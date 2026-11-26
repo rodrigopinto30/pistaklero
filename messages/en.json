@@ -1,0 +1,21 @@
+{
+  "Metadata": {
+    "title": "Pistaklero",
+    "description": "Jobs with visible salaries and companies that reply."
+  },
+  "Layout": {
+    "skipToContent": "Skip to content",
+    "homeLink": "Pistaklero, go to home"
+  },
+  "LocaleSwitcher": {
+    "label": "Language"
+  },
+  "Home": {
+    "tagline": "Jobs with visible salaries and companies that reply."
+  },
+  "NotFound": {
+    "title": "We couldn't find this page",
+    "description": "The link may be mistyped or the page may no longer exist.",
+    "backHome": "Back to home"
+  }
+}
