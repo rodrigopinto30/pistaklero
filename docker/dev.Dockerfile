@@ -10,12 +10,13 @@ ENV COREPACK_HOME=/opt/corepack \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
     NEXT_TELEMETRY_DISABLED=1 \
     HOME=/home/dev \
-    npm_config_store_dir=/pnpm-store
+    XDG_CONFIG_HOME=/opt/xdg-config
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates \
  && rm -rf /var/lib/apt/lists/* \
  && corepack enable pnpm \
  && corepack prepare pnpm@10.34.9 --activate \
- && mkdir -p /home/dev /pnpm-store \
- && chmod 1777 /opt/corepack /home/dev /pnpm-store
+ && mkdir -p /home/dev /pnpm-store /opt/xdg-config/pnpm \
+ && echo "store-dir=/pnpm-store" > /opt/xdg-config/pnpm/rc \
+ && chmod 1777 /opt/corepack /home/dev /pnpm-store /opt/xdg-config
