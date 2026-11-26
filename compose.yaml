@@ -1,0 +1,42 @@
+# Entorno de desarrollo. Usá ./start.sh y ./stop.sh en lugar de llamar a docker compose directo.
+name: pistaklero
+
+x-dev: &dev
+  image: pistaklero-dev:1
+  build:
+    context: .
+    dockerfile: docker/dev.Dockerfile
+  init: true
+  # Corre con tu usuario para que los archivos generados sean tuyos y no de root.
+  user: "${HOST_UID:?Usá ./start.sh}:${HOST_GID:?Usá ./start.sh}"
+  # Red del host: la app y Supabase se ven en 127.0.0.1, igual desde el navegador que desde el servidor.
+  network_mode: host
+  # Misma ruta que en el host: así funcionan los montajes que crea la CLI de Supabase.
+  working_dir: ${PROJECT_DIR:?Usá ./start.sh}
+  volumes:
+    - .:${PROJECT_DIR}
+    - pnpm-store:/pnpm-store
+    - dev-home:/home/dev
+
+services:
+  # App Next.js en modo desarrollo (http://127.0.0.1:3000).
+  web:
+    <<: *dev
+    # Solo escucha en 127.0.0.1: no queda expuesta a la red local.
+    command: ["pnpm", "dev", "--hostname", "127.0.0.1"]
+
+  # Contenedor de herramientas: pnpm, CLI de Supabase, tests. Se usa con ./run.sh.
+  # Es el único con acceso al socket de Docker, porque la CLI de Supabase levanta sus propios contenedores.
+  tools:
+    <<: *dev
+    profiles: ["tools"]
+    group_add: ["${DOCKER_GID:?Usá ./start.sh}"]
+    volumes:
+      - .:${PROJECT_DIR}
+      - pnpm-store:/pnpm-store
+      - dev-home:/home/dev
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  pnpm-store:
+  dev-home:

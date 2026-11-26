@@ -4,14 +4,44 @@ Bolsa de empleo con perfil-portfolio, postulación en 1 clic y sistema anti-ghos
 
 ## Requisitos
 
-- Node.js 24 LTS (`nvm use`)
-- pnpm 10
+Solo **Docker** (con Compose v2) en Linux, con tu usuario en el grupo `docker`.
+Node, pnpm y la CLI de Supabase corren dentro de contenedores: no se instala nada en tu sistema.
 
-## Scripts
+## Uso
 
 | Comando | Qué hace |
 |---|---|
-| `pnpm dev` | Servidor de desarrollo |
-| `pnpm build` | Build de producción |
-| `pnpm start` | Sirve el build |
-| `pnpm lint` | ESLint |
+| `./start.sh` | Levanta todo: Supabase local y la app |
+| `./stop.sh` | Baja todo. Los datos de la base local se conservan |
+| `./run.sh <comando>` | Corre un comando dentro del contenedor de herramientas |
+| `./logs.sh` | Muestra los logs de la app en vivo |
+
+Con todo arriba:
+
+| Servicio | URL |
+|---|---|
+| App | http://127.0.0.1:3000 |
+| Supabase API | http://127.0.0.1:54321 |
+| Supabase Studio | http://127.0.0.1:54323 |
+| Emails de prueba (Mailpit) | http://127.0.0.1:54324 |
+
+### Ejemplos de `./run.sh`
+
+```bash
+./run.sh pnpm add zod                                   # agregar una dependencia
+./run.sh pnpm lint                                      # lint
+./run.sh pnpm build                                     # build de producción
+./run.sh pnpm exec supabase migration new crear_tabla   # nueva migración
+./run.sh pnpm exec supabase db reset                    # recrear la base local
+```
+
+
+## Cómo funciona
+
+- `docker/dev.Dockerfile`: imagen con Node 24 LTS y pnpm.
+- `compose.yaml`: dos servicios con la misma imagen.
+  - **`web`**: corre `pnpm dev`.
+  - **`tools`**: corre comandos sueltos. Es el único con acceso al socket de Docker, porque la CLI de Supabase levanta sus propios contenedores.
+- Los contenedores usan la red del host, así que la app y Supabase se ven en `127.0.0.1` tanto desde el navegador como desde el servidor.
+- La app escucha solo en `127.0.0.1`. Supabase local, en cambio, publica sus puertos en todas las interfaces (la CLI no permite cambiarlo): usa claves de desarrollo conocidas, así que no lo dejes corriendo en redes públicas.
+- Corren con tu usuario. `node_modules` y los archivos generados quedan en la carpeta del proyecto y son tuyos, no de root.
