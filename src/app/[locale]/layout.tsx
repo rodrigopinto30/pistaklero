@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { locale as rootLocale } from "next/root-params";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -7,6 +8,13 @@ import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
 import { fontVariables } from "../fonts";
 import "../globals.css";
+
+/*
+ * Todas las páginas se renderizan por pedido: la CSP usa un nonce distinto en cada pedido,
+ * y una página prerenderizada no lo tendría en sus <script>.
+ * Los datos se pueden seguir cacheando con "use cache".
+ */
+export const instant = false;
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -28,6 +36,7 @@ export const viewport: Viewport = {
 export default async function LocaleLayout({
   children,
 }: LayoutProps<"/[locale]">) {
+  await connection();
   const locale = await rootLocale();
   if (!hasLocale(routing.locales, locale)) notFound();
 
