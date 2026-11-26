@@ -2,6 +2,9 @@
 onlyBuiltDependencies:
   - supabase
 
+# Estos tienen binarios precompilados o no los usamos: no hace falta que ejecuten scripts.
 ignoredBuiltDependencies:
+  - "@parcel/watcher"
+  - "@swc/core"
   - sharp
   - unrs-resolver
