@@ -1,0 +1,44 @@
+# Documentación local (no se versiona)
+/docs
+
+# Dependencias
+/node_modules
+/.pnpm-store
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Build
+/build
+
+# Tests
+/coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Supabase local
+/supabase/.branches
+/supabase/.temp
+
+# Variables de entorno (solo se versiona el ejemplo)
+.env*
+!.env.example
+
+# Vercel
+.vercel
+
+# Sistema / editores
+.DS_Store
+*.pem
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
