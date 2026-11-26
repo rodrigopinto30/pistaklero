@@ -1,0 +1,21 @@
+{
+  "Metadata": {
+    "title": "Pistaklero",
+    "description": "Trabajos con sueldo visible y empresas que responden."
+  },
+  "Layout": {
+    "skipToContent": "Saltar al contenido",
+    "homeLink": "Pistaklero, ir al inicio"
+  },
+  "LocaleSwitcher": {
+    "label": "Idioma"
+  },
+  "Home": {
+    "tagline": "Trabajos con sueldo visible y empresas que responden."
+  },
+  "NotFound": {
+    "title": "No encontramos esta página",
+    "description": "Puede que el enlace esté mal escrito o que la página ya no exista.",
+    "backHome": "Volver al inicio"
+  }
+}
