@@ -30,6 +30,7 @@ Con todo arriba:
 ```bash
 ./run.sh pnpm add zod                                   # agregar una dependencia
 ./run.sh pnpm lint                                      # lint
+./run.sh pnpm typecheck                                 # chequeo de tipos
 ./run.sh pnpm build                                     # build de producción
 ./run.sh pnpm exec supabase migration new crear_tabla   # nueva migración
 ./run.sh pnpm exec supabase db reset                    # recrear la base local
