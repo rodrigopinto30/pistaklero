@@ -9,7 +9,7 @@ x-dev: &dev
   init: true
   # Corre con tu usuario para que los archivos generados sean tuyos y no de root.
   user: "${HOST_UID:?Usá ./start.sh}:${HOST_GID:?Usá ./start.sh}"
-  # Red del host: la app y Supabase se ven en localhost, igual desde el navegador que desde el servidor.
+  # Red del host: la app y Supabase se ven en 127.0.0.1, igual desde el navegador que desde el servidor.
   network_mode: host
   # Misma ruta que en el host: así funcionan los montajes que crea la CLI de Supabase.
   working_dir: ${PROJECT_DIR:?Usá ./start.sh}
@@ -19,10 +19,11 @@ x-dev: &dev
     - dev-home:/home/dev
 
 services:
-  # App Next.js en modo desarrollo (http://localhost:3000).
+  # App Next.js en modo desarrollo (http://127.0.0.1:3000).
   web:
     <<: *dev
-    command: ["pnpm", "dev"]
+    # Solo escucha en 127.0.0.1: no queda expuesta a la red local.
+    command: ["pnpm", "dev", "--hostname", "127.0.0.1"]
 
   # Contenedor de herramientas: pnpm, CLI de Supabase, tests. Se usa con ./run.sh.
   # Es el único con acceso al socket de Docker, porque la CLI de Supabase levanta sus propios contenedores.
