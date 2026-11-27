@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { test as base, expect, type Page } from "@playwright/test";
+import { test as base, expect, type Locator, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0.1:54321";
@@ -291,6 +291,17 @@ export async function expectNoA11yViolations(page: Page) {
  * Test con chequeo automático: falla si la página tiene errores de consola o bloqueos de la CSP.
  * Los 404 esperados (por ejemplo, la página de "no encontrado") no cuentan.
  */
+/**
+ * Hace clic cuando React ya tomó ese elemento. El contenido de una página se hidrata por partes:
+ * un botón que solo funciona con JavaScript puede no responder aunque el resto de la página ya cargó.
+ */
+export async function clickWhenReady(locator: Locator) {
+  await expect
+    .poll(() => locator.evaluate((el) => Object.keys(el).some((key) => key.startsWith("__reactProps"))), { timeout: 20_000 })
+    .toBe(true);
+  await locator.click();
+}
+
 export const test = base.extend<{ consoleErrors: string[] }>({
   consoleErrors: [
     async ({ page }, use) => {

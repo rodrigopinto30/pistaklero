@@ -1,4 +1,4 @@
-import { addQuestions, expect, expectNoA11yViolations, expectToast, seedCompanyWithJobs, signInAsReadyCandidate, test } from "./support/fixtures";
+import { addQuestions, expect, expectNoA11yViolations, expectToast, seedCompanyWithJobs, signInAsReadyCandidate, test, clickWhenReady } from "./support/fixtures";
 
 const token = () => `sv${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
 
@@ -14,19 +14,19 @@ test("guardar y postularse desde la tarjeta, sin abrir la oferta", async ({ page
   const card = page.getByRole("article").filter({ hasText: simple });
 
   // Guardar: el botón queda presionado y avisa.
-  await card.getByRole("button", { name: `Guardar ${simple}` }).click();
+  await clickWhenReady(card.getByRole("button", { name: `Guardar ${simple}` }));
   await expectToast(page, "Empleo guardado. Lo encontrás en Guardados.");
   await expect(card.getByRole("button", { name: `Quitar ${simple} de guardados` })).toHaveAttribute("aria-pressed", "true");
   await expectNoA11yViolations(page);
 
   // Postularse en 1 clic, sin salir de la búsqueda.
-  await card.getByRole("button", { name: `Postularme a ${simple}` }).click();
+  await clickWhenReady(card.getByRole("button", { name: `Postularme a ${simple}` }));
   await expectToast(page, `¡Listo! Te postulaste a ${simple}.`);
   await expect(card.getByRole("link", { name: "Te postulaste" })).toBeVisible();
   await expect(page).toHaveURL(new RegExp(`q=${word}`));
 
   // Con preguntas: lleva a la oferta con el diálogo abierto.
-  await page.getByRole("article").filter({ hasText: withQuestions }).getByRole("button", { name: `Postularme a ${withQuestions}` }).click();
+  await clickWhenReady(page.getByRole("article").filter({ hasText: withQuestions }).getByRole("button", { name: `Postularme a ${withQuestions}` }));
   await expect(page.getByRole("dialog", { name: "Postularme" })).toBeVisible();
   await expectToast(page, "Esta oferta tiene preguntas: respondelas para postularte.");
 
@@ -35,7 +35,7 @@ test("guardar y postularse desde la tarjeta, sin abrir la oferta", async ({ page
   const saved = page.getByRole("article").filter({ hasText: simple });
   await expect(saved).toBeVisible();
   await expectNoA11yViolations(page);
-  await saved.getByRole("button", { name: `Quitar ${simple} de guardados` }).click();
+  await clickWhenReady(saved.getByRole("button", { name: `Quitar ${simple} de guardados` }));
   await expectToast(page, "Lo sacaste de tus guardados.");
   await page.reload();
   await expect(page.getByText("Todavía no guardaste empleos.", { exact: false })).toBeVisible();

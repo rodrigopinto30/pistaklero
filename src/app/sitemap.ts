@@ -18,18 +18,19 @@ function entry(base: string, href: Href, lastModified?: string): MetadataRoute.S
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Las ofertas cambian todo el tiempo: se arma en cada pedido.
+  // Las ofertas cambian todo el tiempo: se arma en cada pedido. Con el tope de 5000 por tipo,
+  // primero lo más reciente (lo que más necesita que los buscadores lo encuentren).
   await connection();
   const base = getPublicEnv().NEXT_PUBLIC_SITE_URL;
   const supabase = createPublicClient();
 
   const [{ data: jobs }, { data: companies }, { data: profiles }, { data: posts }] = await Promise.all([
     // Solo ofertas nativas: las importadas no se indexan (contenido de terceros).
-    supabase.from("jobs").select("slug, updated_at").eq("source", "native").eq("status", "published").gt("valid_through", new Date().toISOString()).limit(5000),
-    supabase.from("companies").select("slug, updated_at").eq("status", "active").limit(5000),
+    supabase.from("jobs").select("slug, updated_at").eq("source", "native").eq("status", "published").gt("valid_through", new Date().toISOString()).order("updated_at", { ascending: false }).limit(5000),
+    supabase.from("companies").select("slug, updated_at").eq("status", "active").order("updated_at", { ascending: false }).limit(5000),
     // RLS devuelve solo los perfiles públicos a un visitante anónimo.
-    supabase.from("candidates").select("slug, updated_at").eq("visibility", "public").limit(5000),
-    supabase.from("posts").select("slug, updated_at").eq("status", "published").limit(5000),
+    supabase.from("candidates").select("slug, updated_at").eq("visibility", "public").order("updated_at", { ascending: false }).limit(5000),
+    supabase.from("posts").select("slug, updated_at").eq("status", "published").order("updated_at", { ascending: false }).limit(5000),
   ]);
 
   return [
