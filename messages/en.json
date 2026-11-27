@@ -93,7 +93,13 @@
       "company_exists": "That domain already belongs to another company on Pistaklero.",
       "file_too_large": "La imagen pesa más de 900 KB.",
       "file_type": "Use a PNG, JPEG or WebP image.",
-      "required_file": "Choose an image."
+      "required_file": "Choose an image.",
+      "max_below_min": "The maximum can't be lower than the minimum.",
+      "range_too_wide": "The maximum can't be more than 3 times the minimum.",
+      "options": "Write 2 to 5 options, one per line (up to 80 characters each).",
+      "required_unless_remote": "Choose the country: the job isn't remote.",
+      "unverified_limit": "Your company isn't verified yet: it can have up to 2 active jobs. Save it as a draft or close another one.",
+      "expired": "The expiration date has passed. Choose a new duration."
     }
   },
   "Profile": {
@@ -368,6 +374,110 @@
       "invalid_invitation": "The invitation doesn't exist, was already used or expired. Ask your team to send a new one.",
       "email_mismatch": "You signed in as {email}, but the invitation is for another email. Sign out and sign in with the invited email.",
       "already_onboarded": "Your account already has a role on Pistaklero. To join a team, use another account with the invited email."
+    }
+  },
+  "Jobs": {
+    "metaNew": "Post a job",
+    "metaEdit": "Edit job",
+    "newTitle": "Post a job",
+    "newSubtitle": "A single page. Salary is required: it helps people decide fast.",
+    "editTitle": "Edit job",
+    "sections": {
+      "basics": "The job",
+      "conditions": "Conditions",
+      "salary": "Salary",
+      "skills": "Technologies",
+      "questions": "Screening questions"
+    },
+    "title": "Role",
+    "titleHint": "For example: Junior Frontend (React)",
+    "description": "Description",
+    "descriptionHint": "What the person will do, what you're looking for and how you work. You can use Markdown: **bold**, lists with -, links.",
+    "language": "Job language",
+    "seniority": "Seniority",
+    "employmentType": "Employment type",
+    "workMode": "Work mode",
+    "country": "Country",
+    "noCountry": "Not specified (remote)",
+    "city": "City",
+    "validDays": "Expires in",
+    "validDaysOption": "{days} days",
+    "salaryMin": "Minimum",
+    "salaryMax": "Maximum",
+    "salaryCurrency": "Currency",
+    "salaryPeriod": "Period",
+    "salaryBasis": "Gross or net",
+    "salaryHint": "Required. The maximum can be up to 3 times the minimum.",
+    "skillsHint": "Up to 10.",
+    "questionsHint": "Up to 2 short questions to screen without asking for a cover letter.",
+    "questionN": "Question {n}",
+    "questionType": "Type",
+    "questionPrompt": "Question",
+    "questionOptions": "Options (one per line)",
+    "questionTypes": {
+      "none": "No question",
+      "short_text": "Short answer",
+      "single_choice": "Single choice"
+    },
+    "saveDraft": "Save draft",
+    "publish": "Publish",
+    "saveChanges": "Save changes",
+    "close": "Close job",
+    "reopen": "Publish again",
+    "deleteDraft": "Delete draft",
+    "viewPublic": "View published job",
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "closed": "Closed",
+      "hidden": "Hidden by moderation",
+      "expired": "Expired"
+    },
+    "seniorityOptions": {
+      "trainee": "Trainee",
+      "junior": "Junior",
+      "semi_senior": "Mid-level",
+      "senior": "Senior",
+      "lead": "Lead"
+    },
+    "employmentOptions": {
+      "full_time": "Full-time",
+      "part_time": "Part-time",
+      "contract": "Contract",
+      "internship": "Internship",
+      "freelance": "Freelance"
+    },
+    "workModeOptions": {
+      "remote": "Remote",
+      "hybrid": "Hybrid",
+      "onsite": "On-site"
+    },
+    "periodShort": {
+      "hour": "per hour",
+      "month": "per month",
+      "year": "per year"
+    },
+    "basisShort": {
+      "gross": "gross",
+      "net": "net"
+    },
+    "list": {
+      "new": "Post a job",
+      "published": "Published on {date}",
+      "validThrough": "Expires on {date}",
+      "draft": "Not published"
+    },
+    "detail": {
+      "postedOn": "Posted on {date}",
+      "validThrough": "Expires on {date}",
+      "apply": "Apply",
+      "about": "About the job",
+      "skills": "Technologies",
+      "company": "The company",
+      "salaryNotInformed": "Salary not disclosed",
+      "applyExternal": "Apply on the original site",
+      "external": "External job",
+      "closed": "This job no longer accepts applications."
     }
   }
 }
