@@ -243,7 +243,8 @@
       "noResults": "No encontramos empresas con ese nombre.",
       "block": "Bloquear {company}",
       "unblock": "Desbloquear {company}"
-    }
+    },
+    "downloadCv": "Descargar CV (PDF)"
   },
   "PublicProfile": {
     "availability": "Disponibilidad: {value}",
@@ -912,5 +913,15 @@
     "newJob": "Publicar oferta",
     "team": "Equipo",
     "import": "Importar oferta"
+  },
+  "Cv": {
+    "about": "Sobre mí",
+    "experience": "Experiencia",
+    "education": "Educación",
+    "projects": "Proyectos",
+    "certifications": "Certificaciones",
+    "skills": "Habilidades",
+    "languages": "Idiomas",
+    "present": "actualidad"
   }
 }
