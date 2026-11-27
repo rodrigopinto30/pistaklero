@@ -12,6 +12,8 @@ type ApplicationStatus = "in_review" | "interview" | "hired" | "rejected" | "no_
 export type EmailTemplates = {
   team_invitation: { companyName: string; inviterName: string; acceptUrl: string };
   application_status: { jobTitle: string; companyName: string; status: ApplicationStatus; message?: string | null };
+  application_slow: { jobTitle: string; companyName: string };
+  recruiter_reminder: { companyName: string; pending: number };
 };
 
 const STATUS_COPY: Record<Locale, Record<ApplicationStatus, string>> = {
@@ -54,6 +56,46 @@ const renderers: { [K in EmailTemplate]: (locale: Locale, data: EmailTemplates[K
       text: `${copy.intro}\n\n${copy.cta}: ${acceptUrl}\n\n${copy.note}`,
     };
   },
+  application_slow(locale, { jobTitle, companyName }) {
+    const copy =
+      locale === "en"
+        ? {
+            subject: `${companyName} is taking longer than usual`,
+            intro: `It's been 14 days without news about your application to ${jobTitle}. ${companyName} is taking longer than usual: don't put your search on hold. If they don't reply within 30 days, we'll close the application so you're not left waiting.`,
+            cta: "View my applications",
+          }
+        : {
+            subject: `${companyName} está demorando más de lo habitual`,
+            intro: `Pasaron 14 días sin novedades de tu postulación a ${jobTitle}. ${companyName} está demorando más de lo habitual: no frenes tu búsqueda. Si no responden en 30 días, cerramos la postulación para que no te quedes esperando.`,
+            cta: "Ver mis postulaciones",
+          };
+    const url = applicationsUrl(locale);
+    return {
+      subject: copy.subject,
+      html: layout({ lang: locale, title: copy.subject, body: paragraph(copy.intro) + button(url, copy.cta) }),
+      text: `${copy.intro}\n\n${copy.cta}: ${url}`,
+    };
+  },
+  recruiter_reminder(locale, { companyName, pending }) {
+    const copy =
+      locale === "en"
+        ? {
+            subject: `${pending} application(s) waiting for ${companyName}`,
+            intro: `${pending} application(s) have been waiting for a reply for more than 7 days. People are counting on you: review them or close them with a message. On Pistaklero, how fast you reply is public.`,
+            cta: "Review applications",
+          }
+        : {
+            subject: `${pending} postulación(es) esperando a ${companyName}`,
+            intro: `Hay ${pending} postulación(es) esperando respuesta hace más de 7 días. Del otro lado hay personas esperando: revisalas o cerralas con un mensaje. En Pistaklero, la velocidad de respuesta es pública.`,
+            cta: "Revisar postulaciones",
+          };
+    const url = dashboardUrl(locale);
+    return {
+      subject: copy.subject,
+      html: layout({ lang: locale, title: copy.subject, body: paragraph(copy.intro) + button(url, copy.cta) }),
+      text: `${copy.intro}\n\n${copy.cta}: ${url}`,
+    };
+  },
   application_status(locale, { jobTitle, companyName, status, message }) {
     const intro = STATUS_COPY[locale][status].replace("{company}", companyName).replace("{job}", jobTitle);
     const subject = locale === "en" ? `Update on your application: ${jobTitle}` : `Novedades de tu postulación: ${jobTitle}`;
@@ -68,6 +110,11 @@ const renderers: { [K in EmailTemplate]: (locale: Locale, data: EmailTemplates[K
     };
   },
 };
+
+export function dashboardUrl(locale: Locale) {
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://127.0.0.1:3000";
+  return `${base}/${locale}/${locale === "en" ? "dashboard" : "panel"}`;
+}
 
 export function applicationsUrl(locale: Locale) {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://127.0.0.1:3000";
