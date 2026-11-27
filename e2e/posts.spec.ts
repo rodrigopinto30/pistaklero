@@ -17,8 +17,22 @@ test("publicar un consejo, darle like, guardarlo, denunciarlo, editarlo y borrar
   await expect(page.getByLabel(/^Título/)).toBeFocused();
   await page.getByLabel(/^Título/).fill(title);
   await page.getByLabel(/^Texto/).fill("Practiqué en voz alta y llevé **dos proyectos** para mostrar.\n\n- Repasé lo básico\n- Pregunté por el equipo");
+  // Etiquetas como en dev.to: con o sin #, con Enter o coma; quedan en minúsculas y sin repetir.
+  const tagTag = `t${Date.now().toString(36)}`;
+  const tags = page.getByLabel(/^Etiquetas/);
+  await tags.fill("#Entrevistas");
+  await tags.press("Enter");
+  await tags.fill(`${tagTag},entrevistas,`);
+  const chosen = page.getByRole("list", { name: "Etiquetas elegidas" });
+  await expect(chosen.getByRole("listitem")).toHaveText(["#entrevistas", `#${tagTag}`]);
   await page.getByRole("button", { name: "Publicar" }).click();
   await expectToast(page, "¡Publicado! Ya lo puede leer toda la comunidad.");
+  await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+  // Cada etiqueta lleva al listado de esa etiqueta.
+  await page.getByRole("list", { name: "Etiquetas" }).getByRole("link", { name: `#${tagTag}` }).click();
+  await expect(page.getByText(`Publicaciones con #${tagTag}`)).toBeVisible();
+  await expect(page.getByRole("article").filter({ hasText: title })).toBeVisible();
+  await page.getByRole("article").filter({ hasText: title }).getByRole("link", { name: title }).click();
   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
   await expect(page.getByRole("article").getByText("Pili Publica")).toBeVisible();
   await expectNoA11yViolations(page);

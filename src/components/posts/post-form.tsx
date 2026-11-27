@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { createPost, type PostFormState, updatePost } from "@/lib/posts/actions";
+import { TagInput } from "./tag-input";
 import type { FormState } from "@/lib/forms";
 
-type Saved = { id?: string; title: string; body: string; language: string };
+type Saved = { id?: string; title: string; body: string; language: string; tags?: string[] };
 
 /** Escribir o editar una publicación. El texto admite Markdown básico (negrita, listas, enlaces). */
 export function PostForm({ locale, saved }: { locale: string; saved?: Saved }) {
@@ -20,7 +21,7 @@ export function PostForm({ locale, saved }: { locale: string; saved?: Saved }) {
   const formState: FormState = state.status === "post_error" ? { status: "error", fieldErrors: {}, values: state.values } : state;
   const formRef = useFocusFirstError(formState);
   const errors = formState.status === "error" ? formState.fieldErrors : {};
-  const v = (name: keyof Saved, fallback = "") => valueOf(formState, name, saved?.[name] ?? fallback);
+  const v = (name: Exclude<keyof Saved, "tags">, fallback = "") => valueOf(formState, name, saved?.[name] ?? fallback);
 
   return (
     <form ref={formRef} action={action} noValidate className="flex flex-col gap-5">
@@ -51,6 +52,7 @@ export function PostForm({ locale, saved }: { locale: string; saved?: Saved }) {
       <Field id="post-body" name="body" label={t("body")} required hint={t("bodyHint")} error={errors.body}>
         {(p) => <Textarea {...p} maxLength={5000} className="min-h-64" defaultValue={v("body")} />}
       </Field>
+      <TagInput name="tags" initial={saved?.tags ?? []} />
       <p className="text-sm text-muted-foreground">{t("public")}</p>
       <SubmitButton label={saved?.id ? t("save") : t("publish")} />
     </form>

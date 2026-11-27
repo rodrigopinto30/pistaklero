@@ -8,6 +8,7 @@ import { Markdown } from "@/components/markdown";
 import { authorSubtitle } from "@/components/posts/post-card";
 import { PostActions } from "@/components/posts/post-actions";
 import { ReportPostForm } from "@/components/posts/report-post-form";
+import { PostTags } from "@/components/posts/post-tags";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { deletePost } from "@/lib/posts/actions";
@@ -86,6 +87,7 @@ export default async function PostPage({ params }: PageProps<"/[locale]/posts/[s
         </header>
 
         <Markdown lang={post.language}>{post.body}</Markdown>
+        <PostTags tags={card.tags ?? []} label={t("tags.label")} />
 
         {card && (
           <div className="border-t border-border pt-4">

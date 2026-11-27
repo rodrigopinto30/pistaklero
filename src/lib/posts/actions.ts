@@ -7,12 +7,16 @@ import { flash } from "@/lib/flash.server";
 import { errorState, type FormState, formValues, zodFieldErrors } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
 import { POST_REPORT_REASONS, postSchema } from "@/lib/validation/post";
+import { MAX_TAGS, normalizeTag } from "@/lib/posts/tags";
 import { redirect } from "@/i18n/navigation";
 import { parseLocale } from "@/i18n/locale";
 
 const POST_ERRORS = ["no_person", "rate_limited", "not_found", "not_authorized"] as const;
 export type PostError = (typeof POST_ERRORS)[number] | "unknown";
 export type PostFormState = FormState | { status: "post_error"; code: PostError; values: Record<string, string> };
+
+/** Etiquetas válidas, sin repetir (la base las vuelve a limpiar). */
+const tagsFrom = (formData: FormData) => [...new Set(formData.getAll("tags").map((t) => normalizeTag(String(t))).filter((t): t is string => t !== null))].slice(0, MAX_TAGS);
 
 const postError = (message: string | undefined): PostError => POST_ERRORS.find((code) => code === message) ?? "unknown";
 
@@ -28,6 +32,7 @@ export async function createPost(_prev: PostFormState, formData: FormData): Prom
     p_title: parsed.data.title,
     p_body: parsed.data.body,
     p_language: parsed.data.language,
+    p_tags: tagsFrom(formData),
   });
   if (error || !slug) {
     const code = postError(error?.message);
@@ -53,6 +58,7 @@ export async function updatePost(_prev: PostFormState, formData: FormData): Prom
     p_title: parsed.data.title,
     p_body: parsed.data.body,
     p_language: parsed.data.language,
+    p_tags: tagsFrom(formData),
   });
   if (error) return { status: "post_error", code: postError(error.message), values };
 

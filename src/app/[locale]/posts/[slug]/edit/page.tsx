@@ -16,7 +16,7 @@ export default async function EditPostPage({ params }: PageProps<"/[locale]/post
   const user = await getCurrentUser();
   if (!user) notFound();
   const supabase = await createClient();
-  const { data: post } = await supabase.from("posts").select("id, title, body, language, author_id").eq("slug", slug).maybeSingle();
+  const { data: post } = await supabase.from("posts").select("id, title, body, language, author_id, tags").eq("slug", slug).maybeSingle();
   // Solo quien la escribió la edita (la función de la base lo vuelve a verificar).
   if (!post || post.author_id !== user.id) notFound();
 
@@ -26,7 +26,7 @@ export default async function EditPostPage({ params }: PageProps<"/[locale]/post
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
       <h1 className="text-3xl font-semibold tracking-tight">{t("editTitle")} <Emoji symbol="✏️" /></h1>
       <div className="rounded-2xl bg-card p-6 shadow-soft">
-        <PostForm locale={locale} saved={{ id: post.id, title: post.title, body: post.body, language: post.language }} />
+        <PostForm locale={locale} saved={{ id: post.id, title: post.title, body: post.body, language: post.language, tags: post.tags }} />
       </div>
     </div>
   );

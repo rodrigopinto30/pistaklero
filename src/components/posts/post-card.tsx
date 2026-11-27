@@ -5,6 +5,7 @@ import type { Database } from "@/lib/supabase/database.types";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { PostActions } from "./post-actions";
+import { PostTags } from "./post-tags";
 
 export type PostCardData = Database["public"]["Functions"]["post_cards"]["Returns"][number];
 
@@ -21,6 +22,7 @@ export async function authorSubtitle(post: Pick<PostCardData, "author_role" | "a
  */
 export async function PostCard({ post, locale, signedIn }: { post: PostCardData; locale: string; signedIn: boolean }) {
   const href = { pathname: "/posts/[slug]" as const, params: { slug: post.slug } };
+  const tTags = await getTranslations("Posts.tags");
   // Sin sesión, "me gusta" y "guardar" quedan pendientes y se vuelve al listado (con JavaScript, a la página exacta).
   const guestReturnTo = signedIn ? undefined : getPathname({ locale: locale as AppLocale, href: "/posts" });
 
@@ -45,6 +47,7 @@ export async function PostCard({ post, locale, signedIn }: { post: PostCardData;
         {post.excerpt}
         {post.excerpt.length >= 280 && "…"}
       </p>
+      <PostTags tags={post.tags ?? []} label={tTags("label")} />
       <PostActions postId={post.id} title={post.title} liked={post.liked} saved={post.saved} likes={post.likes_count} guestReturnTo={guestReturnTo} />
     </article>
   );
