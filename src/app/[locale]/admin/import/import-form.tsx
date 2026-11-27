@@ -120,7 +120,7 @@ function ReviewForm({ proposed, countries }: { proposed: Record<string, string>;
           </Field>
         </FieldGrid>
       </fieldset>
-      <SubmitButton label={t("publish")} />
+      <SubmitButton label={t("publish")} requireChanges={false} />
       <FormMessage state={state} success="published" />
     </form>
   );

@@ -20,9 +20,20 @@ test("ajustes: idioma de los emails y descarga de los datos", async ({ page }) =
   await page.waitForURL("/es/ajustes");
   await expectNoA11yViolations(page);
 
+  // Sin cambios no hay nada que guardar: el botón queda inactivo (y dice por qué).
+  const save = page.getByRole("region", { name: "Preferencias" }).getByRole("button", { name: "Guardar" });
+  await expect(save).toHaveAttribute("aria-disabled", "true");
+  await expect(save).toHaveAttribute("title", "No hay cambios para guardar");
   await page.getByLabel("Idioma de los emails").selectOption("en");
-  await page.getByRole("region", { name: "Preferencias" }).getByRole("button", { name: "Guardar" }).click();
+  await expect(save).not.toHaveAttribute("aria-disabled");
+  // Volver al valor original también cuenta como "sin cambios".
+  await page.getByLabel("Idioma de los emails").selectOption("es");
+  await expect(save).toHaveAttribute("aria-disabled", "true");
+  await page.getByLabel("Idioma de los emails").selectOption("en");
+  await save.click();
   await expectToast(page, "Cambios guardados.");
+  // Recién guardado, vuelve a quedar inactivo.
+  await expect(save).toHaveAttribute("aria-disabled", "true");
   await page.reload();
   await expect(page.getByLabel("Idioma de los emails")).toHaveValue("en");
 

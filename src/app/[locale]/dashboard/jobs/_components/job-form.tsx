@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Button } from "@/components/ui/button";
+import { useFormChanged } from "@/components/forms/use-form-changed";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,6 +45,9 @@ export function JobForm({
 }) {
   const t = useTranslations("Jobs");
   const [state, action, pending] = useActionState(saveJob, idleState);
+  // Editando una oferta publicada, "Guardar cambios" se activa recién cuando algo cambió.
+  const { button: saveButton, changed } = useFormChanged(mode !== "draft");
+  const tForm = useTranslations("Form");
   const formRef = useFocusFirstError(state);
   const errors = state.status === "error" ? state.fieldErrors : {};
   const v = (name: string) => valueOf(state, name, saved[name]);
@@ -195,7 +199,19 @@ export function JobForm({
             </Button>
           </>
         ) : (
-          <Button type="submit" name="intent" value="save" disabled={pending}>
+          <Button
+            ref={saveButton}
+            type="submit"
+            name="intent"
+            value="save"
+            disabled={pending}
+            aria-disabled={!changed || undefined}
+            title={changed ? undefined : tForm("noChanges")}
+            onClick={(event) => {
+              if (!changed) event.preventDefault();
+            }}
+            className={changed ? undefined : "cursor-not-allowed opacity-50"}
+          >
             {t("saveChanges")}
           </Button>
         )}
