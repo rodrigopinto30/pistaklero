@@ -449,6 +449,32 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"external_applications": {
+                  Row: {
+                    "candidate_id": string,"created_at": string,"job_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"created_at"?: string,"job_id": string
+                  }
+                  Update: {
+                    "candidate_id"?: string,"created_at"?: string,"job_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "external_applications_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    },{
+      foreignKeyName: "external_applications_job_id_fkey"
+      columns: ["job_id"]
+isOneToOne: false
+      referencedRelation: "jobs"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"external_apply_clicks": {
                   Row: {
                     "created_at": string,"id": number,"job_id": string,"user_id": string | null
@@ -888,7 +914,7 @@ isOneToOne: false
                            },
 "company_job_cards":
 { Args: { "p_company_id": string }; Returns: {
-              "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
+              "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"external_apply": boolean,"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
             }[]
                            },
 "complete_candidate_setup":
@@ -975,6 +1001,9 @@ isOneToOne: false
 "random_slug":
 { Args: { "p_value": string }; Returns: string
                            },
+"record_external_application":
+{ Args: { "p_job_id": string }; Returns: undefined
+                           },
 "record_external_click":
 { Args: { "p_job_id": string }; Returns: string
                            },
@@ -998,12 +1027,12 @@ isOneToOne: false
                            },
 "saved_job_cards":
 { Args: Record<PropertyKey, never>; Returns: {
-              "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
+              "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"external_apply": boolean,"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
             }[]
                            },
 "search_jobs":
 { Args: { "p_country"?: string,"p_currency"?: Database["public"]['Enums']["currency"],"p_employment_types"?: (Database["public"]['Enums']["employment_type"])[],"p_language"?: Database["public"]['Enums']["app_locale"],"p_limit"?: number,"p_offset"?: number,"p_query"?: string,"p_salary_visible"?: boolean,"p_seniorities"?: (Database["public"]['Enums']["seniority"])[],"p_work_modes"?: (Database["public"]['Enums']["work_mode"])[] }; Returns: {
-              "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
+              "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"external_apply": boolean,"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
             }[]
                            },
 "set_company_cover":
