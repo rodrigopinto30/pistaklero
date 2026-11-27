@@ -40,6 +40,7 @@ Con todo arriba:
 ./run.sh pnpm db:test                                   # tests de la base (pgTAP)
 ./run.sh pnpm db:types                                  # regenerar los tipos de TypeScript
 ./run.sh pnpm admin:grant persona@ejemplo.com           # dar rol de admin a una cuenta nueva
+./run.sh pnpm cron                                      # correr la tarea diaria (anti-ghosting + emails)
 ```
 
 
@@ -73,6 +74,17 @@ Los emails de la app pasan por una cola en la base (`email_outbox`): se encolan,
 - En desarrollo llegan a Mailpit: http://127.0.0.1:54324
 - En producción se envían con Resend (`RESEND_API_KEY`, `EMAIL_FROM`).
 - `POST /api/internal/outbox` con `Authorization: Bearer $OUTBOX_SECRET` vacía la cola (lo llama el cron).
+
+## Tarea diaria (anti-ghosting)
+
+`GET /api/internal/cron` corre una vez por día (Vercel Cron, ver `vercel.json`) con `Authorization: Bearer $CRON_SECRET`:
+
+- 7 días sin cambios en una postulación: recordatorio agrupado a la empresa.
+- 14 días: aviso a la candidata.
+- 30 días: se cierra como "Sin respuesta".
+- Recalcula el badge público de velocidad de respuesta de cada empresa (últimos 90 días).
+
+En local: `./run.sh pnpm cron`.
 
 ## Cómo funciona
 
