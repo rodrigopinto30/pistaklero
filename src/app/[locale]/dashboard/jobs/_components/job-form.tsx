@@ -159,7 +159,7 @@ export function JobForm({
                     key={skill.id}
                     className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg bg-secondary px-3 text-sm has-checked:bg-primary/10 has-checked:text-primary"
                   >
-                    <input type="checkbox" name="skills" value={skill.id} defaultChecked={selectedSkills.has(skill.id)} className="size-4 accent-primary" />
+                    <input type="checkbox" name="skills" value={skill.id} defaultChecked={selectedSkills.has(skill.id)} className="size-4 shrink-0 accent-primary" />
                     {skill.name}
                   </label>
                 ))}
@@ -183,7 +183,7 @@ export function JobForm({
                   value={mode}
                   checked={applyMode === mode}
                   onChange={() => setApplyMode(mode)}
-                  className="size-4 accent-primary"
+                  className="size-4 shrink-0 accent-primary"
                 />
                 {t(`applyModes.${mode}`)}
               </span>

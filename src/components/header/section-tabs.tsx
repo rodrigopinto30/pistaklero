@@ -2,6 +2,7 @@
 
 import { Briefcase, Building2, Newspaper, UsersRound } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/i18n/navigation";
 import { SECTION_HREF, type Section, sectionOf } from "./sections";
@@ -13,10 +14,22 @@ const ICONS = { jobs: Briefcase, companies: Building2, posts: Newspaper, talent:
 export function SectionTabs({ className, showTalent = false }: { className?: string; showTalent?: boolean }) {
   const t = useTranslations("Header");
   const current = sectionOf(usePathname());
+  const nav = useRef<HTMLElement>(null);
+
+  // En el celular las pestañas se deslizan de costado: la actual queda a la vista.
+  useEffect(() => {
+    const scroller = nav.current;
+    const active = scroller?.querySelector<HTMLElement>("[aria-current=page]");
+    if (!scroller || !active || scroller.scrollWidth <= scroller.clientWidth) return;
+    const box = scroller.getBoundingClientRect();
+    const tab = active.getBoundingClientRect();
+    scroller.scrollLeft += tab.left + tab.width / 2 - (box.left + box.width / 2);
+  }, [current]);
 
   return (
-    <nav aria-label={t("sections")} className={className}>
-      <ul className="flex items-center justify-center gap-1 sm:gap-4">
+    <nav ref={nav} aria-label={t("sections")} className={className}>
+      {/* "center-safe": si no entran, empiezan desde la izquierda (centradas, el principio quedaría cortado). */}
+      <ul className="flex w-max min-w-full items-center justify-center-safe gap-1 sm:gap-4">
         {(Object.keys(SECTION_HREF) as Section[]).filter((section) => section !== "talent" || showTalent).map((section) => {
           const Icon = ICONS[section];
           const active = current === section;

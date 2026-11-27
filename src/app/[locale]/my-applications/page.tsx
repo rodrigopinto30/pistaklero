@@ -78,7 +78,7 @@ export default async function MyApplicationsPage() {
                     {job?.companies && (
                       <Link
                         href={{ pathname: "/companies/[slug]", params: { slug: job.companies.slug } }}
-                        className="self-start text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                        className="inline-flex min-h-6 items-center self-start text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                       >
                         {job.companies.name}
                       </Link>

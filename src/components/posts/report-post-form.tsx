@@ -33,7 +33,7 @@ export function ReportPostForm({ postId }: { postId: string }) {
           <legend className="mb-2 text-sm font-medium">{t("reason")}</legend>
           {POST_REPORT_REASONS.map((reason) => (
             <label key={reason} className="inline-flex min-h-9 cursor-pointer items-center gap-2 text-sm">
-              <input type="radio" name="reason" value={reason} className="size-4 accent-primary" />
+              <input type="radio" name="reason" value={reason} className="size-4 shrink-0 accent-primary" />
               {t(`reasons.${reason}`)}
             </label>
           ))}

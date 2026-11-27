@@ -27,7 +27,7 @@ export function PreferencesForm({ emailLocale, emailNotifications }: { emailLoca
         </p>
       </div>
       <label className="flex min-h-10 cursor-pointer items-start gap-3">
-        <input type="checkbox" name="emailNotifications" defaultChecked={emailNotifications} className="mt-1 size-4 accent-primary" aria-describedby="settings-notifications-hint" />
+        <input type="checkbox" name="emailNotifications" defaultChecked={emailNotifications} className="mt-1 size-4 shrink-0 accent-primary" aria-describedby="settings-notifications-hint" />
         <span className="flex flex-col">
           <span className="font-medium">{t("notifications")}</span>
           <span id="settings-notifications-hint" className="text-sm text-muted-foreground">
@@ -49,7 +49,7 @@ export function DeleteAccountForm({ locale, reauthHref }: { locale: string; reau
     <form action={action} noValidate className="flex flex-col gap-4">
       <input type="hidden" name="locale" value={locale} />
       <label className="flex min-h-10 cursor-pointer items-start gap-3">
-        <input type="checkbox" name="confirm" required className="mt-1 size-4 accent-primary" />
+        <input type="checkbox" name="confirm" required className="mt-1 size-4 shrink-0 accent-primary" />
         <span>{t("confirm")}</span>
       </label>
       <SubmitButton label={t("button")} variant="secondary" />

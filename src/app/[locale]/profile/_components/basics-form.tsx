@@ -95,7 +95,7 @@ export function BasicsFields({
                 name="languages"
                 value={language.code}
                 defaultChecked={saved.languages.includes(language.code)}
-                className="size-4 accent-primary"
+                className="size-4 shrink-0 accent-primary"
               />
               <span lang={language.code}>{language.name}</span>
             </label>

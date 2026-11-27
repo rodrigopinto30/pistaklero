@@ -92,7 +92,7 @@ export default async function DashboardPage() {
                   </span>
                   <Link
                     href={{ pathname: "/dashboard/jobs/[id]/applicants", params: { id: job.id } }}
-                    className="text-sm text-violet underline-offset-4 hover:underline"
+                    className="inline-flex min-h-6 items-center text-sm text-violet underline-offset-4 hover:underline"
                   >
                     {tJobs("list.applicants", {
                       pending: countFor(job.id, ["received"]),

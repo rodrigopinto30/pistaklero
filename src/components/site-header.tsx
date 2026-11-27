@@ -13,6 +13,7 @@ import { countryOptions } from "@/lib/geo";
 import { avatarUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
+import { Tip } from "@/components/tip";
 import { DARK_MODE_ENABLED } from "@/lib/theme/theme";
 import { Link } from "@/i18n/navigation";
 
@@ -87,10 +88,13 @@ export async function SiteHeader() {
             )}
             {profile?.role === "recruiter" && (
               // El atajo de las empresas, siempre a la vista (como "Hazte anfitrión" en Airbnb).
-              <Link href="/dashboard/jobs/new" className={cn(buttonVariants(), "gap-1.5 px-3 sm:px-4")}>
-                <Plus aria-hidden="true" className="size-4" />
-                <span className="sr-only sm:not-sr-only">{t("newJob")}</span>
-              </Link>
+              // Entre 1024 y 1279 px las pestañas ocupan el centro: ahí (y en el celular) queda solo el "+".
+              <Tip label={t("newJob")}>
+                <Link href="/dashboard/jobs/new" className={cn(buttonVariants(), "shrink-0 gap-1.5 px-3 sm:px-4 lg:px-3 xl:px-4")}>
+                  <Plus aria-hidden="true" className="size-4" />
+                  <span className="sr-only sm:not-sr-only lg:sr-only xl:not-sr-only">{t("newJob")}</span>
+                </Link>
+              </Tip>
             )}
             {profile && <NotificationBell initialCount={unreadNotifications} />}
             {user ? (
