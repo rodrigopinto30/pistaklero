@@ -16,7 +16,12 @@ export default defineConfig({
   // Un reintento en local: el servidor de desarrollo a veces responde 500 a sus propios recursos internos
   // mientras compila. Playwright igual los informa como "flaky", así que no quedan escondidos.
   retries: process.env.CI ? 2 : 1,
-  reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]],
+  // En la CI, además, cada fallo queda como anotación en la corrida.
+  reporter: [
+    ...(process.env.CI ? [["github"] as const] : []),
+    ["list"],
+    ["html", { open: "never", outputFolder: "playwright-report" }],
+  ],
   use: {
     baseURL: process.env.E2E_BASE_URL ?? "http://127.0.0.1:3000",
     locale: "es-AR",

@@ -66,6 +66,9 @@ jobs:
         run: pnpm build
 
       - name: Levantar la app
+        # En el runner "localhost" resuelve primero a ::1: sin esto el servidor escucha solo en IPv6.
+        env:
+          NODE_OPTIONS: --dns-result-order=ipv4first
         run: |
           pnpm dev --hostname localhost > dev.log 2>&1 &
           for _ in $(seq 1 90); do
@@ -73,6 +76,8 @@ jobs:
             sleep 2
           done
           cat dev.log
+          # El final del log también como anotación, visible en el resumen de la corrida.
+          echo "::error title=La app no respondió::$(tail -c 1500 dev.log | tr '\n' ' ')"
           exit 1
 
       - name: Instalar Chromium
