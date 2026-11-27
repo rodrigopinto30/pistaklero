@@ -8,7 +8,9 @@
     "homeLink": "Pistaklero, ir al inicio",
     "myProfile": "Mi perfil",
     "dashboard": "Panel",
-    "myApplications": "Mis postulaciones"
+    "myApplications": "Mis postulaciones",
+    "admin": "Admin",
+    "suspended": "Tu cuenta está suspendida. Si creés que es un error, escribinos."
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -598,6 +600,66 @@
         "friendly": "Thank you for applying to {job}! We reviewed your profile carefully and this time we decided to move forward with other people. It was great to get to know you: best of luck with your search.",
         "brief": "Thanks for your interest in {job}. This time we're moving forward with other profiles. Best of luck!"
       }
+    }
+  },
+  "Report": {
+    "toggle": "Reportar esta oferta",
+    "reason": "¿Qué pasa con esta oferta?",
+    "reasons": {
+      "scam": "Parece una estafa (piden dinero, datos bancarios…)",
+      "fake": "La oferta o la empresa parecen falsas",
+      "discrimination": "Es discriminatoria",
+      "other": "Otro motivo"
+    },
+    "details": "Contanos más (opcional)",
+    "send": "Enviar reporte",
+    "thanks": "Gracias por avisar. Lo vamos a revisar.",
+    "duplicate": "Ya reportaste esta oferta.",
+    "error": "No pudimos enviar el reporte. Probá de nuevo."
+  },
+  "Admin": {
+    "metaTitle": "Admin",
+    "title": "Administración",
+    "search": "Buscar",
+    "noResults": "Sin resultados.",
+    "reports": {
+      "title": "Reportes abiertos",
+      "hint": "Con 3 reportes de cuentas distintas, la oferta se oculta sola hasta que la revises.",
+      "empty": "No hay reportes abiertos.",
+      "count": "{count, plural, one {# reporte} other {# reportes}}",
+      "hidden": "oculta",
+      "hide": "Ocultar oferta",
+      "hideFor": "Ocultar oferta: {job}",
+      "dismiss": "Descartar reportes",
+      "dismissFor": "Descartar reportes: {job}"
+    },
+    "users": {
+      "title": "Cuentas",
+      "search": "Email (al menos 3 letras)",
+      "suspended": "suspendida",
+      "suspend": "Suspender",
+      "suspendFor": "Suspender: {email}",
+      "restore": "Reactivar",
+      "restoreFor": "Reactivar: {email}"
+    },
+    "companies": {
+      "title": "Empresas",
+      "search": "Nombre de la empresa",
+      "suspend": "Suspender",
+      "suspendFor": "Suspender: {company}",
+      "restore": "Reactivar",
+      "restoreFor": "Reactivar: {company}",
+      "status": {
+        "active": "activa",
+        "unclaimed": "sin reclamar",
+        "suspended": "suspendida"
+      }
+    },
+    "roles": {
+      "candidate": "Candidata/o",
+      "recruiter": "Reclutador/a",
+      "admin": "Admin",
+      "none": "Sin rol (no completó la bienvenida)"
     }
   }
 }

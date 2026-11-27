@@ -8,7 +8,9 @@
     "homeLink": "Pistaklero, go to home",
     "myProfile": "My profile",
     "dashboard": "Dashboard",
-    "myApplications": "My applications"
+    "myApplications": "My applications",
+    "admin": "Admin",
+    "suspended": "Your account is suspended. If you think this is a mistake, contact us."
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -598,6 +600,66 @@
         "friendly": "Thank you for applying to {job}! We reviewed your profile carefully and this time we decided to move forward with other people. It was great to get to know you: best of luck with your search.",
         "brief": "Thanks for your interest in {job}. This time we're moving forward with other profiles. Best of luck!"
       }
+    }
+  },
+  "Report": {
+    "toggle": "Report this job",
+    "reason": "What's wrong with this job?",
+    "reasons": {
+      "scam": "It looks like a scam (asks for money, bank details…)",
+      "fake": "The job or the company seem fake",
+      "discrimination": "It's discriminatory",
+      "other": "Other reason"
+    },
+    "details": "Tell us more (optional)",
+    "send": "Send report",
+    "thanks": "Thanks for letting us know. We'll review it.",
+    "duplicate": "You already reported this job.",
+    "error": "We couldn't send the report. Please try again."
+  },
+  "Admin": {
+    "metaTitle": "Admin",
+    "title": "Administration",
+    "search": "Search",
+    "noResults": "No results.",
+    "reports": {
+      "title": "Open reports",
+      "hint": "With 3 reports from different accounts, the job is hidden automatically until you review it.",
+      "empty": "There are no open reports.",
+      "count": "{count, plural, one {# report} other {# reports}}",
+      "hidden": "hidden",
+      "hide": "Hide job",
+      "hideFor": "Hide job: {job}",
+      "dismiss": "Dismiss reports",
+      "dismissFor": "Dismiss reports: {job}"
+    },
+    "users": {
+      "title": "Accounts",
+      "search": "Email (at least 3 letters)",
+      "suspended": "suspended",
+      "suspend": "Suspend",
+      "suspendFor": "Suspend: {email}",
+      "restore": "Restore",
+      "restoreFor": "Restore: {email}"
+    },
+    "companies": {
+      "title": "Companies",
+      "search": "Company name",
+      "suspend": "Suspend",
+      "suspendFor": "Suspend: {company}",
+      "restore": "Restore",
+      "restoreFor": "Restore: {company}",
+      "status": {
+        "active": "active",
+        "unclaimed": "unclaimed",
+        "suspended": "suspended"
+      }
+    },
+    "roles": {
+      "candidate": "Candidate",
+      "recruiter": "Recruiter",
+      "admin": "Admin",
+      "none": "No role (didn't finish signing up)"
     }
   }
 }
