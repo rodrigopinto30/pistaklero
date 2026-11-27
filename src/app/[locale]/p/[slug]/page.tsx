@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { cache, type ReactNode } from "react";
 import { countryName, formatMonth, languageOptions } from "@/lib/geo";
+import { projectPreviewUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
 
 /*
@@ -171,7 +172,19 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
         <Card title={t("projects")} className="md:col-span-3">
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {projects.data!.map((p) => (
-              <li key={p.id} className="flex flex-col gap-2 rounded-xl border border-border p-4">
+              <li key={p.id} className="flex flex-col gap-2 overflow-hidden rounded-xl border border-border p-4">
+                {p.preview_path && (
+                  // Decorativa: el título y el enlace dicen de qué se trata. WebP 1200×630 ya optimizado.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={projectPreviewUrl(p.preview_path)!}
+                    alt=""
+                    width={1200}
+                    height={630}
+                    loading="lazy"
+                    className="-mx-4 -mt-4 mb-1 aspect-[1200/630] w-[calc(100%+2rem)] max-w-none border-b border-border object-cover"
+                  />
+                )}
                 <h3 className="font-medium">{p.title}</h3>
                 {p.description && <p className="text-sm text-muted-foreground">{p.description}</p>}
                 <div className="mt-auto flex flex-wrap gap-3 text-sm">

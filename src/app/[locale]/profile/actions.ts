@@ -1,6 +1,7 @@
 "use server";
 
 import { refresh } from "next/cache";
+import { after } from "next/server";
 import { z } from "zod";
 import { getCurrentProfile } from "@/lib/auth/session";
 import {
@@ -11,6 +12,7 @@ import {
   successState,
   zodFieldErrors,
 } from "@/lib/forms";
+import { refreshProjectPreview, removeProjectPreview } from "@/lib/projects/preview";
 import { createClient } from "@/lib/supabase/server";
 import {
   basicsSchema,
@@ -207,8 +209,8 @@ async function writeEntry(supabase: Supabase, userId: string, block: EntryBlock,
       const d = entrySchemas.project.parse(values);
       const row = { title: d.title, description: d.description, url: d.url ?? null, repo_url: d.repoUrl ?? null };
       return id
-        ? supabase.from("candidate_projects").update(row).eq("id", id)
-        : supabase.from("candidate_projects").insert({ ...row, candidate_id: userId });
+        ? supabase.from("candidate_projects").update(row).eq("id", id).select("id").single()
+        : supabase.from("candidate_projects").insert({ ...row, candidate_id: userId }).select("id").single();
     }
   }
 }
@@ -230,8 +232,15 @@ export async function saveEntry(_prev: FormState, formData: FormData): Promise<F
   const parsed = entrySchemas[block.data].safeParse(values);
   if (!parsed.success) return errorState(values, zodFieldErrors(parsed.error));
 
-  const { error } = await writeEntry(auth.supabase, auth.userId, block.data, id?.data ?? null, values);
+  const { data, error } = await writeEntry(auth.supabase, auth.userId, block.data, id?.data ?? null, values);
   if (error) return errorState(values, {}, dbErrorCode(error));
+
+  if (block.data === "project" && data && "id" in data) {
+    // La vista previa se baja después de responder: puede tardar y nunca tiene que frenar el guardado.
+    const projectUrl = entrySchemas.project.parse(values).url ?? null;
+    const { userId } = auth;
+    after(() => refreshProjectPreview(data.id, userId, projectUrl));
+  }
 
   refresh();
   return successState();
@@ -242,7 +251,18 @@ export async function deleteEntry(formData: FormData) {
   const block = blockSchema.safeParse(formData.get("block"));
   const id = z.uuid().safeParse(formData.get("id"));
   if (!auth || !block.success || !id.success) return;
-  await auth.supabase.from(ENTRY_TABLES[block.data]).delete().eq("id", id.data).eq("candidate_id", auth.userId);
+  if (block.data === "project") {
+    const { data: removed } = await auth.supabase
+      .from("candidate_projects")
+      .delete()
+      .eq("id", id.data)
+      .eq("candidate_id", auth.userId)
+      .select("preview_path")
+      .maybeSingle();
+    after(() => removeProjectPreview(removed?.preview_path ?? null));
+  } else {
+    await auth.supabase.from(ENTRY_TABLES[block.data]).delete().eq("id", id.data).eq("candidate_id", auth.userId);
+  }
   refresh();
 }
 
