@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SectionCard } from "@/components/section-card";
 import { buttonVariants } from "@/components/ui/button";
+import { AvatarForm } from "@/components/account/avatar-form";
 import { PersonalForm } from "@/components/account/personal-form";
 import { getCurrentPerson, getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { getPathname, redirect } from "@/i18n/navigation";
@@ -33,6 +34,7 @@ export default async function SettingsPage() {
 
       {profile!.role !== "candidate" && (
         <SectionCard id="person" title={tPerson("title")} description={tPerson("hint")}>
+          <AvatarForm path={person?.avatar_path ?? null} name={person?.full_name ?? ""} />
           <PersonalForm
             saved={{
               firstName: person?.first_name ?? "",

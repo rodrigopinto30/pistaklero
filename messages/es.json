@@ -98,7 +98,7 @@
       "not_found": "No encontramos lo que buscabas.",
       "duplicate": "Ya está cargado.",
       "company_exists": "Ese dominio ya es de otra empresa en Pistaklero.",
-      "file_too_large": "La imagen pesa más de 900 KB.",
+      "file_too_large": "La imagen pesa más de 900 KB. Elegí una más liviana.",
       "file_type": "Usá una imagen PNG, JPEG o WebP.",
       "required_file": "Elegí una imagen.",
       "max_below_min": "El máximo no puede ser menor que el mínimo.",
@@ -106,7 +106,8 @@
       "options": "Escribí entre 2 y 5 opciones, una por línea (hasta 80 caracteres cada una).",
       "required_unless_remote": "Elegí el país: la oferta no es remota.",
       "unverified_limit": "Tu empresa todavía no está verificada: puede tener hasta 2 ofertas activas. Guardala como borrador o cerrá otra.",
-      "expired": "La fecha de vencimiento ya pasó. Elegí una duración nueva."
+      "expired": "La fecha de vencimiento ya pasó. Elegí una duración nueva.",
+      "avatar_too_large": "La foto pesa más de 4 MB. Elegí una más liviana."
     }
   },
   "Profile": {
@@ -941,6 +942,12 @@
     "hint": "Así te ven las empresas y quienes lean tus publicaciones.",
     "firstName": "Nombre",
     "middleName": "Segundo nombre",
-    "lastName": "Apellido"
+    "lastName": "Apellido",
+    "avatar": {
+      "file": "Foto de perfil",
+      "hint": "JPG, PNG o WebP de hasta 4 MB. La recortamos en un círculo.",
+      "upload": "Subir foto",
+      "remove": "Quitar foto"
+    }
   }
 }

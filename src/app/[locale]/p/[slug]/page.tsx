@@ -1,9 +1,9 @@
 import { ExternalLink, MapPin } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { cache, type ReactNode } from "react";
+import { Avatar } from "@/components/avatar";
 import { countryName, formatMonth, languageOptions } from "@/lib/geo";
 import { projectPreviewUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
@@ -17,7 +17,7 @@ const loadCandidate = cache(async (slug: string) => {
   const supabase = await createClient();
   const { data: access } = await supabase.rpc("register_profile_view", { p_slug: slug });
   if (access === "limit") return { limited: true as const, candidate: null };
-  const { data } = await supabase.from("candidates").select("*, people(full_name)").eq("slug", slug).maybeSingle();
+  const { data } = await supabase.from("candidates").select("*, people(full_name, avatar_path)").eq("slug", slug).maybeSingle();
   return { limited: false as const, candidate: data };
 });
 
@@ -89,25 +89,14 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
     candidate.linkedin_url && { label: "LinkedIn", url: candidate.linkedin_url },
     candidate.website_url && { label: safeHost(candidate.website_url), url: candidate.website_url },
   ].filter(Boolean) as { label: string; url: string }[];
-  const initials = (candidate.people?.full_name ?? "")
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
 
   return (
     <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 md:grid-cols-3">
       {/* Encabezado */}
       <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 md:col-span-2 md:flex-row md:items-center">
-        {candidate.avatar_url ? (
-          <Image src={candidate.avatar_url} alt="" width={96} height={96} className="size-24 rounded-2xl object-cover" />
-        ) : (
-          <div aria-hidden="true" className="flex size-24 items-center justify-center rounded-2xl bg-muted text-3xl font-semibold text-primary">
-            {initials}
-          </div>
-        )}
+        <Avatar path={candidate.people?.avatar_path} name={candidate.people?.full_name ?? ""} size="xl" />
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold tracking-tight">{(candidate.people?.full_name ?? "")}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">{candidate.people?.full_name}</h1>
           {candidate.headline && <p className="text-lg text-muted-foreground">{candidate.headline}</p>}
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="rounded-full bg-primary px-3 py-1 font-medium text-primary-foreground">
