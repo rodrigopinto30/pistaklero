@@ -276,11 +276,14 @@
       "block": "Block {company}",
       "unblock": "Unblock {company}"
     },
-    "downloadCv": "Download CV (PDF)",
+    "downloadCv": "Download CV",
     "person": {
       "title": "Personal details",
       "hint": "This is how companies and readers of your posts see you."
-    }
+    },
+    "previewCv": "View CV",
+    "cvHint": "Harvard format, as a PDF. Built from what you entered here.",
+    "newTab": "(opens in a new tab)"
   },
   "PublicProfile": {
     "availability": "Availability: {value}",
@@ -1038,14 +1041,15 @@
     "import": "Import a job"
   },
   "Cv": {
-    "about": "About me",
+    "about": "Profile",
     "experience": "Experience",
     "education": "Education",
     "projects": "Projects",
     "certifications": "Certifications",
     "skills": "Skills",
     "languages": "Languages",
-    "present": "present"
+    "present": "present",
+    "skillsSection": "Skills & languages"
   },
   "Person": {
     "title": "Personal details",

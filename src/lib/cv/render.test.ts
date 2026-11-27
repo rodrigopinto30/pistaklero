@@ -2,11 +2,12 @@ import { readFileSync } from "node:fs";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { describe, expect, it } from "vitest";
-import { type CvData, fitToFont, renderCv, wrap } from "./render";
+import { type CvData, fitToFont, renderCv, toBullets, wrap } from "./render";
 
 const fonts = {
-  regular: readFileSync("node_modules/geist/dist/fonts/geist-sans/Geist-Regular.ttf"),
-  semibold: readFileSync("node_modules/geist/dist/fonts/geist-sans/Geist-SemiBold.ttf"),
+  regular: readFileSync("node_modules/dejavu-fonts-ttf/ttf/DejaVuSerif.ttf"),
+  bold: readFileSync("node_modules/dejavu-fonts-ttf/ttf/DejaVuSerif-Bold.ttf"),
+  italic: readFileSync("node_modules/dejavu-fonts-ttf/ttf/DejaVuSerif-Italic.ttf"),
 };
 const labels = {
   about: "Sobre mí",
@@ -16,6 +17,7 @@ const labels = {
   certifications: "Certificaciones",
   skills: "Habilidades",
   languages: "Idiomas",
+  skillsSection: "Habilidades e idiomas",
 };
 
 const data: CvData = {
@@ -49,15 +51,18 @@ async function extractText(bytes: Uint8Array) {
 }
 
 describe("renderCv", () => {
-  it("genera un PDF con texto real, en varias páginas si hace falta", async () => {
+  it("genera un PDF en formato Harvard con texto real, en varias páginas si hace falta", async () => {
     const bytes = await renderCv(data, labels, "es", fonts);
     const { text, pages } = await extractText(bytes);
     expect(pages).toBeGreaterThan(1);
     expect(text).toContain("Łucía Nguyễn Peña");
-    expect(text).toContain("EXPERIENCIA");
-    expect(text).toContain("Desarrolladora 12 · Acme");
-    expect(text).toContain("Tecnicatura en Programación · UTN");
-    expect(text).toContain("React · TypeScript");
+    expect(text).toContain("lucia@example.com");
+    // Harvard: la formación va antes que la experiencia.
+    expect(text.indexOf("Educación")).toBeLessThan(text.indexOf("Experiencia"));
+    expect(text).toContain("Desarrolladora 12");
+    expect(text).toContain("Tecnicatura en Programación");
+    expect(text).toContain("Habilidades: React, TypeScript");
+    expect(text).toContain("Idiomas: español, inglés");
 
     const doc = await PDFDocument.load(bytes);
     expect(doc.getTitle()).toBe("CV · Łucía Nguyễn Peña");
@@ -67,8 +72,19 @@ describe("renderCv", () => {
   it("no deja secciones vacías", async () => {
     const empty = { ...data, bio: "", experiences: [], education: [], projects: [], certifications: [], skills: [], languages: [] };
     const { text } = await extractText(await renderCv(empty, labels, "en", fonts));
-    expect(text).not.toContain("EXPERIENCIA");
+    expect(text).not.toContain("Experiencia");
+    expect(text).not.toContain("Habilidades e idiomas");
     expect(text).toContain("Łucía");
+  });
+});
+
+describe("toBullets", () => {
+  it("una viñeta por línea, sin el guion o punto que se haya escrito", () => {
+    expect(toBullets("- Armé el sistema de diseño\n• Bajé los tiempos de carga\n\n  Lideré a 3 personas")).toEqual([
+      "Armé el sistema de diseño",
+      "Bajé los tiempos de carga",
+      "Lideré a 3 personas",
+    ]);
   });
 });
 

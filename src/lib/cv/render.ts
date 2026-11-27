@@ -2,8 +2,13 @@ import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, type PDFFont, type PDFPage, rgb } from "pdf-lib";
 
 /*
- * CV en PDF: una columna, sin tablas ni imágenes, con texto real (no una captura). Así lo leen bien
- * los sistemas de selección (ATS) y los lectores de pantalla pueden extraer el texto.
+ * CV en formato Harvard (el de la Office of Career Services de Harvard):
+ *   - una columna, tipografía serif, todo en negro;
+ *   - el nombre centrado arriba y, debajo, los datos de contacto en una línea;
+ *   - secciones con el título en negrita y una línea debajo; primero la formación;
+ *   - en cada entrada, la organización en negrita a la izquierda y las fechas a la derecha,
+ *     el cargo o título en cursiva y los logros como viñetas.
+ * Texto real (no una imagen): lo leen bien los sistemas de selección (ATS) y los lectores de pantalla.
  */
 export type CvData = {
   fullName: string;
@@ -28,18 +33,18 @@ export type CvLabels = {
   certifications: string;
   skills: string;
   languages: string;
+  skillsSection: string;
 };
 
-export type CvFonts = { regular: Uint8Array; semibold: Uint8Array };
+export type CvFonts = { regular: Uint8Array; bold: Uint8Array; italic: Uint8Array };
 
 const PAGE: [number, number] = [595.28, 841.89]; // A4
-const MARGIN = 50;
+const MARGIN = 54; // 0,75"
 const WIDTH = PAGE[0] - MARGIN * 2;
-const INK = rgb(0.07, 0.08, 0.08);
-const MUTED = rgb(0.33, 0.36, 0.34);
-const ACCENT = rgb(0.24, 0.42, 0.04); // el lima del modo claro (#3d6b0a)
+const BLACK = rgb(0, 0, 0);
+const BULLET_INDENT = 14;
 
-/** Deja solo caracteres que la fuente puede dibujar: "ễ" sin glifo pasa a "e" en vez de un cuadrado vacío. */
+/** Deja solo caracteres que la fuente puede dibujar: lo que no tiene pasa a su letra base o se descarta. */
 export function fitToFont(text: string, supported: Set<number>) {
   let out = "";
   for (const char of text.normalize("NFC")) {
@@ -82,13 +87,23 @@ export function wrap(text: string, font: PDFFont, size: number, width: number) {
   return lines.filter((line, i) => line !== "" || (i > 0 && lines[i - 1] !== "" && i < lines.length - 1));
 }
 
+/** Logros como viñetas: una por línea (sin el guion o punto que la persona haya escrito al principio). */
+export function toBullets(description: string) {
+  return description
+    .split("\n")
+    .map((line) => line.replace(/^\s*[-•*·]\s*/, "").trim())
+    .filter(Boolean);
+}
+
+type Style = "regular" | "bold" | "italic";
+
 class Writer {
   private page: PDFPage;
   private y: number;
 
   constructor(
     private readonly doc: PDFDocument,
-    private readonly fonts: { regular: PDFFont; semibold: PDFFont },
+    private readonly fonts: Record<Style, PDFFont>,
     private readonly supported: Set<number>
   ) {
     this.page = doc.addPage(PAGE);
@@ -101,42 +116,77 @@ class Writer {
     this.y = PAGE[1] - MARGIN;
   }
 
+  private fit(value: string) {
+    return fitToFont(value, this.supported);
+  }
+
   space(height: number) {
     this.y -= height;
   }
 
-  text(value: string, { size = 10, bold = false, color = INK, indent = 0, after = 0 } = {}) {
-    const font = bold ? this.fonts.semibold : this.fonts.regular;
-    const lineHeight = size * 1.35;
-    for (const line of wrap(fitToFont(value, this.supported), font, size, WIDTH - indent)) {
+  /** Texto en una o más líneas; `align: "center"` para el encabezado. */
+  text(value: string, { size = 10.5, style = "regular" as Style, indent = 0, align = "left" as "left" | "center", after = 0 } = {}) {
+    const font = this.fonts[style];
+    const lineHeight = size * 1.3;
+    for (const line of wrap(this.fit(value), font, size, WIDTH - indent)) {
       this.ensure(lineHeight);
       this.y -= lineHeight;
-      if (line) this.page.drawText(line, { x: MARGIN + indent, y: this.y + size * 0.3, size, font, color });
+      if (!line) continue;
+      const x = align === "center" ? MARGIN + (WIDTH - font.widthOfTextAtSize(line, size)) / 2 : MARGIN + indent;
+      this.page.drawText(line, { x, y: this.y + size * 0.25, size, font, color: BLACK });
     }
     this.y -= after;
   }
 
+  /** Una fila: a la izquierda (puede ocupar varias líneas) y, alineado a la derecha, un dato corto (fechas). */
+  row(left: string, right: string, { size = 10.5, style = "regular" as Style } = {}) {
+    const font = this.fonts[style];
+    const rightText = this.fit(right);
+    const rightWidth = rightText ? this.fonts.regular.widthOfTextAtSize(rightText, size) : 0;
+    const lines = wrap(this.fit(left), font, size, WIDTH - rightWidth - (rightText ? 12 : 0));
+    const lineHeight = size * 1.3;
+    lines.forEach((line, i) => {
+      this.ensure(lineHeight);
+      this.y -= lineHeight;
+      this.page.drawText(line, { x: MARGIN, y: this.y + size * 0.25, size, font, color: BLACK });
+      if (i === 0 && rightText) {
+        this.page.drawText(rightText, { x: MARGIN + WIDTH - rightWidth, y: this.y + size * 0.25, size, font: this.fonts.regular, color: BLACK });
+      }
+    });
+  }
+
+  bullets(items: string[], size = 10.5) {
+    for (const item of items) {
+      const lines = wrap(this.fit(item), this.fonts.regular, size, WIDTH - BULLET_INDENT);
+      const lineHeight = size * 1.3;
+      lines.forEach((line, i) => {
+        this.ensure(lineHeight);
+        this.y -= lineHeight;
+        if (i === 0) this.page.drawText("•", { x: MARGIN + 3, y: this.y + size * 0.25, size, font: this.fonts.regular, color: BLACK });
+        this.page.drawText(line, { x: MARGIN + BULLET_INDENT, y: this.y + size * 0.25, size, font: this.fonts.regular, color: BLACK });
+      });
+    }
+  }
+
   heading(value: string) {
     // Un título nunca queda solo al pie de la página.
-    this.ensure(48);
-    this.space(14);
-    this.text(value.toUpperCase(), { size: 10.5, bold: true, color: ACCENT });
-    this.page.drawLine({
-      start: { x: MARGIN, y: this.y - 3 },
-      end: { x: MARGIN + WIDTH, y: this.y - 3 },
-      thickness: 0.6,
-      color: ACCENT,
-    });
-    this.space(9);
+    this.ensure(52);
+    this.space(12);
+    this.text(value, { size: 11.5, style: "bold" });
+    this.page.drawLine({ start: { x: MARGIN, y: this.y - 2 }, end: { x: MARGIN + WIDTH, y: this.y - 2 }, thickness: 0.7, color: BLACK });
+    this.space(6);
   }
 }
 
 export async function renderCv(data: CvData, labels: CvLabels, locale: "es" | "en", fontBytes: CvFonts) {
   const doc = await PDFDocument.create();
   doc.registerFontkit(fontkit);
-  const regular = await doc.embedFont(fontBytes.regular, { subset: true });
-  const semibold = await doc.embedFont(fontBytes.semibold, { subset: true });
-  const supported = new Set(regular.getCharacterSet());
+  const fonts = {
+    regular: await doc.embedFont(fontBytes.regular, { subset: true }),
+    bold: await doc.embedFont(fontBytes.bold, { subset: true }),
+    italic: await doc.embedFont(fontBytes.italic, { subset: true }),
+  };
+  const supported = new Set(fonts.regular.getCharacterSet());
 
   doc.setTitle(`CV · ${fitToFont(data.fullName, supported)}`, { showInWindowTitleBar: true });
   doc.setAuthor(data.fullName);
@@ -144,65 +194,66 @@ export async function renderCv(data: CvData, labels: CvLabels, locale: "es" | "e
   doc.setProducer("Pistaklero");
   doc.setLanguage(locale === "es" ? "es" : "en");
 
-  const w = new Writer(doc, { regular, semibold }, supported);
+  const w = new Writer(doc, fonts, supported);
 
-  w.text(data.fullName, { size: 22, bold: true, after: 2 });
-  if (data.headline) w.text(data.headline, { size: 12, color: MUTED, after: 4 });
-  const contact = [data.location, data.email].filter(Boolean).join("  ·  ");
-  if (contact) w.text(contact, { size: 9.5, color: MUTED });
-  for (const link of data.links) w.text(link, { size: 9.5, color: MUTED });
+  // Encabezado centrado: nombre, una línea de contacto y el titular.
+  w.text(data.fullName, { size: 18, style: "bold", align: "center", after: 2 });
+  const contact = [data.location, data.email, ...data.links.map((link) => link.replace(/^https?:\/\//, ""))].filter(Boolean).join("  •  ");
+  if (contact) w.text(contact, { size: 10, align: "center" });
+  if (data.headline) w.text(data.headline, { size: 10.5, style: "italic", align: "center" });
 
   if (data.bio) {
     w.heading(labels.about);
     w.text(data.bio);
   }
 
-  if (data.experiences.length > 0) {
-    w.heading(labels.experience);
-    for (const e of data.experiences) {
-      w.text(`${e.title} · ${e.company}`, { size: 10.5, bold: true });
-      w.text(e.period, { size: 9, color: MUTED, after: 2 });
-      if (e.description) w.text(e.description, { after: 2 });
-      w.space(6);
-    }
-  }
-
+  // Harvard: la formación va primero.
   if (data.education.length > 0) {
     w.heading(labels.education);
     for (const e of data.education) {
-      w.text(`${e.degree} · ${e.institution}`, { size: 10.5, bold: true });
-      w.text(e.period, { size: 9, color: MUTED, after: 6 });
+      w.row(e.institution, e.period, { style: "bold" });
+      w.text(e.degree, { style: "italic", after: 5 });
+    }
+  }
+
+  if (data.experiences.length > 0) {
+    w.heading(labels.experience);
+    for (const e of data.experiences) {
+      w.row(e.company, e.period, { style: "bold" });
+      w.text(e.title, { style: "italic" });
+      w.bullets(toBullets(e.description));
+      w.space(5);
     }
   }
 
   if (data.projects.length > 0) {
     w.heading(labels.projects);
     for (const p of data.projects) {
-      w.text(p.title, { size: 10.5, bold: true });
-      for (const link of p.links) w.text(link, { size: 9, color: MUTED });
-      if (p.description) w.text(p.description);
-      w.space(6);
+      w.text(p.title, { style: "bold" });
+      for (const link of p.links) w.text(link.replace(/^https?:\/\//, ""), { size: 9.5, style: "italic" });
+      w.bullets(toBullets(p.description));
+      w.space(5);
     }
   }
 
   if (data.certifications.length > 0) {
     w.heading(labels.certifications);
     for (const c of data.certifications) {
-      w.text(c.name, { size: 10.5, bold: true });
-      const detail = [c.detail, c.url].filter(Boolean).join("  ·  ");
-      if (detail) w.text(detail, { size: 9, color: MUTED });
-      w.space(6);
+      w.row(c.name, c.detail, { style: "bold" });
+      if (c.url) w.text(c.url.replace(/^https?:\/\//, ""), { size: 9.5, style: "italic" });
+      w.space(3);
     }
   }
 
-  if (data.skills.length > 0) {
-    w.heading(labels.skills);
-    w.text(data.skills.join(" · "));
-  }
-
-  if (data.languages.length > 0) {
-    w.heading(labels.languages);
-    w.text(data.languages.join(" · "));
+  // "Habilidades e idiomas", una línea por tipo (como el modelo de Harvard).
+  if (data.skills.length > 0 || data.languages.length > 0) {
+    w.heading(labels.skillsSection);
+    for (const [label, values] of [
+      [labels.skills, data.skills],
+      [labels.languages, data.languages],
+    ] as const) {
+      if (values.length > 0) w.text(`${label}: ${values.join(", ")}`);
+    }
   }
 
   return doc.save();

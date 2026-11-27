@@ -7,14 +7,19 @@ import { countryName, formatMonth } from "@/lib/geo";
 import { createClient } from "@/lib/supabase/server";
 import { parseLocale } from "@/i18n/locale";
 
-/** "Descargar mi CV": el perfil de la candidata en un PDF de una columna. Solo para su propia cuenta. */
+/**
+ * El CV de la candidata en formato Harvard (PDF). Solo para su propia cuenta.
+ * ?view=1 lo abre en el navegador (vista previa); si no, se descarga.
+ */
 export async function GET(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const profile = await getCurrentProfile();
   if (profile?.role !== "candidate") return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
-  const locale = parseLocale(new URL(request.url).searchParams.get("lang") ?? profile.locale);
+  const params = new URL(request.url).searchParams;
+  const locale = parseLocale(params.get("lang") ?? profile.locale);
+  const inline = params.get("view") === "1";
   const t = await getTranslations({ locale, namespace: "Cv" });
   const supabase = await createClient();
   const [candidate, experiences, education, projects, certifications, skills] = await Promise.all([
@@ -63,6 +68,7 @@ export async function GET(request: Request) {
       certifications: t("certifications"),
       skills: t("skills"),
       languages: t("languages"),
+      skillsSection: t("skillsSection"),
     },
     locale,
     await loadCvFonts()
@@ -71,7 +77,7 @@ export async function GET(request: Request) {
   return new NextResponse(Buffer.from(pdf), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="cv-${c.slug}.pdf"`,
+      "Content-Disposition": `${inline ? "inline" : "attachment"}; filename="cv-harvard-${c.slug}.pdf"`,
       // Datos personales: que no los guarde ninguna caché intermedia.
       "Cache-Control": "no-store",
     },

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Download, Eye } from "lucide-react";
+import { Download, Eye, FileText } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { countryOptions, formatMonth, languageOptions } from "@/lib/geo";
@@ -95,8 +95,13 @@ export default async function ProfilePage() {
           <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {/* Descarga directa (no es una página): la ruta arma el PDF con el perfil guardado. */}
-          <a href={`/api/me/cv?lang=${locale}`} download className={buttonVariants({ variant: "outline" })}>
+          {/* El CV en formato Harvard: verlo en el navegador o descargarlo (la ruta arma el PDF). */}
+          <a href={`/api/me/cv?lang=${locale}&view=1`} target="_blank" rel="noopener" title={t("cvHint")} className={buttonVariants({ variant: "outline" })}>
+            <FileText aria-hidden="true" />
+            {t("previewCv")}
+            <span className="sr-only"> {t("newTab")}</span>
+          </a>
+          <a href={`/api/me/cv?lang=${locale}`} download title={t("cvHint")} className={buttonVariants({ variant: "outline" })}>
             <Download aria-hidden="true" />
             {t("downloadCv")}
           </a>

@@ -276,11 +276,14 @@
       "block": "Bloquear {company}",
       "unblock": "Desbloquear {company}"
     },
-    "downloadCv": "Descargar CV (PDF)",
+    "downloadCv": "Descargar CV",
     "person": {
       "title": "Datos personales",
       "hint": "Así te ven las empresas y quienes lean tus publicaciones."
-    }
+    },
+    "previewCv": "Ver CV",
+    "cvHint": "Formato Harvard, en PDF. Se arma con lo que cargaste acá.",
+    "newTab": "(se abre en una pestaña nueva)"
   },
   "PublicProfile": {
     "availability": "Disponibilidad: {value}",
@@ -1038,14 +1041,15 @@
     "import": "Importar oferta"
   },
   "Cv": {
-    "about": "Sobre mí",
+    "about": "Perfil",
     "experience": "Experiencia",
-    "education": "Educación",
+    "education": "Formación",
     "projects": "Proyectos",
     "certifications": "Certificaciones",
     "skills": "Habilidades",
     "languages": "Idiomas",
-    "present": "actualidad"
+    "present": "actualidad",
+    "skillsSection": "Habilidades e idiomas"
   },
   "Person": {
     "title": "Datos personales",

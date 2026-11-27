@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // La fuente del CV en PDF se lee del disco: hay que incluirla en la función que lo genera.
   outputFileTracingIncludes: {
-    "/api/me/cv": ["./node_modules/geist/dist/fonts/geist-sans/Geist-{Regular,SemiBold}.ttf"],
+    "/api/me/cv": ["./node_modules/dejavu-fonts-ttf/ttf/DejaVuSerif{,-Bold,-Italic}.ttf"],
   },
   async headers() {
     return [
