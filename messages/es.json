@@ -258,7 +258,11 @@
     "viewProject": "Ver {project}",
     "viewRepo": "Repositorio de {project}",
     "viewCredential": "Verificar {name}",
-    "languages": "Idiomas"
+    "languages": "Idiomas",
+    "limit": {
+      "title": "Llegaste al límite de perfiles por hoy",
+      "body": "Para proteger a las personas que buscan trabajo, cada reclutador puede ver hasta 200 perfiles por día. Los perfiles de quienes se postularon a tus ofertas los ves siempre. Mañana se renueva."
+    }
   },
   "Company": {
     "metaTitle": "Página de la empresa",

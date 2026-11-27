@@ -3,19 +3,25 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import type { ReactNode } from "react";
+import { cache, type ReactNode } from "react";
 import { countryName, formatMonth, languageOptions } from "@/lib/geo";
 import { createClient } from "@/lib/supabase/server";
 
-async function loadCandidate(slug: string) {
+/*
+ * Un reclutador primero registra la vista del día: la base limita a 200 perfiles "solo empresas" por día
+ * (contra el robo masivo de perfiles). Después, RLS decide si puede verlo: si no, no hay fila y es un 404.
+ * cache(): la metadata y la página comparten el mismo registro y la misma lectura.
+ */
+const loadCandidate = cache(async (slug: string) => {
   const supabase = await createClient();
-  // RLS decide si quien mira puede ver este perfil: si no, no hay fila y es un 404.
+  const { data: access } = await supabase.rpc("register_profile_view", { p_slug: slug });
+  if (access === "limit") return { limited: true as const, candidate: null };
   const { data } = await supabase.from("candidates").select("*").eq("slug", slug).maybeSingle();
-  return data;
-}
+  return { limited: false as const, candidate: data };
+});
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/p/[slug]">): Promise<Metadata> {
-  const candidate = await loadCandidate((await params).slug);
+  const { candidate } = await loadCandidate((await params).slug);
   if (!candidate) return {};
   return {
     title: candidate.full_name,
@@ -47,7 +53,16 @@ function safeHost(url: string) {
 
 export default async function PublicProfilePage({ params }: PageProps<"/[locale]/p/[slug]">) {
   const { slug } = await params;
-  const candidate = await loadCandidate(slug);
+  const { limited, candidate } = await loadCandidate(slug);
+  if (limited) {
+    const tLimit = await getTranslations("PublicProfile.limit");
+    return (
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 py-16">
+        <h1 className="text-2xl font-semibold tracking-tight">{tLimit("title")}</h1>
+        <p className="text-muted-foreground">{tLimit("body")}</p>
+      </div>
+    );
+  }
   if (!candidate) notFound();
 
   const locale = await getLocale();

@@ -177,6 +177,26 @@ isOneToOne: false
       referencedColumns: ["user_id"]
     }
                   ]
+                },"candidate_profile_views": {
+                  Row: {
+                    "candidate_id": string,"created_at": string,"viewed_on": string,"viewer_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"created_at"?: string,"viewed_on"?: string,"viewer_id": string
+                  }
+                  Update: {
+                    "candidate_id"?: string,"created_at"?: string,"viewed_on"?: string,"viewer_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "candidate_profile_views_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    }
+                  ]
                 },"candidate_projects": {
                   Row: {
                     "candidate_id": string,"created_at": string,"description": string,"id": string,"preview_path": string | null,"repo_url": string | null,"title": string,"url": string | null
@@ -657,6 +677,9 @@ isOneToOne: false
 "export_my_data":
 { Args: Record<PropertyKey, never>; Returns: Json
                            },
+"has_applied_to_my_company":
+{ Args: { "p_candidate_id": string }; Returns: boolean
+                           },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
@@ -699,6 +722,9 @@ isOneToOne: false
                            },
 "refresh_job_search_vector":
 { Args: { "p_job_id": string }; Returns: undefined
+                           },
+"register_profile_view":
+{ Args: { "p_slug": string }; Returns: string
                            },
 "search_jobs":
 { Args: { "p_country"?: string,"p_currency"?: Database["public"]['Enums']["currency"],"p_employment_types"?: (Database["public"]['Enums']["employment_type"])[],"p_language"?: Database["public"]['Enums']["app_locale"],"p_limit"?: number,"p_offset"?: number,"p_query"?: string,"p_salary_visible"?: boolean,"p_seniorities"?: (Database["public"]['Enums']["seniority"])[],"p_work_modes"?: (Database["public"]['Enums']["work_mode"])[] }; Returns: {

@@ -258,7 +258,11 @@
     "viewProject": "Open {project}",
     "viewRepo": "{project} repository",
     "viewCredential": "Verify {name}",
-    "languages": "Languages"
+    "languages": "Languages",
+    "limit": {
+      "title": "You've reached today's profile limit",
+      "body": "To protect people looking for work, each recruiter can view up to 200 profiles per day. Profiles of people who applied to your jobs are always visible. It resets tomorrow."
+    }
   },
   "Company": {
     "metaTitle": "Company page",
