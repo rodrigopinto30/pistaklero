@@ -1,7 +1,7 @@
 begin;
 \ir ../support/helpers.inc
 
-select plan(8);
+select plan(12);
 
 select tests.create_user('rrhh@busca.pgtap.test') as owner \gset
 select tests.authenticate_as(:'owner');
@@ -25,6 +25,10 @@ select is((select count(*)::int from public.search_jobs('pgtapdev', p_senioritie
 select is((select count(*)::int from public.search_jobs('pgtapdev', p_currency => 'USD')), 2, 'filtra por moneda');
 select is((select total_count::int from public.search_jobs('pgtapdev', p_limit => 1) limit 1), 3, 'devuelve el total aunque pagine');
 select is((select count(*)::int from public.search_jobs('pgtapdev', p_language => 'en')), 1, 'filtra por idioma');
+select is((select count(*)::int from public.search_jobs('pgtapd')), 3, 'encuentra palabras a medio escribir');
+select is((select title from public.search_jobs('pgtapdev disen')), 'Pgtapdev Diseñadora UX', 'completa la última palabra sin acentos');
+select is((select title from public.search_jobs('pgtapdev back') limit 1), 'Pgtapdev Backend Engineer', 'lo que coincide con el título va primero');
+select is((select count(*)::int from public.search_jobs('100%_')), 0, 'los comodines de LIKE se buscan como texto');
 reset role;
 
 select * from finish();
