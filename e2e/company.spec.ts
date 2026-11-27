@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG, expectToast } from "./support/fixtures";
+import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG, expectToast, seedCompanyWithJobs, jobSlug } from "./support/fixtures";
 
 // PNG de 1×1 px: alcanza para probar la subida y la recodificación.
 
@@ -18,7 +18,7 @@ test("una empresa arma su página y se ve en público", async ({ page }) => {
 
   // Datos
   const details = page.getByRole("region", { name: "Datos de la empresa" });
-  await details.getByLabel(/Sobre la empresa/).fill("Hacemos cohetes reutilizables desde Córdoba.");
+  await details.getByLabel(/Quiénes somos/).fill("Hacemos **cohetes reutilizables** desde Córdoba.");
   await details.getByLabel(/^Etapa/).selectOption("seed");
   await details.getByLabel(/^Tamaño/).selectOption("11-50");
   await details.getByRole("button", { name: "Guardar" }).click();
@@ -58,9 +58,36 @@ test("una empresa arma su página y se ve en público", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Cohetes SA" })).toBeVisible();
   await expect(page.getByText("Empresa verificada").filter({ visible: true })).toBeVisible();
   // getByRole ignora la página anterior que Next deja montada y oculta (React Activity).
-  await expect(page.getByRole("region", { name: "Sobre la empresa" })).toContainText("Hacemos cohetes reutilizables desde Córdoba.");
+  const about = page.getByRole("region", { name: "Quiénes somos" });
+  await expect(about).toContainText("Hacemos cohetes reutilizables desde Córdoba.");
+  await expect(about.locator("strong")).toHaveText("cohetes reutilizables");
   await expect(page.getByText("Seed", { exact: true }).filter({ visible: true })).toBeVisible();
   await expect(page.getByRole("listitem").filter({ hasText: "TypeScript" })).toBeVisible();
+  await expectNoA11yViolations(page);
+
+  // Pestaña de empleos abiertos (todavía ninguno).
+  await page.getByRole("navigation", { name: "Secciones de la empresa" }).getByRole("link", { name: /Empleos abiertos/ }).click();
+  await expect(page).toHaveURL(/tab=jobs/);
+  await expect(page.getByText("No hay ofertas abiertas en este momento.")).toBeVisible();
+
+  // Portada: se sube desde el panel y se ve en la página.
+  await page.goto("/es/panel/empresa");
+  const cover = page.getByRole("region", { name: "Portada" });
+  await cover.getByLabel("Imagen de portada").setInputFiles({ name: "portada.png", mimeType: "image/png", buffer: PNG });
+  await cover.getByRole("button", { name: "Subir portada" }).click();
+  await expectToast(page, "Portada actualizada.");
+  await page.getByRole("link", { name: "Ver página pública" }).click();
+  await expect(page.locator("header img[src*='/company-covers/']")).toBeVisible();
+});
+
+test("la página de una empresa lista sus empleos abiertos", async ({ page }) => {
+  const title = `Empleo de página ${Date.now().toString(36)}`;
+  await seedCompanyWithJobs("Con Empleos SA", [{ title }]);
+  const slug = await jobSlug(title);
+  await page.goto(`/es/empleos/${slug}`);
+  await page.getByRole("link", { name: "Con Empleos SA" }).first().click();
+  await page.getByRole("link", { name: /Empleos abiertos/ }).click();
+  await expect(page.getByRole("article").filter({ hasText: title })).toBeVisible();
   await expectNoA11yViolations(page);
 });
 

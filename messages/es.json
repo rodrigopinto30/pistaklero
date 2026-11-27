@@ -295,8 +295,8 @@
     "details": {
       "title": "Datos de la empresa",
       "name": "Nombre",
-      "description": "Sobre la empresa",
-      "descriptionHint": "Cultura, qué hacen, cómo trabajan. Hasta 2000 caracteres.",
+      "description": "Quiénes somos",
+      "descriptionHint": "Contá qué hace la empresa, cómo trabajan y qué la hace distinta. Se muestra en la pestaña «Quiénes somos» de tu página. Podés usar **negrita** y listas con guiones. Hasta 2000 caracteres.",
       "industry": "Industria",
       "industryHint": "Por ejemplo: Fintech, Educación, E-commerce.",
       "size": "Tamaño",
@@ -347,6 +347,13 @@
       "skill": "Tecnología",
       "choose": "Elegí una tecnología",
       "removeSkill": "Quitar {skill}"
+    },
+    "cover": {
+      "title": "Portada",
+      "hint": "JPG, PNG o WebP de hasta 4 MB. Se ve de fondo en tu página y en el listado de empresas. Sin portada, usamos un degradé con tu logo.",
+      "file": "Imagen de portada",
+      "upload": "Subir portada",
+      "remove": "Quitar portada"
     }
   },
   "Dashboard": {
@@ -369,12 +376,19 @@
       "cta": "Reclamar esta página",
       "contact": "Escribinos a {email} para hacerte cargo."
     },
-    "about": "Sobre la empresa",
+    "about": "Quiénes somos",
     "stack": "Stack tecnológico",
     "links": "Enlaces",
     "jobs": "Ofertas abiertas",
     "noJobs": "No hay ofertas abiertas en este momento.",
-    "website": "Sitio web"
+    "website": "Sitio web",
+    "sections": "Secciones de la empresa",
+    "aboutTab": "Quiénes somos",
+    "jobsTab": "Empleos abiertos",
+    "noAbout": "Esta empresa todavía no contó qué hace.",
+    "facts": "Datos",
+    "location": "Ubicación",
+    "seeJobs": "{count, plural, one {Ver el empleo abierto →} other {Ver los # empleos abiertos →}}"
   },
   "Team": {
     "metaTitle": "Equipo",
@@ -1036,7 +1050,8 @@
     "statusUpdated": "Estado actualizado: le avisamos por email.",
     "jobStatusUpdated": "Estado de la oferta actualizado.",
     "jobSaved": "Oferta guardada.",
-    "published": "Oferta publicada."
+    "published": "Oferta publicada.",
+    "coverUpdated": "Portada actualizada."
   },
   "Saved": {
     "metaTitle": "Guardados",
