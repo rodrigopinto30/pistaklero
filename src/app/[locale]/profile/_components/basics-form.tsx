@@ -24,7 +24,6 @@ export type BasicsValues = {
 };
 
 export function BasicsForm({ saved, countries, languages }: { saved: BasicsValues; countries: Option[]; languages: Option[] }) {
-  const t = useTranslations("Profile.basics");
   const [state, action] = useActionState(updateBasics, idleState);
   const formRef = useFocusFirstError(state);
   const errors = state.status === "error" ? state.fieldErrors : {};

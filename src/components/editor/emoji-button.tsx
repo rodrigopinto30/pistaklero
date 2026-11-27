@@ -8,6 +8,16 @@ import { useState } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { Tip } from "@/components/tip";
 
+/** Corrige aria-rowindex / aria-colindex de Frimousse (vienen desde 0; ARIA los pide desde 1). */
+function ariaIndex(props: object) {
+  const fixed: Record<string, number> = {};
+  for (const key of ["aria-rowindex", "aria-colindex"] as const) {
+    const value = (props as Record<string, unknown>)[key];
+    if (typeof value === "number") fixed[key] = value + 1;
+  }
+  return fixed;
+}
+
 /**
  * Selector de emojis (Frimousse): búsqueda en el idioma del sitio, categorías y teclado completo.
  * Los datos se sirven desde nuestro sitio (/api/emojibase), sin pedir nada a un CDN.
@@ -45,17 +55,18 @@ export function EmojiButton({ onSelect }: { onSelect: (emoji: string) => void })
                   className="select-none pb-1"
                   components={{
                     CategoryHeader: ({ category, ...props }) => (
-                      <div {...props} className="bg-popover px-1 pt-2 pb-1 text-xs font-medium text-muted-foreground">
+                      <div {...props} {...ariaIndex(props)} className="bg-popover px-1 pt-2 pb-1 text-xs font-medium text-muted-foreground">
                         {category.label}
                       </div>
                     ),
+                    // Frimousse numera filas y columnas desde 0; ARIA pide empezar en 1.
                     Row: ({ children, ...props }) => (
-                      <div {...props} className="scroll-my-1">
+                      <div {...props} {...ariaIndex(props)} className="scroll-my-1">
                         {children}
                       </div>
                     ),
                     Emoji: ({ emoji, ...props }) => (
-                      <button {...props} className="flex size-9 items-center justify-center rounded-lg text-xl data-[active]:bg-muted">
+                      <button {...props} {...ariaIndex(props)} className="flex size-9 items-center justify-center rounded-lg text-xl data-[active]:bg-muted">
                         {emoji.emoji}
                       </button>
                     ),

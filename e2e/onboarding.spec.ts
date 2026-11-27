@@ -33,7 +33,8 @@ test("una empresa con email de su dominio, y el mismo dominio no se repite", asy
   await expect(first.getByLabel(/Sitio web/)).toHaveValue(domain);
   await first.getByLabel(/Nombre de la empresa/).fill("Acme");
   await first.getByRole("button", { name: "Continuar" }).click();
-  await first.waitForURL("/es/panel");
+  // Sigue directo a armar la página de la empresa.
+  await first.waitForURL("/es/panel/empresa");
 
   const second = await (await browser.newContext()).newPage();
   await signIn(second, uniqueEmail("otra", domain));

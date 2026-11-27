@@ -1,4 +1,4 @@
-import { Bookmark, Briefcase, CalendarClock, ExternalLink, Laptop, MapPin, Signal } from "lucide-react";
+import { Bookmark, Briefcase, CalendarClock, Laptop, MapPin, Signal } from "lucide-react";
 import { VerifiedBadge } from "@/components/verified-badge";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
