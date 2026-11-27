@@ -1,6 +1,16 @@
 import { expectNoA11yViolations, onboardAsCandidate, signIn, test, uniqueEmail } from "./support/fixtures";
 
-const PUBLIC_PAGES = ["/es", "/en", "/es/ingresar", "/en/sign-in", "/es/no-existe", "/en/nope"];
+const PUBLIC_PAGES = [
+  "/es",
+  "/en",
+  "/es/ingresar",
+  "/en/sign-in",
+  "/es/no-existe",
+  "/en/nope",
+  "/es/legal/terminos",
+  "/en/legal/privacy",
+  "/es/accesibilidad",
+];
 
 for (const path of PUBLIC_PAGES) {
   test(`${path} cumple WCAG 2.2 AA`, async ({ page }) => {
