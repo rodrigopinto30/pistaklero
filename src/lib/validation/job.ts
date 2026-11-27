@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { COUNTRY_CODES } from "@/lib/geo";
+import { optionalHttpsUrl } from "./onboarding";
 import { CURRENCIES, SALARY_BASES, SALARY_PERIODS } from "./profile";
 
 export const SENIORITIES = ["trainee", "junior", "semi_senior", "senior", "lead"] as const;
@@ -7,6 +8,8 @@ export const EMPLOYMENT_TYPES = ["full_time", "part_time", "contract", "internsh
 export const WORK_MODES = ["remote", "hybrid", "onsite"] as const;
 export const VALID_DAYS = ["15", "30", "60", "90"] as const;
 export const QUESTION_TYPES = ["none", "short_text", "single_choice"] as const;
+/** Dónde se postulan: acá (postulación rápida) o en otro sitio (el link de la empresa). */
+export const APPLY_MODES = ["pistaklero", "external"] as const;
 
 const emptyToUndefined = (value: unknown) => (value === "" ? undefined : value);
 
@@ -44,6 +47,8 @@ export const jobSchema = z
     skills: z.array(z.uuid()).max(10),
     question1: question,
     question2: question,
+    applyMode: z.enum(APPLY_MODES),
+    externalUrl: optionalHttpsUrl,
   })
   .superRefine((job, ctx) => {
     if (job.workMode !== "remote" && !job.country) {
@@ -54,7 +59,12 @@ export const jobSchema = z
     } else if (job.salaryMax > job.salaryMin * 3) {
       ctx.addIssue({ code: "custom", path: ["salaryMax"], message: "range_too_wide" });
     }
+    if (job.applyMode === "external" && !job.externalUrl) {
+      ctx.addIssue({ code: "custom", path: ["externalUrl"], message: "required" });
+    }
     for (const key of ["question1", "question2"] as const) {
+      // Las preguntas filtro son de la postulación en Pistaklero.
+      if (job.applyMode === "external") continue;
       const q = job[key];
       if (q.type === "none") continue;
       if (q.prompt.length < 3) ctx.addIssue({ code: "custom", path: [`${key}Prompt`], message: "required" });
@@ -87,5 +97,7 @@ export function jobInputFromForm(formData: FormData) {
     skills: formData.getAll("skills").map(String),
     question1: { type: text("question1Type") || "none", prompt: text("question1Prompt"), options: text("question1Options") },
     question2: { type: text("question2Type") || "none", prompt: text("question2Prompt"), options: text("question2Options") },
+    applyMode: text("applyMode") || "pistaklero",
+    externalUrl: text("externalUrl"),
   };
 }

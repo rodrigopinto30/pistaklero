@@ -61,6 +61,8 @@ export async function saveJob(_prev: FormState, formData: FormData): Promise<For
     salary_period: d.salaryPeriod,
     salary_basis: d.salaryBasis,
     valid_through: validThrough.toISOString(),
+    // Con link externo, "Postularme" lleva a ese sitio; sin link, se postula acá (postulación rápida).
+    external_url: d.applyMode === "external" ? (d.externalUrl ?? null) : null,
   };
 
   let id = jobId?.data;
@@ -90,7 +92,7 @@ export async function saveJob(_prev: FormState, formData: FormData): Promise<For
     .from("applications")
     .select("id", { count: "exact", head: true })
     .eq("job_id", id);
-  const questions = [d.question1, d.question2].filter((q) => q.type !== "none");
+  const questions = d.applyMode === "external" ? [] : [d.question1, d.question2].filter((q) => q.type !== "none");
   if (!applications) await member.supabase.from("job_questions").delete().eq("job_id", id);
   if (!applications && questions.length > 0) {
     const { error } = await member.supabase.from("job_questions").insert(

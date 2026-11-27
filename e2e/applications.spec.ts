@@ -27,7 +27,7 @@ test("postulación en 1 clic, seguimiento y retiro", async ({ page, browser }) =
 
   await signInAsReadyCandidate(page);
   await page.goto(`/es/empleos/${slug}`);
-  await page.getByRole("button", { name: "Postularme" }).click();
+  await page.getByRole("button", { name: "Postularme rápidamente" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Tu postulación fue enviada" })).toBeVisible();
 
   await page.reload();
@@ -54,7 +54,7 @@ test("las preguntas filtro se responden en un diálogo accesible", async ({ page
 
   await signInAsReadyCandidate(page);
   await page.goto(`/es/empleos/${slug}`);
-  await page.getByRole("button", { name: "Postularme" }).click();
+  await page.getByRole("button", { name: "Postularme rápidamente" }).click();
   const dialog = page.getByRole("dialog", { name: "Postularme" });
   await expect(dialog).toBeVisible();
   await expectNoA11yViolations(page);
@@ -62,9 +62,9 @@ test("las preguntas filtro se responden en un diálogo accesible", async ({ page
   // Esc cierra y devuelve el foco al botón
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
-  await expect(page.getByRole("button", { name: "Postularme" })).toBeFocused();
+  await expect(page.getByRole("button", { name: "Postularme rápidamente" })).toBeFocused();
 
-  await page.getByRole("button", { name: "Postularme" }).click();
+  await page.getByRole("button", { name: "Postularme rápidamente" }).click();
   await dialog.getByLabel(/¿Por qué te interesa\?/).fill("Me encanta el producto y quiero aprender.");
   await dialog.getByLabel("Avanzado").check();
   await dialog.getByRole("button", { name: "Enviar postulación" }).click();
@@ -85,5 +85,5 @@ test("con el perfil incompleto se explica qué falta", async ({ page }) => {
   // Las habilidades se recomiendan, pero no frenan la postulación.
   await expect(page.getByText("Al menos una habilidad")).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Completar mi perfil" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Postularme" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Postularme rápidamente" })).toHaveCount(0);
 });

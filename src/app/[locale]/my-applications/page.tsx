@@ -7,6 +7,7 @@ import { timeAgo } from "@/lib/jobs/time";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { withdrawApplication } from "./actions";
+import { removeExternalApplication } from "@/lib/applications/actions";
 import { Emoji } from "@/components/emoji";
 import { ConfirmButton } from "@/components/confirm-button";
 
@@ -36,6 +37,11 @@ export default async function MyApplicationsPage() {
     .select("id, status, created_at, status_changed_at, rejection_message, jobs(title, slug, language, companies(name, slug)), application_events(id, to_status, created_at)")
     .eq("candidate_id", profile!.id)
     .order("created_at", { ascending: false });
+  // Las que contó que hizo en el sitio de la empresa ("¿Te postulaste?" → "Sí").
+  const { data: external } = await supabase
+    .from("external_applications")
+    .select("job_id, created_at, jobs(title, slug, language, companies(name, slug))")
+    .order("created_at", { ascending: false });
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8">
@@ -44,7 +50,7 @@ export default async function MyApplicationsPage() {
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 
-      {(applications ?? []).length === 0 ? (
+      {(applications ?? []).length === 0 && (external ?? []).length === 0 ? (
         <div className="flex flex-col items-start gap-3 rounded-2xl bg-card shadow-soft p-6">
           <p>{t("empty")}</p>
           <Link href="/" className={buttonVariants()}>
@@ -113,6 +119,43 @@ export default async function MyApplicationsPage() {
             );
           })}
         </ul>
+      )}
+
+      {(external ?? []).length > 0 && (
+        <section aria-labelledby="external-title" className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <h2 id="external-title" className="text-xl font-semibold tracking-tight">
+              {t("external.title")} <Emoji symbol="🌐" />
+            </h2>
+            <p className="text-sm text-muted-foreground">{t("external.hint")}</p>
+          </div>
+          <ul className="flex flex-col gap-3">
+            {external!.map((item) => (
+              <li key={item.job_id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-card p-5 shadow-soft">
+                <div className="flex flex-col gap-1">
+                  {item.jobs ? (
+                    <Link href={{ pathname: "/jobs/[slug]", params: { slug: item.jobs.slug } }} lang={item.jobs.language} className="font-semibold underline-offset-4 hover:underline">
+                      {item.jobs.title}
+                    </Link>
+                  ) : (
+                    <span className="font-semibold">{t("removedJob")}</span>
+                  )}
+                  <span className="text-sm text-muted-foreground">
+                    {item.jobs?.companies?.name}
+                    {" · "}
+                    {t("external.appliedOn", { date: format.dateTime(new Date(item.created_at), { dateStyle: "medium" }) })}
+                  </span>
+                </div>
+                <form action={removeExternalApplication}>
+                  <input type="hidden" name="jobId" value={item.job_id} />
+                  <ConfirmButton variant="ghost" ariaLabel={t("external.removeFrom", { job: item.jobs?.title ?? "" })} title={t("external.removeTitle", { job: item.jobs?.title ?? "" })} description={t("external.removeHint")} confirmLabel={tConfirm("remove")}>
+                    {t("external.remove")}
+                  </ConfirmButton>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </div>
   );

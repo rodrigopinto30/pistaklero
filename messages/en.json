@@ -471,7 +471,8 @@
       "conditions": "Conditions",
       "salary": "Salary",
       "skills": "Technologies",
-      "questions": "Screening questions"
+      "questions": "Screening questions",
+      "apply": "Where do people apply?"
     },
     "title": "Role",
     "titleHint": "For example: Junior Frontend (React)",
@@ -560,10 +561,12 @@
       "skills": "Technologies",
       "company": "The company",
       "salaryNotInformed": "Salary not disclosed",
-      "applyExternal": "Apply on the original site",
+      "applyExternal": "Apply",
       "external": "External job",
       "closed": "This job no longer accepts applications.",
-      "verified": "Verified company"
+      "verified": "Verified company",
+      "newTab": "(on the company site, opens in a new tab)",
+      "applyExternalHint": "Takes you to the company's site. When you're back we'll ask if you applied, to add it to My applications."
     },
     "viewApplicants": "View applicants",
     "templates": {
@@ -578,7 +581,7 @@
       "savedLabel": "Saved to your list",
       "savedToast": "Job saved. Find it in Saved.",
       "unsavedToast": "Removed from your saved jobs.",
-      "applyTo": "Apply to {title}",
+      "applyTo": "Quick apply to {title}",
       "applied": "Applied",
       "appliedToast": "Done! You applied to {title}.",
       "needsAnswers": "This job has questions: answer them to apply.",
@@ -588,9 +591,21 @@
         "job_not_available": "This job is no longer available.",
         "limit_reached": "You reached 500 saved jobs. Remove one to add another.",
         "unknown": "We couldn't save the job. Try again."
-      }
+      },
+      "applyExternalTo": "Apply to {title} on the company site (opens in a new tab)"
     },
-    "verified": "Verified company"
+    "verified": "Verified company",
+    "applyHint": "On Pistaklero, applications reach your dashboard neatly. If you prefer your own portal, add the link.",
+    "applyModes": {
+      "pistaklero": "On Pistaklero",
+      "external": "On another site"
+    },
+    "applyModeHints": {
+      "pistaklero": "Quick apply: with their profile, in one click. You can add screening questions.",
+      "external": "The button takes people to your portal or form (for example, your ATS)."
+    },
+    "externalUrl": "Application link",
+    "externalUrlHint": "It must start with https://."
   },
   "Search": {
     "submit": "Search",
@@ -631,7 +646,7 @@
     "removeFilter": "Remove the {filter} filter"
   },
   "Apply": {
-    "apply": "Apply",
+    "apply": "Quick apply",
     "send": "Send application",
     "sending": "Sending…",
     "cancel": "Cancel",
@@ -665,7 +680,8 @@
     "successToast": "Done! Your application was sent. 🚀",
     "suggestSkillsTitle": "Tip:",
     "suggestSkills": "add your skills. It's optional, but companies look at them first.",
-    "suggestSkillsLink": "Add skills"
+    "suggestSkillsLink": "Add skills",
+    "applyExternal": "Apply"
   },
   "Applications": {
     "metaTitle": "My applications",
@@ -687,6 +703,15 @@
       "rejected": "Not selected",
       "no_response": "No response",
       "withdrawn": "Withdrawn"
+    },
+    "external": {
+      "title": "On other sites",
+      "hint": "The ones you told us you made on each company's site. Check their status there.",
+      "appliedOn": "applied on {date}",
+      "remove": "Remove from list",
+      "removeFrom": "Remove from list: {job}",
+      "removeTitle": "Remove “{job}” from your list?",
+      "removeHint": "It's only removed here: your application on the company's site stays the same."
     }
   },
   "Applicants": {
@@ -1413,5 +1438,13 @@
     "add": "Add",
     "selected": "Chosen",
     "remove": "Remove {name}"
+  },
+  "ExternalApply": {
+    "title": "Did you apply? 📝",
+    "body": "You're back from “{title}” at {company}. If you applied, we'll add it to My applications so you can keep track.",
+    "yes": "Yes, I applied",
+    "no": "Not yet",
+    "recorded": "Done, it's in My applications. ✅",
+    "error": "We couldn't save it. Try again from the job page."
   }
 }

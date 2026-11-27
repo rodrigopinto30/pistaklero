@@ -20,6 +20,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { ApplyPanel } from "./apply-panel";
 import { SaveJobButton } from "@/components/jobs/save-job-button";
 import { GuestAction } from "@/components/pending/guest-action";
+import { ExternalApplyLink } from "@/components/jobs/external-apply-link";
 import { getJobViewer } from "@/lib/jobs/viewer";
 import { ReportForm } from "./report-form";
 
@@ -149,12 +150,22 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
         <div className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5 lg:sticky lg:top-44">
           {!isOpen ? (
             <p className="text-sm text-muted-foreground">{t("detail.closed")}</p>
-          ) : job.source === "imported" && job.external_url ? (
-            // Pasa por nuestra ruta para contar el interés (la URL de destino sale de la base).
-            <a href={`/api/jobs/${job.id}/apply`} rel="noopener noreferrer nofollow" target="_blank" className={buttonVariants({ size: "lg" })}>
-              {t("detail.applyExternal")}
-              <ExternalLink aria-hidden="true" />
-            </a>
+          ) : job.external_url ? (
+            // Pasa por nuestra ruta para contar el interés (la URL de destino sale de la base). Al volver,
+            // a las candidatas se les pregunta si se postularon.
+            <div className="flex flex-col gap-2">
+              <ExternalApplyLink
+                jobId={job.id}
+                title={job.title}
+                company={company?.name ?? ""}
+                track={viewer.mode === "candidate"}
+                className={buttonVariants({ size: "lg", className: "w-full gap-2" })}
+              >
+                {t("detail.applyExternal")}
+                <span className="sr-only"> {t("detail.newTab")}</span>
+              </ExternalApplyLink>
+              <p className="text-sm text-muted-foreground">{t("detail.applyExternalHint")}</p>
+            </div>
           ) : (
             <ApplyPanel jobId={job.id} slug={job.slug} autoOpen={(await searchParams).postular === "1"} />
           )}

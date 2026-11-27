@@ -78,6 +78,7 @@ export default async function NewJobPage({ searchParams }: PageProps<"/[locale]/
           salaryCurrency: "USD",
           salaryPeriod: "month",
           salaryBasis: "gross",
+          applyMode: "pistaklero",
           validDays: "30",
           question1Type: "none",
           question2Type: "none",

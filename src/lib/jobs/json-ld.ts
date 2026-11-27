@@ -4,6 +4,7 @@
  */
 type JobForLd = {
   title: string;
+  external_url?: string | null;
   description: string;
   published_at: string | null;
   valid_through: string;
@@ -38,7 +39,8 @@ export function jobPostingJsonLd(job: JobForLd, company: CompanyForLd, url: stri
     datePosted: job.published_at ?? undefined,
     validThrough: job.valid_through,
     employmentType: EMPLOYMENT[job.employment_type],
-    directApply: true,
+    // Con link externo, la postulación es en el sitio de la empresa.
+    directApply: !job.external_url,
     url,
     hiringOrganization: {
       "@type": "Organization",

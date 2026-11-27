@@ -20,13 +20,13 @@ test("guardar y postularse desde la tarjeta, sin abrir la oferta", async ({ page
   await expectNoA11yViolations(page);
 
   // Postularse en 1 clic, sin salir de la búsqueda.
-  await clickWhenReady(card.getByRole("button", { name: `Postularme a ${simple}` }));
+  await clickWhenReady(card.getByRole("button", { name: `Postularme rápidamente a ${simple}` }));
   await expectToast(page, `¡Listo! Te postulaste a ${simple}.`);
   await expect(card.getByRole("link", { name: "Te postulaste" })).toBeVisible();
   await expect(page).toHaveURL(new RegExp(`q=${word}`));
 
   // Con preguntas: lleva a la oferta con el diálogo abierto.
-  await clickWhenReady(page.getByRole("article").filter({ hasText: withQuestions }).getByRole("button", { name: `Postularme a ${withQuestions}` }));
+  await clickWhenReady(page.getByRole("article").filter({ hasText: withQuestions }).getByRole("button", { name: `Postularme rápidamente a ${withQuestions}` }));
   await expect(page.getByRole("dialog", { name: "Postularme" })).toBeVisible();
   await expectToast(page, "Esta oferta tiene preguntas: respondelas para postularte.");
 
@@ -46,7 +46,7 @@ test("sin sesión, los botones de la tarjeta llevan a ingresar", async ({ page }
   await seedCompanyWithJobs("Visitas SA", [{ title }]);
   await page.goto(`/es?q=${encodeURIComponent(title)}`);
   // Postularse lleva a ingresar y después a la oferta con el formulario abierto.
-  await expect(page.getByRole("link", { name: `Postularme a ${title}` })).toHaveAttribute("href", /\/es\/ingresar\?next=%2Fes%2Fempleos%2F.+%3Fpostular%3D1/);
+  await expect(page.getByRole("link", { name: `Postularme rápidamente a ${title}` })).toHaveAttribute("href", /\/es\/ingresar\?next=%2Fes%2Fempleos%2F.+%3Fpostular%3D1/);
   // Guardar queda pendiente y vuelve a la misma búsqueda.
   await page.getByRole("button", { name: `Ingresá para guardar ${title}` }).click();
   await expect(page).toHaveURL(/\/es\/ingresar\?next=%2Fes%3Fq%3D/);
@@ -60,6 +60,6 @@ test("sin habilidades se puede postular y se recomienda completarlas", async ({ 
   await page.getByRole("link", { name: title, exact: true }).click();
 
   await expect(page.getByText("No es obligatorio, pero las empresas las miran primero.", { exact: false })).toBeVisible();
-  await page.getByRole("button", { name: "Postularme" }).click();
+  await page.getByRole("button", { name: "Postularme rápidamente" }).click();
   await expectToast(page, "¡Listo! Tu postulación fue enviada.");
 });

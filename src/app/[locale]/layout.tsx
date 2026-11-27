@@ -5,6 +5,8 @@ import { locale as rootLocale } from "next/root-params";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import { BackToTop } from "@/components/back-to-top";
+import { ExternalApplyCheck } from "@/components/jobs/external-apply-check";
+import { getCurrentProfile } from "@/lib/auth/session";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/toaster";
 import { SiteHeader } from "@/components/site-header";
@@ -53,6 +55,8 @@ export default async function LocaleLayout({
 
   const t = await getTranslations("Layout");
   const theme = await getTheme();
+  // A las candidatas, al volver de postularse en otro sitio, se les pregunta si se postularon.
+  const profile = await getCurrentProfile();
 
   return (
     <html
@@ -74,6 +78,7 @@ export default async function LocaleLayout({
           </main>
           <SiteFooter />
           <BackToTop />
+          {profile?.role === "candidate" && <ExternalApplyCheck />}
           <Toaster />
         </NextIntlClientProvider>
       </body>

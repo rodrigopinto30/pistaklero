@@ -32,7 +32,7 @@ test("el admin importa una oferta, se cuentan los clics y la empresa se transfie
   const card = page.getByRole("article").filter({ hasText: title });
   await expect(card.getByText("Oferta externa")).toBeVisible();
   await card.getByRole("link", { name: title, exact: true }).click();
-  const apply = page.getByRole("link", { name: /Postularme en el sitio original/ });
+  const apply = page.getByRole("link", { name: /^Postularme \(en el sitio de la empresa/ });
   const href = await apply.getAttribute("href");
   expect(href).toMatch(/^\/api\/jobs\/[0-9a-f-]{36}\/apply$/);
   const response = await request.get(href!, { maxRedirects: 0 });
