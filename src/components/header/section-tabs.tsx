@@ -1,12 +1,13 @@
 "use client";
 
-import { Briefcase, Building2, MessagesSquare } from "lucide-react";
+import { Briefcase, Building2, Newspaper } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/i18n/navigation";
 import { SECTION_HREF, type Section, sectionOf } from "./sections";
 
-const ICONS = { jobs: Briefcase, companies: Building2, posts: MessagesSquare } as const;
+// Publicaciones con un diario: el globo de diálogo queda para los mensajes (cuando existan).
+const ICONS = { jobs: Briefcase, companies: Building2, posts: Newspaper } as const;
 
 /** Empleos · Empresas · Publicaciones. La actual se marca con aria-current y una línea abajo. */
 export function SectionTabs({ className }: { className?: string }) {
