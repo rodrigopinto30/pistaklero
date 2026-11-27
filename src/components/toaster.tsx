@@ -12,9 +12,13 @@ export const toastManager = Toast.createToastManager();
 
 export type ToastType = "success" | "error";
 
-/** Muestra un aviso chico. Los errores se anuncian con prioridad alta a los lectores de pantalla. */
+/**
+ * Muestra un aviso chico. Los errores se anuncian con prioridad alta a los lectores de pantalla.
+ * Se agrega en la próxima vuelta del event loop: si se pide al montar un componente, el efecto del hijo
+ * corre antes de que el proveedor de avisos (en el layout) se suscriba, y el aviso se perdería.
+ */
 export function notify(title: string, type: ToastType = "success") {
-  toastManager.add({ title, type, priority: type === "error" ? "high" : "low" });
+  setTimeout(() => toastManager.add({ title, type, priority: type === "error" ? "high" : "low" }), 0);
 }
 
 function readFlashCookie() {
@@ -96,6 +100,10 @@ function ToastList() {
 export function Toaster() {
   const t = useTranslations("Toasts");
   useFlashToasts();
+  // Marca que React ya tomó la página (la usan los tests para no hacer clic antes de tiempo).
+  useEffect(() => {
+    document.documentElement.dataset.hydrated = "true";
+  }, []);
   return (
     <Toast.Provider toastManager={toastManager} timeout={4000} limit={3}>
       <Toast.Portal>
