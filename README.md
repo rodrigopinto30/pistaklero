@@ -18,6 +18,8 @@ Node, pnpm y la CLI de Supabase corren dentro de contenedores: no se instala nad
 | `./check.sh [--fast]` | Todas las verificaciones (tipos, lint, tests, base, build y e2e); corta en el primer fallo |
 | `./e2e.sh [archivo]` | Tests de punta a punta y de accesibilidad (Playwright + axe), con la app levantada |
 
+La CI (`.github/workflows/ci.yml`) corre los mismos pasos en cada push a `main` y en cada pull request.
+
 Con todo arriba:
 
 | Servicio | URL |

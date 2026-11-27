@@ -1,0 +1,92 @@
+# Los mismos pasos que ./check.sh, en GitHub Actions: tipos, lint, tests unitarios, tests de la base,
+# build y tests de punta a punta (Playwright + axe) contra Supabase local.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Verificaciones
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Activar pnpm (la versión de packageManager)
+        run: corepack enable
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Tipos
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Tests unitarios
+        run: pnpm test
+
+      - name: Levantar Supabase local
+        run: pnpm exec supabase start -x studio,imgproxy,postgres-meta
+
+      - name: Escribir .env.local
+        run: |
+          eval "$(pnpm exec supabase status -o env)"
+          {
+            echo "NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000"
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
+            echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
+            echo "MAILPIT_URL=$MAILPIT_URL"
+            echo "OUTBOX_SECRET=$(openssl rand -hex 32)"
+          } > .env.local
+          # Los tests de punta a punta también las necesitan (crean usuarios y llaman rutas internas).
+          cat .env.local >> "$GITHUB_ENV"
+
+      - name: Tests de la base
+        run: pnpm db:test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Levantar la app
+        run: |
+          pnpm dev --hostname localhost > dev.log 2>&1 &
+          for _ in $(seq 1 90); do
+            curl -s -o /dev/null --fail http://127.0.0.1:3000/es && exit 0
+            sleep 2
+          done
+          cat dev.log
+          exit 1
+
+      - name: Instalar Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Tests de punta a punta
+        run: pnpm exec playwright test
+
+      - name: Guardar el reporte si algo falla
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+            dev.log
+          retention-days: 7
