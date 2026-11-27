@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   // El servidor de desarrollo escucha en "localhost" y el sitio se abre en 127.0.0.1:
   // sin esto Next bloquea la recarga en caliente por venir de otro origen.
   allowedDevOrigins: ["127.0.0.1"],
+  // Avatares de Google y GitHub: se sirven desde /_next/image (no se exponen las IPs de quien mira
+  // a terceros y la CSP no necesita permitir esos dominios para imágenes).
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      { protocol: "https", hostname: "avatars.githubusercontent.com" },
+    ],
+  },
   // No anunciar el framework en cada respuesta.
   poweredByHeader: false,
   async headers() {
