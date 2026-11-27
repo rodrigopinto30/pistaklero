@@ -87,7 +87,7 @@ export default async function PostPage({ params }: PageProps<"/[locale]/posts/[s
         </header>
 
         <Markdown lang={post.language}>{post.body}</Markdown>
-        <PostTags tags={card.tags ?? []} label={t("tags.label")} />
+        <PostTags tags={card?.tags ?? []} label={t("tags.label")} />
 
         {card && (
           <div className="border-t border-border pt-4">

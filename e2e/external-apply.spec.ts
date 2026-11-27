@@ -24,7 +24,6 @@ test("una oferta propia puede recibir las postulaciones en otro sitio y la candi
 
   // La candidata ve "Postularme" (afuera) en vez de la postulación rápida.
   const candidate = await (await browser.newContext()).newPage();
-  await candidate.context().route(`https://${domain}/**`, (route) => route.fulfill({ body: "Portal de la empresa" }));
   await signInAsReadyCandidate(candidate, "Eli Externa");
   await candidate.goto(`/es?q=${encodeURIComponent(title)}`);
   const card = candidate.getByRole("article").filter({ hasText: title });
@@ -33,11 +32,13 @@ test("una oferta propia puede recibir las postulaciones en otro sitio y la candi
 
   await card.getByRole("link", { name: title, exact: true }).click();
   await expect(candidate.getByRole("button", { name: "Postularme rápidamente" })).toHaveCount(0);
-  const [portal] = await Promise.all([
+  // Abre una pestaña nueva que pasa por nuestra ruta (cuenta el clic) y sigue al portal de la empresa.
+  const [portal, portalRequest] = await Promise.all([
     candidate.waitForEvent("popup"),
+    candidate.context().waitForEvent("request", (request) => request.url() === `https://${domain}/trabaja-con-nosotros`),
     candidate.getByRole("link", { name: /^Postularme \(en el sitio de la empresa/ }).click(),
   ]);
-  await expect(portal).toHaveURL(`https://${domain}/trabaja-con-nosotros`);
+  expect(portalRequest.url()).toBe(`https://${domain}/trabaja-con-nosotros`);
   // Se postula allá y vuelve: "¿Te postulaste?"
   await candidate.waitForTimeout(3200);
   await portal.close();
