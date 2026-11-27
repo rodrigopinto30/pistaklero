@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // La fuente del CV en PDF se lee del disco: hay que incluirla en la función que lo genera.
   outputFileTracingIncludes: {
+    "/api/emojibase/[locale]/[file]": ["./node_modules/emojibase-data/{es,en}/{data,messages}.json"],
     "/api/me/cv": ["./node_modules/dejavu-fonts-ttf/ttf/DejaVuSerif{,-Bold,-Italic}.ttf"],
   },
   async headers() {

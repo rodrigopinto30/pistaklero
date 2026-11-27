@@ -1,13 +1,15 @@
 import ReactMarkdown from "react-markdown";
+import { isGiphyUrl } from "@/lib/gifs/gifs";
 
 /*
  * Markdown de usuarios (descripciones de ofertas). Seguro por diseño (OWASP A05):
  * - react-markdown arma elementos de React: no usa dangerouslySetInnerHTML ni interpreta HTML crudo.
- * - Solo se permiten estos elementos; imágenes no (evitan rastreo y contenido de terceros).
+ * - Solo se permiten estos elementos. Imágenes, solo los GIFs de GIPHY (hasta 3 por texto, los elige
+ *   quien escribe desde el editor); cualquier otra imagen se descarta (evita rastreo y contenido raro).
  * - Los enlaces llevan rel="nofollow ugc noopener noreferrer" y su URL pasa por el filtro por defecto
  *   (descarta javascript: y similares).
  */
-const ALLOWED = ["p", "br", "strong", "em", "ul", "ol", "li", "a", "h1", "h2", "h3", "h4", "blockquote", "code", "pre", "hr"];
+const ALLOWED = ["p", "br", "strong", "em", "ul", "ol", "li", "a", "h1", "h2", "h3", "h4", "blockquote", "code", "pre", "hr", "img"];
 
 export function Markdown({ children, lang }: { children: string; lang?: string }) {
   return (
@@ -31,6 +33,11 @@ export function Markdown({ children, lang }: { children: string; lang?: string }
           ),
           blockquote: ({ children }) => <blockquote className="border-l-2 border-input pl-4 text-muted-foreground">{children}</blockquote>,
           code: ({ children }) => <code className="rounded bg-muted px-1 py-0.5 font-mono text-sm">{children}</code>,
+          img: ({ src, alt }) =>
+            typeof src === "string" && isGiphyUrl(src) ? (
+              // eslint-disable-next-line @next/next/no-img-element -- GIF animado de GIPHY: no se optimiza.
+              <img src={src} alt={alt ?? "GIF"} loading="lazy" referrerPolicy="no-referrer" className="max-h-72 w-auto max-w-full rounded-xl" />
+            ) : null,
         }}
       >
         {children}

@@ -132,7 +132,8 @@
       "end_required": "Completá la fecha de fin o marcá que sigue en curso.",
       "invalid_url": "Escribí una dirección web válida, por ejemplo github.com/tu-usuario.",
       "invalid_month": "Escribí el mes con el formato AAAA-MM, por ejemplo 2024-03.",
-      "amount_positive": "Escribí un monto mayor a 0, solo con números."
+      "amount_positive": "Escribí un monto mayor a 0, solo con números.",
+      "too_many_gifs": "Hasta 3 GIFs por texto: sacá alguno."
     },
     "noChanges": "No hay cambios para guardar"
   },
@@ -1478,5 +1479,20 @@
       "member_joined": "{email} se sumó al equipo.",
       "role_changed": "Ahora sos {role} del equipo de {company}."
     }
+  },
+  "Editor": {
+    "toolbar": "Formato",
+    "emoji": "Agregar un emoji",
+    "emojiSearch": "Buscar emoji",
+    "noEmoji": "No encontramos ese emoji.",
+    "loading": "Cargando…",
+    "gif": "Agregar un GIF",
+    "gifTitle": "Elegí un GIF",
+    "gifSearch": "Buscar en GIPHY",
+    "noGif": "No encontramos GIFs con eso.",
+    "gifError": "No pudimos cargar los GIFs. Probá de nuevo en un rato.",
+    "gifLimit": "hasta {max} GIFs por texto",
+    "close": "Cerrar",
+    "markdownHint": "**negrita**, - listas"
   }
 }

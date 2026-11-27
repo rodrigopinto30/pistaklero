@@ -6,10 +6,10 @@ import { Field, FieldGrid, useFocusFirstError, valueOf } from "@/components/form
 import { SubmitButton } from "@/components/forms/submit-button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
-import { Textarea } from "@/components/ui/textarea";
 import { createPost, type PostFormState, updatePost } from "@/lib/posts/actions";
 import { TagInput } from "./tag-input";
 import type { FormState } from "@/lib/forms";
+import { RichTextarea } from "@/components/editor/rich-textarea";
 
 type Saved = { id?: string; title: string; body: string; language: string; tags?: string[] };
 
@@ -50,7 +50,7 @@ export function PostForm({ locale, saved }: { locale: string; saved?: Saved }) {
         </Field>
       </FieldGrid>
       <Field id="post-body" name="body" label={t("body")} required hint={t("bodyHint")} error={errors.body}>
-        {(p) => <Textarea {...p} maxLength={5000} className="min-h-64" defaultValue={v("body")} />}
+        {(p) => <RichTextarea {...p} maxLength={5000} className="min-h-64" defaultValue={v("body")} />}
       </Field>
       <TagInput name="tags" initial={saved?.tags ?? []} />
       <p className="text-sm text-muted-foreground">{t("public")}</p>

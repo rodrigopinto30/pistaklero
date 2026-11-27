@@ -6,11 +6,11 @@ import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/co
 import { SubmitButton } from "@/components/forms/submit-button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
-import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import { COMPANY_SIZES, COMPANY_STAGES } from "@/lib/validation/company";
 import { updateCompanyDetails } from "../actions";
 import { IndustryField } from "./industry-field";
+import { RichTextarea } from "@/components/editor/rich-textarea";
 
 export type CompanyDetailsValues = Record<
   "name" | "description" | "industry" | "size" | "stage" | "country" | "city" | "linkedinUrl" | "xUrl" | "instagramUrl",
@@ -30,7 +30,7 @@ export function DetailsForm({ saved, countries }: { saved: CompanyDetailsValues;
         {(p) => <Input {...p} autoComplete="organization" maxLength={80} defaultValue={v("name")} />}
       </Field>
       <Field id="company-description" name="description" label={t("description")} hint={t("descriptionHint")} error={errors.description}>
-        {(p) => <Textarea {...p} className="min-h-40" maxLength={2000} defaultValue={v("description")} />}
+        {(p) => <RichTextarea {...p} className="min-h-40" maxLength={2000} defaultValue={v("description")} />}
       </Field>
       <IndustryField idPrefix="company" saved={v("industry")} error={errors.industry} />
       <FieldGrid>

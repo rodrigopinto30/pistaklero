@@ -1,3 +1,4 @@
+import { withinGifLimit } from "@/lib/gifs/gifs";
 import { z } from "zod";
 import { COUNTRY_CODES } from "@/lib/geo";
 import { optionalHttpsUrl } from "./onboarding";
@@ -44,7 +45,7 @@ export function industryFrom(choice: unknown, other: unknown): string {
 
 export const companyDetailsSchema = z.object({
   name: z.string().trim().min(2).max(80),
-  description: z.string().trim().max(2000),
+  description: z.string().trim().max(2000).refine(withinGifLimit, { message: "too_many_gifs" }),
   industry: z.string().trim().max(60),
   size: z.preprocess(emptyToUndefined, z.enum(COMPANY_SIZES).optional()),
   stage: z.preprocess(emptyToUndefined, z.enum(COMPANY_STAGES).optional()),

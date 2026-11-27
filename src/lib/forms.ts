@@ -16,6 +16,7 @@ const CUSTOM_CODES = [
   "invalid_url",
   "invalid_month",
   "amount_positive",
+  "too_many_gifs",
 ] as const;
 export type FieldErrorCode = "required" | "too_short" | "too_long" | "invalid" | (typeof CUSTOM_CODES)[number];
 export type FieldError = { code: FieldErrorCode; limit?: number };

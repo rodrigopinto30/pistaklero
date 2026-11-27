@@ -10,12 +10,12 @@ import { SectionCard } from "@/components/section-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
-import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import { COMPANY_SIZES, COMPANY_STAGES, COVER_MAX_BYTES, LOGO_MAX_BYTES } from "@/lib/validation/company";
 import { completeCompanySetup } from "../actions";
 import type { CompanyDetailsValues } from "./details-form";
 import { IndustryField } from "./industry-field";
+import { RichTextarea } from "@/components/editor/rich-textarea";
 
 type Props = {
   locale: string;
@@ -62,7 +62,7 @@ export function CompanySetupForm({ locale, saved, countries, catalog }: Props) {
             {(p) => <Input {...p} autoComplete="organization" maxLength={80} defaultValue={v("name")} />}
           </Field>
           <Field id="setup-description" name="description" label={td("description")} hint={td("descriptionHint")} error={errors.description}>
-            {(p) => <Textarea {...p} className="min-h-40" maxLength={2000} defaultValue={v("description")} />}
+            {(p) => <RichTextarea {...p} className="min-h-40" maxLength={2000} defaultValue={v("description")} />}
           </Field>
           <IndustryField idPrefix="setup" saved={v("industry")} error={errors.industry} />
           <FieldGrid>

@@ -18,8 +18,8 @@ export default async function proxy(request: NextRequest) {
     nonce,
     isDev: process.env.NODE_ENV === "development",
     connectSrc: [supabaseOrigin],
-    // Logos, fotos de perfil y vistas previas se sirven desde nuestro Storage.
-    imgSrc: [supabaseOrigin],
+    // Logos, fotos de perfil y vistas previas se sirven desde nuestro Storage; los GIFs, desde GIPHY.
+    imgSrc: [supabaseOrigin, "https://media.giphy.com", "https://*.giphy.com"],
   });
 
   // 1. Renueva la sesión antes de renderizar (actualiza las cookies del pedido).

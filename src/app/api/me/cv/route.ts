@@ -4,6 +4,7 @@ import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { loadCvFonts } from "@/lib/cv/fonts";
 import { type CvData, renderCv } from "@/lib/cv/render";
 import { countryName, formatMonth } from "@/lib/geo";
+import { stripImages } from "@/lib/gifs/gifs";
 import { createClient } from "@/lib/supabase/server";
 import { parseLocale } from "@/i18n/locale";
 
@@ -38,18 +39,18 @@ export async function GET(request: Request) {
   const data: CvData = {
     fullName: c.people?.full_name ?? "",
     headline: c.headline,
-    bio: c.bio,
+    bio: stripImages(c.bio),
     location: [c.city, countryName(c.country, locale)].filter(Boolean).join(", ") || null,
     email: user.email ?? null,
     links: [c.website_url, c.linkedin_url, c.github_url].filter((url): url is string => Boolean(url)),
     languages: c.languages.map((code) => languageNames.of(code) ?? code),
     skills: (skills.data ?? []).map((s) => (locale === "en" ? s.skills?.name_en : s.skills?.name_es)).filter((name): name is string => Boolean(name)),
-    experiences: (experiences.data ?? []).map((e) => ({ title: e.title, company: e.company_name, period: period(e.start_date, e.end_date), description: e.description })),
+    experiences: (experiences.data ?? []).map((e) => ({ title: e.title, company: e.company_name, period: period(e.start_date, e.end_date), description: stripImages(e.description) })),
     education: (education.data ?? []).map((e) => ({ degree: e.degree, institution: e.institution, period: period(e.start_date, e.end_date) })),
     projects: (projects.data ?? []).map((p) => ({
       title: p.title,
       links: [p.url, p.repo_url].filter((url): url is string => Boolean(url)),
-      description: p.description,
+      description: stripImages(p.description),
     })),
     certifications: (certifications.data ?? []).map((cert) => ({
       name: cert.name,
