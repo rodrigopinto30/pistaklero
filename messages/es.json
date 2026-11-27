@@ -13,7 +13,9 @@
     "suspended": "Tu cuenta está suspendida. Si creés que es un error, escribinos.",
     "settings": "Ajustes",
     "lightMode": "Modo claro",
-    "saved": "Guardados"
+    "saved": "Guardados",
+    "posts": "Publicaciones",
+    "myPosts": "Mis publicaciones"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -285,7 +287,8 @@
     "limit": {
       "title": "Llegaste al límite de perfiles por hoy",
       "body": "Para proteger a las personas que buscan trabajo, cada reclutador puede ver hasta 200 perfiles por día. Los perfiles de quienes se postularon a tus ofertas los ves siempre. Mañana se renueva."
-    }
+    },
+    "posts": "Publicaciones"
   },
   "Company": {
     "metaTitle": "Página de la empresa",
@@ -388,7 +391,9 @@
     "noAbout": "Esta empresa todavía no contó qué hace.",
     "facts": "Datos",
     "location": "Ubicación",
-    "seeJobs": "{count, plural, one {Ver el empleo abierto →} other {Ver los # empleos abiertos →}}"
+    "seeJobs": "{count, plural, one {Ver el empleo abierto →} other {Ver los # empleos abiertos →}}",
+    "postsTab": "Publicaciones",
+    "noPosts": "Todavía nadie de esta empresa publicó consejos."
   },
   "Team": {
     "metaTitle": "Equipo",
@@ -755,7 +760,16 @@
         "unknown": "No pudimos transferir la empresa."
       }
     },
-    "importJob": "Importar oferta"
+    "importJob": "Importar oferta",
+    "posts": {
+      "title": "Publicaciones ocultas",
+      "hint": "Se ocultan solas con 3 denuncias. Volvé a publicarlas si están bien, o borralas.",
+      "empty": "No hay publicaciones ocultas.",
+      "restore": "Volver a publicar",
+      "restoreItem": "Volver a publicar: {title}",
+      "delete": "Borrar",
+      "deleteItem": "Borrar: {title}"
+    }
   },
   "Import": {
     "metaTitle": "Importar oferta",
@@ -1051,7 +1065,8 @@
     "jobStatusUpdated": "Estado de la oferta actualizado.",
     "jobSaved": "Oferta guardada.",
     "published": "Oferta publicada.",
-    "coverUpdated": "Portada actualizada."
+    "coverUpdated": "Portada actualizada.",
+    "postPublished": "¡Publicado! Ya lo puede leer toda la comunidad."
   },
   "Saved": {
     "metaTitle": "Guardados",
@@ -1061,6 +1076,86 @@
     "empty": "Todavía no guardaste empleos. Tocá el marcador de una oferta para tenerla a mano.",
     "browse": "Ver empleos",
     "closed": "Ofertas que ya cerraron",
-    "unavailable": "Oferta no disponible"
+    "unavailable": "Oferta no disponible",
+    "posts": "{count, plural, =0 {Publicaciones} one {# publicación} other {# publicaciones}}",
+    "emptyPosts": "Todavía no guardaste publicaciones."
+  },
+  "Posts": {
+    "metaTitle": "Publicaciones",
+    "title": "Publicaciones",
+    "subtitle": "Consejos para conseguir trabajo, escritos por la comunidad: candidatos, reclutadores y quienes ya pasaron por eso.",
+    "write": "Escribir una publicación",
+    "signInToWrite": "Ingresá para publicar",
+    "count": "{count, plural, =0 {Todavía no hay publicaciones} one {# publicación} other {# publicaciones}}",
+    "countFor": "{count, plural, =0 {No hay publicaciones sobre «{query}»} one {# publicación sobre «{query}»} other {# publicaciones sobre «{query}»}}",
+    "empty": "Todavía no hay publicaciones. ¡Podés escribir la primera!",
+    "emptySearch": "No encontramos publicaciones con esa búsqueda.",
+    "seeAll": "Ver todas las publicaciones",
+    "loadMore": "Cargar más",
+    "candidate": "Candidata/o",
+    "recruiterAt": "Recluta en {company}",
+    "team": "Equipo de Pistaklero",
+    "back": "Todas las publicaciones",
+    "hiddenNote": "Esta publicación está oculta por denuncias: solo la ven quien la escribió y el equipo de Pistaklero mientras la revisamos.",
+    "edit": "Editar",
+    "delete": "Borrar publicación",
+    "fromAuthor": "Publicaciones",
+    "actions": {
+      "like": "Me gusta: {title}",
+      "save": "Guardar publicación: {title}",
+      "likesCount": "{count, plural, one {me gusta} other {me gusta}}",
+      "savedToast": "Publicación guardada. La encontrás en Guardados.",
+      "unsavedToast": "La sacaste de tus guardados.",
+      "signInToLike": "Ingresá para darle me gusta a {title}",
+      "signInToSave": "Ingresá para guardar {title}",
+      "errors": {
+        "not_authorized": "Completá tu registro para dar me gusta o guardar.",
+        "not_found": "Esta publicación ya no está disponible.",
+        "limit_reached": "Llegaste a 500 publicaciones guardadas.",
+        "unknown": "No pudimos hacerlo. Probá de nuevo."
+      }
+    },
+    "form": {
+      "newTitle": "Escribir una publicación",
+      "newSubtitle": "Compartí lo que te sirvió para conseguir trabajo, o lo que mirás cuando contratás.",
+      "editTitle": "Editar publicación",
+      "title": "Título",
+      "titleHint": "Entre 5 y 120 caracteres. Por ejemplo: Cómo preparé mi primera entrevista técnica.",
+      "language": "Idioma",
+      "body": "Texto",
+      "bodyHint": "Entre 20 y 5000 caracteres. Podés usar **negrita**, listas con guiones y enlaces.",
+      "public": "Se publica al instante, con tu nombre y tu foto. La comunidad puede denunciarla si no cumple las reglas.",
+      "publish": "Publicar",
+      "save": "Guardar cambios",
+      "needsName": "Para publicar necesitamos tu nombre: se muestra junto a lo que escribís.",
+      "completeName": "Completar mis datos"
+    },
+    "errors": {
+      "no_person": "Para publicar necesitamos tu nombre. Completalo en tu perfil o en Ajustes.",
+      "rate_limited": "Llegaste a 5 publicaciones en las últimas 24 horas. Probá de nuevo mañana.",
+      "not_found": "No encontramos esa publicación.",
+      "not_authorized": "Completá tu registro para publicar.",
+      "unknown": "No pudimos publicar. Probá de nuevo."
+    },
+    "report": {
+      "open": "Denunciar",
+      "reason": "¿Qué pasa con esta publicación?",
+      "reasons": {
+        "spam": "Es spam o publicidad",
+        "offensive": "Es ofensiva o discrimina",
+        "scam": "Parece una estafa",
+        "other": "Otro motivo"
+      },
+      "send": "Enviar denuncia",
+      "thanks": "Gracias. Si la denuncian más personas, la ocultamos hasta revisarla."
+    },
+    "mine": {
+      "title": "Mis publicaciones",
+      "subtitle": "Lo que escribiste para la comunidad.",
+      "write": "Escribir otra",
+      "empty": "Todavía no publicaste nada.",
+      "likes": "{count, plural, =0 {sin me gusta} one {# me gusta} other {# me gusta}}",
+      "hidden": "Oculta por denuncias"
+    }
   }
 }

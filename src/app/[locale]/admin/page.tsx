@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Form from "next/form";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SectionCard } from "@/components/section-card";
+import { deletePost, restorePost } from "@/lib/posts/actions";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,18 +30,21 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
 
   const t = await getTranslations("Admin");
   const tReasons = await getTranslations("Report.reasons");
+  const tPostReasons = await getTranslations("Posts.report.reasons");
   const params = await searchParams;
   const userQuery = typeof params.cuenta === "string" ? params.cuenta.trim().slice(0, 80) : "";
   const companyQuery = typeof params.empresa === "string" ? params.empresa.trim().slice(0, 80) : "";
 
   const supabase = await createClient();
-  const [{ data: reports }, { data: users }, { data: companies }, { data: unclaimed }] = await Promise.all([
+  const [{ data: reports }, { data: users }, { data: companies }, { data: unclaimed }, { data: hiddenPosts }] = await Promise.all([
     supabase.rpc("admin_open_reports"),
     userQuery.length >= 3 ? supabase.rpc("admin_find_users", { p_query: userQuery }) : Promise.resolve({ data: null }),
     companyQuery.length >= 2
       ? supabase.from("companies").select("id, name, domain, status, slug").ilike("name", likePattern(companyQuery)).limit(20)
       : Promise.resolve({ data: null }),
     supabase.rpc("admin_unclaimed_companies"),
+    // Publicaciones ocultas por denuncias (el admin las ve por RLS), con sus motivos.
+    supabase.from("posts").select("id, slug, title, post_reports(reason)").eq("status", "hidden").order("updated_at", { ascending: false }).limit(50),
   ]);
 
   return (
@@ -91,6 +95,42 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
                     <input type="hidden" name="reviewAction" value="dismiss" />
                     <Button type="submit" variant="outline" aria-label={t("reports.dismissFor", { job: report.job_title })}>
                       {t("reports.dismiss")}
+                    </Button>
+                  </form>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </SectionCard>
+
+      <SectionCard id="hidden-posts" title={t("posts.title")} description={t("posts.hint")}>
+        {(hiddenPosts ?? []).length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t("posts.empty")}</p>
+        ) : (
+          <ul className="flex flex-col gap-3">
+            {hiddenPosts!.map((post) => (
+              <li key={post.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/50 p-4">
+                <div className="flex min-w-0 flex-col gap-1">
+                  <Link href={{ pathname: "/posts/[slug]", params: { slug: post.slug } }} className="font-medium underline-offset-4 hover:underline">
+                    {post.title}
+                  </Link>
+                  <p className="text-sm text-muted-foreground">
+                    {post.post_reports.map((r) => tPostReasons(r.reason)).join(" · ")}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <form action={restorePost}>
+                    <input type="hidden" name="id" value={post.id} />
+                    <Button type="submit" variant="secondary" aria-label={t("posts.restoreItem", { title: post.title })}>
+                      {t("posts.restore")}
+                    </Button>
+                  </form>
+                  <form action={deletePost}>
+                    <input type="hidden" name="id" value={post.id} />
+                    <input type="hidden" name="locale" value={locale} />
+                    <Button type="submit" variant="destructive" aria-label={t("posts.deleteItem", { title: post.title })}>
+                      {t("posts.delete")}
                     </Button>
                   </form>
                 </div>

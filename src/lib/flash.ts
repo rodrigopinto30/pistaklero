@@ -15,6 +15,8 @@ export const FLASH_KEYS = [
   "accountDeleted",
   "teamUpdated",
   "done",
+  "postPublished",
+  "saved",
 ] as const;
 export type FlashKey = (typeof FLASH_KEYS)[number];
 

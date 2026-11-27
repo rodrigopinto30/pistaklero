@@ -34,6 +34,11 @@ export const routing = defineRouting({
     "/admin/import": { es: "/admin/importar", en: "/admin/import" },
     "/invitation": { es: "/invitacion", en: "/invitation" },
     "/companies/[slug]": { es: "/empresas/[slug]", en: "/companies/[slug]" },
+    "/posts": { es: "/publicaciones", en: "/posts" },
+    "/posts/new": { es: "/publicaciones/nueva", en: "/posts/new" },
+    "/posts/[slug]": { es: "/publicaciones/[slug]", en: "/posts/[slug]" },
+    "/posts/[slug]/edit": { es: "/publicaciones/[slug]/editar", en: "/posts/[slug]/edit" },
+    "/my-posts": { es: "/mis-publicaciones", en: "/my-posts" },
   },
 });
 

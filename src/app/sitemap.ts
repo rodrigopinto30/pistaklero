@@ -23,12 +23,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getPublicEnv().NEXT_PUBLIC_SITE_URL;
   const supabase = createPublicClient();
 
-  const [{ data: jobs }, { data: companies }, { data: profiles }] = await Promise.all([
+  const [{ data: jobs }, { data: companies }, { data: profiles }, { data: posts }] = await Promise.all([
     // Solo ofertas nativas: las importadas no se indexan (contenido de terceros).
     supabase.from("jobs").select("slug, updated_at").eq("source", "native").eq("status", "published").gt("valid_through", new Date().toISOString()).limit(5000),
     supabase.from("companies").select("slug, updated_at").eq("status", "active").limit(5000),
     // RLS devuelve solo los perfiles públicos a un visitante anónimo.
     supabase.from("candidates").select("slug, updated_at").eq("visibility", "public").limit(5000),
+    supabase.from("posts").select("slug, updated_at").eq("status", "published").limit(5000),
   ]);
 
   return [
@@ -36,8 +37,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...entry(base, "/legal/terms"),
     ...entry(base, "/legal/privacy"),
     ...entry(base, "/accessibility"),
+    ...entry(base, "/posts"),
     ...(jobs ?? []).flatMap((j) => entry(base, { pathname: "/jobs/[slug]", params: { slug: j.slug } }, j.updated_at)),
     ...(companies ?? []).flatMap((c) => entry(base, { pathname: "/companies/[slug]", params: { slug: c.slug } }, c.updated_at)),
     ...(profiles ?? []).flatMap((p) => entry(base, { pathname: "/p/[slug]", params: { slug: p.slug } }, p.updated_at)),
+    ...(posts ?? []).flatMap((p) => entry(base, { pathname: "/posts/[slug]", params: { slug: p.slug } }, p.updated_at)),
   ];
 }
