@@ -9,6 +9,7 @@ import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { AvatarForm } from "@/components/account/avatar-form";
 import { PersonalForm } from "@/components/account/personal-form";
 import { BasicsForm } from "./_components/basics-form";
+import { CandidateSetupForm } from "./_components/candidate-setup-form";
 import { BlockedCompanies } from "./_components/blocked-companies";
 import { EntriesSection, type EntryItem } from "./_components/entries-section";
 import { PreferencesForm } from "./_components/preferences-form";
@@ -86,6 +87,40 @@ export default async function ProfilePage() {
       values: { title: e.title, description: e.description, url: e.url ?? "", repoUrl: e.repo_url ?? "" },
     })),
   };
+
+  const countries = countryOptions(locale);
+  const basicsSaved = {
+    headline: c.headline,
+    bio: c.bio,
+    country: c.country ?? "",
+    city: c.city ?? "",
+    languages: c.languages,
+    githubUrl: c.github_url ?? "",
+    linkedinUrl: c.linkedin_url ?? "",
+    websiteUrl: c.website_url ?? "",
+  };
+
+  // Recién creada la cuenta: todo el perfil en un solo formulario y un solo "Finalizar registro".
+  if (!c.setup_completed_at) {
+    return (
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            {t("setup.title")} <Emoji symbol="🙋" />
+          </h1>
+          <p className="text-muted-foreground">{t("setup.subtitle")}</p>
+        </div>
+        <CandidateSetupForm
+          locale={locale}
+          name={person.data?.full_name ?? ""}
+          saved={basicsSaved}
+          countries={countries}
+          languages={languageOptions(locale)}
+          skills={(catalog.data ?? []).map((s) => ({ id: s.id, name: skillName(s) }))}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">

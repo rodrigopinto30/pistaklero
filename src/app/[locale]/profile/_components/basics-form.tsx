@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
-import { idleState } from "@/lib/forms";
+import { type FieldError, idleState } from "@/lib/forms";
 import { updateBasics } from "../actions";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { RichTextarea } from "@/components/editor/rich-textarea";
@@ -32,14 +32,41 @@ export function BasicsForm({ saved, countries, languages }: { saved: BasicsValue
 
   return (
     <form ref={formRef} action={action} noValidate className="flex flex-col gap-4">
-      <Field id="basics-headline" name="headline" label={t("headline")} hint={t("headlineHint")} error={errors.headline}>
+      <BasicsFields idPrefix="basics" saved={saved} countries={countries} languages={languages} errors={errors} value={v} />
+      <SubmitButton />
+      <FormMessage state={state} />
+    </form>
+  );
+}
+
+/** Los campos de "Datos básicos" (también los usa el alta en un paso). */
+export function BasicsFields({
+  idPrefix,
+  saved,
+  countries,
+  languages,
+  errors,
+  value,
+}: {
+  idPrefix: string;
+  saved: BasicsValues;
+  countries: Option[];
+  languages: Option[];
+  errors: Record<string, FieldError>;
+  value: (name: keyof BasicsValues) => string;
+}) {
+  const t = useTranslations("Profile.basics");
+  const v = value;
+  return (
+    <>
+      <Field id={`${idPrefix}-headline`} name="headline" label={t("headline")} hint={t("headlineHint")} error={errors.headline}>
         {(p) => <Input {...p} maxLength={100} defaultValue={v("headline")} />}
       </Field>
-      <Field id="basics-bio" name="bio" label={t("bio")} hint={t("bioHint")} error={errors.bio}>
+      <Field id={`${idPrefix}-bio`} name="bio" label={t("bio")} hint={t("bioHint")} error={errors.bio}>
         {(p) => <RichTextarea {...p} maxLength={500} defaultValue={v("bio")} />}
       </Field>
       <FieldGrid>
-        <Field id="basics-country" name="country" label={t("country")} error={errors.country}>
+        <Field id={`${idPrefix}-country`} name="country" label={t("country")} error={errors.country}>
           {(p) => (
             <NativeSelect {...p} autoComplete="country" defaultValue={v("country")}>
               <option value="">{t("noCountry")}</option>
@@ -51,12 +78,12 @@ export function BasicsForm({ saved, countries, languages }: { saved: BasicsValue
             </NativeSelect>
           )}
         </Field>
-        <Field id="basics-city" name="city" label={t("city")} error={errors.city}>
+        <Field id={`${idPrefix}-city`} name="city" label={t("city")} error={errors.city}>
           {(p) => <Input {...p} autoComplete="address-level2" maxLength={80} defaultValue={v("city")} />}
         </Field>
       </FieldGrid>
 
-      <fieldset className="flex flex-col gap-2" aria-describedby={errors.languages ? "basics-languages-error" : undefined}>
+      <fieldset className="flex flex-col gap-2" aria-describedby={errors.languages ? `${idPrefix}-languages-error` : undefined}>
         <legend className="mb-2 text-sm font-medium">{t("languages")}</legend>
         <div className="flex flex-wrap gap-2">
           {languages.map((language) => (
@@ -79,19 +106,17 @@ export function BasicsForm({ saved, countries, languages }: { saved: BasicsValue
 
       {/* Uno debajo del otro: así se lee la dirección completa. */}
       <div className="flex flex-col gap-4">
-        <Field id="basics-githubUrl" name="githubUrl" label={t("githubUrl")} error={errors.githubUrl}>
+        <Field id={`${idPrefix}-githubUrl`} name="githubUrl" label={t("githubUrl")} error={errors.githubUrl}>
           {(p) => <Input {...p} type="url" inputMode="url" placeholder="github.com/…" defaultValue={v("githubUrl")} />}
         </Field>
-        <Field id="basics-linkedinUrl" name="linkedinUrl" label={t("linkedinUrl")} error={errors.linkedinUrl}>
+        <Field id={`${idPrefix}-linkedinUrl`} name="linkedinUrl" label={t("linkedinUrl")} error={errors.linkedinUrl}>
           {(p) => <Input {...p} type="url" inputMode="url" placeholder="linkedin.com/in/…" defaultValue={v("linkedinUrl")} />}
         </Field>
-        <Field id="basics-websiteUrl" name="websiteUrl" label={t("websiteUrl")} error={errors.websiteUrl}>
+        <Field id={`${idPrefix}-websiteUrl`} name="websiteUrl" label={t("websiteUrl")} error={errors.websiteUrl}>
           {(p) => <Input {...p} type="url" inputMode="url" autoComplete="url" defaultValue={v("websiteUrl")} />}
         </Field>
       </div>
 
-      <SubmitButton />
-      <FormMessage state={state} />
-    </form>
+    </>
   );
 }

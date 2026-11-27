@@ -8,6 +8,8 @@ import { getCurrentProfile } from "@/lib/auth/session";
 import {
   dbErrorCode,
   errorState,
+  type FieldError,
+  type FormErrorCode,
   type FormState,
   formValues,
   successState,
@@ -15,6 +17,10 @@ import {
 } from "@/lib/forms";
 import { refreshProjectPreview, removeProjectPreview } from "@/lib/projects/preview";
 import { createClient } from "@/lib/supabase/server";
+import { storeAvatar } from "@/lib/account/avatar-store";
+import { processAvatar } from "@/lib/images";
+import { redirect } from "@/i18n/navigation";
+import { parseLocale } from "@/i18n/locale";
 import {
   basicsSchema,
   ENTRY_BLOCKS,
@@ -312,4 +318,120 @@ export async function unblockCompany(formData: FormData) {
   await auth.supabase.from("candidate_blocked_companies").delete().eq("candidate_id", auth.userId).eq("company_id", companyId.data);
   await flash("unblocked");
   refresh();
+}
+
+// ---------------------------------------------------------------------------
+// Alta en un paso: todo el perfil en un solo envío ("Finalizar registro")
+// ---------------------------------------------------------------------------
+
+const SETUP_BLOCKS = ["experience", "education", "project"] as const;
+const hasFile = (value: FormDataEntryValue | null): value is File => value instanceof File && value.size > 0;
+
+/** Los grupos repetibles llegan como "experience.3.title": se juntan por bloque y por número. */
+function setupGroups(formData: FormData) {
+  const groups = new Map<string, { block: (typeof SETUP_BLOCKS)[number]; key: string; values: Record<string, string> }>();
+  for (const [name, value] of formData.entries()) {
+    const match = /^(experience|education|project)\.(\d{1,4})\.(\w+)$/.exec(name);
+    if (!match || typeof value !== "string") continue;
+    const [, block, key, field] = match as unknown as [string, (typeof SETUP_BLOCKS)[number], string, string];
+    const id = `${block}.${key}`;
+    if (!groups.has(id)) groups.set(id, { block, key, values: {} });
+    groups.get(id)!.values[field] = value;
+  }
+  return [...groups.values()].slice(0, 30);
+}
+
+/**
+ * Alta de la candidata en un solo envío: foto, datos básicos, habilidades, experiencia, formación,
+ * proyectos, disponibilidad y expectativa salarial. Primero se valida todo; si algo falla no se
+ * guarda nada (y el formulario conserva lo escrito). Después, cada sección se edita por separado.
+ */
+export async function completeCandidateSetup(_prev: FormState, formData: FormData): Promise<FormState> {
+  const values = formValues(formData);
+  const auth = await requireCandidate();
+  if (!auth) return unknownError(values);
+  const locale = parseLocale(formData.get("locale"));
+  const { data: candidate } = await auth.supabase.from("candidates").select("setup_completed_at").eq("user_id", auth.userId).single();
+  if (candidate?.setup_completed_at) return redirect({ href: "/profile", locale });
+
+  const fieldErrors: Record<string, FieldError> = {};
+  const basics = basicsSchema.safeParse({ ...values, languages: formData.getAll("languages") });
+  if (!basics.success) Object.assign(fieldErrors, zodFieldErrors(basics.error));
+  const preferences = preferencesSchema.safeParse(values);
+  if (!preferences.success) Object.assign(fieldErrors, zodFieldErrors(preferences.error));
+  const salary = values.amount ? salarySchema.safeParse(values) : null;
+  if (salary && !salary.success) Object.assign(fieldErrors, zodFieldErrors(salary.error));
+
+  const entries = setupGroups(formData).map((group) => ({ ...group, parsed: entrySchemas[group.block].safeParse(group.values) }));
+  for (const entry of entries) {
+    if (entry.parsed.success) continue;
+    for (const [field, error] of Object.entries(zodFieldErrors(entry.parsed.error))) fieldErrors[`${entry.block}.${entry.key}.${field}`] = error;
+  }
+
+  const avatarFile = formData.get("avatar");
+  const avatar = hasFile(avatarFile) ? await processAvatar(avatarFile) : null;
+  let formError: FormErrorCode | undefined;
+  if (avatar && !avatar.ok) {
+    fieldErrors.avatar = { code: "invalid" };
+    formError = avatar.code === "file_too_large" ? "avatar_too_large" : avatar.code;
+  }
+  if (Object.keys(fieldErrors).length > 0 || !basics.success || !preferences.success) return errorState(values, fieldErrors, formError);
+
+  const b = basics.data;
+  const { error } = await auth.supabase
+    .from("candidates")
+    .update({
+      headline: b.headline,
+      bio: b.bio,
+      country: b.country ?? null,
+      city: b.city || null,
+      languages: b.languages,
+      github_url: b.githubUrl ?? null,
+      linkedin_url: b.linkedinUrl ?? null,
+      website_url: b.websiteUrl ?? null,
+      availability: preferences.data.availability,
+      visibility: preferences.data.visibility,
+    })
+    .eq("user_id", auth.userId);
+  if (error) return errorState(values, {}, dbErrorCode(error));
+
+  if (avatar?.ok) {
+    const saved = await storeAvatar(auth.supabase, auth.userId, avatar.webp);
+    if (saved !== "ok") return errorState(values, {}, saved);
+  }
+
+  const skillIds = [...new Set(formData.getAll("skillIds").map(String))].filter((id) => z.uuid().safeParse(id).success).slice(0, 30);
+  if (skillIds.length > 0) {
+    await auth.supabase.from("candidate_skills").upsert(
+      skillIds.map((skill_id) => ({ candidate_id: auth.userId, skill_id, level: "intermediate" as const })),
+      { ignoreDuplicates: true }
+    );
+  }
+
+  for (const entry of entries) {
+    const { data } = await writeEntry(auth.supabase, auth.userId, entry.block, null, entry.values);
+    if (entry.block === "project" && data && "id" in data) {
+      const projectUrl = entrySchemas.project.parse(entry.values).url ?? null;
+      const { userId } = auth;
+      after(() => refreshProjectPreview(data.id, userId, projectUrl));
+    }
+  }
+
+  if (salary?.success) {
+    await auth.supabase.from("candidate_salary_expectations").upsert({
+      candidate_id: auth.userId,
+      amount: salary.data.amount,
+      currency: salary.data.currency,
+      period: salary.data.period,
+      basis: salary.data.basis,
+      visibility: salary.data.salaryVisibility,
+    });
+  }
+
+  const done = await auth.supabase.rpc("complete_candidate_setup");
+  if (done.error) return errorState(values, {}, dbErrorCode(done.error));
+
+  await flash("profileReady");
+  refresh();
+  return redirect({ href: "/profile", locale });
 }

@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Input } from "@/components/ui/input";
-import { idleState } from "@/lib/forms";
+import { type FieldError, idleState } from "@/lib/forms";
 import type { EntryBlock } from "@/lib/validation/profile";
 import { deleteEntry, saveEntry } from "../actions";
 import { SubmitButton } from "@/components/forms/submit-button";
@@ -62,31 +62,42 @@ const LAYOUT: Record<EntryBlock, (FieldConfig[] | "current")[]> = {
 
 export type EntryItem = { id: string; heading: string; subheading: string; period: string | null; values: Record<string, string> };
 
-function EntryForm({ block, entry }: { block: EntryBlock; entry?: EntryItem }) {
+/**
+ * Los campos de un bloque (experiencia, formación…). `namePrefix` los agrupa cuando hay varios en un
+ * mismo formulario (el alta en un paso manda "experience.0.title", "experience.1.title"…).
+ */
+export function EntryFields({
+  block,
+  idPrefix,
+  namePrefix = "",
+  errors,
+  value,
+  current,
+}: {
+  block: EntryBlock;
+  idPrefix: string;
+  namePrefix?: string;
+  errors: Record<string, FieldError>;
+  value: (name: string) => string;
+  current: boolean;
+}) {
   const t = useTranslations("Profile.entries");
-  const [state, action] = useActionState(saveEntry, idleState);
-  const formRef = useFocusFirstError(state);
-  const errors = state.status === "error" ? state.fieldErrors : {};
-  const prefix = `${block}-${entry?.id ?? "new"}`;
-  // Una entrada guardada sin fecha de fin es una que sigue en curso.
-  const current = state.status === "error" ? state.values.current === "on" : Boolean(entry && !entry.values.endDate);
-
   const renderField = (field: FieldConfig) => (
     <Field
       key={field.name}
-      id={`${prefix}-${field.name}`}
-      name={field.name}
+      id={`${idPrefix}-${field.name}`}
+      name={`${namePrefix}${field.name}`}
       // La clave se arma con el bloque y el campo; las dos existen en Profile.entries (lo verifica el test de traducciones).
       label={t(`${block}.${field.label}` as Parameters<typeof t>[0])}
       required={field.required}
       hint={field.type === "month" ? t(field.name === "endDate" ? "endHint" : "monthHint") : undefined}
-      error={errors[field.name]}
+      error={errors[`${namePrefix}${field.name}`]}
       // Con "sigue en curso" marcado, la fecha de fin no hace falta: se oculta (y no se envía como dato útil).
-      className={field.name === "endDate" ? "group-has-[[name=current]:checked]/entry:hidden" : undefined}
+      className={field.name === "endDate" ? "group-has-[[name$=current]:checked]/entry:hidden" : undefined}
     >
       {(p) =>
         field.type === "textarea" ? (
-          <RichTextarea {...p} maxLength={field.max} defaultValue={valueOf(state, field.name, entry?.values[field.name])} />
+          <RichTextarea {...p} maxLength={field.max} defaultValue={value(field.name)} />
         ) : (
           <Input
             {...p}
@@ -94,7 +105,7 @@ function EntryForm({ block, entry }: { block: EntryBlock; entry?: EntryItem }) {
             inputMode={field.type === "url" ? "url" : undefined}
             placeholder={field.type === "month" ? "2024-03" : undefined}
             maxLength={field.max}
-            defaultValue={valueOf(state, field.name, entry?.values[field.name])}
+            defaultValue={value(field.name)}
           />
         )
       }
@@ -102,13 +113,11 @@ function EntryForm({ block, entry }: { block: EntryBlock; entry?: EntryItem }) {
   );
 
   return (
-    <form ref={formRef} action={action} noValidate className="group/entry flex flex-col gap-4 pt-3">
-      <input type="hidden" name="block" value={block} />
-      {entry && <input type="hidden" name="id" value={entry.id} />}
+    <>
       {LAYOUT[block].map((row, index) =>
         row === "current" ? (
           <label key="current" className="inline-flex min-h-10 cursor-pointer items-center gap-3 self-start text-sm">
-            <input type="checkbox" name="current" defaultChecked={current} className="size-4 accent-primary" />
+            <input type="checkbox" name={`${namePrefix}current`} defaultChecked={current} className="size-4 accent-primary" />
             {t(`${block}.current` as Parameters<typeof t>[0])}
           </label>
         ) : row.length > 1 ? (
@@ -117,6 +126,29 @@ function EntryForm({ block, entry }: { block: EntryBlock; entry?: EntryItem }) {
           renderField(row[0])
         )
       )}
+    </>
+  );
+}
+
+function EntryForm({ block, entry }: { block: EntryBlock; entry?: EntryItem }) {
+  const t = useTranslations("Profile.entries");
+  const [state, action] = useActionState(saveEntry, idleState);
+  const formRef = useFocusFirstError(state);
+  const errors = state.status === "error" ? state.fieldErrors : {};
+  // Una entrada guardada sin fecha de fin es una que sigue en curso.
+  const current = state.status === "error" ? state.values.current === "on" : Boolean(entry && !entry.values.endDate);
+
+  return (
+    <form ref={formRef} action={action} noValidate className="group/entry flex flex-col gap-4 pt-3">
+      <input type="hidden" name="block" value={block} />
+      {entry && <input type="hidden" name="id" value={entry.id} />}
+      <EntryFields
+        block={block}
+        idPrefix={`${block}-${entry?.id ?? "new"}`}
+        errors={errors}
+        value={(name) => valueOf(state, name, entry?.values[name])}
+        current={current}
+      />
       <SubmitButton label={entry ? undefined : t(`${block}.add`)} />
       <FormMessage state={state} />
     </form>
