@@ -64,8 +64,10 @@ select throws_ok(
 );
 reset role;
 
--- Visibilidad
+-- Visibilidad (el reclutador registra la vista del día: límite de 200 por día, ver 18_profile_views)
+select slug as ana_slug from public.candidates where user_id = :'ana' \gset
 select tests.authenticate_as(:'globex');
+select public.register_profile_view(:'ana_slug') = 'ok' as registered;
 select is((select count(*)::int from public.candidates where user_id = :'ana'), 1, 'una empresa no bloqueada ve el perfil');
 select is((select count(*)::int from public.candidate_experiences where candidate_id = :'ana'), 1, 'y también sus bloques');
 select is((select count(*)::int from public.candidate_salary_expectations where candidate_id = :'ana'), 0, 'pero no su expectativa salarial');

@@ -68,7 +68,10 @@ select tests.authenticate_as(:'beto');
 select is((select count(*)::int from public.candidates where user_id = :'ana'), 0, 'otra candidata no ve un perfil "solo empresas"');
 reset role;
 
+-- El reclutador registra la vista del día (límite de 200 por día; ver 18_profile_views).
+select slug as ana_slug from public.candidates where user_id = :'ana' \gset
 select tests.authenticate_as(:'acme');
+select public.register_profile_view(:'ana_slug') = 'ok' as registered;
 select is((select count(*)::int from public.candidates where user_id = :'ana'), 1, 'un reclutador sí lo ve');
 reset role;
 
