@@ -1,5 +1,6 @@
 "use server";
 
+import { flash } from "@/lib/flash.server";
 import { randomUUID } from "node:crypto";
 import { refresh } from "next/cache";
 import { z } from "zod";
@@ -102,6 +103,7 @@ export async function removeCompanyLogo() {
   // Texto vacío = quitar el logo.
   const { error } = await member.supabase.rpc("set_company_logo", { p_path: "" });
   if (!error) await createAdminClient().storage.from(LOGO_BUCKET).remove([member.company.logo_path]);
+  await flash("removed");
   refresh();
 }
 
@@ -124,5 +126,6 @@ export async function removeCompanySkill(formData: FormData) {
   const skillId = z.uuid().safeParse(formData.get("skillId"));
   if (!member || !skillId.success) return;
   await member.supabase.from("company_skills").delete().eq("company_id", member.company.id).eq("skill_id", skillId.data);
+  await flash("removed");
   refresh();
 }

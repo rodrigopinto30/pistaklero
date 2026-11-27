@@ -121,7 +121,7 @@ function ReviewForm({ proposed, countries }: { proposed: Record<string, string>;
         </div>
       </fieldset>
       <SubmitButton label={t("publish")} />
-      <FormMessage state={state} />
+      <FormMessage state={state} success="published" />
     </form>
   );
 }

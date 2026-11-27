@@ -1,5 +1,6 @@
 "use server";
 
+import { flash } from "@/lib/flash.server";
 import { refresh } from "next/cache";
 import { z } from "zod";
 import { getCurrentProfile } from "@/lib/auth/session";
@@ -145,6 +146,7 @@ export async function syncSourceNow(formData: FormData) {
   const sourceId = z.uuid().safeParse(formData.get("sourceId"));
   if (!(await isAdmin()) || !sourceId.success) return;
   await syncImportSource(sourceId.data);
+  await flash("done");
   refresh();
 }
 
@@ -153,5 +155,6 @@ export async function setSourceActive(formData: FormData) {
   if (!(await isAdmin()) || !sourceId.success) return;
   const supabase = await createClient();
   await supabase.rpc("admin_set_import_source_active", { p_source_id: sourceId.data, p_active: formData.get("active") === "true" });
+  await flash("done");
   refresh();
 }

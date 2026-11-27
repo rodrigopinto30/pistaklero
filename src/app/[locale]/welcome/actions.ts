@@ -1,5 +1,6 @@
 "use server";
 
+import { flash } from "@/lib/flash.server";
 import { refresh } from "next/cache";
 import { after } from "next/server";
 import { importAvatarFromProvider } from "@/lib/account/avatar";
@@ -81,6 +82,7 @@ export async function completeOnboarding(
     after(() => importAvatarFromProvider(id, avatarUrl));
   }
 
+  await flash("welcome");
   // El encabezado (en el layout) tiene que dejar de mostrar "Completá tu registro".
   refresh();
   // Cada rol sigue en su espacio: la candidata arma su perfil y la empresa va a su panel.
