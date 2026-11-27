@@ -39,6 +39,25 @@ services:
       - dev-home:/home/dev
       - /var/run/docker.sock:/var/run/docker.sock
 
+  # Tests de punta a punta (Playwright + axe) contra la app levantada. Se usa con ./e2e.sh.
+  # La versión de la imagen tiene que coincidir con @playwright/test en package.json.
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.65.1-noble
+    profiles: ["e2e"]
+    init: true
+    ipc: host
+    user: "${HOST_UID:?Usá ./start.sh}:${HOST_GID:?Usá ./start.sh}"
+    network_mode: host
+    working_dir: ${PROJECT_DIR:?Usá ./start.sh}
+    volumes:
+      - .:${PROJECT_DIR}
+    env_file:
+      - path: .env.local
+        required: false
+    environment:
+      HOME: /tmp
+      CI: ${CI:-}
+
 volumes:
   pnpm-store:
   dev-home:
