@@ -487,7 +487,12 @@
       "external": "External job",
       "closed": "This job no longer accepts applications."
     },
-    "viewApplicants": "View applicants"
+    "viewApplicants": "View applicants",
+    "templates": {
+      "title": "Start from a template",
+      "hint": "Fills in the title, a base description, the seniority and the technologies. You can then adjust anything you want.",
+      "blank": "Start from scratch"
+    }
   },
   "Search": {
     "label": "Search jobs",

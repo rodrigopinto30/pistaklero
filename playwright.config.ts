@@ -13,7 +13,9 @@ export default defineConfig({
   // Con la suite en paralelo, el servidor de desarrollo puede tardar más en compilar y responder.
   expect: { timeout: 10_000 },
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  // Un reintento en local: el servidor de desarrollo a veces responde 500 a sus propios recursos internos
+  // mientras compila. Playwright igual los informa como "flaky", así que no quedan escondidos.
+  retries: process.env.CI ? 2 : 1,
   reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]],
   use: {
     baseURL: process.env.E2E_BASE_URL ?? "http://127.0.0.1:3000",
