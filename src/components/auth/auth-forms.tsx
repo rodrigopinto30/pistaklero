@@ -142,7 +142,7 @@ export function SignUpForm({ locale, role, next }: { locale: string; role: SignU
       <AuthField label={tAuth("emailLabel")} error={emailError}>
         {(props) => <Input {...props} name="email" type="email" autoComplete="username" inputMode="email" required defaultValue={error?.email} />}
       </AuthField>
-      <NewPasswordFields label={tAuth("passwordLabel")} errorCode={passwordProblem} />
+      <NewPasswordFields label={tAuth("passwordLabel")} errorCode={passwordProblem} errorFrom={state} />
       <FormAlert>{formError}</FormAlert>
       <Button type="submit" size="lg" disabled={pending}>
         {pending ? t("submitting") : t("submit")}
@@ -296,7 +296,7 @@ function ResetPasswordForm({ locale, email }: { locale: string; email: string })
         <AuthField label={tCode("label")} error={codeError}>
           {(props) => <CodeInput {...props} defaultValue={error?.typedCode} />}
         </AuthField>
-        <NewPasswordFields label={t("newPassword")} errorCode={passwordProblem} />
+        <NewPasswordFields label={t("newPassword")} errorCode={passwordProblem} errorFrom={state} />
         <FormAlert>{formError}</FormAlert>
         <Button type="submit" size="lg" disabled={pending}>
           {pending ? t("saving") : t("save")}
@@ -333,7 +333,7 @@ export function ChangePasswordForm({ email }: { email: string }) {
     <form ref={formRef} action={action} noValidate className="flex max-w-sm flex-col gap-4">
       <input type="text" name="username" value={email} autoComplete="username" readOnly hidden />
       <PasswordField label={t("change.current")} name="current_password" autoComplete="current-password" error={currentError} />
-      <NewPasswordFields label={t("newPassword")} errorCode={passwordProblem} />
+      <NewPasswordFields label={t("newPassword")} errorCode={passwordProblem} errorFrom={state} />
       <FormAlert>{formError}</FormAlert>
       <Button type="submit" disabled={pending} className="self-start">
         {pending ? t("saving") : t("change.submit")}

@@ -2,7 +2,7 @@
 
 import { Check, Eye, EyeOff, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -28,16 +28,23 @@ export function PasswordField({ label, name, autoComplete, error, describedBy, o
   const id = useId();
   const errorId = `${id}-error`;
   const [visible, setVisible] = useState(false);
+  // Controlado: si React vacía el formulario después de un envío y la persona vuelve a escribir la
+  // misma contraseña, un campo sin controlar no avisaría el cambio (React recuerda el valor anterior).
+  const [value, setValue] = useState("");
   const input = useRef<HTMLInputElement>(null);
 
-  // Después de cada envío React vacía el formulario: lo que se mostraba (reglas, coincidencia) también.
+  const update = (next: string) => {
+    setValue(next);
+    onValueChange?.(next);
+  };
+  const onReset = useEffectEvent(() => update(""));
   useEffect(() => {
     const form = input.current?.form;
-    if (!form || !onValueChange) return;
-    const onReset = () => onValueChange("");
-    form.addEventListener("reset", onReset);
-    return () => form.removeEventListener("reset", onReset);
-  }, [onValueChange]);
+    if (!form) return;
+    const handler = () => onReset();
+    form.addEventListener("reset", handler);
+    return () => form.removeEventListener("reset", handler);
+  }, []);
 
   return (
     <div className="flex flex-col gap-2">
@@ -59,7 +66,8 @@ export function PasswordField({ label, name, autoComplete, error, describedBy, o
           required
           aria-invalid={error ? true : undefined}
           aria-describedby={[error ? errorId : null, describedBy].filter(Boolean).join(" ") || undefined}
-          onChange={(event) => onValueChange?.(event.target.value)}
+          value={value}
+          onChange={(event) => update(event.target.value)}
           className="pr-12"
         />
         <button
@@ -87,21 +95,27 @@ export function PasswordField({ label, name, autoComplete, error, describedBy, o
  * debajo de la repetición, se avisa si coinciden. Los textos dicen el estado de cada regla
  * ("cumplida" / "falta") para quien usa lector de pantalla, sin anunciar cada tecla.
  */
-export function NewPasswordFields({ label, errorCode }: { label: string; errorCode?: string | null }) {
+export function NewPasswordFields({ label, errorCode, errorFrom }: { label: string; errorCode?: string | null; errorFrom?: object }) {
   const t = useTranslations("Password");
   const rulesId = useId();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  // El error del servidor vale hasta que se vuelve a escribir: después mandan la lista y "Coinciden".
+  const [editedAfter, setEditedAfter] = useState<object | undefined>(undefined);
   const checks = passwordRuleChecks(password);
+  const edit = (set: (value: string) => void) => (value: string) => {
+    set(value);
+    if (value) setEditedAfter(errorFrom);
+  };
 
-  const problem = (errorCode ?? null) as PasswordProblem | null;
+  const problem = (errorFrom && editedAfter === errorFrom ? null : (errorCode ?? null)) as PasswordProblem | null;
   const passwordError = problem && problem !== "mismatch" ? t(`problems.${problem}`) : null;
   const confirmError = problem === "mismatch" ? t("problems.mismatch") : null;
 
   return (
     <>
       <div className="flex flex-col gap-2">
-        <PasswordField label={label} name="password" autoComplete="new-password" error={passwordError} describedBy={rulesId} onValueChange={setPassword} />
+        <PasswordField label={label} name="password" autoComplete="new-password" error={passwordError} describedBy={rulesId} onValueChange={edit(setPassword)} />
         <ul id={rulesId} aria-label={t("rules.label")} className="grid gap-1 text-sm sm:grid-cols-2">
           {PASSWORD_RULES.map((rule) => (
             <li key={rule} className={cn("flex items-center gap-1.5 transition-colors", checks[rule] ? "text-verified" : "text-muted-foreground")}>
@@ -113,7 +127,7 @@ export function NewPasswordFields({ label, errorCode }: { label: string; errorCo
         </ul>
       </div>
       <div className="flex flex-col gap-2">
-        <PasswordField label={t("repeat")} name="password_confirm" autoComplete="new-password" error={confirmError} onValueChange={setConfirm} />
+        <PasswordField label={t("repeat")} name="password_confirm" autoComplete="new-password" error={confirmError} onValueChange={edit(setConfirm)} />
         {confirm.length > 0 && !confirmError && (
           <p className={cn("flex items-center gap-1.5 text-sm", confirm === password ? "text-verified" : "text-muted-foreground")}>
             {confirm === password ? <Check aria-hidden="true" className="size-4" /> : <X aria-hidden="true" className="size-4" />}

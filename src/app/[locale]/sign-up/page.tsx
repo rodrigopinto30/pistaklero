@@ -2,7 +2,6 @@ import { Briefcase, Search } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SignUpSteps } from "@/components/auth/sign-up-steps";
-import { buttonVariants } from "@/components/ui/button";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { safeNextPath } from "@/lib/auth/redirect";

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { buttonVariants } from "@/components/ui/button";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { safeNextPath } from "@/lib/auth/redirect";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
