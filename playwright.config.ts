@@ -8,8 +8,9 @@ export default defineConfig({
   testDir: "./e2e",
   globalSetup: "./e2e/support/global-setup.ts",
   fullyParallel: true,
-  // El servidor de desarrollo compila cada página a pedido: con muchos workers se satura.
-  workers: 3,
+  // El servidor de desarrollo compila cada página a pedido: con muchos workers se satura (y con
+  // pocos núcleos o poca memoria se puede trabar la máquina). E2E_WORKERS lo cambia.
+  workers: Number(process.env.E2E_WORKERS) || 2,
   timeout: 60_000,
   // Con la suite en paralelo, el servidor de desarrollo puede tardar más en compilar y responder.
   expect: { timeout: 10_000 },
