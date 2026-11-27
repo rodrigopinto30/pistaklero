@@ -320,7 +320,8 @@
     "editCompany": "Edit the company page",
     "viewCompany": "View public page",
     "jobsTitle": "Jobs",
-    "jobsEmpty": "You haven't posted any jobs yet."
+    "jobsEmpty": "You haven't posted any jobs yet.",
+    "team": "Team"
   },
   "CompanyPage": {
     "verified": "Verified company",
@@ -332,5 +333,41 @@
     "jobs": "Open jobs",
     "noJobs": "There are no open jobs right now.",
     "website": "Website"
+  },
+  "Team": {
+    "metaTitle": "Team",
+    "title": "Team",
+    "subtitle": "Who manages {company}'s jobs.",
+    "membersTitle": "Members",
+    "roles": {
+      "owner": "Owner (manages the team)",
+      "member": "Recruiter"
+    },
+    "makeOwner": "Make owner",
+    "makeOwnerOf": "Make {email} an owner",
+    "remove": "Remove",
+    "removeOf": "Remove {email} from the team",
+    "inviteTitle": "Invite someone",
+    "inviteHint": "They get an email with a link that expires in 7 days. They must sign in with that same email.",
+    "email": "Email",
+    "emailHint": "Ideally the company email, so it's clear who they are.",
+    "emailLanguage": "Email language",
+    "invite": "Send invitation",
+    "pendingTitle": "Pending invitations",
+    "pendingEmpty": "There are no pending invitations.",
+    "expires": "Expires on {date}",
+    "revoke": "Revoke",
+    "revokeOf": "Revoke the invitation for {email}",
+    "onlyOwners": "Only owners can invite or remove members."
+  },
+  "Invitation": {
+    "metaTitle": "Invitation",
+    "title": "We couldn't use the invitation",
+    "backHome": "Back to home",
+    "errors": {
+      "invalid_invitation": "The invitation doesn't exist, was already used or expired. Ask your team to send a new one.",
+      "email_mismatch": "You signed in as {email}, but the invitation is for another email. Sign out and sign in with the invited email.",
+      "already_onboarded": "Your account already has a role on Pistaklero. To join a team, use another account with the invited email."
+    }
   }
 }

@@ -320,7 +320,8 @@
     "editCompany": "Editar la página de la empresa",
     "viewCompany": "Ver página pública",
     "jobsTitle": "Ofertas",
-    "jobsEmpty": "Todavía no publicaste ofertas."
+    "jobsEmpty": "Todavía no publicaste ofertas.",
+    "team": "Equipo"
   },
   "CompanyPage": {
     "verified": "Empresa verificada",
@@ -332,5 +333,41 @@
     "jobs": "Ofertas abiertas",
     "noJobs": "No hay ofertas abiertas en este momento.",
     "website": "Sitio web"
+  },
+  "Team": {
+    "metaTitle": "Equipo",
+    "title": "Equipo",
+    "subtitle": "Quiénes gestionan las ofertas de {company}.",
+    "membersTitle": "Miembros",
+    "roles": {
+      "owner": "Owner (administra el equipo)",
+      "member": "Reclutador/a"
+    },
+    "makeOwner": "Hacer owner",
+    "makeOwnerOf": "Hacer owner a {email}",
+    "remove": "Quitar",
+    "removeOf": "Quitar a {email} del equipo",
+    "inviteTitle": "Invitar a alguien",
+    "inviteHint": "Le llega un email con un link que vence en 7 días. Tiene que entrar con ese mismo email.",
+    "email": "Email",
+    "emailHint": "Idealmente, el email de la empresa: así queda claro quién es.",
+    "emailLanguage": "Idioma del email",
+    "invite": "Enviar invitación",
+    "pendingTitle": "Invitaciones pendientes",
+    "pendingEmpty": "No hay invitaciones pendientes.",
+    "expires": "Vence el {date}",
+    "revoke": "Revocar",
+    "revokeOf": "Revocar la invitación de {email}",
+    "onlyOwners": "Solo los owners pueden invitar o quitar miembros."
+  },
+  "Invitation": {
+    "metaTitle": "Invitación",
+    "title": "No pudimos usar la invitación",
+    "backHome": "Volver al inicio",
+    "errors": {
+      "invalid_invitation": "La invitación no existe, ya se usó o venció. Pedile a tu equipo que te mande una nueva.",
+      "email_mismatch": "Entraste como {email}, pero la invitación es para otro email. Salí y entrá con el email que recibió la invitación.",
+      "already_onboarded": "Tu cuenta ya tiene un rol en Pistaklero. Para sumarte a un equipo, usá otra cuenta con el email invitado."
+    }
   }
 }
