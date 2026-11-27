@@ -463,7 +463,8 @@
       "new": "Post a job",
       "published": "Published on {date}",
       "validThrough": "Expires on {date}",
-      "draft": "Not published"
+      "draft": "Not published",
+      "applicants": "{total, plural, =0 {No applications} one {# application} other {# applications}} · {pending} unreviewed"
     },
     "detail": {
       "postedOn": "Posted on {date}",
@@ -476,7 +477,8 @@
       "applyExternal": "Apply on the original site",
       "external": "External job",
       "closed": "This job no longer accepts applications."
-    }
+    },
+    "viewApplicants": "View applicants"
   },
   "Search": {
     "label": "Search jobs",
@@ -556,6 +558,46 @@
       "rejected": "Not selected",
       "no_response": "No response",
       "withdrawn": "Withdrawn"
+    }
+  },
+  "Applicants": {
+    "metaTitle": "Applicants",
+    "title": "Applicants for {job}",
+    "backToJob": "Back to the job",
+    "tabsLabel": "Filter by status",
+    "empty": "There are no applications with this status.",
+    "unavailable": "Profile unavailable",
+    "tabs": {
+      "received": "New",
+      "in_review": "In review",
+      "interview": "Interview",
+      "closed": "Closed"
+    },
+    "availability": "Availability: {value}",
+    "appliedAgo": "applied {when}",
+    "expectation": "Expects {value}",
+    "moveTo": "Move {name} to",
+    "move": "Move",
+    "actions": {
+      "in_review": "In review",
+      "interview": "Interview",
+      "hired": "Hired"
+    },
+    "rejectToggle": "Reject {name} with a message",
+    "template": "Template",
+    "templateN": "Template {n}",
+    "message": "Message for the person",
+    "messageHint": "They get it by email. You can edit it; up to 1000 characters.",
+    "reject": "Reject and send message",
+    "templates": {
+      "es": {
+        "friendly": "¡Gracias por postularte a {job}! Revisamos tu perfil con atención y en esta oportunidad decidimos avanzar con otras personas. Nos gustó conocerte: te deseamos mucha suerte en la búsqueda.",
+        "brief": "Gracias por tu interés en {job}. Esta vez seguimos con otros perfiles. ¡Éxitos!"
+      },
+      "en": {
+        "friendly": "Thank you for applying to {job}! We reviewed your profile carefully and this time we decided to move forward with other people. It was great to get to know you: best of luck with your search.",
+        "brief": "Thanks for your interest in {job}. This time we're moving forward with other profiles. Best of luck!"
+      }
     }
   }
 }

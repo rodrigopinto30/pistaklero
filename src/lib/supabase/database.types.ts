@@ -484,6 +484,9 @@ isOneToOne: false
 "candidate_missing_requirements":
 { Args: { "p_candidate_id": string }; Returns: (string)[]
                            },
+"change_application_status":
+{ Args: { "p_application_id": string,"p_message"?: string,"p_to": Database["public"]['Enums']["application_status"] }; Returns: undefined
+                           },
 "claim_email_batch":
 { Args: { "p_limit": number }; Returns: {
               "attempts": number,
@@ -540,6 +543,11 @@ isOneToOne: false
                            },
 "my_company_id":
 { Args: Record<PropertyKey, never>; Returns: string
+                           },
+"my_job_application_counts":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "job_id": string,"status": Database["public"]['Enums']["application_status"],"total": number
+            }[]
                            },
 "onboard_candidate":
 { Args: { "p_full_name": string,"p_headline": string,"p_locale": Database["public"]['Enums']["app_locale"] }; Returns: undefined

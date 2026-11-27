@@ -48,6 +48,38 @@ export async function addQuestions(jobTitle: string) {
   return job!.slug;
 }
 
+/** Publica una oferta directamente para una empresa ya creada (por su nombre). */
+export async function publishJobFor(companyName: string, title: string) {
+  const { data: company } = await admin.from("companies").select("id").eq("name", companyName).single();
+  const { data: job, error } = await admin
+    .from("jobs")
+    .insert({
+      company_id: company!.id,
+      title,
+      description: "Oferta de prueba para la gestión de postulantes.",
+      language: "es",
+      seniority: "junior",
+      employment_type: "full_time",
+      work_mode: "remote",
+      salary_min: 1000,
+      salary_max: 1500,
+      salary_currency: "USD",
+      salary_period: "month",
+      salary_basis: "gross",
+      valid_through: new Date(Date.now() + 30 * 86_400_000).toISOString(),
+      status: "published",
+    })
+    .select("id, slug")
+    .single();
+  if (error) throw error;
+  return job!;
+}
+
+export async function emailOf(userId: string) {
+  const { data } = await admin.auth.admin.getUserById(userId);
+  return data.user!.email!;
+}
+
 export async function jobSlug(jobTitle: string) {
   const { data } = await admin.from("jobs").select("slug").eq("title", jobTitle).single();
   return data!.slug;
