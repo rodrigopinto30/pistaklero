@@ -1,3 +1,4 @@
+import { withinGifLimit } from "@/lib/gifs/gifs";
 import { z } from "zod";
 import { COUNTRY_CODES, LANGUAGE_CODES } from "@/lib/geo";
 import { optionalHttpsUrl } from "./onboarding";
@@ -15,7 +16,7 @@ const optionalMonth = z.preprocess(emptyToUndefined, month.optional());
 
 export const basicsSchema = z.object({
   headline: optionalText(100),
-  bio: optionalText(500),
+  bio: optionalText(500).refine(withinGifLimit, { message: "too_many_gifs" }),
   country: z.preprocess(emptyToUndefined, z.enum(COUNTRY_CODES).optional()),
   city: optionalText(80),
   languages: z.array(z.enum(LANGUAGE_CODES)).max(10),
@@ -70,7 +71,7 @@ export const entrySchemas = {
       startDate: month,
       endDate: optionalMonth,
       current: checkbox,
-      description: optionalText(1000),
+      description: optionalText(1000).refine(withinGifLimit, { message: "too_many_gifs" }),
     })
     .superRefine(checkPeriod)
     .transform(withoutEndIfCurrent),
@@ -92,7 +93,7 @@ export const entrySchemas = {
   }),
   project: z.object({
     title: requiredText(80),
-    description: optionalText(500),
+    description: optionalText(500).refine(withinGifLimit, { message: "too_many_gifs" }),
     url: optionalHttpsUrl,
     repoUrl: optionalHttpsUrl,
   }),

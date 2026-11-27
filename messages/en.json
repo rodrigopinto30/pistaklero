@@ -132,7 +132,8 @@
       "end_required": "Enter the end date or mark it as ongoing.",
       "invalid_url": "Enter a valid web address, for example github.com/your-user.",
       "invalid_month": "Enter the month as YYYY-MM, for example 2024-03.",
-      "amount_positive": "Enter an amount greater than 0, numbers only."
+      "amount_positive": "Enter an amount greater than 0, numbers only.",
+      "too_many_gifs": "Up to 3 GIFs per text: remove one."
     },
     "noChanges": "Nothing to save yet"
   },
@@ -1478,5 +1479,20 @@
       "member_joined": "{email} joined the team.",
       "role_changed": "You're now {role} of the {company} team."
     }
+  },
+  "Editor": {
+    "toolbar": "Formatting",
+    "emoji": "Add an emoji",
+    "emojiSearch": "Search emoji",
+    "noEmoji": "We couldn't find that emoji.",
+    "loading": "Loading…",
+    "gif": "Add a GIF",
+    "gifTitle": "Choose a GIF",
+    "gifSearch": "Search GIPHY",
+    "noGif": "No GIFs found for that.",
+    "gifError": "We couldn't load the GIFs. Try again in a while.",
+    "gifLimit": "up to {max} GIFs per text",
+    "close": "Close",
+    "markdownHint": "**bold**, - lists"
   }
 }

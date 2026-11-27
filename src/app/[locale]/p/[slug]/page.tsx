@@ -10,6 +10,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { countryName, formatMonth, languageOptions } from "@/lib/geo";
 import { projectPreviewUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
+import { Markdown } from "@/components/markdown";
 
 /*
  * Un reclutador primero registra la vista del día: la base limita a 200 perfiles "solo empresas" por día
@@ -149,7 +150,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
 
       {candidate.bio && (
         <Card title={t("about")} className="md:col-span-2">
-          <p className="whitespace-pre-line">{candidate.bio}</p>
+          <Markdown>{candidate.bio}</Markdown>
         </Card>
       )}
 
@@ -184,7 +185,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
                   />
                 )}
                 <h3 className="font-medium">{p.title}</h3>
-                {p.description && <p className="text-sm text-muted-foreground">{p.description}</p>}
+                {p.description && <div className="text-sm text-muted-foreground"><Markdown>{p.description}</Markdown></div>}
                 <div className="mt-auto flex flex-wrap gap-3 text-sm">
                   {p.url && (
                     <a href={p.url} rel="noopener noreferrer nofollow ugc" target="_blank" className="text-violet underline-offset-4 hover:underline">
@@ -214,7 +215,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
                   {e.title} · <span className="text-muted-foreground">{e.company_name}</span>
                 </h3>
                 <p className="text-sm text-muted-foreground">{period(e.start_date, e.end_date)}</p>
-                {e.description && <p className="text-sm whitespace-pre-line">{e.description}</p>}
+                {e.description && <div className="text-sm"><Markdown>{e.description}</Markdown></div>}
               </li>
             ))}
           </ol>

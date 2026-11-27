@@ -5,6 +5,7 @@ import { locale as rootLocale } from "next/root-params";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import { BackToTop } from "@/components/back-to-top";
+import { FeaturesProvider } from "@/components/features";
 import { ExternalApplyCheck } from "@/components/jobs/external-apply-check";
 import { getCurrentProfile } from "@/lib/auth/session";
 import { SiteFooter } from "@/components/site-footer";
@@ -72,6 +73,8 @@ export default async function LocaleLayout({
           {t("skipToContent")}
         </a>
         <NextIntlClientProvider>
+          {/* Los GIFs aparecen en el editor solo si hay clave de GIPHY. */}
+          <FeaturesProvider value={{ gifs: Boolean(process.env.GIPHY_API_KEY) }}>
           <SiteHeader />
           <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col outline-none">
             {children}
@@ -80,6 +83,7 @@ export default async function LocaleLayout({
           <BackToTop />
           {profile?.role === "candidate" && <ExternalApplyCheck />}
           <Toaster />
+          </FeaturesProvider>
         </NextIntlClientProvider>
       </body>
     </html>

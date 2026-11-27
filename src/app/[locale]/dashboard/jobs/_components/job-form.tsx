@@ -12,6 +12,7 @@ import { idleState } from "@/lib/forms";
 import { CURRENCIES, SALARY_BASES, SALARY_PERIODS } from "@/lib/validation/profile";
 import { EMPLOYMENT_TYPES, QUESTION_TYPES, APPLY_MODES, SENIORITIES, VALID_DAYS, WORK_MODES } from "@/lib/validation/job";
 import { saveJob } from "../actions";
+import { RichTextarea } from "@/components/editor/rich-textarea";
 
 export type JobFormValues = Record<string, string> & { skills: string };
 type Option = { code: string; name: string };
@@ -77,7 +78,7 @@ export function JobForm({
           {(p) => <Input {...p} maxLength={100} defaultValue={v("title")} />}
         </Field>
         <Field id="job-description" name="description" label={t("description")} required hint={t("descriptionHint")} error={errors.description}>
-          {(p) => <Textarea {...p} className="min-h-56" maxLength={8000} defaultValue={v("description")} />}
+          {(p) => <RichTextarea {...p} className="min-h-56" maxLength={8000} defaultValue={v("description")} />}
         </Field>
         <Field id="job-language" name="language" label={t("language")} required error={errors.language}>
           {(p) => (

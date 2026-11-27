@@ -1,3 +1,4 @@
+import { withinGifLimit } from "@/lib/gifs/gifs";
 import { z } from "zod";
 import { COUNTRY_CODES } from "@/lib/geo";
 import { optionalHttpsUrl } from "./onboarding";
@@ -31,7 +32,7 @@ const question = z
 export const jobSchema = z
   .object({
     title: z.string().trim().min(3).max(100),
-    description: z.string().trim().min(20).max(8000),
+    description: z.string().trim().min(20).max(8000).refine(withinGifLimit, { message: "too_many_gifs" }),
     language: z.enum(["es", "en"]),
     seniority: z.enum(SENIORITIES),
     employmentType: z.enum(EMPLOYMENT_TYPES),

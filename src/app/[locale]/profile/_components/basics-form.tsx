@@ -5,10 +5,10 @@ import { useActionState } from "react";
 import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
-import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import { updateBasics } from "../actions";
 import { SubmitButton } from "@/components/forms/submit-button";
+import { RichTextarea } from "@/components/editor/rich-textarea";
 
 type Option = { code: string; name: string };
 
@@ -36,7 +36,7 @@ export function BasicsForm({ saved, countries, languages }: { saved: BasicsValue
         {(p) => <Input {...p} maxLength={100} defaultValue={v("headline")} />}
       </Field>
       <Field id="basics-bio" name="bio" label={t("bio")} hint={t("bioHint")} error={errors.bio}>
-        {(p) => <Textarea {...p} maxLength={500} defaultValue={v("bio")} />}
+        {(p) => <RichTextarea {...p} maxLength={500} defaultValue={v("bio")} />}
       </Field>
       <FieldGrid>
         <Field id="basics-country" name="country" label={t("country")} error={errors.country}>

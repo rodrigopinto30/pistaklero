@@ -1,3 +1,4 @@
+import { withinGifLimit } from "@/lib/gifs/gifs";
 import { z } from "zod";
 
 export const POST_REPORT_REASONS = ["spam", "offensive", "scam", "other"] as const;
@@ -5,7 +6,7 @@ export const POST_REPORT_REASONS = ["spam", "offensive", "scam", "other"] as con
 /** Una publicación: título corto y un cuerpo en Markdown (se muestra con el mismo renderizador seguro). */
 export const postSchema = z.object({
   title: z.string().trim().min(5).max(120),
-  body: z.string().trim().min(20).max(5000),
+  body: z.string().trim().min(20).max(5000).refine(withinGifLimit, { message: "too_many_gifs" }),
   language: z.enum(["es", "en"]),
 });
 

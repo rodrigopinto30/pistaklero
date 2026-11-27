@@ -5,12 +5,12 @@ import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import type { EntryBlock } from "@/lib/validation/profile";
 import { deleteEntry, saveEntry } from "../actions";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { ConfirmButton } from "@/components/confirm-button";
+import { RichTextarea } from "@/components/editor/rich-textarea";
 
 type FieldConfig = { name: string; label: string; type: "text" | "textarea" | "month" | "url"; required?: boolean; max?: number };
 
@@ -86,7 +86,7 @@ function EntryForm({ block, entry }: { block: EntryBlock; entry?: EntryItem }) {
     >
       {(p) =>
         field.type === "textarea" ? (
-          <Textarea {...p} maxLength={field.max} defaultValue={valueOf(state, field.name, entry?.values[field.name])} />
+          <RichTextarea {...p} maxLength={field.max} defaultValue={valueOf(state, field.name, entry?.values[field.name])} />
         ) : (
           <Input
             {...p}
