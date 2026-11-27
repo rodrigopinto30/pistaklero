@@ -10,6 +10,8 @@ export default defineConfig({
   // El servidor de desarrollo compila cada página a pedido: con muchos workers se satura.
   workers: 3,
   timeout: 60_000,
+  // Con la suite en paralelo, el servidor de desarrollo puede tardar más en compilar y responder.
+  expect: { timeout: 10_000 },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]],

@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Form from "next/form";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SectionCard } from "@/components/section-card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { reviewReport, setCompanyStatus, setUserSuspended } from "./actions";
+import { TransferForm } from "./transfer-form";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Admin");
@@ -33,17 +34,23 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
   const companyQuery = typeof params.empresa === "string" ? params.empresa.trim().slice(0, 80) : "";
 
   const supabase = await createClient();
-  const [{ data: reports }, { data: users }, { data: companies }] = await Promise.all([
+  const [{ data: reports }, { data: users }, { data: companies }, { data: unclaimed }] = await Promise.all([
     supabase.rpc("admin_open_reports"),
     userQuery.length >= 3 ? supabase.rpc("admin_find_users", { p_query: userQuery }) : Promise.resolve({ data: null }),
     companyQuery.length >= 2
       ? supabase.from("companies").select("id, name, domain, status, slug").ilike("name", likePattern(companyQuery)).limit(20)
       : Promise.resolve({ data: null }),
+    supabase.rpc("admin_unclaimed_companies"),
   ]);
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8">
-      <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+        <Link href="/admin/import" className={buttonVariants()}>
+          {t("importJob")}
+        </Link>
+      </div>
 
       <SectionCard id="reports" title={t("reports.title")} description={t("reports.hint")}>
         {(reports ?? []).length === 0 ? (
@@ -87,6 +94,28 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
                     </Button>
                   </form>
                 </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </SectionCard>
+
+      <SectionCard id="unclaimed" title={t("unclaimed.title")} description={t("unclaimed.hint")}>
+        {(unclaimed ?? []).length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t("unclaimed.empty")}</p>
+        ) : (
+          <ul className="flex flex-col gap-3">
+            {unclaimed!.map((company) => (
+              <li key={company.id} className="flex flex-col gap-3 rounded-xl border border-border p-4">
+                <span className="flex flex-col">
+                  <Link href={{ pathname: "/companies/[slug]", params: { slug: company.slug } }} className="font-medium underline-offset-4 hover:underline">
+                    {company.name}
+                  </Link>
+                  <span className="text-sm text-muted-foreground">
+                    {company.domain ?? "—"} · {t("unclaimed.stats", { jobs: Number(company.jobs), clicks: Number(company.clicks) })}
+                  </span>
+                </span>
+                <TransferForm companyId={company.id} companyName={company.name} />
               </li>
             ))}
           </ul>
