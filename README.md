@@ -39,6 +39,7 @@ Con todo arriba:
 ./run.sh pnpm db:reset                                  # recrear la base local con las migraciones
 ./run.sh pnpm db:test                                   # tests de la base (pgTAP)
 ./run.sh pnpm db:types                                  # regenerar los tipos de TypeScript
+./run.sh pnpm admin:grant persona@ejemplo.com           # dar rol de admin a una cuenta nueva
 ```
 
 
