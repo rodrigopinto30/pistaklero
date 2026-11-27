@@ -205,6 +205,26 @@ isOneToOne: true
                   Relationships: [
                     
                   ]
+                },"company_invitations": {
+                  Row: {
+                    "accepted_at": string | null,"company_id": string,"created_at": string,"email": string,"expires_at": string,"id": string,"invited_by": string | null,"token_hash": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "accepted_at"?: string | null,"company_id": string,"created_at"?: string,"email": string,"expires_at"?: string,"id"?: string,"invited_by"?: string | null,"token_hash": string
+                  }
+                  Update: {
+                    "accepted_at"?: string | null,"company_id"?: string,"created_at"?: string,"email"?: string,"expires_at"?: string,"id"?: string,"invited_by"?: string | null,"token_hash"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "company_invitations_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"company_members": {
                   Row: {
                     "company_id": string,"created_at": string,"member_role": Database["public"]['Enums']["member_role"],"user_id": string
@@ -305,7 +325,10 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "auth_role":
+            "accept_invitation":
+{ Args: { "p_locale": Database["public"]['Enums']["app_locale"],"p_token": string }; Returns: string
+                           },
+"auth_role":
 { Args: Record<PropertyKey, never>; Returns: Database["public"]['Enums']["user_role"]
                            },
 "can_view_candidate":
@@ -336,6 +359,9 @@ isOneToOne: false
 "create_company":
 { Args: { "p_company_name": string,"p_locale": Database["public"]['Enums']["app_locale"],"p_website_url": string }; Returns: string
                            },
+"create_invitation":
+{ Args: { "p_email": string,"p_token_hash": string }; Returns: string
+                           },
 "domain_from_url":
 { Args: { "p_url": string }; Returns: string
                            },
@@ -348,8 +374,16 @@ isOneToOne: false
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
+"is_company_owner":
+{ Args: Record<PropertyKey, never>; Returns: boolean
+                           },
 "is_free_email_domain":
 { Args: { "p_domain": string }; Returns: boolean
+                           },
+"list_company_members":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "email": string,"joined_at": string,"member_role": Database["public"]['Enums']["member_role"],"user_id": string
+            }[]
                            },
 "my_company_id":
 { Args: Record<PropertyKey, never>; Returns: string
@@ -368,6 +402,9 @@ isOneToOne: false
                            },
 "update_company_website":
 { Args: { "p_website_url": string }; Returns: undefined
+                           },
+"update_member":
+{ Args: { "p_action": string,"p_user_id": string }; Returns: undefined
                            },
 "write_audit_log":
 { Args: { "p_action": string,"p_metadata"?: Json,"p_target_id"?: string,"p_target_type"?: string }; Returns: undefined
