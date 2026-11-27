@@ -31,11 +31,25 @@ test.describe("perfil del candidato", () => {
     await experience.getByLabel(/Inicio/).fill("2025-06");
     await experience.getByLabel(/Fin/).fill("2025-01");
     await experience.getByRole("button", { name: "Agregar experiencia" }).click();
-    await expect(experience.getByText("Revisá el valor de este campo.")).toBeVisible();
+    await expect(experience.getByText("La fecha de fin no puede ser anterior a la de inicio.")).toBeVisible();
     await expect(experience.getByLabel(/Fin/)).toBeFocused();
+    await experience.getByLabel(/Fin/).fill("");
+    await experience.getByRole("button", { name: "Agregar experiencia" }).click();
+    await expect(experience.getByText("Completá la fecha de fin o marcá que sigue en curso.")).toBeVisible();
     await experience.getByLabel(/Fin/).fill("2025-12");
     await experience.getByRole("button", { name: "Agregar experiencia" }).click();
     await expect(experience.getByRole("heading", { name: "Pasante de desarrollo" })).toBeVisible();
+
+    // Formación en curso: sin fecha de fin, se muestra "Actualidad".
+    const education = page.getByRole("region", { name: "Formación" });
+    await education.getByText("Agregar formación", { exact: true }).first().click();
+    await education.getByLabel(/Título o curso/).fill("Tecnicatura en Programación");
+    await education.getByLabel(/Institución/).fill("UTN");
+    await education.getByLabel(/Inicio/).fill("2024-03");
+    await education.getByLabel("Lo estoy cursando").check();
+    await expect(education.getByLabel(/Fin/)).toBeHidden();
+    await education.getByRole("button", { name: "Agregar formación" }).click();
+    await expect(education.getByText(/Actualidad/)).toBeVisible();
 
     // Proyecto
     const projects = page.getByRole("region", { name: "Proyectos" });

@@ -34,12 +34,13 @@ export function BlockedCompanies({ blocked }: { blocked: { id: string; name: str
         </ul>
       )}
 
-      <form action={searchAction} role="search" className="flex flex-col gap-2 sm:flex-row sm:items-end">
-        <div className="flex flex-1 flex-col gap-2">
-          <Label htmlFor="block-search">{t("search")}</Label>
-          <Input id="block-search" name="query" type="search" minLength={2} maxLength={80} defaultValue={search.status === "results" ? search.query : ""} />
+      {/* Rótulo arriba y campo + botón en la misma línea: quedan alineados en cualquier ancho. */}
+      <form action={searchAction} role="search" className="flex flex-col gap-2">
+        <Label htmlFor="block-search">{t("search")}</Label>
+        <div className="flex gap-2">
+          <Input id="block-search" name="query" type="search" minLength={2} maxLength={80} defaultValue={search.status === "results" ? search.query : ""} className="flex-1" />
+          <SubmitButton label={t("searchButton")} variant="secondary" className="shrink-0" />
         </div>
-        <SubmitButton label={t("searchButton")} variant="secondary" />
       </form>
 
       <div role="status" className="empty:hidden">

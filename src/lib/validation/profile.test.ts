@@ -18,15 +18,24 @@ describe("basicsSchema", () => {
 
 describe("entrySchemas", () => {
   it("convierte los meses a fechas", () => {
-    const result = entrySchemas.experience.parse({ companyName: "Acme", title: "Dev", startDate: "2024-03", endDate: "", description: "" });
+    const result = entrySchemas.experience.parse({ companyName: "Acme", title: "Dev", startDate: "2024-03", endDate: "2024-09", description: "" });
     expect(result.startDate).toBe("2024-03-01");
+    expect(result.endDate).toBe("2024-09-01");
+  });
+
+  it("si sigue en curso no guarda fecha de fin", () => {
+    const result = entrySchemas.experience.parse({ companyName: "Acme", title: "Dev", startDate: "2024-03", endDate: "2024-09", current: "on", description: "" });
     expect(result.endDate).toBeUndefined();
   });
 
-  it("rechaza un fin anterior al inicio", () => {
-    const result = entrySchemas.education.safeParse({ institution: "UBA", degree: "Lic.", startDate: "2024-03", endDate: "2023-01" });
+  it.each([
+    [{ endDate: "2023-01" }, "end_before_start"],
+    [{ endDate: "" }, "end_required"],
+    [{ endDate: "marzo" }, "invalid_month"],
+  ])("explica el problema con la fecha de fin %o", (dates, message) => {
+    const result = entrySchemas.education.safeParse({ institution: "UBA", degree: "Lic.", startDate: "2024-03", ...dates });
     expect(result.success).toBe(false);
-    expect(result.error?.issues[0]?.path).toEqual(["endDate"]);
+    expect(result.error?.issues[0]).toMatchObject({ path: ["endDate"], message });
   });
 });
 

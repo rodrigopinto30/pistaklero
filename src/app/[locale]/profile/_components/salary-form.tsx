@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { Field, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
+import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -29,7 +29,7 @@ export function SalaryForm({ saved }: { saved: SalaryValues }) {
   return (
     <div className="flex flex-col gap-3">
       <form ref={formRef} action={action} noValidate className="flex flex-col gap-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <FieldGrid className="grid-cols-2">
           <Field id="salary-amount" name="amount" label={t("amount")} required error={errors.amount}>
             {(p) => <Input {...p} type="number" inputMode="decimal" min="1" step="any" defaultValue={v("amount", "")} />}
           </Field>
@@ -66,7 +66,7 @@ export function SalaryForm({ saved }: { saved: SalaryValues }) {
               </NativeSelect>
             )}
           </Field>
-        </div>
+        </FieldGrid>
         <Field id="salary-visibility" name="salaryVisibility" label={t("visibility")} required error={errors.salaryVisibility}>
           {(p) => (
             <NativeSelect {...p} defaultValue={v("salaryVisibility", "private")}>

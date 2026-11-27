@@ -17,7 +17,8 @@ function Questions({ questions }: { questions: Question[] }) {
         q.type === "short_text" ? (
           <div key={q.id} className="flex flex-col gap-2">
             <Label htmlFor={`answer-${q.id}`}>
-              {q.prompt} <span className="font-normal text-muted-foreground">{q.required ? t("required") : t("optional")}</span>
+              {q.prompt}
+              {!q.required && <span className="font-normal text-muted-foreground"> {t("optional")}</span>}
             </Label>
             <Textarea
               id={`answer-${q.id}`}
@@ -33,7 +34,8 @@ function Questions({ questions }: { questions: Question[] }) {
         ) : (
           <fieldset key={q.id} className="flex flex-col gap-2">
             <legend className="mb-2 text-sm font-medium">
-              {q.prompt} <span className="font-normal text-muted-foreground">{q.required ? t("required") : t("optional")}</span>
+              {q.prompt}
+              {!q.required && <span className="font-normal text-muted-foreground"> {t("optional")}</span>}
             </legend>
             {(q.options ?? []).map((option, index) => (
               <label

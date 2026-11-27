@@ -9,7 +9,7 @@ const emptyToUndefined = (value: unknown) => (value === "" ? undefined : value);
 /** "2025-03" (input type="month") → "2025-03-01". */
 const month = z
   .string()
-  .regex(/^\d{4}-(0[1-9]|1[0-2])$/)
+  .regex(/^\d{4}-(0[1-9]|1[0-2])$/, { error: "invalid_month" })
   .transform((value) => `${value}-01`);
 const optionalMonth = z.preprocess(emptyToUndefined, month.optional());
 
@@ -34,7 +34,7 @@ export const SALARY_PERIODS = ["hour", "month", "year"] as const;
 export const SALARY_BASES = ["gross", "net"] as const;
 
 export const salarySchema = z.object({
-  amount: z.coerce.number().positive().max(1_000_000_000),
+  amount: z.coerce.number({ error: "amount_positive" }).positive({ error: "amount_positive" }).max(1_000_000_000),
   currency: z.enum(CURRENCIES),
   period: z.enum(SALARY_PERIODS),
   basis: z.enum(SALARY_BASES),
@@ -47,8 +47,20 @@ export const skillSchema = z.object({
   level: z.enum(SKILL_LEVELS),
 });
 
-const endAfterStart = <T extends { startDate: string; endDate?: string }>(value: T) =>
-  !value.endDate || value.endDate >= value.startDate;
+/** "on" del checkbox "sigue en curso". */
+const checkbox = z.preprocess((value) => value === "on" || value === true, z.boolean());
+
+/**
+ * Fin de una experiencia o formación: si sigue en curso no hay fecha de fin; si no, es obligatoria
+ * y no puede ser anterior al inicio. Cada caso con su propio mensaje.
+ */
+function checkPeriod(value: { startDate: string; endDate?: string; current: boolean }, ctx: z.RefinementCtx) {
+  if (value.current) return;
+  if (!value.endDate) ctx.addIssue({ code: "custom", path: ["endDate"], message: "end_required" });
+  else if (value.endDate < value.startDate) ctx.addIssue({ code: "custom", path: ["endDate"], message: "end_before_start" });
+}
+const withoutEndIfCurrent = <T extends { endDate?: string; current: boolean }>(value: T) =>
+  value.current ? { ...value, endDate: undefined } : value;
 
 export const entrySchemas = {
   experience: z
@@ -57,17 +69,21 @@ export const entrySchemas = {
       title: requiredText(80),
       startDate: month,
       endDate: optionalMonth,
+      current: checkbox,
       description: optionalText(1000),
     })
-    .refine(endAfterStart, { path: ["endDate"] }),
+    .superRefine(checkPeriod)
+    .transform(withoutEndIfCurrent),
   education: z
     .object({
       institution: requiredText(120),
       degree: requiredText(120),
       startDate: month,
       endDate: optionalMonth,
+      current: checkbox,
     })
-    .refine(endAfterStart, { path: ["endDate"] }),
+    .superRefine(checkPeriod)
+    .transform(withoutEndIfCurrent),
   certification: z.object({
     name: requiredText(120),
     issuer: optionalText(120),

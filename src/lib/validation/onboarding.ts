@@ -10,7 +10,7 @@ export const optionalHttpsUrl = z
     if (value === "") return undefined;
     return /^https?:\/\//i.test(value) ? value.replace(/^http:/i, "https:") : `https://${value}`;
   })
-  .pipe(z.url({ protocol: /^https$/, hostname: z.regexes.domain }).optional());
+  .pipe(z.url({ protocol: /^https$/, hostname: z.regexes.domain, error: "invalid_url" }).optional());
 
 export const candidateOnboardingSchema = personNameSchema.extend({
   role: z.literal("candidate"),
