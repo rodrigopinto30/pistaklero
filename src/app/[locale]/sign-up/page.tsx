@@ -5,9 +5,10 @@ import { SignUpSteps } from "@/components/auth/sign-up-steps";
 import { buttonVariants } from "@/components/ui/button";
 import { getEnabledOAuthProviders, OAUTH_PROVIDER_NAMES } from "@/lib/auth/providers";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
+import { safeNextPath } from "@/lib/auth/redirect";
 import { parseSignUpRole } from "@/lib/auth/sign-up";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
-import { MagicLinkForm } from "../sign-in/magic-link-form";
+import { SignUpForm } from "@/components/auth/auth-forms";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("SignUp");
@@ -17,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 /*
  * Registro en tres pasos:
  *   1. ¿Qué buscás? (trabajo o talento)
- *   2. El email: llega un link para confirmarlo (o Google/GitHub).
+ *   2. Email y contraseña (o Google/GitHub); el email se confirma con un código de 6 dígitos.
  *   3. Los datos personales, en la bienvenida, con el rol ya elegido.
  * Cada paso es una URL (?role=…): funciona sin JavaScript y con el botón "atrás".
  */
@@ -28,7 +29,10 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
   }
 
   const t = await getTranslations("SignUp");
-  const role = parseSignUpRole((await searchParams).role);
+  const params = await searchParams;
+  const role = parseSignUpRole(params.role);
+  // Adónde volver después del registro (por ejemplo, aceptar una invitación). Solo rutas propias.
+  const returnTo = params.next ? safeNextPath(params.next, "") || undefined : undefined;
 
   if (!role) {
     const options = [
@@ -46,7 +50,7 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
           {options.map((option) => (
             <li key={option.role}>
               <Link
-                href={{ pathname: "/sign-up", query: { role: option.role } }}
+                href={{ pathname: "/sign-up", query: returnTo ? { role: option.role, next: returnTo } : { role: option.role } }}
                 className="flex h-full flex-col gap-3 rounded-2xl bg-card p-5 shadow-soft transition-shadow hover:shadow-soft-lg"
               >
                 <span aria-hidden="true" className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -69,8 +73,8 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
     );
   }
 
-  // Después del link, la bienvenida ya sabe qué eligió.
-  const next = `${getPathname({ locale, href: "/welcome" })}?${new URLSearchParams({ role })}`;
+  // Después de Google/GitHub, la bienvenida ya sabe qué eligió (con contraseña, lo lleva el formulario).
+  const next = returnTo?.startsWith("/api/team/accept?") ? returnTo : `${getPathname({ locale, href: "/welcome" })}?${new URLSearchParams({ role })}`;
   const providers = getEnabledOAuthProviders();
 
   return (
@@ -104,7 +108,7 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
         </>
       )}
 
-      <MagicLinkForm locale={locale} next={next} variant="sign-up" />
+      <SignUpForm locale={locale} role={role} next={returnTo} />
 
       <p className="text-sm">
         {t("haveAccount")}{" "}

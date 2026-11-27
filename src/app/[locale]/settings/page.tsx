@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { SectionCard } from "@/components/section-card";
 import { buttonVariants } from "@/components/ui/button";
 import { AvatarForm } from "@/components/account/avatar-form";
+import { ChangePasswordForm } from "@/components/auth/auth-forms";
 import { PersonalForm } from "@/components/account/personal-form";
 import { getCurrentPerson, getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { getPathname, redirect } from "@/i18n/navigation";
@@ -26,7 +27,8 @@ export default async function SettingsPage() {
   const tPerson = await getTranslations("Person");
   // La candidata edita su nombre en su perfil, junto al resto de su portfolio.
   const person = profile!.role === "candidate" ? null : await getCurrentPerson();
-  const reauthHref = `${getPathname({ locale, href: "/sign-in" })}?${new URLSearchParams({ next: here })}`;
+  const reauthHref = `${getPathname({ locale, href: "/sign-in" })}?${new URLSearchParams({ reauth: "1", next: here })}`;
+  const user = await getCurrentUser();
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
@@ -44,6 +46,10 @@ export default async function SettingsPage() {
           />
         </SectionCard>
       )}
+
+      <SectionCard id="password" title={t("password.title")} description={t("password.hint")}>
+        <ChangePasswordForm email={user?.email ?? ""} />
+      </SectionCard>
 
       <SectionCard id="preferences" title={t("preferences.title")}>
         <PreferencesForm emailLocale={profile!.locale} emailNotifications={profile!.email_notifications} />

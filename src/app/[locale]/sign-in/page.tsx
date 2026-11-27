@@ -5,7 +5,7 @@ import { getEnabledOAuthProviders, OAUTH_PROVIDER_NAMES } from "@/lib/auth/provi
 import { safeNextPath } from "@/lib/auth/redirect";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { Link, redirect } from "@/i18n/navigation";
-import { MagicLinkForm } from "./magic-link-form";
+import { SignInForm } from "@/components/auth/auth-forms";
 
 const CALLBACK_ERRORS = ["callback", "link_expired"] as const;
 
@@ -16,12 +16,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function SignInPage({ searchParams }: PageProps<"/[locale]/sign-in">) {
   const locale = await getLocale();
-  if (await getCurrentUser()) {
+  const params = await searchParams;
+  const user = await getCurrentUser();
+  // Con sesión, solo se vuelve a pedir la contraseña para confirmar algo delicado (borrar la cuenta).
+  const reauth = Boolean(user) && params.reauth === "1";
+  if (user && !reauth) {
     redirect({ href: (await getCurrentProfile()) ? "/" : "/welcome", locale });
   }
 
   const t = await getTranslations("Auth");
-  const params = await searchParams;
   const next = safeNextPath(params.next, `/${locale}`);
   const error = CALLBACK_ERRORS.find((code) => code === params.error);
   const providers = getEnabledOAuthProviders();
@@ -29,8 +32,8 @@ export default async function SignInPage({ searchParams }: PageProps<"/[locale]/
   return (
     <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-4 py-12">
       <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("subtitle")}</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{reauth ? t("reauthTitle") : t("title")}</h1>
+        <p className="text-muted-foreground">{reauth ? t("reauthSubtitle") : t("subtitle")}</p>
       </div>
 
       {error && (
@@ -57,14 +60,17 @@ export default async function SignInPage({ searchParams }: PageProps<"/[locale]/
         </>
       )}
 
-      <MagicLinkForm locale={locale} next={next} />
+      <SignInForm locale={locale} next={next} fixedEmail={reauth ? (user?.email ?? undefined) : undefined} />
 
+      {!reauth && (
       <p className="text-center text-sm">
         {t("noAccount")}{" "}
-        <Link href="/sign-up" className="font-medium text-primary underline underline-offset-4">
+        {/* Si venía de algún lado (una invitación, una acción pendiente), el registro vuelve ahí. */}
+        <Link href={{ pathname: "/sign-up", query: params.next ? { next } : {} }} className="font-medium text-primary underline underline-offset-4">
           {t("signUp")}
         </Link>
       </p>
+      )}
     </div>
   );
 }

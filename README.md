@@ -55,9 +55,22 @@ La lista completa está en `.env.example`.
 
 Después de cambiar el esquema de la base: `./run.sh pnpm db:types` regenera los tipos de TypeScript.
 
+## Ingreso
+
+Con email y contraseña. Al crear la cuenta, el email se confirma una vez con un código de 6 dígitos;
+"¿Olvidaste tu contraseña?" manda otro código para elegir una nueva. En local, los emails llegan a
+Mailpit (http://127.0.0.1:54324). Las cuentas creadas antes de la contraseña (con el link mágico)
+entran eligiendo una desde "¿Olvidaste tu contraseña?".
+
+En producción, en el panel de Supabase (Authentication):
+- confirmar el email, largo mínimo 8 y "Require current password when updating" activados;
+- las plantillas de `supabase/templates` (código en vez de link) y el aviso de contraseña cambiada;
+- el límite por IP de Supabase ve la IP del servidor: la app lleva su propio límite de intentos
+  (tabla `auth_throttle`). Para que Supabase vea la IP de cada persona, activar
+  `security_sb_forwarded_for_enabled` y mandar `Sb-Forwarded-For` (ver la guía de rate limits).
+
 ## Login con Google o GitHub (opcional)
 
-En local alcanza con el link mágico: los emails llegan a Mailpit (http://127.0.0.1:54324).
 Para probar OAuth:
 
 1. Creá la app OAuth en Google Cloud o en GitHub con la URL de callback `http://127.0.0.1:54321/auth/v1/callback`.

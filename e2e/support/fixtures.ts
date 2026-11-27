@@ -233,6 +233,34 @@ export async function linkFromEmail(email: string, contains: string) {
   return link!;
 }
 
+/**
+ * Código de 6 dígitos del último email que recibió `email` cuyo asunto contiene `subject`
+ * (confirmar la cuenta o recuperar la contraseña). `after` descarta los emails anteriores.
+ */
+export async function codeFromEmail(email: string, subject: RegExp, after = new Date(0)) {
+  let code: string | undefined;
+  await expect
+    .poll(async () => {
+      const search = await (await fetch(`${MAILPIT_URL}/api/v1/search?query=${encodeURIComponent(`to:${email}`)}`)).json();
+      const message = (search.messages ?? []).find(
+        (m: { Subject: string; Created: string }) => subject.test(m.Subject) && new Date(m.Created) >= after
+      );
+      if (!message) return undefined;
+      const full = await (await fetch(`${MAILPIT_URL}/api/v1/message/${message.ID}`)).json();
+      code = String(full.Text).match(/\b(\d{6})\b/)?.[1];
+      return code;
+    }, { timeout: 15_000 })
+    .toBeTruthy();
+  return code!;
+}
+
+/** Cuenta con contraseña y email ya confirmado, creada directo con la API de administración. */
+export async function createUserWithPassword(email: string, password: string) {
+  const { data, error } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
+  if (error) throw error;
+  return data.user.id;
+}
+
 /** Nombre y apellido en la bienvenida ("Nombre" a secas: no "Nombre de la empresa" ni "Segundo nombre"). */
 export async function fillPersonName(page: Page, fullName: string) {
   const [firstName, ...rest] = fullName.split(" ");

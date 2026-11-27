@@ -12,20 +12,25 @@ export function redirectTo(path: string) {
 
 /**
  * Adónde ir después de ingresar: a `next`, o a la bienvenida si la cuenta todavía no eligió su rol.
+ * Lo usan los Route Handlers (OAuth, links) y las Server Actions (contraseña, código).
  */
-export async function afterSignIn(supabase: Awaited<ReturnType<typeof createClient>>, next: string) {
+export async function destinationAfterSignIn(supabase: Awaited<ReturnType<typeof createClient>>, next: string) {
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub;
-  if (!userId) return redirectTo(next);
+  if (!userId) return next;
 
   const { data: profile } = await supabase.from("profiles").select("id").eq("id", userId).maybeSingle();
   // Aceptar una invitación también crea el perfil: no hace falta pasar por la bienvenida.
-  if (profile || next.startsWith("/api/team/accept?")) return redirectTo(next);
+  if (profile || next.startsWith("/api/team/accept?")) return next;
 
   const welcome = getPathname({ locale: localeFromPath(next), href: "/welcome" });
   // Desde el registro, `next` ya es la bienvenida con el rol elegido (?role=…): se conserva.
-  if (new URL(next, "http://placeholder.invalid").pathname === welcome) return redirectTo(next);
-  return redirectTo(welcome);
+  if (new URL(next, "http://placeholder.invalid").pathname === welcome) return next;
+  return welcome;
+}
+
+export async function afterSignIn(supabase: Awaited<ReturnType<typeof createClient>>, next: string) {
+  return redirectTo(await destinationAfterSignIn(supabase, next));
 }
 
 /** Vuelve a la página de ingreso, en el idioma de `next`, mostrando el error. */

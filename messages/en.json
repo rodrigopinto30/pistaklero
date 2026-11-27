@@ -29,21 +29,26 @@
     "signOut": "Sign out",
     "metaTitle": "Sign in",
     "title": "Sign in to Pistaklero",
-    "subtitle": "No passwords: use your account or get a link by email.",
+    "subtitle": "Sign in with your email and password.",
     "continueWith": "Continue with {provider}",
     "or": "or with your email",
     "emailLabel": "Email",
-    "emailHint": "We'll send you a sign-in link. It expires in 15 minutes.",
-    "sendLink": "Send me the link",
     "sending": "Sending…",
-    "sentTitle": "Check your email",
-    "sentBody": "If {email} is correct, the sign-in link will arrive in a few seconds.",
+    "passwordLabel": "Password",
+    "showPassword": "Show password",
+    "forgot": "Forgot your password?",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "reauthTitle": "Confirm it's you",
+    "reauthSubtitle": "For your security, enter your password again.",
     "errors": {
       "invalid_email": "Enter a valid email, for example ana@company.com.",
-      "rate_limited": "You requested too many links in a row. Wait a few minutes and try again.",
+      "rate_limited": "Too many attempts in a row. Wait {minutes, plural, one {# minute} other {# minutes}} and try again, or reset your password.",
       "callback": "We couldn't complete the sign-in. Please try again.",
       "link_expired": "The link expired or was already used. Request a new one.",
-      "unknown": "Something went wrong. Please try again in a few minutes."
+      "unknown": "Something went wrong. Please try again in a few minutes.",
+      "missing_password": "Enter your password.",
+      "invalid_credentials": "The email or password is incorrect."
     },
     "completeSignUp": "Finish signing up",
     "noAccount": "New to Pistaklero?",
@@ -864,6 +869,10 @@
   "Settings": {
     "metaTitle": "Settings",
     "title": "Settings",
+    "password": {
+      "title": "Password",
+      "hint": "You use it to sign in with your email. Changing it signs you out everywhere else."
+    },
     "preferences": {
       "title": "Preferences",
       "emailLocale": "Email language",
@@ -881,9 +890,9 @@
       "hint": "Your profile, your applications and all your data are deleted. This can't be undone.",
       "confirm": "I understand everything is deleted and this can't be undone.",
       "button": "Delete my account forever",
-      "reauthLink": "Sign in again",
+      "reauthLink": "Confirm my password",
       "errors": {
-        "reauth": "For security, sign in again before deleting your account (valid for 10 minutes).",
+        "reauth": "For security, confirm your password before deleting your account (valid for 10 minutes).",
         "confirm": "Check the box to confirm.",
         "unknown": "We couldn't delete the account. Please try again."
       }
@@ -1033,29 +1042,70 @@
   "SignUp": {
     "metaTitle": "Create account",
     "chooseTitle": "What are you looking for?",
-    "chooseSubtitle": "Pick one to get started. Then we'll ask for your email and your details.",
+    "chooseSubtitle": "Pick one to get started. Then we'll ask for your email, a password and your details.",
     "candidate": "I'm looking for a job",
     "candidateHint": "Build your profile and apply in 1 click to jobs with visible salaries.",
     "recruiter": "I'm looking for talent",
     "recruiterHint": "Post jobs for your company and get organized applications.",
     "roleNote": "An account is either for finding a job or for finding talent, not both.",
-    "emailTitle": "Your email",
+    "emailTitle": "Your account",
     "chosen": "You're signing up for: {role}.",
     "change": "Change",
     "continueWith": "Continue with {provider}",
     "or": "or with your email",
-    "emailHint": "We'll send you a link to confirm it. No passwords.",
-    "sendLink": "Send me the confirmation link",
-    "sentTitle": "Check your email",
-    "sentBody": "We sent a link to {email}. Open it to confirm your email and fill in your details.",
+    "submit": "Create account",
+    "submitting": "Creating your account…",
     "haveAccount": "Already have an account?",
     "signIn": "Sign in",
     "steps": {
       "label": "Sign-up steps",
       "role": "What you need",
-      "email": "Your email",
+      "account": "Your account",
       "details": "Your details",
       "done": "Done:"
+    }
+  },
+  "Code": {
+    "title": "Check your email",
+    "body": "We sent a 6-digit code to {email}. Type it here to confirm your email.",
+    "label": "6-digit code",
+    "submit": "Confirm",
+    "submitting": "Confirming…",
+    "resend": "Resend the code",
+    "resent": "Done, we sent you a new code.",
+    "alreadyHadAccount": "Already had an account with this email?",
+    "signIn": "Sign in",
+    "forgot": "reset your password",
+    "errors": {
+      "invalid_code": "The code is incorrect or has expired. Check it or ask for a new one."
+    }
+  },
+  "Password": {
+    "metaTitle": "Reset your password",
+    "title": "Choose a new password",
+    "subtitle": "We'll email you a code to confirm it's you. It also works if you used to sign in with Google or GitHub.",
+    "send": "Send me the code",
+    "codeSent": "If {email} has a Pistaklero account, a 6-digit code is on its way. Type it here along with your new password.",
+    "newPassword": "New password",
+    "hint": "At least 8 characters. A phrase you remember is safer than a weird word.",
+    "save": "Save password",
+    "saving": "Saving…",
+    "backToSignIn": "Back to sign in",
+    "problems": {
+      "too_short": "Your password needs at least 8 characters.",
+      "too_long": "Your password is too long: use up to 72 characters (accents and emojis take more space).",
+      "too_common": "That password is one of the most used and easy to guess. Choose another one.",
+      "same_as_email": "Your password can't be your email."
+    },
+    "change": {
+      "current": "Current password",
+      "submit": "Change password",
+      "noPassword": "Do you sign in with Google or GitHub, or don't remember your current one?",
+      "noPasswordLink": "Choose a new one with an email code",
+      "errors": {
+        "wrong_current": "Your current password is incorrect.",
+        "missing_current": "Enter your current password."
+      }
     }
   },
   "Toasts": {
@@ -1081,7 +1131,9 @@
     "jobSaved": "Job saved.",
     "published": "Job published.",
     "coverUpdated": "Cover updated.",
-    "postPublished": "Published! The whole community can read it now."
+    "postPublished": "Published! The whole community can read it now.",
+    "passwordUpdated": "Done, your new password is set.",
+    "passwordChanged": "Password changed. We signed you out everywhere else."
   },
   "Saved": {
     "metaTitle": "Saved",
