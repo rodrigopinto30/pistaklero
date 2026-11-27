@@ -40,7 +40,10 @@
       "link_expired": "The link expired or was already used. Request a new one.",
       "unknown": "Something went wrong. Please try again in a few minutes."
     },
-    "completeSignUp": "Finish signing up"
+    "completeSignUp": "Finish signing up",
+    "noAccount": "New to Pistaklero?",
+    "signUp": "Create your account",
+    "createAccount": "Create account"
   },
   "Welcome": {
     "metaTitle": "Welcome",
@@ -75,7 +78,11 @@
     },
     "firstName": "First name",
     "middleName": "Middle name",
-    "lastName": "Last name"
+    "lastName": "Last name",
+    "chosen": "You're signing up for: {role}.",
+    "change": "Change",
+    "detailsTitle": "Your details",
+    "detailsSubtitle": "Last step: tell us who you are."
   },
   "Form": {
     "required": "(required)",
@@ -948,6 +955,34 @@
       "hint": "JPG, PNG or WebP up to 4 MB. We crop it into a circle.",
       "upload": "Upload photo",
       "remove": "Remove photo"
+    }
+  },
+  "SignUp": {
+    "metaTitle": "Create account",
+    "chooseTitle": "What are you looking for?",
+    "chooseSubtitle": "Pick one to get started. Then we'll ask for your email and your details.",
+    "candidate": "I'm looking for a job",
+    "candidateHint": "Build your profile and apply in 1 click to jobs with visible salaries.",
+    "recruiter": "I'm looking for talent",
+    "recruiterHint": "Post jobs for your company and get organized applications.",
+    "roleNote": "An account is either for finding a job or for finding talent, not both.",
+    "emailTitle": "Your email",
+    "chosen": "You're signing up for: {role}.",
+    "change": "Change",
+    "continueWith": "Continue with {provider}",
+    "or": "or with your email",
+    "emailHint": "We'll send you a link to confirm it. No passwords.",
+    "sendLink": "Send me the confirmation link",
+    "sentTitle": "Check your email",
+    "sentBody": "We sent a link to {email}. Open it to confirm your email and fill in your details.",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "steps": {
+      "label": "Sign-up steps",
+      "role": "What you need",
+      "email": "Your email",
+      "details": "Your details",
+      "done": "Done:"
     }
   }
 }

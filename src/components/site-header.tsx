@@ -29,7 +29,7 @@ export async function SiteHeader() {
     paletteLinks.push({ href: "/admin", label: t("admin") }, { href: "/admin/import", label: tPalette("import") });
   }
   if (profile) paletteLinks.push({ href: "/settings", label: t("settings") });
-  if (!user) paletteLinks.push({ href: "/sign-in", label: tAuth("signIn") });
+  if (!user) paletteLinks.push({ href: "/sign-in", label: tAuth("signIn") }, { href: "/sign-up", label: tAuth("createAccount") });
 
   return (
     <header className="border-b border-border">
@@ -80,9 +80,14 @@ export async function SiteHeader() {
           {user ? (
             <SignOutButton />
           ) : (
-            <Link href="/sign-in" className={buttonVariants({ variant: "ghost" })}>
-              {tAuth("signIn")}
-            </Link>
+            <>
+              <Link href="/sign-in" className={buttonVariants({ variant: "ghost" })}>
+                {tAuth("signIn")}
+              </Link>
+              <Link href="/sign-up" className={buttonVariants()}>
+                {tAuth("createAccount")}
+              </Link>
+            </>
           )}
           <CommandPalette links={paletteLinks} />
           {DARK_MODE_ENABLED && <ThemeToggle />}
