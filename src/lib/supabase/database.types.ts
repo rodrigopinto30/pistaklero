@@ -257,6 +257,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"email_outbox": {
+                  Row: {
+                    "attempts": number,"created_at": string,"dedupe_key": string | null,"id": number,"last_error": string | null,"locale": Database["public"]['Enums']["app_locale"],"next_attempt_at": string,"payload": NonNullable<Json>,"sent_at": string | null,"status": Database["public"]['Enums']["email_status"],"template": string,"to_email": string,"to_user_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attempts"?: number,"created_at"?: string,"dedupe_key"?: string | null,"id"?: never,"last_error"?: string | null,"locale"?: Database["public"]['Enums']["app_locale"],"next_attempt_at"?: string,"payload"?: NonNullable<Json>,"sent_at"?: string | null,"status"?: Database["public"]['Enums']["email_status"],"template": string,"to_email": string,"to_user_id"?: string | null
+                  }
+                  Update: {
+                    "attempts"?: number,"created_at"?: string,"dedupe_key"?: string | null,"id"?: never,"last_error"?: string | null,"locale"?: Database["public"]['Enums']["app_locale"],"next_attempt_at"?: string,"payload"?: NonNullable<Json>,"sent_at"?: string | null,"status"?: Database["public"]['Enums']["email_status"],"template"?: string,"to_email"?: string,"to_user_id"?: string | null
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"email_notifications": boolean,"id": string,"locale": Database["public"]['Enums']["app_locale"],"role": Database["public"]['Enums']["user_role"],"suspended_at": string | null
@@ -297,6 +311,28 @@ isOneToOne: false
 "can_view_candidate":
 { Args: { "p_candidate_id": string }; Returns: boolean
                            },
+"claim_email_batch":
+{ Args: { "p_limit": number }; Returns: {
+              "attempts": number,
+"created_at": string,
+"dedupe_key": string | null,
+"id": number,
+"last_error": string | null,
+"locale": Database["public"]['Enums']["app_locale"],
+"next_attempt_at": string,
+"payload": NonNullable<Json>,
+"sent_at": string | null,
+"status": Database["public"]['Enums']["email_status"],
+"template": string,
+"to_email": string,
+"to_user_id": string | null
+            }[]
+                          SetofOptions: {
+        from: "*"
+        to: "email_outbox"
+        isOneToOne: false
+        isSetofReturn: true
+      } },
 "create_company":
 { Args: { "p_company_name": string,"p_locale": Database["public"]['Enums']["app_locale"],"p_website_url": string }; Returns: string
                            },
@@ -305,6 +341,9 @@ isOneToOne: false
                            },
 "email_matches_domain":
 { Args: { "p_domain": string,"p_email": string }; Returns: boolean
+                           },
+"enqueue_email":
+{ Args: { "p_dedupe_key"?: string,"p_locale": Database["public"]['Enums']["app_locale"],"p_payload": Json,"p_template": string,"p_to_email": string,"p_to_user_id": string }; Returns: undefined
                            },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
@@ -335,7 +374,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "app_locale": "es"|"en","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","member_role": "owner"|"member","profile_visibility": "companies_only"|"public"|"hidden","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin"
+            "app_locale": "es"|"en","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","email_status": "pending"|"sent"|"failed","member_role": "owner"|"member","profile_visibility": "companies_only"|"public"|"hidden","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -451,7 +490,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "app_locale": ["es", "en"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"member_role": ["owner", "member"],"profile_visibility": ["companies_only", "public", "hidden"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"]
+            "app_locale": ["es", "en"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"email_status": ["pending", "sent", "failed"],"member_role": ["owner", "member"],"profile_visibility": ["companies_only", "public", "hidden"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"]
           }
         }
 } as const
