@@ -522,7 +522,8 @@
     "count": "{count, plural, =0 {No hay empleos con estos filtros} one {# empleo} other {# empleos}}",
     "empty": "No encontramos empleos con esa búsqueda. Probá con menos filtros u otras palabras.",
     "clear": "Ver todos los empleos",
-    "loadMore": "Cargar más"
+    "loadMore": "Cargar más",
+    "suggestions": "Otras ofertas que te pueden interesar"
   },
   "Apply": {
     "apply": "Postularme",

@@ -66,10 +66,22 @@ test("cargar más resultados", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Cargar más" })).toHaveCount(0);
 });
 
+test("encuentra palabras a medio escribir", async ({ page }) => {
+  const word = token();
+  await seedCompanyWithJobs("Prefijos SA", [{ title: `Desarrollador/a ${word}xyz Junior` }]);
+
+  // Solo el comienzo de cada palabra: "desa" y el token sin sus últimas letras.
+  await page.goto(`/es?q=${encodeURIComponent(`desa ${word}`)}`);
+  await expect(page.getByRole("status")).toHaveText("1 empleo");
+  await expect(page.getByRole("heading", { name: `Desarrollador/a ${word}xyz Junior` })).toBeVisible();
+});
+
 test("sin resultados se ofrece ver todo", async ({ page }) => {
+  await seedCompanyWithJobs("Sugerencias SA", [{ title: `${token()} Sugerida` }]);
   await page.goto(`/es?q=${token()}`);
   await expect(page.getByText("No encontramos empleos con esa búsqueda.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Ver todos los empleos" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Otras ofertas que te pueden interesar" })).toBeVisible();
 });
 
 test("los chips de filtro muestran el foco al navegar con teclado", async ({ page }) => {

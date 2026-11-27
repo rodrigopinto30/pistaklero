@@ -522,7 +522,8 @@
     "count": "{count, plural, =0 {No jobs match these filters} one {# job} other {# jobs}}",
     "empty": "We couldn't find jobs for that search. Try fewer filters or other words.",
     "clear": "See all jobs",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "suggestions": "Other jobs you might like"
   },
   "Apply": {
     "apply": "Apply",
