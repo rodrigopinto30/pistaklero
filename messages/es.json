@@ -16,7 +16,8 @@
     "saved": "Guardados",
     "posts": "Publicaciones",
     "myPosts": "Mis publicaciones",
-    "companies": "Empresas"
+    "companies": "Empresas",
+    "myCompany": "Mi empresa"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -563,9 +564,6 @@
     }
   },
   "Search": {
-    "label": "Buscar empleos",
-    "query": "Puesto, empresa o tecnología",
-    "placeholder": "Puesto, empresa o tecnología (por ejemplo: React)",
     "submit": "Buscar",
     "quickFilters": "Filtros rápidos",
     "chips": {
@@ -574,18 +572,34 @@
       "salary": "Con sueldo visible",
       "usd": "Pago en USD"
     },
-    "moreFilters": "Más filtros",
     "apply": "Aplicar filtros",
     "any": "Cualquiera",
-    "title": "Trabajos con sueldo visible y",
-    "titleAccent": "empresas que responden.",
-    "subtitle": "Sin feed, sin vueltas: buscá, filtrá y postulate en 1 clic.",
     "results": "Resultados",
     "count": "{count, plural, =0 {No hay empleos con estos filtros} one {# empleo} other {# empleos}}",
     "empty": "No encontramos empleos con esa búsqueda. Probá con menos filtros u otras palabras.",
     "clear": "Ver todos los empleos",
     "loadMore": "Cargar más",
-    "suggestions": "Otras ofertas que te pueden interesar"
+    "suggestions": "Otras ofertas que te pueden interesar",
+    "label": {
+      "jobs": "Buscar empleos",
+      "companies": "Buscar empresas",
+      "posts": "Buscar publicaciones"
+    },
+    "query": {
+      "jobs": "Puesto, empresa o tecnología",
+      "companies": "Nombre o rubro de la empresa",
+      "posts": "Tema de la publicación"
+    },
+    "placeholder": {
+      "jobs": "Buscá por puesto, empresa o tecnología",
+      "companies": "Buscá empresas por nombre o rubro",
+      "posts": "Buscá consejos: entrevistas, CV, portfolio…"
+    },
+    "filters": "Filtros",
+    "activeFilters": "{count, plural, one {filtro activo} other {filtros activos}}",
+    "clearFilters": "Limpiar filtros",
+    "activeFiltersLabel": "Filtros aplicados",
+    "removeFilter": "Quitar el filtro {filter}"
   },
   "Apply": {
     "apply": "Postularme",
@@ -876,7 +890,7 @@
     }
   },
   "Footer": {
-    "tagline": "Pistaklero · Trabajos con sueldo visible y empresas que responden.",
+    "tagline": "Donde el talento y las empresas se encuentran, con reglas claras para los dos.",
     "label": "Información",
     "terms": "Términos",
     "privacy": "Privacidad",
@@ -1189,5 +1203,18 @@
         "unknown": "No pudimos hacerlo. Probá de nuevo."
       }
     }
+  },
+  "Header": {
+    "sections": "Secciones",
+    "tabs": {
+      "jobs": "Empleos",
+      "companies": "Empresas",
+      "posts": "Publicaciones"
+    },
+    "accountMenu": "Menú de tu cuenta",
+    "signOut": "Salir",
+    "shortcutBefore": "Tip: con",
+    "shortcutAction": "abrir la búsqueda rápida",
+    "shortcutAfter": "vas a cualquier sección al instante."
   }
 }

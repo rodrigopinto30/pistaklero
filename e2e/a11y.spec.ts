@@ -1,4 +1,4 @@
-import { expectNoA11yViolations, onboardAsCandidate, signIn, test, uniqueEmail } from "./support/fixtures";
+import { expectNoA11yViolations, onboardAsCandidate, openAccountMenu, signIn, test, uniqueEmail } from "./support/fixtures";
 
 const PUBLIC_PAGES = [
   "/es",
@@ -32,9 +32,16 @@ test("la bienvenida cumple WCAG 2.2 AA, también con errores a la vista", async 
   await expectNoA11yViolations(page);
 });
 
-test("el encabezado de una sesión iniciada cumple WCAG 2.2 AA", async ({ page }) => {
+test("el encabezado de una sesión iniciada cumple WCAG 2.2 AA, con el menú y los filtros abiertos", async ({ page }) => {
   await signIn(page, uniqueEmail("a11y-sesion"));
   await onboardAsCandidate(page);
+  await expectNoA11yViolations(page);
+
+  await page.goto("/es");
+  await page.getByRole("button", { name: /^Filtros/ }).click();
+  await expectNoA11yViolations(page);
+
+  await openAccountMenu(page);
   await expectNoA11yViolations(page);
 });
 

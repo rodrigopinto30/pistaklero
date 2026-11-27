@@ -16,7 +16,8 @@
     "saved": "Saved",
     "posts": "Posts",
     "myPosts": "My posts",
-    "companies": "Companies"
+    "companies": "Companies",
+    "myCompany": "My company"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -563,9 +564,6 @@
     }
   },
   "Search": {
-    "label": "Search jobs",
-    "query": "Role, company or technology",
-    "placeholder": "Role, company or technology (for example: React)",
     "submit": "Search",
     "quickFilters": "Quick filters",
     "chips": {
@@ -574,18 +572,34 @@
       "salary": "Salary shown",
       "usd": "Paid in USD"
     },
-    "moreFilters": "More filters",
     "apply": "Apply filters",
     "any": "Any",
-    "title": "Jobs with visible salaries and",
-    "titleAccent": "companies that reply.",
-    "subtitle": "No feed, no fuss: search, filter and apply in 1 click.",
     "results": "Results",
     "count": "{count, plural, =0 {No jobs match these filters} one {# job} other {# jobs}}",
     "empty": "We couldn't find jobs for that search. Try fewer filters or other words.",
     "clear": "See all jobs",
     "loadMore": "Load more",
-    "suggestions": "Other jobs you might like"
+    "suggestions": "Other jobs you might like",
+    "label": {
+      "jobs": "Search jobs",
+      "companies": "Search companies",
+      "posts": "Search posts"
+    },
+    "query": {
+      "jobs": "Role, company or technology",
+      "companies": "Company name or industry",
+      "posts": "Post topic"
+    },
+    "placeholder": {
+      "jobs": "Search by role, company or technology",
+      "companies": "Search companies by name or industry",
+      "posts": "Search tips: interviews, CV, portfolio…"
+    },
+    "filters": "Filters",
+    "activeFilters": "{count, plural, one {active filter} other {active filters}}",
+    "clearFilters": "Clear filters",
+    "activeFiltersLabel": "Applied filters",
+    "removeFilter": "Remove the {filter} filter"
   },
   "Apply": {
     "apply": "Apply",
@@ -876,7 +890,7 @@
     }
   },
   "Footer": {
-    "tagline": "Pistaklero · Jobs with visible salaries and companies that reply.",
+    "tagline": "Where talent and companies meet, with clear rules for both.",
     "label": "Information",
     "terms": "Terms",
     "privacy": "Privacy",
@@ -1189,5 +1203,18 @@
         "unknown": "We couldn't do it. Try again."
       }
     }
+  },
+  "Header": {
+    "sections": "Sections",
+    "tabs": {
+      "jobs": "Jobs",
+      "companies": "Companies",
+      "posts": "Posts"
+    },
+    "accountMenu": "Your account menu",
+    "signOut": "Sign out",
+    "shortcutBefore": "Tip: press",
+    "shortcutAction": "open quick search",
+    "shortcutAfter": "to jump to any section."
   }
 }

@@ -17,11 +17,17 @@ test("buscar y filtrar ofertas desde el inicio", async ({ page }) => {
   await expect(page.getByRole("status").filter({ hasText: "3 empleos" })).toBeVisible();
   await expectNoA11yViolations(page);
 
-  // Filtro rápido: Remoto
-  await page.getByText("Remoto", { exact: true }).filter({ visible: true }).first().click();
-  await page.getByRole("button", { name: "Buscar", exact: true }).click();
+  // Filtro rápido: Remoto. Los filtros se despliegan desde el buscador y se aplican apenas se tocan.
+  await page.getByRole("button", { name: /^Filtros/ }).click();
+  await expect(page.getByRole("button", { name: /^Filtros/ })).toHaveAttribute("aria-expanded", "true");
+  await page.getByRole("group", { name: "Filtros rápidos" }).getByText("Remoto", { exact: true }).click();
+  await expect(page).toHaveURL(/remote=1/);
   await expect(page.getByRole("status").filter({ hasText: "1 empleo" })).toBeVisible();
   await expect(page.getByRole("heading", { name: `${word} Frontend React` })).toBeVisible();
+  // El filtro queda a la vista y se saca con un clic.
+  await expect(page.getByRole("button", { name: /Filtros 1 filtro activo/ })).toBeVisible();
+  await page.getByRole("link", { name: "Quitar el filtro Remoto" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "3 empleos" })).toBeVisible();
 
   // Filtro rápido: Trainee / Junior + Pago en USD (sin Remoto)
   await page.goto(`/es?q=${word}&junior=1&usd=1`);
@@ -30,7 +36,7 @@ test("buscar y filtrar ofertas desde el inicio", async ({ page }) => {
   // Filtro avanzado: presencial
   await page.goto(`/es?q=${word}&mode=onsite`);
   await expect(page.getByRole("heading", { name: `${word} Backend Go` })).toBeVisible();
-  await expect(page.locator("details[open]")).toHaveCount(1);
+  await expect(page.getByRole("link", { name: "Quitar el filtro Presencial" })).toBeVisible();
 
   // La tarjeta lleva al detalle
   await page.getByRole("link", { name: `${word} Backend Go`, exact: true }).click();
@@ -86,12 +92,22 @@ test("sin resultados se ofrece ver todo", async ({ page }) => {
 
 test("los chips de filtro muestran el foco al navegar con teclado", async ({ page }) => {
   await page.goto("/es");
-  await page.getByRole("searchbox").focus();
+  await page.getByRole("button", { name: /^Filtros/ }).click();
+  await page.getByRole("button", { name: /^Filtros/ }).focus();
   await page.keyboard.press("Tab"); // botón Buscar
   await page.keyboard.press("Tab"); // primer chip
   const chip = page.locator("label").filter({ hasText: "Remoto" }).first();
-  const outline = await chip.evaluate((el) => getComputedStyle(el).outlineStyle);
-  expect(outline).toBe("solid");
-  await page.keyboard.press("Space");
-  await expect(chip.locator("input")).toBeChecked();
+  await expect(chip).toHaveCSS("outline-style", "solid");
+});
+
+test("al ir a otra página, el buscador se limpia", async ({ page }) => {
+  await page.goto("/es?q=desarrollador");
+  const box = page.getByRole("searchbox", { name: "Puesto, empresa o tecnología" });
+  await expect(box).toHaveValue("desarrollador");
+  await page.getByRole("link", { name: "Pistaklero, ir al inicio" }).click();
+  await page.waitForURL("/es");
+  await expect(box).toHaveValue("");
+  // En otra sección busca ahí: empresas.
+  await page.getByRole("navigation", { name: "Secciones" }).first().getByRole("link", { name: "Empresas" }).click();
+  await expect(page.getByRole("searchbox", { name: "Nombre o rubro de la empresa" })).toHaveValue("");
 });

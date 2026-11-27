@@ -258,6 +258,18 @@ export async function onboardAsCompany(page: Page, companyName: string, website:
   await page.waitForURL("/es/panel");
 }
 
+/** Abre el menú de la cuenta (foto, nombre y email arriba a la derecha). */
+export async function openAccountMenu(page: Page) {
+  await page.getByRole("button", { name: /^(Menú de tu cuenta|Your account menu)/ }).click();
+  return page.getByRole("menu");
+}
+
+/** Sale de la cuenta desde el menú. */
+export async function signOutFromMenu(page: Page) {
+  const menu = await openAccountMenu(page);
+  await menu.getByRole("menuitem", { name: /^(Salir|Sign out)$/ }).click();
+}
+
 /** Espera el aviso (toast) con ese texto. Puede haber varios apilados: alcanza con el último. */
 export async function expectToast(page: Page, text: string | RegExp) {
   await expect(page.getByRole("region", { name: /^(Avisos|Notifications)$/ }).getByText(text).last()).toBeVisible();

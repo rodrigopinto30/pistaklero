@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { emailOf, expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, expectToast } from "./support/fixtures";
+import { emailOf, expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, expectToast, openAccountMenu } from "./support/fixtures";
 
 test("las páginas legales están enlazadas desde el pie y existen en los dos idiomas", async ({ page }) => {
   await page.goto("/es");
@@ -15,7 +15,8 @@ test("las páginas legales están enlazadas desde el pie y existen en los dos id
 test("ajustes: idioma de los emails y descarga de los datos", async ({ page }) => {
   const userId = await signIn(page, uniqueEmail("ajustes"));
   await onboardAsCandidate(page, "Dana Ruiz");
-  await page.getByRole("link", { name: "Ajustes" }).click();
+  const menu = await openAccountMenu(page);
+  await menu.getByRole("menuitem", { name: "Ajustes" }).click();
   await page.waitForURL("/es/ajustes");
   await expectNoA11yViolations(page);
 
