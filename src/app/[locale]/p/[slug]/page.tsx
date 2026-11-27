@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { cache, type ReactNode } from "react";
 import { Avatar } from "@/components/avatar";
+import { Masonry } from "@/components/masonry";
+import { PostCard } from "@/components/posts/post-card";
+import { getCurrentUser } from "@/lib/auth/session";
 import { countryName, formatMonth, languageOptions } from "@/lib/geo";
 import { projectPreviewUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
@@ -72,13 +75,15 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
   const supabase = await createClient();
   const id = candidate.user_id;
 
-  const [skills, experiences, education, certifications, projects] = await Promise.all([
+  const [skills, experiences, education, certifications, projects, posts] = await Promise.all([
     supabase.from("candidate_skills").select("level, skills(name_es, name_en)").eq("candidate_id", id),
     supabase.from("candidate_experiences").select("*").eq("candidate_id", id).order("start_date", { ascending: false }),
     supabase.from("candidate_education").select("*").eq("candidate_id", id).order("start_date", { ascending: false }),
     supabase.from("candidate_certifications").select("*").eq("candidate_id", id).order("issued_on", { ascending: false, nullsFirst: false }),
     supabase.from("candidate_projects").select("*").eq("candidate_id", id).order("created_at", { ascending: false }),
+    supabase.rpc("post_cards", { p_author_id: id, p_limit: 12 }),
   ]);
+  const signedIn = Boolean(await getCurrentUser());
 
   const period = (start: string, end: string | null) =>
     `${formatMonth(start, locale)} – ${end ? formatMonth(end, locale) : tp("entries.present")}`;
@@ -246,6 +251,21 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
             ))}
           </ul>
         </Card>
+      )}
+
+      {(posts.data ?? []).length > 0 && (
+        <section aria-labelledby="profile-posts" className="flex flex-col gap-4 md:col-span-3">
+          <h2 id="profile-posts" className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+            {t("posts")}
+          </h2>
+          <Masonry className="lg:columns-3 xl:columns-3">
+            {posts.data!.map((post) => (
+              <li key={post.id}>
+                <PostCard post={post} locale={locale} signedIn={signedIn} />
+              </li>
+            ))}
+          </Masonry>
+        </section>
       )}
     </div>
   );

@@ -42,14 +42,14 @@ test("los accesos de la búsqueda rápida dependen del rol", async ({ page }) =>
   await page.goto("/en");
   await openWithShortcut(page, page.getByRole("dialog", { name: "Quick search" }));
   const guest = page.getByRole("dialog", { name: "Quick search" }).getByRole("navigation", { name: "Go to" });
-  await expect(guest.getByRole("link")).toHaveText(["Home", "Sign in", "Create account"]);
+  await expect(guest.getByRole("link")).toHaveText(["Home", "Posts", "Sign in", "Create account"]);
   await page.keyboard.press("Escape");
 
   await signInAsReadyCandidate(page);
   await page.goto("/es");
   await openWithShortcut(page, page.getByRole("dialog", { name: "Búsqueda rápida" }));
   const nav = page.getByRole("dialog", { name: "Búsqueda rápida" }).getByRole("navigation", { name: "Ir a" });
-  await expect(nav.getByRole("link")).toHaveText(["Inicio", "Mis postulaciones", "Guardados", "Mi perfil", "Ajustes"]);
+  await expect(nav.getByRole("link")).toHaveText(["Inicio", "Publicaciones", "Mis postulaciones", "Guardados", "Mi perfil", "Mis publicaciones", "Ajustes"]);
   await nav.getByRole("link", { name: "Mis postulaciones" }).click();
   await page.waitForURL("/es/mis-postulaciones");
   await expect(page.getByRole("dialog", { name: "Búsqueda rápida" })).toBeHidden();

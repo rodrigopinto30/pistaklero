@@ -16,7 +16,10 @@ export async function SiteHeader() {
   const tPalette = await getTranslations("CommandPalette");
 
   // Accesos de la búsqueda rápida, según el rol.
-  const paletteLinks: PaletteLink[] = [{ href: "/", label: tPalette("home") }];
+  const paletteLinks: PaletteLink[] = [
+    { href: "/", label: tPalette("home") },
+    { href: "/posts", label: t("posts") },
+  ];
   if (profile?.role === "candidate") {
     paletteLinks.push(
       { href: "/my-applications", label: t("myApplications") },
@@ -32,7 +35,7 @@ export async function SiteHeader() {
   } else if (profile?.role === "admin") {
     paletteLinks.push({ href: "/admin", label: t("admin") }, { href: "/admin/import", label: tPalette("import") });
   }
-  if (profile) paletteLinks.push({ href: "/settings", label: t("settings") });
+  if (profile) paletteLinks.push({ href: "/my-posts", label: t("myPosts") }, { href: "/settings", label: t("settings") });
   if (!user) paletteLinks.push({ href: "/sign-in", label: tAuth("signIn") }, { href: "/sign-up", label: tAuth("createAccount") });
 
   return (
@@ -51,6 +54,9 @@ export async function SiteHeader() {
           Pista<span className="text-primary">klero</span>
         </Link>
         <div className="flex flex-wrap items-center justify-end gap-x-1 gap-y-2">
+          <Link href="/posts" className={buttonVariants({ variant: "ghost" })}>
+            {t("posts")}
+          </Link>
           {user && !profile && (
             <Link href="/welcome" className={buttonVariants()}>
               {tAuth("completeSignUp")}

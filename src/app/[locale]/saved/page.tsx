@@ -2,6 +2,8 @@ import { Bookmark } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { JobCard } from "@/components/jobs/job-card";
+import { Masonry } from "@/components/masonry";
+import { PostCard } from "@/components/posts/post-card";
 import { SaveJobButton } from "@/components/jobs/save-job-button";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
@@ -21,14 +23,16 @@ export default async function SavedPage() {
   }
   const profile = await getCurrentProfile();
   if (!profile) redirect({ href: "/welcome", locale });
-  if (profile?.role !== "candidate") redirect({ href: "/", locale });
+  // Empleos guardan solo los candidatos; publicaciones, cualquiera.
+  const isCandidate = profile?.role === "candidate";
 
   const t = await getTranslations("Saved");
   const supabase = await createClient();
-  const [{ data: cards }, { data: all }] = await Promise.all([
+  const [{ data: cards }, { data: all }, { data: savedPosts }] = await Promise.all([
     supabase.rpc("saved_job_cards"),
     // También las que ya cerraron: se listan aparte para poder sacarlas.
     supabase.from("saved_jobs").select("job_id, jobs(title)").order("created_at", { ascending: false }),
+    supabase.rpc("post_cards", { p_saved_only: true, p_limit: 60 }),
   ]);
   const open = cards ?? [];
   const openIds = new Set(open.map((job) => job.id));
@@ -42,32 +46,51 @@ export default async function SavedPage() {
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 
-      <section aria-labelledby="saved-jobs" className="flex flex-col gap-4">
-        <h2 id="saved-jobs" className="text-xl font-semibold">
-          {t("jobs", { count: open.length })}
+      {isCandidate && (
+        <section aria-labelledby="saved-jobs" className="flex flex-col gap-4">
+          <h2 id="saved-jobs" className="text-xl font-semibold">
+            {t("jobs", { count: open.length })}
+          </h2>
+          {open.length === 0 ? (
+            <div className="flex flex-col items-start gap-3 rounded-2xl bg-card p-6 shadow-soft">
+              <p className="flex items-center gap-2">
+                <Bookmark aria-hidden="true" className="size-5 text-muted-foreground" />
+                {t("empty")}
+              </p>
+              <Link href="/" className={buttonVariants()}>
+                {t("browse")}
+              </Link>
+            </div>
+          ) : (
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {open.map((job) => (
+                <li key={job.id}>
+                  <JobCard job={job} locale={locale} viewer={viewer} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
+
+      <section aria-labelledby="saved-posts" className="flex flex-col gap-4">
+        <h2 id="saved-posts" className="text-xl font-semibold">
+          {t("posts", { count: (savedPosts ?? []).length })}
         </h2>
-        {open.length === 0 ? (
-          <div className="flex flex-col items-start gap-3 rounded-2xl bg-card p-6 shadow-soft">
-            <p className="flex items-center gap-2">
-              <Bookmark aria-hidden="true" className="size-5 text-muted-foreground" />
-              {t("empty")}
-            </p>
-            <Link href="/" className={buttonVariants()}>
-              {t("browse")}
-            </Link>
-          </div>
+        {(savedPosts ?? []).length === 0 ? (
+          <p className="rounded-2xl bg-card p-6 text-muted-foreground shadow-soft">{t("emptyPosts")}</p>
         ) : (
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {open.map((job) => (
-              <li key={job.id}>
-                <JobCard job={job} locale={locale} viewer={viewer} />
+          <Masonry>
+            {savedPosts!.map((post) => (
+              <li key={post.id}>
+                <PostCard post={post} locale={locale} signedIn />
               </li>
             ))}
-          </ul>
+          </Masonry>
         )}
       </section>
 
-      {closed.length > 0 && (
+      {isCandidate && closed.length > 0 && (
         <section aria-labelledby="saved-closed" className="flex flex-col gap-3">
           <h2 id="saved-closed" className="text-lg font-semibold">
             {t("closed")}

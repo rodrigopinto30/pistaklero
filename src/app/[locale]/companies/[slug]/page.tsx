@@ -7,6 +7,9 @@ import { CompanyCover } from "@/components/companies/company-cover";
 import { JobCard } from "@/components/jobs/job-card";
 import { ResponseBadge } from "@/components/jobs/response-badge";
 import { Markdown } from "@/components/markdown";
+import { Masonry } from "@/components/masonry";
+import { PostCard } from "@/components/posts/post-card";
+import { getCurrentUser } from "@/lib/auth/session";
 import { countryName } from "@/lib/geo";
 import { getJobViewer } from "@/lib/jobs/viewer";
 import { companyLogoUrl } from "@/lib/storage";
@@ -14,7 +17,7 @@ import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
 
-const TABS = ["about", "jobs"] as const;
+const TABS = ["about", "jobs", "posts"] as const;
 type Tab = (typeof TABS)[number];
 
 async function loadCompany(slug: string) {
@@ -67,6 +70,9 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
   ]);
   const openJobs = jobs ?? [];
   const viewer = tab === "jobs" ? await getJobViewer(openJobs.map((job) => job.id)) : null;
+  // Publicaciones de quienes trabajan en la empresa (sus reclutadores).
+  const posts = tab === "posts" ? ((await supabase.rpc("post_cards", { p_company_id: company.id, p_limit: 24 })).data ?? []) : [];
+  const signedIn = tab === "posts" ? Boolean(await getCurrentUser()) : false;
 
   const logo = companyLogoUrl(company.logo_path);
   const location = [company.city, countryName(company.country, locale)].filter(Boolean).join(", ");
@@ -167,7 +173,7 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
               tab === value && "border-foreground text-foreground"
             )}
           >
-            {value === "about" ? t("aboutTab") : t("jobsTab")}
+            {value === "about" ? t("aboutTab") : value === "jobs" ? t("jobsTab") : t("postsTab")}
             {value === "jobs" && <span className="rounded-full bg-secondary px-2 py-0.5 text-xs">{openJobs.length}</span>}
           </Link>
         ))}
@@ -228,6 +234,23 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
             )}
           </div>
         </div>
+      ) : tab === "posts" ? (
+        <section aria-labelledby="company-posts" className="flex flex-col gap-4">
+          <h2 id="company-posts" className="sr-only">
+            {t("postsTab")}
+          </h2>
+          {posts.length === 0 ? (
+            <p className="rounded-2xl bg-card p-6 text-muted-foreground shadow-soft">{t("noPosts")}</p>
+          ) : (
+            <Masonry>
+              {posts.map((post) => (
+                <li key={post.id}>
+                  <PostCard post={post} locale={locale} signedIn={signedIn} />
+                </li>
+              ))}
+            </Masonry>
+          )}
+        </section>
       ) : (
         <section aria-labelledby="company-jobs" className="flex flex-col gap-4">
           <h2 id="company-jobs" className="sr-only">

@@ -13,7 +13,9 @@
     "suspended": "Your account is suspended. If you think this is a mistake, contact us.",
     "settings": "Settings",
     "lightMode": "Light mode",
-    "saved": "Saved"
+    "saved": "Saved",
+    "posts": "Posts",
+    "myPosts": "My posts"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -285,7 +287,8 @@
     "limit": {
       "title": "You've reached today's profile limit",
       "body": "To protect people looking for work, each recruiter can view up to 200 profiles per day. Profiles of people who applied to your jobs are always visible. It resets tomorrow."
-    }
+    },
+    "posts": "Posts"
   },
   "Company": {
     "metaTitle": "Company page",
@@ -388,7 +391,9 @@
     "noAbout": "This company hasn't shared what it does yet.",
     "facts": "Facts",
     "location": "Location",
-    "seeJobs": "{count, plural, one {See the open job →} other {See the # open jobs →}}"
+    "seeJobs": "{count, plural, one {See the open job →} other {See the # open jobs →}}",
+    "postsTab": "Posts",
+    "noPosts": "Nobody from this company has posted tips yet."
   },
   "Team": {
     "metaTitle": "Team",
@@ -755,7 +760,16 @@
         "unknown": "We couldn't transfer the company."
       }
     },
-    "importJob": "Import job"
+    "importJob": "Import job",
+    "posts": {
+      "title": "Hidden posts",
+      "hint": "They're hidden automatically after 3 reports. Publish them again if they're fine, or delete them.",
+      "empty": "No hidden posts.",
+      "restore": "Publish again",
+      "restoreItem": "Publish again: {title}",
+      "delete": "Delete",
+      "deleteItem": "Delete: {title}"
+    }
   },
   "Import": {
     "metaTitle": "Import job",
@@ -1051,7 +1065,8 @@
     "jobStatusUpdated": "Job status updated.",
     "jobSaved": "Job saved.",
     "published": "Job published.",
-    "coverUpdated": "Cover updated."
+    "coverUpdated": "Cover updated.",
+    "postPublished": "Published! The whole community can read it now."
   },
   "Saved": {
     "metaTitle": "Saved",
@@ -1061,6 +1076,86 @@
     "empty": "You haven't saved any jobs yet. Tap a job's bookmark to keep it handy.",
     "browse": "Browse jobs",
     "closed": "Jobs that already closed",
-    "unavailable": "Job not available"
+    "unavailable": "Job not available",
+    "posts": "{count, plural, =0 {Posts} one {# post} other {# posts}}",
+    "emptyPosts": "You haven't saved any posts yet."
+  },
+  "Posts": {
+    "metaTitle": "Posts",
+    "title": "Posts",
+    "subtitle": "Tips to land a job, written by the community: candidates, recruiters and people who've been there.",
+    "write": "Write a post",
+    "signInToWrite": "Sign in to post",
+    "count": "{count, plural, =0 {No posts yet} one {# post} other {# posts}}",
+    "countFor": "{count, plural, =0 {No posts about “{query}”} one {# post about “{query}”} other {# posts about “{query}”}}",
+    "empty": "No posts yet. You can write the first one!",
+    "emptySearch": "We couldn't find posts for that search.",
+    "seeAll": "See all posts",
+    "loadMore": "Load more",
+    "candidate": "Candidate",
+    "recruiterAt": "Recruiter at {company}",
+    "team": "Pistaklero team",
+    "back": "All posts",
+    "hiddenNote": "This post is hidden because of reports: only its author and the Pistaklero team can see it while we review it.",
+    "edit": "Edit",
+    "delete": "Delete post",
+    "fromAuthor": "Posts",
+    "actions": {
+      "like": "Like: {title}",
+      "save": "Save post: {title}",
+      "likesCount": "{count, plural, one {like} other {likes}}",
+      "savedToast": "Post saved. Find it in Saved.",
+      "unsavedToast": "Removed from your saved posts.",
+      "signInToLike": "Sign in to like {title}",
+      "signInToSave": "Sign in to save {title}",
+      "errors": {
+        "not_authorized": "Finish signing up to like or save.",
+        "not_found": "This post is no longer available.",
+        "limit_reached": "You reached 500 saved posts.",
+        "unknown": "We couldn't do it. Try again."
+      }
+    },
+    "form": {
+      "newTitle": "Write a post",
+      "newSubtitle": "Share what helped you land a job, or what you look for when hiring.",
+      "editTitle": "Edit post",
+      "title": "Title",
+      "titleHint": "5 to 120 characters. For example: How I prepared for my first technical interview.",
+      "language": "Language",
+      "body": "Text",
+      "bodyHint": "20 to 5000 characters. You can use **bold**, lists with dashes and links.",
+      "public": "It's published right away, with your name and photo. The community can report it if it breaks the rules.",
+      "publish": "Publish",
+      "save": "Save changes",
+      "needsName": "To post we need your name: it's shown next to what you write.",
+      "completeName": "Complete my details"
+    },
+    "errors": {
+      "no_person": "To post we need your name. Add it in your profile or in Settings.",
+      "rate_limited": "You reached 5 posts in the last 24 hours. Try again tomorrow.",
+      "not_found": "We couldn't find that post.",
+      "not_authorized": "Finish signing up to post.",
+      "unknown": "We couldn't publish. Try again."
+    },
+    "report": {
+      "open": "Report",
+      "reason": "What's wrong with this post?",
+      "reasons": {
+        "spam": "It's spam or advertising",
+        "offensive": "It's offensive or discriminatory",
+        "scam": "It looks like a scam",
+        "other": "Another reason"
+      },
+      "send": "Send report",
+      "thanks": "Thanks. If more people report it, we'll hide it until we review it."
+    },
+    "mine": {
+      "title": "My posts",
+      "subtitle": "What you wrote for the community.",
+      "write": "Write another",
+      "empty": "You haven't posted anything yet.",
+      "likes": "{count, plural, =0 {no likes} one {# like} other {# likes}}",
+      "hidden": "Hidden by reports"
+    }
   }
 }
