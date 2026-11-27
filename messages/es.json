@@ -132,7 +132,8 @@
       "invalid_url": "Escribí una dirección web válida, por ejemplo github.com/tu-usuario.",
       "invalid_month": "Escribí el mes con el formato AAAA-MM, por ejemplo 2024-03.",
       "amount_positive": "Escribí un monto mayor a 0, solo con números."
-    }
+    },
+    "noChanges": "No hay cambios para guardar"
   },
   "Profile": {
     "metaTitle": "Mi perfil",
