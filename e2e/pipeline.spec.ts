@@ -16,7 +16,7 @@ async function lastEmailTo(email: string) {
 
 test("la empresa gestiona a quien se postuló y la candidata se entera de todo", async ({ browser }) => {
   const companyName = `Pipeline ${Date.now()}`;
-  const domain = `pipeline-${Date.now()}.com`;
+  const domain = `pipeline-${Date.now()}${Math.random().toString(36).slice(2, 6)}.com`;
   const recruiter = await (await browser.newContext()).newPage();
   await signIn(recruiter, uniqueEmail("rrhh", domain));
   await onboardAsCompany(recruiter, companyName, domain);
