@@ -6,6 +6,7 @@ import { timeAgo } from "@/lib/jobs/time";
 import { companyLogoUrl } from "@/lib/storage";
 import type { Database } from "@/lib/supabase/database.types";
 import { Link } from "@/i18n/navigation";
+import { ResponseBadge } from "./response-badge";
 
 export type JobCardData = Database["public"]["Functions"]["search_jobs"]["Returns"][number];
 
@@ -73,11 +74,14 @@ export async function JobCard({ job, locale, index }: { job: JobCardData; locale
           ))}
         </ul>
       )}
-      {job.published_at && (
-        <p className="mt-auto text-xs text-muted-foreground">
-          <time dateTime={job.published_at}>{timeAgo(job.published_at, locale)}</time>
-        </p>
-      )}
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
+        {job.published_at && (
+          <p className="text-xs text-muted-foreground">
+            <time dateTime={job.published_at}>{timeAgo(job.published_at, locale)}</time>
+          </p>
+        )}
+        {job.source === "native" && <ResponseBadge badge={job.company_badge} />}
+      </div>
     </article>
   );
 }

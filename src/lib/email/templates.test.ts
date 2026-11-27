@@ -35,6 +35,12 @@ describe("emails", () => {
     expect(email.text).toContain("Mensaje de Acme:\nGracias <3");
   });
 
+  it("el recordatorio a la empresa dice cuántas postulaciones esperan", () => {
+    const email = renderEmail("recruiter_reminder", "es", { companyName: "Acme", pending: 3 });
+    expect(email.subject).toBe("3 postulación(es) esperando a Acme");
+    expect(email.text).toContain("/es/panel");
+  });
+
   it("respeta el idioma de quien lo recibe", () => {
     const email = renderEmail("team_invitation", "en", { companyName: "Acme", inviterName: "Ana", acceptUrl: "https://x.com" });
     expect(email.subject).toBe("Join Acme on Pistaklero");

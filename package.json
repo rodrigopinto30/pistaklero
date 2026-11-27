@@ -12,7 +12,8 @@
     "db:types": "supabase gen types typescript --schema public > src/lib/supabase/database.types.ts",
     "db:reset": "supabase db reset",
     "db:test": "supabase test db",
-    "admin:grant": "node scripts/make-admin.mjs"
+    "admin:grant": "node scripts/make-admin.mjs",
+    "cron": "node scripts/run-cron.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.14.0",
