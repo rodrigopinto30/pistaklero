@@ -10,7 +10,7 @@ import { BlockedCompanies } from "./_components/blocked-companies";
 import { EntriesSection, type EntryItem } from "./_components/entries-section";
 import { PreferencesForm } from "./_components/preferences-form";
 import { SalaryForm } from "./_components/salary-form";
-import { Section } from "./_components/section";
+import { SectionCard as Section } from "@/components/section-card";
 import { SkillsSection } from "./_components/skills-section";
 
 export async function generateMetadata(): Promise<Metadata> {
