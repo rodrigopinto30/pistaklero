@@ -9,7 +9,9 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "db:types": "supabase gen types typescript --schema public > src/lib/supabase/database.types.ts"
+    "db:types": "supabase gen types typescript --schema public > src/lib/supabase/database.types.ts",
+    "db:reset": "supabase db reset",
+    "db:test": "supabase test db"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
