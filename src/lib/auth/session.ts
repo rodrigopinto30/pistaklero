@@ -3,7 +3,7 @@ import { connection } from "next/server";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
-export type SessionUser = { id: string; email: string | null; name: string | null };
+export type SessionUser = { id: string; email: string | null; name: string | null; avatarUrl: string | null };
 
 /**
  * Usuario de la sesión actual, o null. Verifica la firma del JWT (getClaims), no se fía de la cookie.
@@ -21,7 +21,9 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   const metadata = (data.claims.user_metadata ?? {}) as Record<string, unknown>;
   const rawName = metadata.full_name ?? metadata.name;
   const name = typeof rawName === "string" && rawName.trim() ? rawName.trim().slice(0, 80) : null;
-  return { id: data.claims.sub, email, name };
+  const rawAvatar = metadata.avatar_url ?? metadata.picture;
+  const avatarUrl = typeof rawAvatar === "string" && rawAvatar.startsWith("https://") ? rawAvatar : null;
+  return { id: data.claims.sub, email, name, avatarUrl };
 });
 
 /**
@@ -58,7 +60,7 @@ export const getCurrentPerson = cache(async () => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("people")
-    .select("first_name, middle_name, last_name, full_name")
+    .select("first_name, middle_name, last_name, full_name, avatar_path")
     .eq("user_id", user.id)
     .maybeSingle();
   return data;

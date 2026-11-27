@@ -1,6 +1,9 @@
 "use server";
 
 import { refresh } from "next/cache";
+import { after } from "next/server";
+import { importAvatarFromProvider } from "@/lib/account/avatar";
+import { getCurrentUser } from "@/lib/auth/session";
 import { redirect } from "@/i18n/navigation";
 import { parseLocale } from "@/i18n/locale";
 import { createClient } from "@/lib/supabase/server";
@@ -69,6 +72,13 @@ export async function completeOnboarding(
     }
     console.error("La bienvenida falló", { code: error.code, message: error.message });
     return { status: "error", fieldErrors: {}, formError: "unknown", values };
+  }
+
+  // Si entró con Google o GitHub, su foto queda como foto de perfil (después de responder).
+  const user = await getCurrentUser();
+  if (user?.avatarUrl) {
+    const { id, avatarUrl } = user;
+    after(() => importAvatarFromProvider(id, avatarUrl));
   }
 
   // El encabezado (en el layout) tiene que dejar de mostrar "Completá tu registro".

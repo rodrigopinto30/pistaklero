@@ -11,9 +11,6 @@ import { refreshSession } from "./lib/supabase/proxy";
  */
 const handleI18nRouting = createMiddleware(routing);
 
-// Fotos de perfil de los proveedores de login.
-const AVATAR_ORIGINS = ["https://lh3.googleusercontent.com", "https://avatars.githubusercontent.com"];
-
 export default async function proxy(request: NextRequest) {
   const supabaseOrigin = new URL(getPublicEnv().NEXT_PUBLIC_SUPABASE_URL).origin;
   const nonce = createNonce();
@@ -21,7 +18,8 @@ export default async function proxy(request: NextRequest) {
     nonce,
     isDev: process.env.NODE_ENV === "development",
     connectSrc: [supabaseOrigin],
-    imgSrc: [supabaseOrigin, ...AVATAR_ORIGINS],
+    // Logos, fotos de perfil y vistas previas se sirven desde nuestro Storage.
+    imgSrc: [supabaseOrigin],
   });
 
   // 1. Renueva la sesión antes de renderizar (actualiza las cookies del pedido).
