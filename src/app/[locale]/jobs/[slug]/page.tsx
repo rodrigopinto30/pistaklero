@@ -122,7 +122,8 @@ export default async function JobPage({ params }: PageProps<"/[locale]/jobs/[slu
           {!isOpen ? (
             <p className="text-sm text-muted-foreground">{t("detail.closed")}</p>
           ) : job.source === "imported" && job.external_url ? (
-            <a href={job.external_url} rel="noopener noreferrer nofollow" target="_blank" className={buttonVariants({ size: "lg" })}>
+            // Pasa por nuestra ruta para contar el interés (la URL de destino sale de la base).
+            <a href={`/api/jobs/${job.id}/apply`} rel="noopener noreferrer nofollow" target="_blank" className={buttonVariants({ size: "lg" })}>
               {t("detail.applyExternal")}
               <ExternalLink aria-hidden="true" />
             </a>
