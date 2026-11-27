@@ -1135,7 +1135,9 @@
     "coverUpdated": "Cover updated.",
     "postPublished": "Published! The whole community can read it now.",
     "passwordUpdated": "Done, your new password is set.",
-    "passwordChanged": "Password changed. We signed you out everywhere else."
+    "passwordChanged": "Password changed. We signed you out everywhere else.",
+    "pendingLiked": "Done: you liked it.",
+    "pendingSaved": "Done: it's in Saved."
   },
   "Saved": {
     "metaTitle": "Saved",

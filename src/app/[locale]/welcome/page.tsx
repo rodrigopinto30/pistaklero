@@ -4,6 +4,7 @@ import { SignUpSteps } from "@/components/auth/sign-up-steps";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { parseSignUpRole } from "@/lib/auth/sign-up";
 import { getPathname, redirect } from "@/i18n/navigation";
+import { safeNextPath } from "@/lib/auth/redirect";
 import { WelcomeForm } from "./welcome-form";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,7 +23,10 @@ export default async function WelcomePage({ searchParams }: PageProps<"/[locale]
 
   const t = await getTranslations("Welcome");
   // Si viene del registro, el rol ya está elegido: este es el último paso.
-  const presetRole = parseSignUpRole((await searchParams).role);
+  const params = await searchParams;
+  const presetRole = parseSignUpRole(params.role);
+  // Adónde seguir al terminar (por ejemplo, la oferta a la que se quería postular). Solo rutas propias.
+  const next = params.next ? safeNextPath(params.next, "") || undefined : undefined;
 
   return (
     <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8 px-4 py-12">
@@ -31,7 +35,7 @@ export default async function WelcomePage({ searchParams }: PageProps<"/[locale]
         <h1 className="text-2xl font-semibold tracking-tight">{presetRole ? t("detailsTitle") : t("title")}</h1>
         <p className="text-muted-foreground">{presetRole ? t("detailsSubtitle") : t("subtitle")}</p>
       </div>
-      <WelcomeForm locale={locale} defaultName={user?.name ?? ""} presetRole={presetRole} />
+      <WelcomeForm locale={locale} defaultName={user?.name ?? ""} presetRole={presetRole} next={next} />
     </div>
   );
 }

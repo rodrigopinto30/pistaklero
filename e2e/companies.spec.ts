@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, expectToast, onboardAsCandidate, seedCompanyWithJobs, signIn, test, uniqueEmail, clickWhenReady } from "./support/fixtures";
+import { expect, expectNoA11yViolations, expectToast, fillPersonName, seedCompanyWithJobs, signIn, test, uniqueEmail, clickWhenReady } from "./support/fixtures";
 
 test("explorar empresas, darles me gusta y guardarlas", async ({ page }) => {
   const name = `Exploradora ${Date.now().toString(36)}`;
@@ -9,16 +9,25 @@ test("explorar empresas, darles me gusta y guardarlas", async ({ page }) => {
   const card = page.getByRole("article").filter({ hasText: name });
   await expect(card.getByText("1 empleo abierto", { exact: false })).toBeVisible();
   await expectNoA11yViolations(page);
-  await card.getByRole("link", { name: `Ingresá para darle me gusta a ${name}` }).click();
-  await expect(page).toHaveURL(/\/es\/ingresar\?next=%2Fes%2Fempresas%2F/);
+  await card.getByRole("button", { name: `Ingresá para darle me gusta a ${name}` }).click();
+  // Vuelve al mismo listado, con la misma búsqueda.
+  await expect(page).toHaveURL(/\/es\/ingresar\?next=%2Fes%2Fempresas%3Fq%3D/);
 
-  // Con sesión: me gusta y guardar desde la tarjeta.
+  // Crea la cuenta: al terminar la bienvenida vuelve a la misma búsqueda, con el me gusta ya hecho.
   await signIn(page, uniqueEmail("exploradora"));
-  await onboardAsCandidate(page, "Eva Explora");
-  await page.goto(`/es/empresas?q=${encodeURIComponent(name)}`);
-  await clickWhenReady(card.getByRole("button", { name: `Me gusta: ${name}` }));
+  await page.getByLabel(/Busco trabajo/).check();
+  await fillPersonName(page, "Eva Explora");
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await page.waitForURL(/\/es\/empresas\?q=/);
+  await expectToast(page, "Listo: le diste me gusta.");
   await expect(card.getByRole("button", { name: `Me gusta: ${name}` })).toHaveAttribute("aria-pressed", "true");
   await expect(card.getByText("1 me gusta", { exact: false })).toBeVisible();
+
+  // Con sesión: me gusta (se saca y se vuelve a dar) y guardar desde la tarjeta.
+  await clickWhenReady(card.getByRole("button", { name: `Me gusta: ${name}` }));
+  await expect(card.getByRole("button", { name: `Me gusta: ${name}` })).toHaveAttribute("aria-pressed", "false");
+  await clickWhenReady(card.getByRole("button", { name: `Me gusta: ${name}` }));
+  await expect(card.getByRole("button", { name: `Me gusta: ${name}` })).toHaveAttribute("aria-pressed", "true");
   await clickWhenReady(card.getByRole("button", { name: `Guardar empresa: ${name}` }));
   await expectToast(page, "Empresa guardada. La encontrás en Guardados.");
 

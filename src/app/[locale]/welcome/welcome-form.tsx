@@ -18,7 +18,7 @@ const initialState: OnboardingState = { status: "idle" };
  * Los campos de cada rol se muestran solo con CSS (`:has(:checked)`), así el formulario
  * funciona igual sin JavaScript. Lo oculto con display:none tampoco lo leen los lectores de pantalla.
  */
-export function WelcomeForm({ locale, defaultName, presetRole }: { locale: string; defaultName: string; presetRole: SignUpRole | null }) {
+export function WelcomeForm({ locale, defaultName, presetRole, next }: { locale: string; defaultName: string; presetRole: SignUpRole | null; next?: string }) {
   const t = useTranslations("Welcome");
   const [state, formAction, pending] = useActionState(completeOnboarding, initialState);
   const formRef = useRef<HTMLFormElement>(null);
@@ -57,6 +57,7 @@ export function WelcomeForm({ locale, defaultName, presetRole }: { locale: strin
   return (
     <form ref={formRef} action={formAction} noValidate className="group flex flex-col gap-6">
       <input type="hidden" name="locale" value={locale} />
+      {next && <input type="hidden" name="next" value={next} />}
 
       {formError === "unknown" && (
         <p role="alert" className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">

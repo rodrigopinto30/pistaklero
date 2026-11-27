@@ -18,6 +18,8 @@ export const FLASH_KEYS = [
   "postPublished",
   "saved",
   "passwordUpdated",
+  "pendingLiked",
+  "pendingSaved",
 ] as const;
 export type FlashKey = (typeof FLASH_KEYS)[number];
 

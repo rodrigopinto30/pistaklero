@@ -120,9 +120,10 @@ export async function verifyEmailCode(_previous: CodeState, formData: FormData):
   const requested = safeNextPath(formData.get("next"), `/${locale}`);
   // Una invitación crea el perfil al aceptarla: va directo. Desde el registro, sigue la bienvenida
   // con el rol elegido; desde el ingreso, adonde iba.
+  const cameFrom = formData.get("next") ? requested : null;
   const next =
     role && !requested.startsWith("/api/team/accept?")
-      ? `${getPathname({ locale, href: "/welcome" })}?${new URLSearchParams({ role })}`
+      ? `${getPathname({ locale, href: "/welcome" })}?${new URLSearchParams(cameFrom ? { role, next: cameFrom } : { role })}`
       : requested;
 
   const code = codeSchema.safeParse(text(formData, "code"));

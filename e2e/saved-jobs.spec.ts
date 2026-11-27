@@ -45,8 +45,11 @@ test("sin sesión, los botones de la tarjeta llevan a ingresar", async ({ page }
   const title = `${token()} Sin sesión`;
   await seedCompanyWithJobs("Visitas SA", [{ title }]);
   await page.goto(`/es?q=${encodeURIComponent(title)}`);
-  await page.getByRole("link", { name: `Ingresá para guardar ${title}` }).click();
-  await expect(page).toHaveURL(/\/es\/ingresar\?next=%2Fes%2Fempleos%2F/);
+  // Postularse lleva a ingresar y después a la oferta con el formulario abierto.
+  await expect(page.getByRole("link", { name: `Postularme a ${title}` })).toHaveAttribute("href", /\/es\/ingresar\?next=%2Fes%2Fempleos%2F.+%3Fpostular%3D1/);
+  // Guardar queda pendiente y vuelve a la misma búsqueda.
+  await page.getByRole("button", { name: `Ingresá para guardar ${title}` }).click();
+  await expect(page).toHaveURL(/\/es\/ingresar\?next=%2Fes%3Fq%3D/);
 });
 
 test("sin habilidades se puede postular y se recomienda completarlas", async ({ page }) => {

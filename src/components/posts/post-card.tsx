@@ -21,7 +21,8 @@ export async function authorSubtitle(post: Pick<PostCardData, "author_role" | "a
  */
 export async function PostCard({ post, locale, signedIn }: { post: PostCardData; locale: string; signedIn: boolean }) {
   const href = { pathname: "/posts/[slug]" as const, params: { slug: post.slug } };
-  const signInHref = signedIn ? undefined : `${getPathname({ locale: locale as AppLocale, href: "/sign-in" })}?${new URLSearchParams({ next: getPathname({ locale: locale as AppLocale, href }) })}`;
+  // Sin sesión, "me gusta" y "guardar" quedan pendientes y se vuelve al listado (con JavaScript, a la página exacta).
+  const guestReturnTo = signedIn ? undefined : getPathname({ locale: locale as AppLocale, href: "/posts" });
 
   return (
     <article aria-labelledby={`post-${post.id}`} className="relative flex flex-col gap-3 rounded-2xl bg-card p-5 shadow-soft transition-shadow hover:shadow-soft-lg">
@@ -44,7 +45,7 @@ export async function PostCard({ post, locale, signedIn }: { post: PostCardData;
         {post.excerpt}
         {post.excerpt.length >= 280 && "…"}
       </p>
-      <PostActions postId={post.id} title={post.title} liked={post.liked} saved={post.saved} likes={post.likes_count} signInHref={signInHref} />
+      <PostActions postId={post.id} title={post.title} liked={post.liked} saved={post.saved} likes={post.likes_count} guestReturnTo={guestReturnTo} />
     </article>
   );
 }

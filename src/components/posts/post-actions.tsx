@@ -3,6 +3,7 @@
 import { Bookmark, Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useOptimistic, useTransition } from "react";
+import { GuestAction } from "@/components/pending/guest-action";
 import { notify } from "@/components/toaster";
 import { type ToggleResult, togglePostLike, toggleSavedPost } from "@/lib/posts/actions";
 import { cn } from "@/lib/utils";
@@ -13,15 +14,15 @@ type Props = {
   liked: boolean;
   saved: boolean;
   likes: number;
-  /** Sin sesión, los botones llevan a ingresar (y vuelven a la publicación). */
-  signInHref?: string;
+  /** Sin sesión: adónde volver después de ingresar (los botones dejan la acción pendiente). */
+  guestReturnTo?: string;
   size?: "sm" | "md";
 };
 
 const iconButton = "relative z-10 inline-flex size-10 items-center justify-center rounded-full transition-colors hover:bg-muted disabled:opacity-70";
 
 /** Me gusta y guardar: botones conmutables (aria-pressed), al instante y con aviso. */
-export function PostActions({ postId, title, liked, saved, likes, signInHref, size = "sm" }: Props) {
+export function PostActions({ postId, title, liked, saved, likes, guestReturnTo, size = "sm" }: Props) {
   const t = useTranslations("Posts.actions");
   const [state, setState] = useOptimistic({ liked, saved, likes });
   const [pending, startTransition] = useTransition();
@@ -44,16 +45,16 @@ export function PostActions({ postId, title, liked, saved, likes, signInHref, si
     </span>
   );
 
-  if (signInHref) {
+  if (guestReturnTo !== undefined) {
     return (
       <div className="flex items-center gap-1">
-        <a href={signInHref} aria-label={t("signInToLike", { title })} className={cn(iconButton, "text-muted-foreground")}>
+        <GuestAction kind="like-post" id={postId} returnTo={guestReturnTo} label={t("signInToLike", { title })} className={cn(iconButton, "text-muted-foreground")}>
           <Heart aria-hidden="true" className={icon} />
-        </a>
+        </GuestAction>
         {count}
-        <a href={signInHref} aria-label={t("signInToSave", { title })} className={cn(iconButton, "ml-auto text-muted-foreground")}>
+        <GuestAction kind="save-post" id={postId} returnTo={guestReturnTo} label={t("signInToSave", { title })} className={cn(iconButton, "ml-auto text-muted-foreground")}>
           <Bookmark aria-hidden="true" className={icon} />
-        </a>
+        </GuestAction>
       </div>
     );
   }

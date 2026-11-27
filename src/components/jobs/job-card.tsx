@@ -8,6 +8,7 @@ import type { Database } from "@/lib/supabase/database.types";
 import { Bookmark } from "lucide-react";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
+import { GuestAction } from "@/components/pending/guest-action";
 import type { JobViewer } from "@/lib/jobs/viewer";
 import { buttonVariants } from "@/components/ui/button";
 import { QuickApplyButton } from "./quick-apply-button";
@@ -33,14 +34,21 @@ async function JobCardAction({ part, job, locale, viewer }: { part: "save" | "ap
 
   if (viewer.mode === "none") return null;
   if (viewer.mode === "guest") {
-    const next = getPathname({ locale: locale as AppLocale, href: jobHref });
-    const signIn = { pathname: "/sign-in" as const, query: { next } };
+    // Guardar queda pendiente y se hace solo al ingresar; postularse lleva a la oferta con el formulario
+    // abierto (postularse se confirma siempre a mano).
+    const jobPath = getPathname({ locale: locale as AppLocale, href: jobHref });
     return part === "save" ? (
-      <Link href={signIn} aria-label={t("signInToSave", { title: job.title })} title={t("signInToSave", { title: job.title })} className="relative z-10 -m-2 inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
+      <GuestAction
+        kind="save-job"
+        id={job.id}
+        returnTo={getPathname({ locale: locale as AppLocale, href: "/" })}
+        label={t("signInToSave", { title: job.title })}
+        className="relative z-10 -m-2 inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+      >
         <Bookmark aria-hidden="true" className="size-5" />
-      </Link>
+      </GuestAction>
     ) : (
-      applyLink(signIn)
+      applyLink(job.source === "native" ? { pathname: "/sign-in", query: { next: `${jobPath}?postular=1` } } : jobHref)
     );
   }
   if (part === "save") return <SaveJobButton jobId={job.id} title={job.title} saved={viewer.saved.has(job.id)} className="-m-2" />;
