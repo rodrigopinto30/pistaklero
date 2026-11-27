@@ -68,7 +68,8 @@
       "companyName": "Escribí el nombre de la empresa (entre 2 y 80 caracteres).",
       "websiteUrl": "Escribí una dirección válida, por ejemplo acme.com.",
       "company_exists": "Esa empresa ya está en Pistaklero. Pedile a alguien de tu equipo que te invite.",
-      "unknown": "No pudimos guardar los datos. Probá de nuevo."
+      "unknown": "No pudimos guardar los datos. Probá de nuevo.",
+      "company_unclaimed": "Esa página está sin reclamar. Para que sea tuya, ingresá con un email de ese dominio (por ejemplo, nombre@empresa.com)."
     }
   },
   "Form": {
@@ -333,7 +334,12 @@
   "CompanyPage": {
     "verified": "Empresa verificada",
     "unverified": "Empresa sin verificar",
-    "unclaimed": "Página sin reclamar. ¿Trabajás acá? Escribinos para hacerte cargo.",
+    "unclaimed": {
+      "title": "Página sin reclamar · ¿Trabajás acá?",
+      "byDomain": "Ingresá con tu email de @{domain}: la página y sus ofertas pasan a ser tuyas al instante.",
+      "cta": "Reclamar esta página",
+      "contact": "Escribinos a {email} para hacerte cargo."
+    },
     "about": "Sobre la empresa",
     "stack": "Stack tecnológico",
     "links": "Enlaces",

@@ -68,7 +68,8 @@
       "companyName": "Enter the company name (2 to 80 characters).",
       "websiteUrl": "Enter a valid address, for example acme.com.",
       "company_exists": "That company is already on Pistaklero. Ask someone on your team to invite you.",
-      "unknown": "We couldn't save your details. Please try again."
+      "unknown": "We couldn't save your details. Please try again.",
+      "company_unclaimed": "That page is unclaimed. To make it yours, sign in with an email from that domain (for example, name@company.com)."
     }
   },
   "Form": {
@@ -333,7 +334,12 @@
   "CompanyPage": {
     "verified": "Verified company",
     "unverified": "Unverified company",
-    "unclaimed": "Unclaimed page. Do you work here? Contact us to take it over.",
+    "unclaimed": {
+      "title": "Unclaimed page · Do you work here?",
+      "byDomain": "Sign in with your @{domain} email: the page and its jobs become yours instantly.",
+      "cta": "Claim this page",
+      "contact": "Email us at {email} to take it over."
+    },
     "about": "About the company",
     "stack": "Tech stack",
     "links": "Links",

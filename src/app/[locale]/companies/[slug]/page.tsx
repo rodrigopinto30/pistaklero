@@ -6,6 +6,7 @@ import { ResponseBadge } from "@/components/jobs/response-badge";
 import { countryName } from "@/lib/geo";
 import { companyLogoUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
+import { Link } from "@/i18n/navigation";
 
 async function loadCompany(slug: string) {
   const supabase = await createClient();
@@ -116,7 +117,21 @@ export default async function CompanyPage({ params }: PageProps<"/[locale]/compa
       </section>
 
       {company.status === "unclaimed" && (
-        <p className="rounded-2xl border border-warn p-4 text-sm text-warn md:col-span-3">{t("unclaimed")}</p>
+        <section aria-labelledby="company-unclaimed" className="flex flex-col gap-2 rounded-2xl border border-warn p-5 md:col-span-3">
+          <h2 id="company-unclaimed" className="font-semibold text-warn">
+            {t("unclaimed.title")}
+          </h2>
+          {company.domain ? (
+            <p className="text-sm">
+              {t("unclaimed.byDomain", { domain: company.domain })}{" "}
+              <Link href="/sign-in" className="font-medium text-primary underline underline-offset-4">
+                {t("unclaimed.cta")}
+              </Link>
+            </p>
+          ) : (
+            <p className="text-sm">{t("unclaimed.contact", { email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hola@pistaklero.com" })}</p>
+          )}
+        </section>
       )}
 
       {company.description && (

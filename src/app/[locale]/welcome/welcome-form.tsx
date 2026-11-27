@@ -43,7 +43,9 @@ export function WelcomeForm({ locale, defaultName }: { locale: string; defaultNa
   const error = (name: OnboardingField) =>
     errors[name] ? (
       <p id={`welcome-${name}-error`} className="text-sm text-destructive">
-        {name === "websiteUrl" && formError === "company_exists" ? t("errors.company_exists") : t(`errors.${name}`)}
+        {name === "websiteUrl" && (formError === "company_exists" || formError === "company_unclaimed")
+          ? t(`errors.${formError}`)
+          : t(`errors.${name}`)}
       </p>
     ) : null;
 
