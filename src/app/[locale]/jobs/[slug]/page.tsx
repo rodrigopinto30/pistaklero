@@ -8,6 +8,10 @@ import { Markdown } from "@/components/markdown";
 import { buttonVariants } from "@/components/ui/button";
 import { countryName } from "@/lib/geo";
 import { formatSalaryRange, isExpired } from "@/lib/jobs/format";
+import { jobPostingJsonLd, serializeJsonLd } from "@/lib/jobs/json-ld";
+import { getPublicEnv } from "@/lib/env";
+import { getPathname } from "@/i18n/navigation";
+import type { AppLocale } from "@/i18n/routing";
 import { companyLogoUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
@@ -20,7 +24,7 @@ async function loadJob(slug: string) {
   // RLS: el público solo ve ofertas publicadas y vigentes (la empresa ve también las suyas).
   const { data } = await supabase
     .from("jobs")
-    .select("*, companies(id, name, slug, logo_path, verified_at, company_response_stats(badge))")
+    .select("*, companies(id, name, slug, logo_path, verified_at, website_url, company_response_stats(badge))")
     .eq("slug", slug)
     .maybeSingle();
   return data;
@@ -30,9 +34,17 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/jobs/[sl
   const job = await loadJob((await params).slug);
   if (!job) return {};
   const t = await getTranslations("Jobs");
+  const href = { pathname: "/jobs/[slug]" as const, params: { slug: job.slug } };
+  const locale = (await getLocale()) as AppLocale;
+  const description = (job.summary || job.description).slice(0, 160);
   return {
     title: `${job.title} · ${job.companies?.name ?? ""}`,
-    description: (job.summary || job.description).slice(0, 160),
+    description,
+    alternates: {
+      canonical: getPathname({ locale, href }),
+      languages: { es: getPathname({ locale: "es", href }), en: getPathname({ locale: "en", href }) },
+    },
+    openGraph: { title: job.title, description, type: "article" },
     // Las importadas no se indexan al principio (contenido de terceros).
     robots: { index: job.source === "native" && job.status === "published", follow: true },
     other: { "job:seniority": t(`seniorityOptions.${job.seniority}`) },
@@ -56,9 +68,17 @@ export default async function JobPage({ params }: PageProps<"/[locale]/jobs/[slu
   const salary = formatSalaryRange(job, locale);
   const location = job.work_mode === "remote" ? null : [job.city, countryName(job.country, locale)].filter(Boolean).join(", ");
   const isOpen = job.status === "published" && !isExpired(job.valid_through);
+  const url = `${getPublicEnv().NEXT_PUBLIC_SITE_URL}${getPathname({ locale: locale as AppLocale, href: { pathname: "/jobs/[slug]", params: { slug: job.slug } } })}`;
+  // Datos estructurados solo para ofertas nativas abiertas (Google Jobs).
+  const jsonLd =
+    job.source === "native" && isOpen && company
+      ? serializeJsonLd(jobPostingJsonLd(job, { name: company.name, website_url: company.website_url, logoUrl: logo }, url))
+      : null;
 
   return (
     <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 lg:grid-cols-3">
+      {/* JSON (no se ejecuta) ya escapado por serializeJsonLd: es el único HTML crudo del sitio. */}
+      {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />}
       <article className="flex flex-col gap-6 lg:col-span-2" aria-labelledby="job-title">
         <header className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
           <div className="flex items-center gap-3">
