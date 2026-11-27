@@ -1,6 +1,7 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { getPublicEnv } from "@/lib/env";
 import type { Database } from "./database.types";
 import { SESSION_COOKIE_OPTIONS } from "./cookies";
@@ -11,6 +12,9 @@ import { SESSION_COOKIE_OPTIONS } from "./cookies";
  * Hay que crear uno por pedido.
  */
 export async function createClient() {
+  // Todo lo que consulta a Supabase depende del pedido (sesión, RLS). Además, el cliente usa
+  // Date.now() al iniciarse: sin esto, Next intenta prerenderizar y avisa en desarrollo.
+  await connection();
   const cookieStore = await cookies();
   const env = getPublicEnv();
 

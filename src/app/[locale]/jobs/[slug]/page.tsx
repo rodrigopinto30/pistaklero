@@ -1,6 +1,7 @@
 import { BadgeCheck, Briefcase, CalendarClock, ExternalLink, Laptop, MapPin, Signal } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { Markdown } from "@/components/markdown";
 import { buttonVariants } from "@/components/ui/button";
@@ -9,7 +10,9 @@ import { formatSalaryRange, isExpired } from "@/lib/jobs/format";
 import { companyLogoUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
+import { getCurrentUser } from "@/lib/auth/session";
 import { ApplyPanel } from "./apply-panel";
+import { ReportForm } from "./report-form";
 
 async function loadJob(slug: string) {
   const supabase = await createClient();
@@ -36,6 +39,8 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/jobs/[sl
 }
 
 export default async function JobPage({ params }: PageProps<"/[locale]/jobs/[slug]">) {
+  // Si la oferta sigue abierta depende del momento del pedido.
+  await connection();
   const job = await loadJob((await params).slug);
   if (!job) notFound();
 
@@ -131,6 +136,7 @@ export default async function JobPage({ params }: PageProps<"/[locale]/jobs/[slu
           <p className="text-sm text-muted-foreground">
             {t("detail.validThrough", { date: format.dateTime(new Date(job.valid_through), { dateStyle: "medium" }) })}
           </p>
+          {isOpen && (await getCurrentUser()) && <ReportForm jobId={job.id} />}
         </div>
         {(skills ?? []).length > 0 && (
           <section aria-labelledby="job-skills" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
