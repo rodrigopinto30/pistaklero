@@ -28,6 +28,7 @@ export const routing = defineRouting({
     "/my-applications": { es: "/mis-postulaciones", en: "/my-applications" },
     "/saved": { es: "/guardados", en: "/saved" },
     "/notifications": { es: "/notificaciones", en: "/notifications" },
+    "/talent": { es: "/talento", en: "/talent" },
     "/admin": "/admin",
     "/settings": { es: "/ajustes", en: "/settings" },
     "/legal/terms": { es: "/legal/terminos", en: "/legal/terms" },

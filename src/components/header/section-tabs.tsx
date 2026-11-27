@@ -1,23 +1,23 @@
 "use client";
 
-import { Briefcase, Building2, Newspaper } from "lucide-react";
+import { Briefcase, Building2, Newspaper, UsersRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/i18n/navigation";
 import { SECTION_HREF, type Section, sectionOf } from "./sections";
 
 // Publicaciones con un diario: el globo de diálogo queda para los mensajes (cuando existan).
-const ICONS = { jobs: Briefcase, companies: Building2, posts: Newspaper } as const;
+const ICONS = { jobs: Briefcase, companies: Building2, posts: Newspaper, talent: UsersRound } as const;
 
 /** Empleos · Empresas · Publicaciones. La actual se marca con aria-current y una línea abajo. */
-export function SectionTabs({ className }: { className?: string }) {
+export function SectionTabs({ className, showTalent = false }: { className?: string; showTalent?: boolean }) {
   const t = useTranslations("Header");
   const current = sectionOf(usePathname());
 
   return (
     <nav aria-label={t("sections")} className={className}>
       <ul className="flex items-center justify-center gap-1 sm:gap-4">
-        {(Object.keys(SECTION_HREF) as Section[]).map((section) => {
+        {(Object.keys(SECTION_HREF) as Section[]).filter((section) => section !== "talent" || showTalent).map((section) => {
           const Icon = ICONS[section];
           const active = current === section;
           return (

@@ -60,7 +60,7 @@ export async function SiteHeader() {
     { href: "/companies", label: t("companies") },
     { href: "/posts", label: t("posts") },
     ...entries.map(({ href, label }) => ({ href, label })),
-    ...(profile?.role === "recruiter" ? [{ href: "/dashboard/jobs/new" as const, label: tPalette("newJob") }] : []),
+    ...(profile?.role === "recruiter" ? [{ href: "/dashboard/jobs/new" as const, label: tPalette("newJob") }, { href: "/talent" as const, label: t("talent") }] : []),
   ];
   if (!user) paletteLinks.push({ href: "/sign-in", label: tAuth("signIn") }, { href: "/sign-up", label: tAuth("createAccount") });
 
@@ -78,7 +78,7 @@ export async function SiteHeader() {
           <Link href="/" data-home-link aria-label={t("homeLink")} className="justify-self-start rounded-md text-xl font-semibold tracking-tight">
             Pista<span className="text-primary">klero</span>
           </Link>
-          <SectionTabs className="hidden lg:block" />
+          <SectionTabs className="hidden lg:block" showTalent={profile?.role === "recruiter"} />
           <div className="ml-auto flex items-center gap-2 justify-self-end">
             {user && !profile && (
               <Link href="/welcome" className={buttonVariants({ className: "rounded-full" })}>
@@ -116,7 +116,7 @@ export async function SiteHeader() {
         </div>
         {/* Sin Suspense a propósito: el buscador tiene que llegar en el HTML inicial (funciona sin JavaScript). */}
         <SearchBar countries={countryOptions(locale)} />
-        <SectionTabs className="-mx-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:hidden" />
+        <SectionTabs className="-mx-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:hidden" showTalent={profile?.role === "recruiter"} />
       </div>
       <CommandPalette links={paletteLinks} />
     </header>
