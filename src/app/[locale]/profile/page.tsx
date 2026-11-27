@@ -129,14 +129,14 @@ export default async function ProfilePage() {
           <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="🙋" /></h1>
           <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {/* El CV en formato Harvard: verlo en el navegador o descargarlo (la ruta arma el PDF). */}
-          <a href={`/api/me/cv?lang=${locale}&view=1`} target="_blank" rel="noopener" title={t("cvHint")} className={buttonVariants({ variant: "outline" })}>
+          <a href={`/api/me/cv?lang=${locale}&view=1`} target="_blank" rel="noopener" className={buttonVariants({ variant: "outline" })}>
             <FileText aria-hidden="true" />
             {t("previewCv")}
             <span className="sr-only"> {t("newTab")}</span>
           </a>
-          <a href={`/api/me/cv?lang=${locale}`} download title={t("cvHint")} className={buttonVariants({ variant: "outline" })}>
+          <a href={`/api/me/cv?lang=${locale}`} download className={buttonVariants({ variant: "outline" })}>
             <Download aria-hidden="true" />
             {t("downloadCv")}
           </a>
@@ -144,6 +144,7 @@ export default async function ProfilePage() {
             <Eye aria-hidden="true" />
             {t("viewPublic")}
           </Link>
+          <p className="w-full text-sm text-muted-foreground">{t("cvHint")}</p>
         </div>
       </div>
 

@@ -1273,7 +1273,9 @@
         "not_found": "Esta publicación ya no está disponible.",
         "limit_reached": "Llegaste a 500 publicaciones guardadas.",
         "unknown": "No pudimos hacerlo. Probá de nuevo."
-      }
+      },
+      "likeTip": "Me gusta",
+      "saveTip": "Guardar"
     },
     "form": {
       "newTitle": "Escribir una publicación",
@@ -1354,7 +1356,9 @@
         "not_found": "Esta empresa ya no está disponible.",
         "limit_reached": "Llegaste a 500 empresas guardadas.",
         "unknown": "No pudimos hacerlo. Probá de nuevo."
-      }
+      },
+      "likeTip": "Me gusta",
+      "saveTip": "Guardar"
     }
   },
   "Header": {

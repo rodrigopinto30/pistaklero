@@ -6,6 +6,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Gif } from "@/lib/gifs/gifs";
+import { Tip } from "@/components/tip";
 
 /**
  * Buscar y elegir un GIF de GIPHY (diálogo nativo). Sin texto, muestra los populares.
@@ -43,10 +44,10 @@ export function GifButton({ disabled, disabledReason, onSelect }: { disabled: bo
 
   return (
     <>
+      <Tip label={disabled ? `${t("gif")} (${disabledReason})` : t("gif")}>
       <button
         type="button"
         aria-label={disabled ? `${t("gif")} (${disabledReason})` : t("gif")}
-        title={disabled ? disabledReason : t("gif")}
         aria-disabled={disabled || undefined}
         onClick={() => {
           if (disabled) return;
@@ -57,6 +58,7 @@ export function GifButton({ disabled, disabledReason, onSelect }: { disabled: bo
       >
         <ImagePlay aria-hidden="true" />
       </button>
+      </Tip>
       <dialog
         ref={dialog}
         aria-labelledby={titleId}

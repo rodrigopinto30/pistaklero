@@ -5,6 +5,7 @@ import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useFormChanged } from "./use-form-changed";
+import { Tip } from "@/components/tip";
 
 /**
  * Botón de envío con estado "Guardando…". Por defecto va alineado a la izquierda (self-start).
@@ -29,13 +30,13 @@ export function SubmitButton({
   const inactive = !changed && !pending;
 
   return (
+    <Tip label={inactive ? t("noChanges") : null}>
     <Button
       ref={button}
       type="submit"
       variant={variant}
       disabled={pending}
       aria-disabled={inactive || undefined}
-      title={inactive ? t("noChanges") : undefined}
       onClick={(event) => {
         if (inactive) event.preventDefault();
       }}
@@ -43,5 +44,6 @@ export function SubmitButton({
     >
       {pending ? t("saving") : (label ?? t("save"))}
     </Button>
+    </Tip>
   );
 }
