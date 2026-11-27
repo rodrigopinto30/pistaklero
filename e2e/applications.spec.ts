@@ -39,6 +39,10 @@ test("postulación en 1 clic, seguimiento y retiro", async ({ page, browser }) =
 
   await item.getByRole("button", { name: `Retirar postulación: ${title}` }).click();
   await expect(page.getByRole("listitem").filter({ hasText: title }).getByText("Retirada", { exact: true })).toBeVisible();
+
+  // El nombre de la empresa lleva a su página.
+  await page.getByRole("listitem").filter({ hasText: title }).getByRole("link", { name: "Postulaciones SA" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Postulaciones SA" })).toBeVisible();
 });
 
 test("las preguntas filtro se responden en un diálogo accesible", async ({ page }) => {

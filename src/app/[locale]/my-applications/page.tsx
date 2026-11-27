@@ -30,7 +30,7 @@ export default async function MyApplicationsPage() {
   const supabase = await createClient();
   const { data: applications } = await supabase
     .from("applications")
-    .select("id, status, created_at, status_changed_at, rejection_message, jobs(title, slug, language, companies(name)), application_events(id, to_status, created_at)")
+    .select("id, status, created_at, status_changed_at, rejection_message, jobs(title, slug, language, companies(name, slug)), application_events(id, to_status, created_at)")
     .eq("candidate_id", profile!.id)
     .order("created_at", { ascending: false });
 
@@ -66,7 +66,14 @@ export default async function MyApplicationsPage() {
                         t("removedJob")
                       )}
                     </h2>
-                    <p className="text-sm text-muted-foreground">{job?.companies?.name}</p>
+                    {job?.companies && (
+                      <Link
+                        href={{ pathname: "/companies/[slug]", params: { slug: job.companies.slug } }}
+                        className="self-start text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                      >
+                        {job.companies.name}
+                      </Link>
+                    )}
                   </div>
                   <ApplicationStatusBadge status={application.status} />
                 </div>
