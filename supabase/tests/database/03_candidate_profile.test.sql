@@ -4,19 +4,19 @@ begin;
 select plan(14);
 
 -- Candidata con perfil "solo empresas"
-select tests.create_user('ana@example.com') as ana \gset
+select tests.create_user('ana@pgtap.test') as ana \gset
 select tests.authenticate_as(:'ana');
 select public.onboard_candidate('Ana Pérez', 'Frontend', 'es');
 reset role;
 
 -- Dos empresas (una será bloqueada)
-select tests.create_user('rrhh@acme.com') as acme \gset
+select tests.create_user('rrhh@acme.pgtap.test') as acme \gset
 select tests.authenticate_as(:'acme');
-select public.create_company('Acme', 'https://acme.com', 'es') as acme_company \gset
+select public.create_company('Acme', 'https://acme.pgtap.test', 'es') as acme_company \gset
 reset role;
-select tests.create_user('rrhh@globex.com') as globex \gset
+select tests.create_user('rrhh@globex.pgtap.test') as globex \gset
 select tests.authenticate_as(:'globex');
-select public.create_company('Globex', 'https://globex.com', 'es');
+select public.create_company('Globex', 'https://globex.pgtap.test', 'es');
 reset role;
 
 -- La candidata arma su perfil
