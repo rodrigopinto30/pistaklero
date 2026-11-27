@@ -18,7 +18,8 @@
     "myPosts": "My posts",
     "companies": "Companies",
     "myCompany": "My company",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "newJob": "Post a job"
   },
   "NotFound": {
     "title": "We couldn't find this page",

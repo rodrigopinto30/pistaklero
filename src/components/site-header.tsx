@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { CommandPalette, type PaletteLink } from "@/components/command-palette";
 import { SearchBar } from "@/components/header/search-bar";
@@ -78,6 +79,13 @@ export async function SiteHeader() {
             {user && !profile && (
               <Link href="/welcome" className={buttonVariants({ className: "rounded-full" })}>
                 {tAuth("completeSignUp")}
+              </Link>
+            )}
+            {profile?.role === "recruiter" && (
+              // El atajo de las empresas, siempre a la vista (como "Hazte anfitrión" en Airbnb).
+              <Link href="/dashboard/jobs/new" className={cn(buttonVariants(), "gap-1.5 px-3 sm:px-4")}>
+                <Plus aria-hidden="true" className="size-4" />
+                <span className="sr-only sm:not-sr-only">{t("newJob")}</span>
               </Link>
             )}
             {user ? (

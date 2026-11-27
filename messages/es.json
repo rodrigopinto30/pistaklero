@@ -18,7 +18,8 @@
     "myPosts": "Mis publicaciones",
     "companies": "Empresas",
     "myCompany": "Mi empresa",
-    "backToTop": "Volver arriba"
+    "backToTop": "Volver arriba",
+    "newJob": "Publicar empleo"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -542,7 +543,7 @@
       "net": "neto"
     },
     "list": {
-      "new": "Publicar oferta",
+      "new": "Publicar empleo",
       "published": "Publicada el {date}",
       "validThrough": "Vence el {date}",
       "draft": "Sin publicar",
