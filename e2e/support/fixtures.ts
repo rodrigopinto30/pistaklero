@@ -315,6 +315,13 @@ export async function signOutFromMenu(page: Page) {
   await expect(page.getByRole("banner").getByRole("link", { name: /^(Ingresar|Sign in)$/ })).toBeVisible();
 }
 
+/** Confirma una acción que no se puede deshacer (el diálogo "¿Seguro?" que abre el botón). */
+export async function confirmDialog(page: Page, confirmLabel: string | RegExp = /^Sí, /) {
+  const dialog = page.getByRole("alertdialog");
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: confirmLabel }).click();
+}
+
 /** Espera el aviso (toast) con ese texto. Puede haber varios apilados: alcanza con el último. */
 export async function expectToast(page: Page, text: string | RegExp) {
   await expect(page.getByRole("region", { name: /^(Avisos|Notifications)$/ }).getByText(text).last()).toBeVisible();

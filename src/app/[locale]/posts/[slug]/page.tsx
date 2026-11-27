@@ -14,6 +14,7 @@ import { deletePost } from "@/lib/posts/actions";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
+import { ConfirmButton } from "@/components/confirm-button";
 
 /** La publicación (RLS: publicada, propia o admin) y su tarjeta pública (autor, likes, guardada). */
 const loadPost = cache(async (slug: string) => {
@@ -39,6 +40,7 @@ export default async function PostPage({ params }: PageProps<"/[locale]/posts/[s
 
   const locale = (await getLocale()) as AppLocale;
   const t = await getTranslations("Posts");
+  const tConfirm = await getTranslations("Confirm");
   const format = await getFormatter();
   const user = await getCurrentUser();
   const profile = user ? await getCurrentProfile() : null;
@@ -111,10 +113,10 @@ export default async function PostPage({ params }: PageProps<"/[locale]/posts/[s
           <form action={deletePost}>
             <input type="hidden" name="id" value={post.id} />
             <input type="hidden" name="locale" value={locale} />
-            <Button type="submit" variant="destructive">
+            <ConfirmButton title={tConfirm("deletePost.title")} description={tConfirm("deletePost.description")} confirmLabel={tConfirm("delete")}>
               <Trash2 aria-hidden="true" />
               {t("delete")}
-            </Button>
+            </ConfirmButton>
           </form>
         )}
         {user && !isAuthor && post.status === "published" && <ReportPostForm postId={post.id} />}

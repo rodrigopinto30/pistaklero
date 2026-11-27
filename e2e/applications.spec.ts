@@ -1,5 +1,6 @@
 import {
   addQuestions,
+  confirmDialog,
   expect,
   expectNoA11yViolations,
   jobSlug,
@@ -38,6 +39,7 @@ test("postulación en 1 clic, seguimiento y retiro", async ({ page, browser }) =
   await expectNoA11yViolations(page);
 
   await item.getByRole("button", { name: `Retirar postulación: ${title}` }).click();
+  await confirmDialog(page, "Sí, retirarla");
   await expect(page.getByRole("listitem").filter({ hasText: title }).getByText("Retirada", { exact: true })).toBeVisible();
 
   // El nombre de la empresa lleva a su página.

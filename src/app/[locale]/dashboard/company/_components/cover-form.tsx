@@ -10,10 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { idleState } from "@/lib/forms";
 import { removeCompanyCover, uploadCompanyCover } from "../actions";
+import { ConfirmButton } from "@/components/confirm-button";
 
 /** Portada: vista previa, subir una nueva o quitarla. */
 export function CoverForm({ preview, hasCover }: { preview: React.ReactNode; hasCover: boolean }) {
   const t = useTranslations("Company.cover");
+  const tConfirm = useTranslations("Confirm");
   const [state, action] = useActionState(uploadCompanyCover, idleState);
   const hasError = state.status === "error";
 
@@ -40,9 +42,9 @@ export function CoverForm({ preview, hasCover }: { preview: React.ReactNode; has
         <div className="flex flex-wrap items-center gap-2">
           <SubmitButton label={t("upload")} variant="secondary" />
           {hasCover && (
-            <Button type="submit" variant="ghost" formAction={removeCompanyCover} formNoValidate>
+            <ConfirmButton variant="ghost" formAction={removeCompanyCover} title={tConfirm("removeCover.title")} description={tConfirm("removeCover.description")} confirmLabel={tConfirm("remove")}>
               {t("remove")}
-            </Button>
+            </ConfirmButton>
           )}
         </div>
         <FormMessage state={state} success="coverUpdated" />

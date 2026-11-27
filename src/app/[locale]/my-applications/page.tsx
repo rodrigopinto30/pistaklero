@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { withdrawApplication } from "./actions";
 import { Emoji } from "@/components/emoji";
+import { ConfirmButton } from "@/components/confirm-button";
 
 const OPEN = ["received", "in_review", "interview"];
 
@@ -26,6 +27,7 @@ export default async function MyApplicationsPage() {
   if (profile?.role !== "candidate") redirect({ href: "/", locale });
 
   const t = await getTranslations("Applications");
+  const tConfirm = await getTranslations("Confirm");
   const tStatus = await getTranslations("Applications.status");
   const format = await getFormatter();
   const supabase = await createClient();
@@ -102,9 +104,9 @@ export default async function MyApplicationsPage() {
                 {OPEN.includes(application.status) && (
                   <form action={withdrawApplication}>
                     <input type="hidden" name="applicationId" value={application.id} />
-                    <Button type="submit" variant="ghost" aria-label={t("withdrawFrom", { job: job?.title ?? "" })}>
+                    <ConfirmButton variant="ghost" ariaLabel={t("withdrawFrom", { job: job?.title ?? "" })} title={tConfirm("withdraw.title", { job: job?.title ?? "" })} description={tConfirm("withdraw.description")} confirmLabel={tConfirm("withdraw")}>
                       {t("withdraw")}
-                    </Button>
+                    </ConfirmButton>
                   </form>
                 )}
               </li>

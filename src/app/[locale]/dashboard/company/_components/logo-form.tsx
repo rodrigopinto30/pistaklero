@@ -9,9 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { idleState } from "@/lib/forms";
 import { removeCompanyLogo, uploadCompanyLogo } from "../actions";
+import { ConfirmButton } from "@/components/confirm-button";
 
 export function LogoForm({ logoUrl, companyName }: { logoUrl: string | null; companyName: string }) {
   const t = useTranslations("Company.logo");
+  const tConfirm = useTranslations("Confirm");
   const [state, action] = useActionState(uploadCompanyLogo, idleState);
   const hasError = state.status === "error";
 
@@ -49,9 +51,9 @@ export function LogoForm({ logoUrl, companyName }: { logoUrl: string | null; com
       </form>
       {logoUrl && (
         <form action={removeCompanyLogo}>
-          <Button type="submit" variant="destructive">
+          <ConfirmButton title={tConfirm("removeLogo.title")} description={tConfirm("removeLogo.description")} confirmLabel={tConfirm("remove")}>
             {t("remove")}
-          </Button>
+          </ConfirmButton>
         </form>
       )}
     </div>

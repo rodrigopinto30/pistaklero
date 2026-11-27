@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, expectToast, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, clickWhenReady } from "./support/fixtures";
+import { expect, expectNoA11yViolations, expectToast, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, clickWhenReady, confirmDialog } from "./support/fixtures";
 
 const unique = (label: string) => `${label} ${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
 
@@ -54,6 +54,13 @@ test("publicar un consejo, darle like, guardarlo, denunciarlo, editarlo y borrar
   await page.getByRole("button", { name: "Guardar cambios" }).click();
   await expect(page.getByRole("heading", { level: 1, name: `${title} (editada)` })).toBeVisible();
   await page.getByRole("button", { name: "Borrar publicación" }).click();
+  // Pide confirmación: cancelar no borra nada.
+  await page.getByRole("alertdialog").getByRole("button", { name: "Cancelar" }).click();
+  await expect(page.getByRole("alertdialog")).toBeHidden();
+  await page.getByRole("button", { name: "Borrar publicación" }).click();
+  await expect(page.getByRole("alertdialog")).toContainText("¿Borrar la publicación?");
+  await expect(page.getByRole("alertdialog").getByRole("button", { name: "Cancelar" })).toBeFocused();
+  await confirmDialog(page, "Sí, borrar");
   await page.waitForURL("/es/mis-publicaciones");
   await expectToast(page, "Listo, se quitó.");
   // getByRole ignora la página anterior que Next deja montada y oculta.

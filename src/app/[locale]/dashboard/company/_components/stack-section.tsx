@@ -10,11 +10,13 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/native-select";
 import { idleState } from "@/lib/forms";
 import { addCompanySkill, removeCompanySkill } from "../actions";
+import { ConfirmButton } from "@/components/confirm-button";
 
 type Skill = { id: string; name: string };
 
 export function StackSection({ catalog, selected }: { catalog: Skill[]; selected: Skill[] }) {
   const t = useTranslations("Company.stack");
+  const tConfirm = useTranslations("Confirm");
   const [state, action] = useActionState(addCompanySkill, idleState);
   const selectedIds = new Set(selected.map((s) => s.id));
 
@@ -29,9 +31,9 @@ export function StackSection({ catalog, selected }: { catalog: Skill[]; selected
               {skill.name}
               <form action={removeCompanySkill}>
                 <input type="hidden" name="skillId" value={skill.id} />
-                <Button type="submit" variant="ghost" size="icon-sm" className="size-7 rounded-full" aria-label={t("removeSkill", { skill: skill.name })}>
+                <ConfirmButton variant="ghost" size="icon-sm" className="size-7 rounded-full" ariaLabel={t("removeSkill", { skill: skill.name })} title={tConfirm("removeTech.title", { tech: skill.name })} description={tConfirm("removeTech.description")} confirmLabel={tConfirm("remove")}>
                   <X aria-hidden="true" />
-                </Button>
+                </ConfirmButton>
               </form>
             </li>
           ))}

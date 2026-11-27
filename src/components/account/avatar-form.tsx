@@ -10,10 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { removeAvatar, uploadAvatar } from "@/lib/account/actions";
 import { idleState } from "@/lib/forms";
+import { ConfirmButton } from "@/components/confirm-button";
 
 /** Foto de perfil: vista previa redonda, subir una nueva o quitarla. */
 export function AvatarForm({ path, name }: { path: string | null; name: string }) {
   const t = useTranslations("Person.avatar");
+  const tConfirm = useTranslations("Confirm");
   const [state, action] = useActionState(uploadAvatar, idleState);
   const hasError = state.status === "error";
 
@@ -41,9 +43,9 @@ export function AvatarForm({ path, name }: { path: string | null; name: string }
           <div className="flex flex-wrap items-center gap-2">
             <SubmitButton label={t("upload")} variant="secondary" />
             {path && (
-              <Button type="submit" variant="ghost" formAction={removeAvatar} formNoValidate>
+              <ConfirmButton variant="ghost" formAction={removeAvatar} title={tConfirm("removePhoto.title")} description={tConfirm("removePhoto.description")} confirmLabel={tConfirm("remove")}>
                 {t("remove")}
-              </Button>
+              </ConfirmButton>
             )}
           </div>
           <FormMessage state={state} success="photoUpdated" />

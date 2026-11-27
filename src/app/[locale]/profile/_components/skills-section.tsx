@@ -11,6 +11,7 @@ import { idleState } from "@/lib/forms";
 import { SKILL_LEVELS } from "@/lib/validation/profile";
 import { addSkill, removeSkill, updateSkillLevel } from "../actions";
 import { SubmitButton } from "@/components/forms/submit-button";
+import { ConfirmButton } from "@/components/confirm-button";
 
 export type CatalogSkill = { id: string; name: string; category: string };
 export type SelectedSkill = { skillId: string; name: string; level: (typeof SKILL_LEVELS)[number] };
@@ -54,6 +55,7 @@ function LevelForm({ skill }: { skill: SelectedSkill }) {
 
 export function SkillsSection({ catalog, selected }: { catalog: CatalogSkill[]; selected: SelectedSkill[] }) {
   const t = useTranslations("Profile.skills");
+  const tConfirm = useTranslations("Confirm");
   const [state, action] = useActionState(addSkill, idleState);
   const selectedIds = new Set(selected.map((s) => s.skillId));
   const available = catalog.filter((s) => !selectedIds.has(s.id));
@@ -71,9 +73,9 @@ export function SkillsSection({ catalog, selected }: { catalog: CatalogSkill[]; 
                 <LevelForm skill={skill} />
                 <form action={removeSkill}>
                   <input type="hidden" name="skillId" value={skill.skillId} />
-                  <Button type="submit" variant="ghost" size="icon-sm" aria-label={t("removeSkill", { skill: skill.name })}>
+                  <ConfirmButton variant="ghost" size="icon-sm" ariaLabel={t("removeSkill", { skill: skill.name })} title={tConfirm("removeSkill.title", { skill: skill.name })} description={tConfirm("removeSkill.description")} confirmLabel={tConfirm("remove")}>
                     <X aria-hidden="true" />
-                  </Button>
+                  </ConfirmButton>
                 </form>
               </span>
             </li>
