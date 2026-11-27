@@ -12,8 +12,11 @@ write_supabase_env() {
 
   get() { printf '%s\n' "$status" | sed -n "s/^$1=\"\{0,1\}\([^\"]*\)\"\{0,1\}$/\1/p"; }
 
-  local api_url publishable_key secret_key
+  local api_url publishable_key secret_key mailpit_url outbox_secret
   api_url="$(get API_URL)"
+  mailpit_url="$(get MAILPIT_URL)"
+  # Secreto local para la ruta interna que vacía la cola de emails.
+  outbox_secret="$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')"
   publishable_key="$(get PUBLISHABLE_KEY)"
   secret_key="$(get SECRET_KEY)"
 
@@ -34,6 +37,8 @@ write_supabase_env() {
     printf 'NEXT_PUBLIC_SUPABASE_URL=%s\n' "$api_url"
     printf 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=%s\n' "$publishable_key"
     printf 'SUPABASE_SECRET_KEY=%s\n' "$secret_key"
+    printf 'MAILPIT_URL=%s\n' "$mailpit_url"
+    printf 'OUTBOX_SECRET=%s\n' "$outbox_secret"
     printf '%s\n' "$end"
   } > "$env_file.tmp"
   mv "$env_file.tmp" "$env_file"
