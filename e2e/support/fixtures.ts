@@ -75,6 +75,21 @@ export async function publishJobFor(companyName: string, title: string) {
   return job!;
 }
 
+/** Cuenta de admin nueva (el rol se asigna directo en la base, como hace pnpm admin:grant). */
+export async function signInAsAdmin(page: Page) {
+  const email = uniqueEmail("admin");
+  const userId = await signIn(page, email);
+  await admin.from("profiles").insert({ id: userId, role: "admin" });
+  return { userId, email };
+}
+
+/** Reporte hecho por una cuenta candidata nueva, directo en la base. */
+export async function reportJobAs(jobId: string, reason: "scam" | "fake" | "discrimination" | "other" = "scam") {
+  const { data: user } = await admin.auth.admin.createUser({ email: uniqueEmail("reporta"), email_confirm: true });
+  await admin.from("profiles").insert({ id: user.user!.id, role: "candidate" });
+  await admin.from("job_reports").insert({ job_id: jobId, reporter_id: user.user!.id, reason });
+}
+
 export async function emailOf(userId: string) {
   const { data } = await admin.auth.admin.getUserById(userId);
   return data.user!.email!;

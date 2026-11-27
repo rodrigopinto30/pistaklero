@@ -13,6 +13,11 @@ export async function SiteHeader() {
 
   return (
     <header className="border-b border-border">
+      {profile?.suspended_at && (
+        <p role="alert" className="bg-destructive/20 px-4 py-2 text-center text-sm text-destructive">
+          {t("suspended")}
+        </p>
+      )}
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
         <Link
           href="/"
@@ -36,6 +41,11 @@ export async function SiteHeader() {
                 {t("myProfile")}
               </Link>
             </>
+          )}
+          {profile?.role === "admin" && (
+            <Link href="/admin" className={buttonVariants({ variant: "ghost" })}>
+              {t("admin")}
+            </Link>
           )}
           {profile?.role === "recruiter" && (
             <Link href="/dashboard" className={buttonVariants({ variant: "ghost" })}>
