@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
 import { getEnabledOAuthProviders, OAUTH_PROVIDER_NAMES } from "@/lib/auth/providers";
 import { safeNextPath } from "@/lib/auth/redirect";
-import { getCurrentUser } from "@/lib/auth/session";
+import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { redirect } from "@/i18n/navigation";
 import { MagicLinkForm } from "./magic-link-form";
 
@@ -16,7 +16,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function SignInPage({ searchParams }: PageProps<"/[locale]/sign-in">) {
   const locale = await getLocale();
-  if (await getCurrentUser()) redirect({ href: "/", locale });
+  if (await getCurrentUser()) {
+    redirect({ href: (await getCurrentProfile()) ? "/" : "/welcome", locale });
+  }
 
   const t = await getTranslations("Auth");
   const params = await searchParams;

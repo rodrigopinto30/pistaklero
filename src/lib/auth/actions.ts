@@ -1,5 +1,6 @@
 "use server";
 
+import { refresh } from "next/cache";
 import { redirect } from "@/i18n/navigation";
 import { parseLocale } from "@/i18n/locale";
 import { createClient } from "@/lib/supabase/server";
@@ -9,5 +10,6 @@ export async function signOut(formData: FormData) {
   const locale = parseLocale(formData.get("locale"));
   const supabase = await createClient();
   await supabase.auth.signOut({ scope: "global" });
+  refresh();
   redirect({ href: "/", locale });
 }
