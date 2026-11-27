@@ -383,6 +383,20 @@
     // `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
     // `twitter`, `x`, `slack_oidc`, `spotify`, `workos`, `zoom`.
     "external": {
+      // Para activarlos en local: credenciales en supabase/.env, "enabled": true y
+      // AUTH_OAUTH_PROVIDERS en .env.local (ver README). URL de callback: http://127.0.0.1:54321/auth/v1/callback
+      "github": {
+        "enabled": false,
+        "client_id": "env(SUPABASE_AUTH_EXTERNAL_GITHUB_CLIENT_ID)",
+        "secret": "env(SUPABASE_AUTH_EXTERNAL_GITHUB_SECRET)"
+      },
+      "google": {
+        "enabled": false,
+        "client_id": "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)",
+        "secret": "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)",
+        // Necesario para el login con Google en local.
+        "skip_nonce_check": true
+      },
       "apple": {
         "enabled": false,
         "client_id": "",
