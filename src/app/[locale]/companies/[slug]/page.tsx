@@ -1,12 +1,21 @@
-import { BadgeCheck, Building2, CircleAlert, ExternalLink, MapPin, Rocket, Users } from "lucide-react";
+import { BadgeCheck, Building2, CircleAlert, ExternalLink, Factory, MapPin, Rocket, Users } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
+import { CompanyCover } from "@/components/companies/company-cover";
+import { JobCard } from "@/components/jobs/job-card";
 import { ResponseBadge } from "@/components/jobs/response-badge";
+import { Markdown } from "@/components/markdown";
 import { countryName } from "@/lib/geo";
+import { getJobViewer } from "@/lib/jobs/viewer";
 import { companyLogoUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
+import { cn } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
+
+const TABS = ["about", "jobs"] as const;
+type Tab = (typeof TABS)[number];
 
 async function loadCompany(slug: string) {
   const supabase = await createClient();
@@ -29,18 +38,35 @@ function host(url: string) {
   }
 }
 
-export default async function CompanyPage({ params }: PageProps<"/[locale]/companies/[slug]">) {
-  const company = await loadCompany((await params).slug);
+function Card({ id, title, className, children }: { id: string; title: string; className?: string; children: ReactNode }) {
+  return (
+    <section aria-labelledby={id} className={cn("flex flex-col gap-3 rounded-2xl bg-card p-6 shadow-soft", className)}>
+      <h2 id={id} className="text-lg font-semibold">
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+export default async function CompanyPage({ params, searchParams }: PageProps<"/[locale]/companies/[slug]">) {
+  const { slug } = await params;
+  const company = await loadCompany(slug);
   if (!company) notFound();
 
+  const requested = (await searchParams).tab;
+  const tab: Tab = TABS.find((t) => t === requested) ?? "about";
   const locale = await getLocale();
   const t = await getTranslations("CompanyPage");
   const td = await getTranslations("Company.details");
   const supabase = await createClient();
-  const [{ data: stack }, { data: stats }] = await Promise.all([
+  const [{ data: stack }, { data: stats }, { data: jobs }] = await Promise.all([
     supabase.from("company_skills").select("skills(name_es, name_en)").eq("company_id", company.id),
     supabase.from("company_response_stats").select("badge").eq("company_id", company.id).maybeSingle(),
+    supabase.rpc("company_job_cards", { p_company_id: company.id }),
   ]);
+  const openJobs = jobs ?? [];
+  const viewer = tab === "jobs" ? await getJobViewer(openJobs.map((job) => job.id)) : null;
 
   const logo = companyLogoUrl(company.logo_path);
   const location = [company.city, countryName(company.country, locale)].filter(Boolean).join(", ");
@@ -50,74 +76,69 @@ export default async function CompanyPage({ params }: PageProps<"/[locale]/compa
     company.x_url && { label: "X", url: company.x_url },
     company.instagram_url && { label: "Instagram", url: company.instagram_url },
   ].filter(Boolean) as { label: string; url: string }[];
+  const facts = [
+    company.industry && { icon: Factory, label: td("industry"), value: company.industry },
+    company.size && { icon: Users, label: td("size"), value: td(`sizeOptions.${company.size}`) },
+    company.stage && { icon: Rocket, label: td("stage"), value: td(`stageOptions.${company.stage}`) },
+    location && { icon: MapPin, label: t("location"), value: location },
+  ].filter(Boolean) as { icon: typeof Factory; label: string; value: string }[];
+
+  const tabHref = (value: Tab) => ({
+    pathname: "/companies/[slug]" as const,
+    params: { slug },
+    ...(value === "about" ? {} : { query: { tab: value } }),
+  });
 
   return (
-    <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 md:grid-cols-3">
-      <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 md:col-span-2 md:flex-row md:items-center">
-        {logo ? (
-          // eslint-disable-next-line @next/next/no-img-element -- WebP de 256 px ya optimizado, desde nuestro Storage.
-          <img src={logo} alt="" width={96} height={96} className="size-24 rounded-2xl border border-border bg-muted object-contain" />
-        ) : (
-          <div aria-hidden="true" className="flex size-24 items-center justify-center rounded-2xl bg-muted">
-            <Building2 className="size-10 text-muted-foreground" />
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
+      {/* Portada, logo y datos principales */}
+      <header className="overflow-hidden rounded-3xl bg-card shadow-soft">
+        <CompanyCover name={company.name} coverPath={company.cover_path} logoPath={company.logo_path} className="aspect-[3/1] max-h-72 w-full" />
+        <div className="flex flex-col gap-4 px-6 pb-6 sm:flex-row sm:items-end">
+          {logo ? (
+            // eslint-disable-next-line @next/next/no-img-element -- WebP de 256 px ya optimizado, desde nuestro Storage.
+            <img src={logo} alt="" width={96} height={96} className="-mt-12 size-24 shrink-0 rounded-2xl bg-card object-contain p-1 shadow-soft-lg ring-4 ring-card" />
+          ) : (
+            <div aria-hidden="true" className="-mt-12 flex size-24 shrink-0 items-center justify-center rounded-2xl bg-muted shadow-soft-lg ring-4 ring-card">
+              <Building2 className="size-10 text-muted-foreground" />
+            </div>
+          )}
+          <div className="flex flex-1 flex-col gap-2 sm:pt-4">
+            <h1 className="text-3xl font-semibold tracking-tight">{company.name}</h1>
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              {company.verified_at ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-3 py-1 font-medium text-primary">
+                  <BadgeCheck aria-hidden="true" className="size-4" />
+                  {t("verified")}
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-warn/12 px-3 py-1 font-medium text-warn">
+                  <CircleAlert aria-hidden="true" className="size-4" />
+                  {t("unverified")}
+                </span>
+              )}
+              {company.status !== "unclaimed" && <ResponseBadge badge={stats?.badge ?? "new"} />}
+              {(company.industry || location) && (
+                <span className="text-muted-foreground">{[company.industry, location].filter(Boolean).join(" · ")}</span>
+              )}
+            </div>
           </div>
-        )}
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold tracking-tight">{company.name}</h1>
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            {company.verified_at ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 font-medium text-primary-foreground">
-                <BadgeCheck aria-hidden="true" className="size-4" />
-                {t("verified")}
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 rounded-full border border-warn px-3 py-1 text-warn">
-                <CircleAlert aria-hidden="true" className="size-4" />
-                {t("unverified")}
-              </span>
-            )}
-            {company.status !== "unclaimed" && <ResponseBadge badge={stats?.badge ?? "new"} />}
-            {company.stage && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-input px-3 py-1">
-                <Rocket aria-hidden="true" className="size-4 text-violet" />
-                {td(`stageOptions.${company.stage}`)}
-              </span>
-            )}
-            {company.size && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-input px-3 py-1">
-                <Users aria-hidden="true" className="size-4 text-violet" />
-                {td(`sizeOptions.${company.size}`)}
-              </span>
-            )}
-            {location && (
-              <span className="inline-flex items-center gap-1 text-muted-foreground">
-                <MapPin aria-hidden="true" className="size-4" />
-                {location}
-              </span>
-            )}
-          </div>
-          {company.industry && <p className="text-muted-foreground">{company.industry}</p>}
+          {company.website_url && (
+            <a
+              href={company.website_url}
+              rel="noopener noreferrer nofollow"
+              target="_blank"
+              className="inline-flex h-10 items-center gap-2 self-start rounded-full bg-secondary px-4 text-sm font-medium hover:bg-muted sm:self-end"
+            >
+              {t("website")}
+              <ExternalLink aria-hidden="true" className="size-4" />
+            </a>
+          )}
         </div>
-      </section>
-
-      <section aria-labelledby="company-links" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
-        <h2 id="company-links" className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
-          {t("links")}
-        </h2>
-        <ul className="flex flex-col gap-2">
-          {links.map((link) => (
-            <li key={link.url}>
-              <a href={link.url} rel="noopener noreferrer nofollow" target="_blank" className="inline-flex items-center gap-1 text-violet underline-offset-4 hover:underline">
-                {link.label}
-                <ExternalLink aria-hidden="true" className="size-3.5" />
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
+      </header>
 
       {company.status === "unclaimed" && (
-        <section aria-labelledby="company-unclaimed" className="flex flex-col gap-2 rounded-2xl border border-warn p-5 md:col-span-3">
+        <section aria-labelledby="company-unclaimed" className="flex flex-col gap-2 rounded-2xl bg-warn/10 p-5">
           <h2 id="company-unclaimed" className="font-semibold text-warn">
             {t("unclaimed.title")}
           </h2>
@@ -134,36 +155,97 @@ export default async function CompanyPage({ params }: PageProps<"/[locale]/compa
         </section>
       )}
 
-      {company.description && (
-        <section aria-labelledby="company-about" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 md:col-span-2">
-          <h2 id="company-about" className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
-            {t("about")}
+      {/* Pestañas: son enlaces (cada una tiene su URL y funciona sin JavaScript). */}
+      <nav aria-label={t("sections")} className="flex gap-6 overflow-x-auto">
+        {TABS.map((value) => (
+          <Link
+            key={value}
+            href={tabHref(value)}
+            aria-current={tab === value ? "page" : undefined}
+            className={cn(
+              "-mb-px inline-flex min-h-11 items-center gap-2 border-b-2 border-transparent text-sm font-medium whitespace-nowrap text-muted-foreground hover:text-foreground",
+              tab === value && "border-foreground text-foreground"
+            )}
+          >
+            {value === "about" ? t("aboutTab") : t("jobsTab")}
+            {value === "jobs" && <span className="rounded-full bg-secondary px-2 py-0.5 text-xs">{openJobs.length}</span>}
+          </Link>
+        ))}
+      </nav>
+
+      {tab === "about" ? (
+        <div className="grid items-start gap-6 lg:grid-cols-3">
+          <div className="flex flex-col gap-6 lg:col-span-2">
+            <Card id="company-about" title={t("about")}>
+              {company.description ? <Markdown>{company.description}</Markdown> : <p className="text-muted-foreground">{t("noAbout")}</p>}
+            </Card>
+            {(stack ?? []).length > 0 && (
+              <Card id="company-stack" title={t("stack")}>
+                <ul className="flex flex-wrap gap-2">
+                  {stack!.map((s, i) => (
+                    <li key={i} className="rounded-full bg-secondary px-3 py-1 text-sm">
+                      {(locale === "en" ? s.skills?.name_en : s.skills?.name_es) ?? ""}
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            )}
+          </div>
+          <div className="flex flex-col gap-6">
+            {facts.length > 0 && (
+              <Card id="company-facts" title={t("facts")}>
+                <dl className="flex flex-col gap-3">
+                  {facts.map((fact) => (
+                    <div key={fact.label} className="flex flex-col gap-0.5">
+                      <dt className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <fact.icon aria-hidden="true" className="size-4 shrink-0" />
+                        {fact.label}
+                      </dt>
+                      <dd className="pl-6 text-sm">{fact.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </Card>
+            )}
+            {links.length > 0 && (
+              <Card id="company-links" title={t("links")}>
+                <ul className="flex flex-col gap-2">
+                  {links.map((link) => (
+                    <li key={link.url}>
+                      <a href={link.url} rel="noopener noreferrer nofollow" target="_blank" className="inline-flex items-center gap-1 text-violet underline-offset-4 hover:underline">
+                        {link.label}
+                        <ExternalLink aria-hidden="true" className="size-3.5" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            )}
+            {openJobs.length > 0 && (
+              <Link href={tabHref("jobs")} className="rounded-2xl bg-primary/10 p-5 text-sm font-medium text-primary hover:bg-primary/15">
+                {t("seeJobs", { count: openJobs.length })}
+              </Link>
+            )}
+          </div>
+        </div>
+      ) : (
+        <section aria-labelledby="company-jobs" className="flex flex-col gap-4">
+          <h2 id="company-jobs" className="sr-only">
+            {t("jobs")}
           </h2>
-          <p className="whitespace-pre-line">{company.description}</p>
+          {openJobs.length === 0 ? (
+            <p className="rounded-2xl bg-card p-6 text-muted-foreground shadow-soft">{t("noJobs")}</p>
+          ) : (
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {openJobs.map((job) => (
+                <li key={job.id}>
+                  <JobCard job={job} locale={locale} viewer={viewer ?? undefined} />
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       )}
-
-      {(stack ?? []).length > 0 && (
-        <section aria-labelledby="company-stack" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
-          <h2 id="company-stack" className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
-            {t("stack")}
-          </h2>
-          <ul className="flex flex-wrap gap-2">
-            {stack!.map((s, i) => (
-              <li key={i} className="rounded-full border border-input px-3 py-1 text-sm">
-                {(locale === "en" ? s.skills?.name_en : s.skills?.name_es) ?? ""}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <section aria-labelledby="company-jobs" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 md:col-span-3">
-        <h2 id="company-jobs" className="text-lg font-semibold">
-          {t("jobs")}
-        </h2>
-        <p className="text-sm text-muted-foreground">{t("noJobs")}</p>
-      </section>
     </div>
   );
 }

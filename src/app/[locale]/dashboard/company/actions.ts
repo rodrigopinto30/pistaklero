@@ -6,7 +6,7 @@ import { refresh } from "next/cache";
 import { z } from "zod";
 import { getCurrentRecruiter } from "@/lib/auth/recruiter";
 import { dbErrorCode, errorState, type FormState, formValues, successState, zodFieldErrors } from "@/lib/forms";
-import { processLogo } from "@/lib/images";
+import { processCover, processLogo } from "@/lib/images";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { companyDetailsSchema, companyWebsiteSchema } from "@/lib/validation/company";
@@ -126,6 +126,46 @@ export async function removeCompanySkill(formData: FormData) {
   const skillId = z.uuid().safeParse(formData.get("skillId"));
   if (!member || !skillId.success) return;
   await member.supabase.from("company_skills").delete().eq("company_id", member.company.id).eq("skill_id", skillId.data);
+  await flash("removed");
+  refresh();
+}
+
+const COVER_BUCKET = "company-covers";
+
+/** Portada de la empresa: el servidor la recodifica (1200×800) y la guarda; el cliente nunca escribe en Storage. */
+export async function uploadCompanyCover(_prev: FormState, formData: FormData): Promise<FormState> {
+  const member = await requireMember();
+  if (!member) return errorState({}, {}, "unknown");
+
+  const cover = await processCover(formData.get("cover"));
+  if (!cover.ok) {
+    return errorState({}, { cover: { code: "invalid" } }, cover.code === "file_too_large" ? "avatar_too_large" : cover.code);
+  }
+
+  const path = `${member.company.id}/${randomUUID().replaceAll("-", "")}.webp`;
+  const admin = createAdminClient();
+  const upload = await admin.storage.from(COVER_BUCKET).upload(path, cover.webp, { contentType: "image/webp", cacheControl: "31536000", upsert: false });
+  if (upload.error) {
+    console.error("No se pudo subir la portada", { message: upload.error.message });
+    return errorState({}, {}, "unknown");
+  }
+
+  const { error } = await member.supabase.rpc("set_company_cover", { p_path: path });
+  if (error) {
+    await admin.storage.from(COVER_BUCKET).remove([path]);
+    return errorState({}, {}, dbErrorCode(error));
+  }
+
+  if (member.company.cover_path) await admin.storage.from(COVER_BUCKET).remove([member.company.cover_path]);
+  refresh();
+  return successState();
+}
+
+export async function removeCompanyCover() {
+  const member = await requireMember();
+  if (!member?.company.cover_path) return;
+  const { error } = await member.supabase.rpc("set_company_cover", { p_path: "" });
+  if (!error) await createAdminClient().storage.from(COVER_BUCKET).remove([member.company.cover_path]);
   await flash("removed");
   refresh();
 }

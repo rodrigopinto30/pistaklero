@@ -10,6 +10,8 @@ import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { DetailsForm } from "./_components/details-form";
 import { LogoForm } from "./_components/logo-form";
+import { CoverForm } from "./_components/cover-form";
+import { CompanyCover } from "@/components/companies/company-cover";
 import { StackSection } from "./_components/stack-section";
 import { WebsiteForm } from "./_components/website-form";
 
@@ -57,6 +59,12 @@ export default async function CompanyEditPage() {
               instagramUrl: c.instagram_url ?? "",
             }}
             countries={countryOptions(locale)}
+          />
+        </SectionCard>
+        <SectionCard id="cover" title={t("cover.title")} className="lg:col-span-3 lg:row-start-1">
+          <CoverForm
+            hasCover={Boolean(c.cover_path)}
+            preview={<CompanyCover name={c.name} coverPath={c.cover_path} logoPath={c.logo_path} />}
           />
         </SectionCard>
         <SectionCard id="logo" title={t("logo.title")}>

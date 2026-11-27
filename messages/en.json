@@ -295,8 +295,8 @@
     "details": {
       "title": "Company details",
       "name": "Name",
-      "description": "About the company",
-      "descriptionHint": "Culture, what you do, how you work. Up to 2000 characters.",
+      "description": "About us",
+      "descriptionHint": "Tell what the company does, how you work and what makes you different. It shows in the “About us” tab of your page. You can use **bold** and lists with dashes. Up to 2000 characters.",
       "industry": "Industry",
       "industryHint": "For example: Fintech, Education, E-commerce.",
       "size": "Size",
@@ -347,6 +347,13 @@
       "skill": "Technology",
       "choose": "Choose a technology",
       "removeSkill": "Remove {skill}"
+    },
+    "cover": {
+      "title": "Cover",
+      "hint": "JPG, PNG or WebP up to 4 MB. It shows as the background of your page and in the companies list. Without a cover, we use a gradient with your logo.",
+      "file": "Cover image",
+      "upload": "Upload cover",
+      "remove": "Remove cover"
     }
   },
   "Dashboard": {
@@ -369,12 +376,19 @@
       "cta": "Claim this page",
       "contact": "Email us at {email} to take it over."
     },
-    "about": "About the company",
+    "about": "About us",
     "stack": "Tech stack",
     "links": "Links",
     "jobs": "Open jobs",
     "noJobs": "There are no open jobs right now.",
-    "website": "Website"
+    "website": "Website",
+    "sections": "Company sections",
+    "aboutTab": "About us",
+    "jobsTab": "Open jobs",
+    "noAbout": "This company hasn't shared what it does yet.",
+    "facts": "Facts",
+    "location": "Location",
+    "seeJobs": "{count, plural, one {See the open job →} other {See the # open jobs →}}"
   },
   "Team": {
     "metaTitle": "Team",
@@ -1036,7 +1050,8 @@
     "statusUpdated": "Status updated: we emailed them.",
     "jobStatusUpdated": "Job status updated.",
     "jobSaved": "Job saved.",
-    "published": "Job published."
+    "published": "Job published.",
+    "coverUpdated": "Cover updated."
   },
   "Saved": {
     "metaTitle": "Saved",

@@ -56,3 +56,8 @@ export function avatarFromBuffer(input: Buffer): Promise<ImageResult> {
 }
 
 const avatarResize = (image: Sharp) => image.resize(256, 256, { fit: "cover", position: "attention" });
+
+/** Portada de empresa: 1200×800 recortada con foco en lo importante (se usa de fondo en tarjetas y en su página). */
+export function processCover(file: FormDataEntryValue | null): Promise<ImageResult> {
+  return toWebp(file, AVATAR_MAX_BYTES, (image) => image.resize(1200, 800, { fit: "cover", position: "attention" }));
+}
