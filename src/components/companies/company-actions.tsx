@@ -8,6 +8,7 @@ import { notify } from "@/components/toaster";
 import { toggleCompanyLike, toggleSavedCompany } from "@/lib/companies/actions";
 import type { ToggleResult } from "@/lib/posts/actions";
 import { cn } from "@/lib/utils";
+import { Tip } from "@/components/tip";
 
 type Props = {
   companyId: string;
@@ -63,14 +64,18 @@ export function CompanyActions({ companyId, name, liked, saved, likes, guestRetu
   }
   return (
     <div className="flex items-center gap-1.5">
-      <button type="button" onClick={() => run("like")} disabled={pending} aria-pressed={state.liked} aria-label={t("like", { name })} className={base}>
+      <Tip label={t("likeTip")}>
+        <button type="button" onClick={() => run("like")} disabled={pending} aria-pressed={state.liked} aria-label={t("like", { name })} className={base}>
           {heart(state.liked)}
-      </button>
+        </button>
+      </Tip>
       {/* En la tarjeta, los me gusta van escritos abajo, sobre el degradé; acá, al lado del corazón. */}
       {variant === "inline" && count}
-      <button type="button" onClick={() => run("save")} disabled={pending} aria-pressed={state.saved} aria-label={t("save", { name })} className={base}>
-        {bookmark(state.saved)}
-      </button>
+      <Tip label={t("saveTip")}>
+        <button type="button" onClick={() => run("save")} disabled={pending} aria-pressed={state.saved} aria-label={t("save", { name })} className={base}>
+          {bookmark(state.saved)}
+        </button>
+      </Tip>
     </div>
   );
 }

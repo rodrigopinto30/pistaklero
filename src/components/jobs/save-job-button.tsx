@@ -6,6 +6,7 @@ import { useOptimistic, useTransition } from "react";
 import { notify } from "@/components/toaster";
 import { toggleSavedJob } from "@/lib/jobs/actions";
 import { cn } from "@/lib/utils";
+import { Tip } from "@/components/tip";
 
 /**
  * Guardar un empleo: un botón conmutable (aria-pressed) con el marcador lleno o vacío.
@@ -26,13 +27,13 @@ export function SaveJobButton({ jobId, title, saved, variant = "icon", className
 
   const label = optimistic ? t("unsave", { title }) : t("save", { title });
   return (
+    <Tip label={variant === "icon" ? label : null}>
     <button
       type="button"
       onClick={toggle}
       disabled={pending}
       aria-pressed={optimistic}
       aria-label={variant === "icon" ? label : undefined}
-      title={variant === "icon" ? label : undefined}
       className={cn(
         "relative z-10 inline-flex shrink-0 items-center justify-center gap-2 rounded-full transition-colors disabled:opacity-70",
         variant === "icon" ? "size-10 hover:bg-muted" : "h-10 bg-secondary px-4 text-sm font-medium hover:bg-muted",
@@ -43,5 +44,6 @@ export function SaveJobButton({ jobId, title, saved, variant = "icon", className
       <Bookmark aria-hidden="true" className={cn("size-5", optimistic && "fill-current")} />
       {variant === "full" && (optimistic ? t("savedLabel") : t("saveLabel"))}
     </button>
+    </Tip>
   );
 }

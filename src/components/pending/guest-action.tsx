@@ -4,6 +4,7 @@ import { useLocale } from "next-intl";
 import { type ReactNode, useRef } from "react";
 import type { PendingKind } from "@/lib/pending/kinds";
 import { rememberAndSignIn } from "@/lib/pending/actions";
+import { Tip } from "@/components/tip";
 
 /**
  * Botón de "me gusta" o "guardar" para quien no inició sesión: anota la acción y lleva a ingresar.
@@ -37,10 +38,10 @@ export function GuestAction({
       <input type="hidden" name="kind" value={kind} />
       <input type="hidden" name="id" value={id} />
       <input ref={returnInput} type="hidden" name="returnTo" defaultValue={returnTo} />
+      <Tip label={label}>
       <button
         type="submit"
         aria-label={labelIsVisible ? undefined : label}
-        title={label}
         className={className}
         // Con JavaScript, vuelve exactamente a donde estaba (búsqueda y filtros incluidos).
         onClick={() => {
@@ -49,6 +50,7 @@ export function GuestAction({
       >
         {children}
       </button>
+      </Tip>
     </form>
   );
 }

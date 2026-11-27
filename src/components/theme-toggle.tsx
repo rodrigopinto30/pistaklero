@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
 import { setTheme } from "@/lib/theme/actions";
 import { getTheme } from "@/lib/theme/server";
+import { Tip } from "@/components/tip";
 
 /*
  * Botón de modo claro: un interruptor (aria-pressed) con un nombre fijo, "Modo claro".
@@ -16,15 +17,16 @@ export async function ThemeToggle() {
   return (
     <form action={setTheme}>
       <input type="hidden" name="theme" value={isLight ? "dark" : "light"} />
+      <Tip label={t("lightMode")}>
       <button
         type="submit"
         aria-pressed={isLight}
         aria-label={t("lightMode")}
-        title={t("lightMode")}
         className={buttonVariants({ variant: "ghost", size: "icon" })}
       >
         {isLight ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
       </button>
+      </Tip>
     </form>
   );
 }

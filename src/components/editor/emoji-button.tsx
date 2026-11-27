@@ -6,6 +6,7 @@ import { Smile } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { buttonVariants } from "@/components/ui/button";
+import { Tip } from "@/components/tip";
 
 /** Corrige aria-rowindex / aria-colindex de Frimousse (vienen desde 0; ARIA los pide desde 1). */
 function ariaIndex(props: object) {
@@ -28,9 +29,11 @@ export function EmojiButton({ onSelect }: { onSelect: (emoji: string) => void })
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger aria-label={t("emoji")} title={t("emoji")} className={buttonVariants({ variant: "ghost", size: "icon-sm" })}>
-        <Smile aria-hidden="true" />
-      </Popover.Trigger>
+      <Tip label={t("emoji")}>
+        <Popover.Trigger aria-label={t("emoji")} className={buttonVariants({ variant: "ghost", size: "icon-sm" })}>
+          <Smile aria-hidden="true" />
+        </Popover.Trigger>
+      </Tip>
       <Popover.Portal>
         <Popover.Positioner sideOffset={6} align="start" className="z-50">
           <Popover.Popup className="rounded-2xl bg-popover p-2 text-popover-foreground shadow-soft-lg outline-none">

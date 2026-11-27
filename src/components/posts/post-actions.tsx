@@ -7,6 +7,7 @@ import { GuestAction } from "@/components/pending/guest-action";
 import { notify } from "@/components/toaster";
 import { type ToggleResult, togglePostLike, toggleSavedPost } from "@/lib/posts/actions";
 import { cn } from "@/lib/utils";
+import { Tip } from "@/components/tip";
 
 type Props = {
   postId: string;
@@ -61,6 +62,7 @@ export function PostActions({ postId, title, liked, saved, likes, guestReturnTo,
 
   return (
     <div className="flex items-center gap-1">
+      <Tip label={t("likeTip")}>
       <button
         type="button"
         onClick={() => run("like")}
@@ -71,7 +73,9 @@ export function PostActions({ postId, title, liked, saved, likes, guestReturnTo,
       >
         <Heart aria-hidden="true" className={cn(icon, state.liked && "fill-current")} />
       </button>
+      </Tip>
       {count}
+      <Tip label={t("saveTip")}>
       <button
         type="button"
         onClick={() => run("save")}
@@ -82,6 +86,7 @@ export function PostActions({ postId, title, liked, saved, likes, guestReturnTo,
       >
         <Bookmark aria-hidden="true" className={cn(icon, state.saved && "fill-current")} />
       </button>
+      </Tip>
     </div>
   );
 }

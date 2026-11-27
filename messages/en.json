@@ -1273,7 +1273,9 @@
         "not_found": "This post is no longer available.",
         "limit_reached": "You reached 500 saved posts.",
         "unknown": "We couldn't do it. Try again."
-      }
+      },
+      "likeTip": "Like",
+      "saveTip": "Save"
     },
     "form": {
       "newTitle": "Write a post",
@@ -1354,7 +1356,9 @@
         "not_found": "This company is no longer available.",
         "limit_reached": "You reached 500 saved companies.",
         "unknown": "We couldn't do it. Try again."
-      }
+      },
+      "likeTip": "Like",
+      "saveTip": "Save"
     }
   },
   "Header": {
