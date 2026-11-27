@@ -53,7 +53,8 @@
     "completeSignUp": "Completá tu registro",
     "noAccount": "¿Primera vez en Pistaklero?",
     "signUp": "Creá tu cuenta",
-    "createAccount": "Crear cuenta"
+    "createAccount": "Crear cuenta",
+    "continue": "Continuar"
   },
   "Welcome": {
     "metaTitle": "Bienvenida",
@@ -436,7 +437,8 @@
       "invalid_invitation": "La invitación no existe, ya se usó o venció. Pedile a tu equipo que te mande una nueva.",
       "email_mismatch": "Entraste como {email}, pero la invitación es para otro email. Salí y entrá con el email que recibió la invitación.",
       "already_onboarded": "Tu cuenta ya tiene un rol en Pistaklero. Para sumarte a un equipo, usá otra cuenta con el email invitado."
-    }
+    },
+    "accepting": "Aceptando la invitación…"
   },
   "Jobs": {
     "metaNew": "Publicar oferta",

@@ -53,7 +53,8 @@
     "completeSignUp": "Finish signing up",
     "noAccount": "New to Pistaklero?",
     "signUp": "Create your account",
-    "createAccount": "Create account"
+    "createAccount": "Create account",
+    "continue": "Continue"
   },
   "Welcome": {
     "metaTitle": "Welcome",
@@ -436,7 +437,8 @@
       "invalid_invitation": "The invitation doesn't exist, was already used or expired. Ask your team to send a new one.",
       "email_mismatch": "You signed in as {email}, but the invitation is for another email. Sign out and sign in with the invited email.",
       "already_onboarded": "Your account already has a role on Pistaklero. To join a team, use another account with the invited email."
-    }
+    },
+    "accepting": "Accepting the invitation…"
   },
   "Jobs": {
     "metaNew": "Post a job",

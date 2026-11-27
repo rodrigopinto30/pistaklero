@@ -22,6 +22,16 @@ import { codeSchema, emailSchema, type PasswordProblem } from "@/lib/validation/
  */
 
 type RateLimited = { code: "rate_limited"; minutes: number };
+/**
+ * Termina el ingreso yendo a `destination`. Aceptar una invitación es una ruta /api/…, no una página:
+ * si la Server Action redirigiera ahí, Next mostraría el resultado con la URL de la API en la barra.
+ * Por eso pasa por la página de la invitación, que abre la ruta con una navegación completa.
+ */
+function finish(destination: string): never {
+  if (!destination.startsWith("/api/")) redirect(destination);
+  const locale = parseLocale(new URL(destination, "http://placeholder.invalid").searchParams.get("locale"));
+  redirect(`${getPathname({ locale, href: "/invitation" })}?${new URLSearchParams({ continue: destination })}`);
+}
 
 const text = (formData: FormData, name: string) => String(formData.get(name) ?? "");
 const emailOf = (formData: FormData) => text(formData, "email").trim().toLowerCase();
@@ -63,7 +73,7 @@ export async function signInWithPassword(_previous: SignInState, formData: FormD
   }
 
   await clearFailures(email);
-  redirect(await destinationAfterSignIn(supabase, next));
+  finish(await destinationAfterSignIn(supabase, next));
 }
 
 // ─── Crear la cuenta ─────────────────────────────────────────────────────────
@@ -131,7 +141,7 @@ export async function verifyEmailCode(_previous: CodeState, formData: FormData):
   }
 
   await clearFailures(email);
-  redirect(await destinationAfterSignIn(supabase, next));
+  finish(await destinationAfterSignIn(supabase, next));
 }
 
 export async function resendEmailCode(_previous: CodeState, formData: FormData): Promise<CodeState> {
@@ -164,35 +174,37 @@ export async function requestPasswordReset(_previous: ResetRequestState, formDat
 
 export type ResetState =
   | { status: "idle" }
-  | ({ status: "error" } & ({ code: "invalid_code" | PasswordProblem | "unknown" } | RateLimited));
+  // typedCode: el código que escribió, para no tener que copiarlo de nuevo si falló la contraseña.
+  | ({ status: "error"; typedCode: string } & ({ code: "invalid_code" | PasswordProblem | "unknown" } | RateLimited));
 
 export async function resetPassword(_previous: ResetState, formData: FormData): Promise<ResetState> {
   const locale = parseLocale(formData.get("locale"));
   const email = emailOf(formData);
   const password = text(formData, "password");
 
-  const code = codeSchema.safeParse(text(formData, "code"));
-  if (!code.success || !emailSchema.safeParse(email).success) return { status: "error", code: "invalid_code" };
+  const typedCode = text(formData, "code").trim().slice(0, 6);
+  const code = codeSchema.safeParse(typedCode);
+  if (!code.success || !emailSchema.safeParse(email).success) return { status: "error", code: "invalid_code", typedCode: "" };
   // La contraseña se revisa antes de usar el código: el código sirve una sola vez.
   const problem = passwordProblem(password, email);
-  if (problem) return { status: "error", code: problem };
+  if (problem) return { status: "error", code: problem, typedCode };
 
   const minutes = await minutesToWait(email);
-  if (minutes > 0) return { status: "error", code: "rate_limited", minutes };
+  if (minutes > 0) return { status: "error", code: "rate_limited", minutes, typedCode };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.verifyOtp({ email, token: code.data, type: "recovery" });
   if (error) {
-    if (error.status === 429) return { status: "error", code: "rate_limited", minutes: 5 };
+    if (error.status === 429) return { status: "error", code: "rate_limited", minutes: 5, typedCode };
     await registerFailure(email);
-    return { status: "error", code: "invalid_code" };
+    return { status: "error", code: "invalid_code", typedCode: "" };
   }
 
   const { error: updateError } = await supabase.auth.updateUser({ password });
   // Si eligió la misma que ya tenía, igual la recuerda: se sigue como si la hubiera cambiado.
   if (updateError && updateError.code !== "same_password") {
     console.error("updateUser (recuperar) falló", { status: updateError.status, code: updateError.code });
-    return { status: "error", code: updateError.code === "weak_password" ? "too_short" : "unknown" };
+    return { status: "error", code: updateError.code === "weak_password" ? "too_short" : "unknown", typedCode: "" };
   }
 
   // Las otras sesiones abiertas (otro navegador, otro dispositivo) se cierran.
@@ -226,7 +238,7 @@ export async function changePassword(_previous: ChangePasswordState, formData: F
   // Con require_current_password, Supabase verifica la actual antes de cambiarla.
   const { error } = await supabase.auth.updateUser({ password, current_password: current });
   if (error && error.code !== "same_password") {
-    if (error.code === "current_password_mismatch" || error.code === "current_password_required" || error.code === "invalid_credentials") {
+    if (error.code === "current_password_invalid" || error.code === "current_password_required") {
       await registerFailure(user.email);
       return { status: "error", code: "wrong_current" };
     }

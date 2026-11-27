@@ -158,10 +158,11 @@ export function SignUpForm({ locale, role, next }: { locale: string; role: SignU
 
 // ─── Código de 6 dígitos ─────────────────────────────────────────────────────
 
-function CodeInput(props: ControlProps) {
+function CodeInput({ defaultValue, ...props }: ControlProps & { defaultValue?: string }) {
   return (
     <Input
       {...props}
+      defaultValue={defaultValue}
       name="code"
       inputMode="numeric"
       autoComplete="one-time-code"
@@ -298,7 +299,7 @@ function ResetPasswordForm({ locale, email }: { locale: string; email: string })
         {/* Para que el gestor de contraseñas asocie la nueva a esta cuenta. */}
         <input type="text" name="username" value={email} autoComplete="username" readOnly hidden />
         <AuthField label={tCode("label")} error={codeError}>
-          {(props) => <CodeInput {...props} />}
+          {(props) => <CodeInput {...props} defaultValue={error?.typedCode} />}
         </AuthField>
         <AuthField label={t("newPassword")} hint={t("hint")} error={passwordError}>
           {(props) => <PasswordInput {...props} name="password" autoComplete="new-password" required />}
@@ -329,7 +330,8 @@ export function ChangePasswordForm({ email }: { email: string }) {
   }, [savedAt, tToasts, formRef]);
 
   const error = state.status === "error" ? state : null;
-  const currentError = error?.code === "wrong_current" || error?.code === "missing_current" ? t(`change.errors.${error.code}`) : null;
+  const currentError =
+    error?.code === "wrong_current" ? t("change.errors.wrong_current") : error?.code === "missing_current" ? t("change.errors.missing_current") : null;
   const passwordError = error && isPasswordProblem(error.code) ? t(`problems.${error.code}`) : null;
   const formError =
     error?.code === "rate_limited" ? tAuth("errors.rate_limited", { minutes: error.minutes }) : error?.code === "unknown" ? tAuth("errors.unknown") : null;

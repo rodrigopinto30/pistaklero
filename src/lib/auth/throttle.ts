@@ -6,11 +6,12 @@ import { createAdminClient } from "@/lib/supabase/admin";
 /*
  * Límite de intentos fallidos (ver la migración limite_de_intentos):
  *   - por email: 5 fallos en 15 minutos → 15 minutos sin poder intentar;
- *   - por IP: 30 fallos en 15 minutos → 15 minutos (frena a quien prueba muchos emails).
+ *   - por IP: 100 fallos en 15 minutos → 15 minutos (frena a quien prueba muchos emails; alto para no
+ *     castigar a una oficina o una red móvil donde mucha gente comparte la IP).
  * Bloqueo suave: la persona puede recuperar la contraseña o entrar con Google/GitHub mientras tanto.
  */
 const EMAIL_LIMIT = { max: 5, window: "15 minutes", lock: "15 minutes" } as const;
-const IP_LIMIT = { max: 30, window: "15 minutes", lock: "15 minutes" } as const;
+const IP_LIMIT = { max: 100, window: "15 minutes", lock: "15 minutes" } as const;
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
