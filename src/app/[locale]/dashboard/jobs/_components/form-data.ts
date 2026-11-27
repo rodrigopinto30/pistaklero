@@ -9,7 +9,7 @@ const CATEGORIES = ["language", "framework", "tool", "data", "design", "marketin
 export async function loadJobFormOptions(locale: string) {
   const supabase = await createClient();
   const tSkills = await getTranslations("Profile.skills");
-  const { data: skills } = await supabase.from("skills").select("id, name_es, name_en, category").order("slug");
+  const { data: skills } = await supabase.from("skills").select("id, slug, name_es, name_en, category").order("slug");
   const skillGroups = CATEGORIES.map((category) => ({
     category,
     label: tSkills(`categories.${category}`),
@@ -17,5 +17,6 @@ export async function loadJobFormOptions(locale: string) {
       .filter((s) => s.category === category)
       .map((s) => ({ id: s.id, name: locale === "en" ? s.name_en : s.name_es })),
   })).filter((g) => g.skills.length > 0);
-  return { countries: countryOptions(locale), skillGroups };
+  const skillIdsBySlug = new Map((skills ?? []).map((s) => [s.slug as string, s.id]));
+  return { countries: countryOptions(locale), skillGroups, skillIdsBySlug };
 }

@@ -487,7 +487,12 @@
       "external": "Oferta externa",
       "closed": "Esta oferta ya no recibe postulaciones."
     },
-    "viewApplicants": "Ver postulantes"
+    "viewApplicants": "Ver postulantes",
+    "templates": {
+      "title": "Empezar con una plantilla",
+      "hint": "Completa el puesto, una descripción base, el seniority y las tecnologías. Después ajustás todo lo que quieras.",
+      "blank": "Empezar de cero"
+    }
   },
   "Search": {
     "label": "Buscar empleos",
