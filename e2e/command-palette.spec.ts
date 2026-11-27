@@ -42,7 +42,7 @@ test("los accesos de la búsqueda rápida dependen del rol", async ({ page }) =>
   await page.goto("/en");
   await openWithShortcut(page, page.getByRole("dialog", { name: "Quick search" }));
   const guest = page.getByRole("dialog", { name: "Quick search" }).getByRole("navigation", { name: "Go to" });
-  await expect(guest.getByRole("link")).toHaveText(["Home", "Sign in"]);
+  await expect(guest.getByRole("link")).toHaveText(["Home", "Sign in", "Create account"]);
   await page.keyboard.press("Escape");
 
   await signInAsReadyCandidate(page);
