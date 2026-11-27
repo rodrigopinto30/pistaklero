@@ -9,6 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getCurrentPerson, getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { countryOptions } from "@/lib/geo";
 import { avatarUrl } from "@/lib/storage";
+import { cn } from "@/lib/utils";
 import { DARK_MODE_ENABLED } from "@/lib/theme/theme";
 import { Link } from "@/i18n/navigation";
 
@@ -65,13 +66,15 @@ export async function SiteHeader() {
           {t("suspended")}
         </p>
       )}
-      <div className="mx-auto w-full max-w-6xl px-4">
-        <div className="flex min-h-16 items-center gap-3">
-          <Link href="/" aria-label={t("homeLink")} className="rounded-md text-xl font-semibold tracking-tight">
+      {/* A todo el ancho, como Airbnb: el logo pegado a la izquierda, la cuenta a la derecha y las pestañas
+          en el centro exacto (la grilla de tres columnas las centra aunque los costados midan distinto). */}
+      <div className="w-full px-4 sm:px-6 lg:px-10">
+        <div className="flex min-h-16 items-center gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+          <Link href="/" aria-label={t("homeLink")} className="justify-self-start rounded-md text-xl font-semibold tracking-tight">
             Pista<span className="text-primary">klero</span>
           </Link>
-          <SectionTabs className="mx-auto hidden md:block" />
-          <div className="ml-auto flex items-center gap-2">
+          <SectionTabs className="hidden lg:block" />
+          <div className="ml-auto flex items-center gap-2 justify-self-end">
             {user && !profile && (
               <Link href="/welcome" className={buttonVariants({ className: "rounded-full" })}>
                 {tAuth("completeSignUp")}
@@ -90,7 +93,7 @@ export async function SiteHeader() {
                 <Link href="/sign-in" className={buttonVariants({ variant: "ghost", className: "rounded-full" })}>
                   {tAuth("signIn")}
                 </Link>
-                <Link href="/sign-up" className={buttonVariants({ className: "hidden rounded-full sm:inline-flex" })}>
+                <Link href="/sign-up" className={cn(buttonVariants(), "hidden sm:inline-flex")}>
                   {tAuth("createAccount")}
                 </Link>
               </>
@@ -100,7 +103,7 @@ export async function SiteHeader() {
         </div>
         {/* Sin Suspense a propósito: el buscador tiene que llegar en el HTML inicial (funciona sin JavaScript). */}
         <SearchBar countries={countryOptions(locale)} />
-        <SectionTabs className="-mx-4 overflow-x-auto px-4 pb-2 md:hidden" />
+        <SectionTabs className="-mx-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:hidden" />
       </div>
       <CommandPalette links={paletteLinks} />
     </header>
