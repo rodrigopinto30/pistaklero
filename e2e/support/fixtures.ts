@@ -24,6 +24,33 @@ export async function signIn(page: Page, email: string, next = "/es") {
   if (error) throw error;
   const params = new URLSearchParams({ token_hash: data.properties.hashed_token, type: "email", next });
   await page.goto(`/api/auth/confirm?${params}`);
+  return data.user.id;
+}
+
+/** Candidata con el perfil mínimo para postularse (titular, una habilidad y un proyecto). */
+export async function signInAsReadyCandidate(page: Page, name = "Ana Pérez") {
+  const userId = await signIn(page, uniqueEmail("lista"));
+  await onboardAsCandidate(page, name);
+  await admin.from("candidates").update({ headline: "Frontend Junior" }).eq("user_id", userId);
+  const { data: skill } = await admin.from("skills").select("id").eq("slug", "react").single();
+  await admin.from("candidate_skills").insert({ candidate_id: userId, skill_id: skill!.id });
+  await admin.from("candidate_projects").insert({ candidate_id: userId, title: "Portfolio" });
+  return userId;
+}
+
+/** Agrega preguntas filtro a una oferta ya creada. */
+export async function addQuestions(jobTitle: string) {
+  const { data: job } = await admin.from("jobs").select("id, slug").eq("title", jobTitle).single();
+  await admin.from("job_questions").insert([
+    { job_id: job!.id, position: 1, type: "short_text" as const, prompt: "¿Por qué te interesa?" },
+    { job_id: job!.id, position: 2, type: "single_choice" as const, prompt: "¿Qué nivel de inglés tenés?", options: ["Básico", "Intermedio", "Avanzado"] },
+  ]);
+  return job!.slug;
+}
+
+export async function jobSlug(jobTitle: string) {
+  const { data } = await admin.from("jobs").select("slug").eq("title", jobTitle).single();
+  return data!.slug;
 }
 
 type SeedJob = {

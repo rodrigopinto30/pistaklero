@@ -84,9 +84,14 @@ export async function saveJob(_prev: FormState, formData: FormData): Promise<For
   if (d.skills.length > 0) {
     await member.supabase.from("job_skills").insert(d.skills.map((skill_id) => ({ job_id: id!, skill_id })));
   }
-  await member.supabase.from("job_questions").delete().eq("job_id", id);
+  // Con postulaciones, las preguntas quedan fijas (las respuestas dejarían de tener sentido).
+  const { count: applications } = await member.supabase
+    .from("applications")
+    .select("id", { count: "exact", head: true })
+    .eq("job_id", id);
   const questions = [d.question1, d.question2].filter((q) => q.type !== "none");
-  if (questions.length > 0) {
+  if (!applications) await member.supabase.from("job_questions").delete().eq("job_id", id);
+  if (!applications && questions.length > 0) {
     const { error } = await member.supabase.from("job_questions").insert(
       questions.map((q, index) => ({
         job_id: id!,

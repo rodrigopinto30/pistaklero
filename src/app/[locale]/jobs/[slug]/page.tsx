@@ -9,6 +9,7 @@ import { formatSalaryRange, isExpired } from "@/lib/jobs/format";
 import { companyLogoUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
+import { ApplyPanel } from "./apply-panel";
 
 async function loadJob(slug: string) {
   const supabase = await createClient();
@@ -121,7 +122,7 @@ export default async function JobPage({ params }: PageProps<"/[locale]/jobs/[slu
               <ExternalLink aria-hidden="true" />
             </a>
           ) : (
-            <div id="apply" />
+            <ApplyPanel jobId={job.id} slug={job.slug} />
           )}
           <p className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarClock aria-hidden="true" className="size-4" />

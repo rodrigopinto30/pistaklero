@@ -7,7 +7,8 @@
     "skipToContent": "Skip to content",
     "homeLink": "Pistaklero, go to home",
     "myProfile": "My profile",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "myApplications": "My applications"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -500,5 +501,61 @@
     "empty": "We couldn't find jobs for that search. Try fewer filters or other words.",
     "clear": "See all jobs",
     "loadMore": "Load more"
+  },
+  "Apply": {
+    "apply": "Apply",
+    "send": "Send application",
+    "sending": "Sending…",
+    "cancel": "Cancel",
+    "required": "(required)",
+    "optional": "(optional)",
+    "shortHint": "Up to 280 characters.",
+    "dialogTitle": "Apply",
+    "dialogHint": "The company receives your full profile and these answers.",
+    "success": "Done! Your application was sent. Track it in My applications.",
+    "signInToApply": "Sign in to apply",
+    "onlyCandidates": "Only candidate accounts can apply.",
+    "alreadyApplied": "You already applied:",
+    "viewApplications": "View my applications",
+    "incompleteTitle": "To apply, complete your profile:",
+    "completeProfile": "Complete my profile",
+    "missing": {
+      "headline": "A headline (for example: Junior Frontend · React)",
+      "skills": "At least one skill",
+      "experience": "An experience, a project or education"
+    },
+    "errors": {
+      "not_candidate": "Only candidate accounts can apply.",
+      "job_not_available": "This job no longer accepts applications.",
+      "company_blocked": "You blocked this company: it can't see your profile. Unblock it from My profile to apply.",
+      "profile_incomplete": "Complete your profile to apply.",
+      "already_applied": "You already applied to this job.",
+      "rate_limited": "You reached 20 applications in the last 24 hours. Try again tomorrow.",
+      "answer_required": "Answer the required questions.",
+      "invalid_answer": "Check your answers.",
+      "unknown": "We couldn't send the application. Please try again."
+    }
+  },
+  "Applications": {
+    "metaTitle": "My applications",
+    "title": "My applications",
+    "subtitle": "The status of every application, always visible.",
+    "empty": "You haven't applied to any job yet.",
+    "browse": "Search jobs",
+    "removedJob": "Removed job",
+    "appliedOn": "You applied on {date}",
+    "lastChange": "last change {when}",
+    "history": "View history",
+    "withdraw": "Withdraw application",
+    "withdrawFrom": "Withdraw application: {job}",
+    "status": {
+      "received": "Received",
+      "in_review": "In review",
+      "interview": "Interview",
+      "hired": "Hired",
+      "rejected": "Not selected",
+      "no_response": "No response",
+      "withdrawn": "Withdrawn"
+    }
   }
 }

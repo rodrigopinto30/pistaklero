@@ -5,7 +5,79 @@ export type Database = {
   
   "public": {
           Tables: {
-            "audit_log": {
+            "application_answers": {
+                  Row: {
+                    "answer_option": number | null,"answer_text": string | null,"application_id": string,"question_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "answer_option"?: number | null,"answer_text"?: string | null,"application_id": string,"question_id": string
+                  }
+                  Update: {
+                    "answer_option"?: number | null,"answer_text"?: string | null,"application_id"?: string,"question_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "application_answers_application_id_fkey"
+      columns: ["application_id"]
+isOneToOne: false
+      referencedRelation: "applications"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "application_answers_question_id_fkey"
+      columns: ["question_id"]
+isOneToOne: false
+      referencedRelation: "job_questions"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"application_events": {
+                  Row: {
+                    "actor_id": string | null,"actor_type": Database["public"]['Enums']["actor_type"],"application_id": string,"created_at": string,"from_status": Database["public"]['Enums']["application_status"] | null,"id": number,"to_status": Database["public"]['Enums']["application_status"]
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "actor_id"?: string | null,"actor_type": Database["public"]['Enums']["actor_type"],"application_id": string,"created_at"?: string,"from_status"?: Database["public"]['Enums']["application_status"] | null,"id"?: never,"to_status": Database["public"]['Enums']["application_status"]
+                  }
+                  Update: {
+                    "actor_id"?: string | null,"actor_type"?: Database["public"]['Enums']["actor_type"],"application_id"?: string,"created_at"?: string,"from_status"?: Database["public"]['Enums']["application_status"] | null,"id"?: never,"to_status"?: Database["public"]['Enums']["application_status"]
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "application_events_application_id_fkey"
+      columns: ["application_id"]
+isOneToOne: false
+      referencedRelation: "applications"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"applications": {
+                  Row: {
+                    "candidate_id": string,"candidate_warned_at": string | null,"closed_at": string | null,"created_at": string,"first_response_at": string | null,"id": string,"job_id": string,"recruiter_reminded_at": string | null,"rejection_message": string | null,"status": Database["public"]['Enums']["application_status"],"status_changed_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"candidate_warned_at"?: string | null,"closed_at"?: string | null,"created_at"?: string,"first_response_at"?: string | null,"id"?: string,"job_id": string,"recruiter_reminded_at"?: string | null,"rejection_message"?: string | null,"status"?: Database["public"]['Enums']["application_status"],"status_changed_at"?: string
+                  }
+                  Update: {
+                    "candidate_id"?: string,"candidate_warned_at"?: string | null,"closed_at"?: string | null,"created_at"?: string,"first_response_at"?: string | null,"id"?: string,"job_id"?: string,"recruiter_reminded_at"?: string | null,"rejection_message"?: string | null,"status"?: Database["public"]['Enums']["application_status"],"status_changed_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "applications_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    },{
+      foreignKeyName: "applications_job_id_fkey"
+      columns: ["job_id"]
+isOneToOne: false
+      referencedRelation: "jobs"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"audit_log": {
                   Row: {
                     "action": string,"actor_id": string | null,"created_at": string,"id": number,"metadata": NonNullable<Json>,"target_id": string | null,"target_type": string | null
                   }
@@ -394,14 +466,23 @@ isOneToOne: false
             "accept_invitation":
 { Args: { "p_locale": Database["public"]['Enums']["app_locale"],"p_token": string }; Returns: string
                            },
+"apply_to_job":
+{ Args: { "p_answers"?: Json,"p_job_id": string }; Returns: string
+                           },
 "auth_role":
 { Args: Record<PropertyKey, never>; Returns: Database["public"]['Enums']["user_role"]
                            },
 "can_edit_job":
 { Args: { "p_job_id": string }; Returns: boolean
                            },
+"can_view_application":
+{ Args: { "p_application_id": string }; Returns: boolean
+                           },
 "can_view_candidate":
 { Args: { "p_candidate_id": string }; Returns: boolean
+                           },
+"candidate_missing_requirements":
+{ Args: { "p_candidate_id": string }; Returns: (string)[]
                            },
 "claim_email_batch":
 { Args: { "p_limit": number }; Returns: {
@@ -486,12 +567,15 @@ isOneToOne: false
 "update_member":
 { Args: { "p_action": string,"p_user_id": string }; Returns: undefined
                            },
+"withdraw_application":
+{ Args: { "p_application_id": string }; Returns: undefined
+                           },
 "write_audit_log":
 { Args: { "p_action": string,"p_metadata"?: Json,"p_target_id"?: string,"p_target_type"?: string }; Returns: undefined
                            }
           }
           Enums: {
-            "app_locale": "es"|"en","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","email_status": "pending"|"sent"|"failed","employment_type": "full_time"|"part_time"|"contract"|"internship"|"freelance","import_provider": "manual"|"greenhouse"|"lever"|"ashby"|"workable","job_source": "native"|"imported","job_status": "draft"|"published"|"closed"|"hidden","member_role": "owner"|"member","profile_visibility": "companies_only"|"public"|"hidden","question_type": "short_text"|"single_choice","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","seniority": "trainee"|"junior"|"semi_senior"|"senior"|"lead","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin","work_mode": "remote"|"hybrid"|"onsite"
+            "actor_type": "candidate"|"recruiter"|"system","app_locale": "es"|"en","application_status": "received"|"in_review"|"interview"|"hired"|"rejected"|"no_response"|"withdrawn","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","email_status": "pending"|"sent"|"failed","employment_type": "full_time"|"part_time"|"contract"|"internship"|"freelance","import_provider": "manual"|"greenhouse"|"lever"|"ashby"|"workable","job_source": "native"|"imported","job_status": "draft"|"published"|"closed"|"hidden","member_role": "owner"|"member","profile_visibility": "companies_only"|"public"|"hidden","question_type": "short_text"|"single_choice","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","seniority": "trainee"|"junior"|"semi_senior"|"senior"|"lead","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin","work_mode": "remote"|"hybrid"|"onsite"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -607,7 +691,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "app_locale": ["es", "en"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"email_status": ["pending", "sent", "failed"],"employment_type": ["full_time", "part_time", "contract", "internship", "freelance"],"import_provider": ["manual", "greenhouse", "lever", "ashby", "workable"],"job_source": ["native", "imported"],"job_status": ["draft", "published", "closed", "hidden"],"member_role": ["owner", "member"],"profile_visibility": ["companies_only", "public", "hidden"],"question_type": ["short_text", "single_choice"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"seniority": ["trainee", "junior", "semi_senior", "senior", "lead"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"],"work_mode": ["remote", "hybrid", "onsite"]
+            "actor_type": ["candidate", "recruiter", "system"],"app_locale": ["es", "en"],"application_status": ["received", "in_review", "interview", "hired", "rejected", "no_response", "withdrawn"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"email_status": ["pending", "sent", "failed"],"employment_type": ["full_time", "part_time", "contract", "internship", "freelance"],"import_provider": ["manual", "greenhouse", "lever", "ashby", "workable"],"job_source": ["native", "imported"],"job_status": ["draft", "published", "closed", "hidden"],"member_role": ["owner", "member"],"profile_visibility": ["companies_only", "public", "hidden"],"question_type": ["short_text", "single_choice"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"seniority": ["trainee", "junior", "semi_senior", "senior", "lead"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"],"work_mode": ["remote", "hybrid", "onsite"]
           }
         }
 } as const
