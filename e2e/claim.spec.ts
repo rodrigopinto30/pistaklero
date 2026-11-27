@@ -30,6 +30,10 @@ test("una empresa sin reclamar se reclama al registrarse con un email del domini
   await page.getByLabel(/Nombre de la empresa/).fill("Reclamo");
   await page.getByLabel(/Sitio web/).fill(`https://www.${domain}`);
   await page.getByRole("button", { name: "Continuar" }).click();
+  // Primero arma la página de la empresa reclamada (con sus datos ya cargados), después el panel.
+  await page.waitForURL("/es/panel/empresa");
+  await expect(page.getByLabel(/^Nombre/).first()).toHaveValue(`Reclamo ${run}`);
+  await page.getByRole("button", { name: "Finalizar registro" }).click();
   await page.waitForURL("/es/panel");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(`Reclamo ${run}`);
   await expect(page.getByText(`Oferta reclamable ${run}`)).toBeVisible();
