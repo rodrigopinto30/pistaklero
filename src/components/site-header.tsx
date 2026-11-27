@@ -5,6 +5,7 @@ import { LocaleSwitcher } from "@/components/locale-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
+import { DARK_MODE_ENABLED } from "@/lib/theme/theme";
 import { Link } from "@/i18n/navigation";
 
 export async function SiteHeader() {
@@ -84,7 +85,7 @@ export async function SiteHeader() {
             </Link>
           )}
           <CommandPalette links={paletteLinks} />
-          <ThemeToggle />
+          {DARK_MODE_ENABLED && <ThemeToggle />}
           <LocaleSwitcher />
         </div>
       </div>

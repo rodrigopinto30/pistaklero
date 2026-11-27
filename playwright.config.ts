@@ -16,6 +16,8 @@ export default defineConfig({
   // Un reintento en local: el servidor de desarrollo a veces responde 500 a sus propios recursos internos
   // mientras compila. Playwright igual los informa como "flaky", así que no quedan escondidos.
   retries: process.env.CI ? 2 : 1,
+  // Si el servidor de desarrollo queda roto, todo falla por timeout: mejor cortar temprano que esperar 20 minutos.
+  maxFailures: process.env.CI ? 0 : 5,
   // En la CI, además, cada fallo queda como anotación en la corrida.
   reporter: [
     ...(process.env.CI ? [["github"] as const] : []),
