@@ -91,6 +91,20 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"auth_throttle": {
+                  Row: {
+                    "failures": number,"key": string,"locked_until": string | null,"updated_at": string,"window_started_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "failures"?: number,"key": string,"locked_until"?: string | null,"updated_at"?: string,"window_started_at"?: string
+                  }
+                  Update: {
+                    "failures"?: number,"key"?: string,"locked_until"?: string | null,"updated_at"?: string,"window_started_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"candidate_blocked_companies": {
                   Row: {
                     "candidate_id": string,"company_id": string,"created_at": string
@@ -817,6 +831,15 @@ isOneToOne: false
                            },
 "auth_role":
 { Args: Record<PropertyKey, never>; Returns: Database["public"]['Enums']["user_role"]
+                           },
+"auth_throttle_fail":
+{ Args: { "p_key": string,"p_lock": string,"p_max": number,"p_window": string }; Returns: undefined
+                           },
+"auth_throttle_reset":
+{ Args: { "p_key": string }; Returns: undefined
+                           },
+"auth_throttle_wait":
+{ Args: { "p_keys": (string)[] }; Returns: number
                            },
 "can_edit_job":
 { Args: { "p_job_id": string }; Returns: boolean

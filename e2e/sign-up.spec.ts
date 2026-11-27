@@ -15,17 +15,21 @@ test("registro en tres pasos: qué buscás, la cuenta (con código) y los datos 
   await expect(page).toHaveURL(/\/es\/registro\?role=candidate/);
   await expect(page.getByText("Te registrás para: Busco trabajo.")).toBeVisible();
   await expectNoA11yViolations(page);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Contraseña", { exact: true }).fill("12345678");
+  await page.getByRole("textbox", { name: "Email" }).fill(email);
+  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("12345678");
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await expect(page.getByText("Esa contraseña es de las más usadas")).toBeVisible();
-  await expect(page.getByLabel("Contraseña", { exact: true })).toBeFocused();
-  await page.getByLabel("Contraseña", { exact: true }).fill("corta");
+  await expect(page.getByRole("textbox", { name: "Contraseña", exact: true })).toBeFocused();
+  // React vacía la contraseña después de cada respuesta; el email queda.
+  await expect(page.getByRole("textbox", { name: "Contraseña", exact: true })).toHaveValue("");
+  await expect(page.getByRole("textbox", { name: "Email" })).toHaveValue(email);
+  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("corta");
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await expect(page.getByText("al menos 8 caracteres.")).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Contraseña", exact: true })).toHaveValue("");
 
   const created = new Date(Date.now() - 1000);
-  await page.getByLabel("Contraseña", { exact: true }).fill("mi primera frase segura");
+  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("mi primera frase segura");
   await page.getByRole("button", { name: "Crear cuenta" }).click();
 
   // El código de 6 dígitos confirma el email, en la misma pantalla
@@ -35,6 +39,7 @@ test("registro en tres pasos: qué buscás, la cuenta (con código) y los datos 
   await page.getByLabel("Código de 6 dígitos").fill("123456");
   await page.getByRole("button", { name: "Confirmar" }).click();
   await expect(page.getByText("El código no es correcto o ya venció")).toBeVisible();
+  await expect(page.getByLabel("Código de 6 dígitos")).toHaveValue("");
   await page.getByLabel("Código de 6 dígitos").fill(await codeFromEmail(email, /confirmar el email/, created));
   await page.getByRole("button", { name: "Confirmar" }).click();
 
@@ -52,16 +57,16 @@ test("registro en tres pasos: qué buscás, la cuenta (con código) y los datos 
 test("si no confirmó el email, al ingresar se le pide el código", async ({ page }) => {
   const email = uniqueEmail("sin-confirmar");
   await page.goto("/es/registro?role=recruiter");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Contraseña", { exact: true }).fill("frase para después");
+  await page.getByRole("textbox", { name: "Email" }).fill(email);
+  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("frase para después");
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await expect(page.getByRole("heading", { name: "Revisá tu email" })).toBeVisible();
 
   // Se va sin confirmar y vuelve otro día por el ingreso.
   const later = new Date(Date.now() - 1000);
   await page.goto("/es/ingresar");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Contraseña", { exact: true }).fill("frase para después");
+  await page.getByRole("textbox", { name: "Email" }).fill(email);
+  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("frase para después");
   await page.getByRole("button", { name: "Ingresar", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Revisá tu email" })).toBeVisible();
   await page.getByLabel("Código de 6 dígitos").fill(await codeFromEmail(email, /confirmar el email/, later));
@@ -78,4 +83,21 @@ test("en el registro se puede volver y cambiar lo que buscás", async ({ page })
   await expect(page).toHaveURL("/es/ingresar");
   await page.getByRole("link", { name: "Creá tu cuenta" }).click();
   await expect(page).toHaveURL("/es/registro");
+});
+
+test("si llegó invitada a un equipo, crear la cuenta vuelve a la invitación", async ({ page }) => {
+  const email = uniqueEmail("invitada");
+  await page.goto(`/es/ingresar?${new URLSearchParams({ next: "/api/team/accept?token=inventado" })}`);
+  await page.getByRole("link", { name: "Creá tu cuenta" }).click();
+  await page.getByRole("link", { name: /Busco talento/ }).click();
+  await expect(page).toHaveURL(/\/es\/registro\?role=recruiter&next=%2Fapi%2Fteam%2Faccept/);
+
+  const created = new Date(Date.now() - 1000);
+  await page.getByRole("textbox", { name: "Email" }).fill(email);
+  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("frase de la invitada");
+  await page.getByRole("button", { name: "Crear cuenta" }).click();
+  await page.getByLabel("Código de 6 dígitos").fill(await codeFromEmail(email, /confirmar el email/, created));
+  await page.getByRole("button", { name: "Confirmar" }).click();
+  // Vuelve a aceptar la invitación (acá, inventada: la página lo explica) y no a la bienvenida.
+  await expect(page).toHaveURL(/\/es\/invitacion\?error=invalid_invitation/);
 });

@@ -296,6 +296,8 @@ export async function openAccountMenu(page: Page) {
 export async function signOutFromMenu(page: Page) {
   const menu = await openAccountMenu(page);
   await menu.getByRole("menuitem", { name: /^(Salir|Sign out)$/ }).click();
+  // Espera a que la sesión se haya cerrado de verdad (si no, el próximo goto la cancela).
+  await expect(page.getByRole("banner").getByRole("link", { name: /^(Ingresar|Sign in)$/ })).toBeVisible();
 }
 
 /** Espera el aviso (toast) con ese texto. Puede haber varios apilados: alcanza con el último. */
