@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, expectToast, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail } from "./support/fixtures";
+import { expect, expectNoA11yViolations, expectToast, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, clickWhenReady } from "./support/fixtures";
 
 const unique = (label: string) => `${label} ${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
 
@@ -31,10 +31,10 @@ test("publicar un consejo, darle like, guardarlo, denunciarlo, editarlo y borrar
   const card = reader.getByRole("article").filter({ hasText: title });
   await expect(card.getByText("Pili Publica")).toBeVisible();
   await expectNoA11yViolations(reader);
-  await card.getByRole("button", { name: `Me gusta: ${title}` }).click();
+  await clickWhenReady(card.getByRole("button", { name: `Me gusta: ${title}` }));
   await expect(card.getByRole("button", { name: `Me gusta: ${title}` })).toHaveAttribute("aria-pressed", "true");
   await expect(card.getByText("1 me gusta", { exact: true })).toBeVisible();
-  await card.getByRole("button", { name: `Guardar publicación: ${title}` }).click();
+  await clickWhenReady(card.getByRole("button", { name: `Guardar publicación: ${title}` }));
   await expectToast(reader, "Publicación guardada. La encontrás en Guardados.");
   await reader.goto("/es/guardados");
   await expect(reader.getByRole("article").filter({ hasText: title })).toBeVisible();
