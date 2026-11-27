@@ -98,7 +98,7 @@
       "required": "This field is required.",
       "too_short": "It must have at least {limit} characters.",
       "too_long": "It can have up to {limit} items or characters.",
-      "invalid": "Check the value of this field.",
+      "invalid": "This value doesn't have a valid format. Please check it.",
       "fix_fields": "Check the highlighted fields.",
       "unknown": "We couldn't save the changes. Please try again.",
       "limit_reached": "You reached the maximum allowed for this section.",
@@ -114,7 +114,12 @@
       "required_unless_remote": "Choose the country: the job isn't remote.",
       "unverified_limit": "Your company isn't verified yet: it can have up to 2 active jobs. Save it as a draft or close another one.",
       "expired": "The expiration date has passed. Choose a new duration.",
-      "avatar_too_large": "The photo is larger than 4 MB. Choose a lighter one."
+      "avatar_too_large": "The photo is larger than 4 MB. Choose a lighter one.",
+      "end_before_start": "The end date can't be earlier than the start date.",
+      "end_required": "Enter the end date or mark it as ongoing.",
+      "invalid_url": "Enter a valid web address, for example github.com/your-user.",
+      "invalid_month": "Enter the month as YYYY-MM, for example 2024-03.",
+      "amount_positive": "Enter an amount greater than 0, numbers only."
     }
   },
   "Profile": {
@@ -206,7 +211,7 @@
       "editItem": "Edit {item}",
       "deleteItem": "Delete {item}",
       "monthHint": "Format YYYY-MM, for example 2024-03.",
-      "endHint": "Leave it empty if it's ongoing. Format YYYY-MM.",
+      "endHint": "Format YYYY-MM.",
       "experience": {
         "title": "Experience",
         "empty": "No experience yet. If you're just starting, add projects.",
@@ -215,7 +220,8 @@
         "title_field": "Role",
         "startDate": "Start",
         "endDate": "End",
-        "description": "What you did"
+        "description": "What you did",
+        "current": "I currently work here"
       },
       "education": {
         "title": "Education",
@@ -224,7 +230,8 @@
         "institution": "Institution",
         "degree": "Degree or course",
         "startDate": "Start",
-        "endDate": "End"
+        "endDate": "End",
+        "current": "I'm currently studying this"
       },
       "certification": {
         "title": "Certifications",

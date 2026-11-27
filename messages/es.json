@@ -98,7 +98,7 @@
       "required": "Este campo es obligatorio.",
       "too_short": "Tiene que tener al menos {limit} caracteres.",
       "too_long": "Puede tener hasta {limit} elementos o caracteres.",
-      "invalid": "Revisá el valor de este campo.",
+      "invalid": "Este dato no tiene un formato válido. Revisalo.",
       "fix_fields": "Revisá los campos marcados.",
       "unknown": "No pudimos guardar los cambios. Probá de nuevo.",
       "limit_reached": "Llegaste al máximo permitido para esta sección.",
@@ -114,7 +114,12 @@
       "required_unless_remote": "Elegí el país: la oferta no es remota.",
       "unverified_limit": "Tu empresa todavía no está verificada: puede tener hasta 2 ofertas activas. Guardala como borrador o cerrá otra.",
       "expired": "La fecha de vencimiento ya pasó. Elegí una duración nueva.",
-      "avatar_too_large": "La foto pesa más de 4 MB. Elegí una más liviana."
+      "avatar_too_large": "La foto pesa más de 4 MB. Elegí una más liviana.",
+      "end_before_start": "La fecha de fin no puede ser anterior a la de inicio.",
+      "end_required": "Completá la fecha de fin o marcá que sigue en curso.",
+      "invalid_url": "Escribí una dirección web válida, por ejemplo github.com/tu-usuario.",
+      "invalid_month": "Escribí el mes con el formato AAAA-MM, por ejemplo 2024-03.",
+      "amount_positive": "Escribí un monto mayor a 0, solo con números."
     }
   },
   "Profile": {
@@ -206,7 +211,7 @@
       "editItem": "Editar {item}",
       "deleteItem": "Eliminar {item}",
       "monthHint": "Formato AAAA-MM, por ejemplo 2024-03.",
-      "endHint": "Dejalo vacío si sigue en curso. Formato AAAA-MM.",
+      "endHint": "Formato AAAA-MM.",
       "experience": {
         "title": "Experiencia",
         "empty": "Sin experiencia cargada. Si recién empezás, sumá proyectos.",
@@ -215,7 +220,8 @@
         "title_field": "Puesto",
         "startDate": "Inicio",
         "endDate": "Fin",
-        "description": "Qué hiciste"
+        "description": "Qué hiciste",
+        "current": "Trabajo acá actualmente"
       },
       "education": {
         "title": "Formación",
@@ -224,7 +230,8 @@
         "institution": "Institución",
         "degree": "Título o curso",
         "startDate": "Inicio",
-        "endDate": "Fin"
+        "endDate": "Fin",
+        "current": "Lo estoy cursando"
       },
       "certification": {
         "title": "Certificaciones",
