@@ -62,7 +62,7 @@ export function BasicsForm({ saved, countries, languages }: { saved: BasicsValue
           {languages.map((language) => (
             <label
               key={language.code}
-              className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-input px-3 text-sm has-checked:border-primary has-checked:text-primary"
+              className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg bg-secondary px-3 text-sm has-checked:bg-primary/10 has-checked:text-primary"
             >
               <input
                 type="checkbox"

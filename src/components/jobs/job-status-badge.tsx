@@ -14,7 +14,7 @@ export async function JobStatusBadge({ status, validThrough }: { status: "draft"
       className={
         effective === "published"
           ? "inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 text-sm font-medium text-primary-foreground"
-          : "inline-flex items-center gap-1 rounded-full border border-input px-2.5 py-0.5 text-sm text-muted-foreground"
+          : "inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-sm text-muted-foreground"
       }
     >
       <Icon aria-hidden="true" className="size-3.5" />

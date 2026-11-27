@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const chip =
-  "inline-flex min-h-10 items-center rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+  "inline-flex min-h-10 items-center rounded-full px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
 
 export default async function NewJobPage({ searchParams }: PageProps<"/[locale]/dashboard/jobs/new">) {
   const locale = (await getLocale()) as AppLocale;
@@ -31,7 +31,7 @@ export default async function NewJobPage({ searchParams }: PageProps<"/[locale]/
         <p className="text-muted-foreground">{t("newSubtitle")}</p>
       </div>
 
-      <nav aria-labelledby="templates-title" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
+      <nav aria-labelledby="templates-title" className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5">
         <h2 id="templates-title" className="flex items-center gap-2 font-semibold">
           <FileText aria-hidden="true" className="size-4 text-primary" />
           {t("templates.title")}
@@ -45,7 +45,7 @@ export default async function NewJobPage({ searchParams }: PageProps<"/[locale]/
                 <Link
                   href={{ pathname: "/dashboard/jobs/new", query: { plantilla: item.slug } }}
                   aria-current={current ? "true" : undefined}
-                  className={`${chip} ${current ? "border-primary bg-primary text-primary-foreground" : "border-input hover:border-primary"}`}
+                  className={`${chip} ${current ? "bg-primary text-primary-foreground" : "bg-secondary hover:bg-muted"}`}
                 >
                   {item[locale].title}
                 </Link>
@@ -54,7 +54,7 @@ export default async function NewJobPage({ searchParams }: PageProps<"/[locale]/
           })}
           {template && (
             <li>
-              <Link href="/dashboard/jobs/new" className={`${chip} border-transparent text-muted-foreground underline underline-offset-4`}>
+              <Link href="/dashboard/jobs/new" className={`${chip} text-muted-foreground underline underline-offset-4`}>
                 {t("templates.blank")}
               </Link>
             </li>

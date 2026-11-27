@@ -21,7 +21,7 @@ export function BlockedCompanies({ blocked }: { blocked: { id: string; name: str
       ) : (
         <ul className="flex flex-col gap-2">
           {blocked.map((company) => (
-            <li key={company.id} className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
+            <li key={company.id} className="flex items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-2">
               <span>{company.name}</span>
               <form action={unblockCompany}>
                 <input type="hidden" name="companyId" value={company.id} />
@@ -50,7 +50,7 @@ export function BlockedCompanies({ blocked }: { blocked: { id: string; name: str
           ) : (
             <ul className="flex flex-col gap-2">
               {search.companies.map((company) => (
-                <li key={company.id} className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
+                <li key={company.id} className="flex items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-2">
                   <span>
                     {company.name}
                     {company.domain && <span className="ml-2 text-sm text-muted-foreground">{company.domain}</span>}

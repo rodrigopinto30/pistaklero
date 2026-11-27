@@ -78,7 +78,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
                 <Link
                   href={{ pathname: "/dashboard/jobs/[id]/applicants", params: { id }, query: { estado: key } }}
                   aria-current={key === tab ? "page" : undefined}
-                  className="inline-flex h-10 items-center gap-2 rounded-full border border-input px-4 text-sm font-medium aria-[current=page]:border-primary aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground"
+                  className="inline-flex h-10 items-center gap-2 rounded-full bg-secondary px-4 text-sm font-medium aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground"
                 >
                   {tTabs(key)}
                   <span className="rounded-full bg-muted px-2 text-xs text-foreground">{count}</span>
@@ -90,7 +90,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
       </nav>
 
       {visible.length === 0 ? (
-        <p className="rounded-2xl border border-border bg-card p-6 text-muted-foreground">{t("empty")}</p>
+        <p className="rounded-2xl bg-card shadow-soft p-6 text-muted-foreground">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {visible.map((application) => {
@@ -98,7 +98,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
             const salary = salaries?.find((s) => s.candidate_id === application.candidate_id);
             const name = candidate?.people?.full_name ?? t("unavailable");
             return (
-              <li key={application.id} className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
+              <li key={application.id} className="flex flex-col gap-4 rounded-2xl bg-card shadow-soft p-5">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="flex flex-col gap-1">
                     <h2 className="text-lg font-semibold">
@@ -128,7 +128,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
                 </div>
 
                 {(questions ?? []).length > 0 && (
-                  <dl className="flex flex-col gap-2 rounded-xl border border-border p-3 text-sm">
+                  <dl className="flex flex-col gap-2 rounded-xl bg-muted/60 p-3 text-sm">
                     {questions!.map((question) => {
                       const answer = application.application_answers.find((a) => a.question_id === question.id);
                       const value = answer?.answer_text ?? (answer?.answer_option != null ? question.options?.[answer.answer_option] : null);

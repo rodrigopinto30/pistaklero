@@ -62,7 +62,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
         ) : (
           <ul className="flex flex-col gap-3">
             {reports!.map((report) => (
-              <li key={report.job_id} className="flex flex-col gap-2 rounded-xl border border-border p-4">
+              <li key={report.job_id} className="flex flex-col gap-2 rounded-xl bg-muted/60 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="flex flex-col">
                     <Link href={{ pathname: "/jobs/[slug]", params: { slug: report.job_slug } }} className="font-medium underline-offset-4 hover:underline">
@@ -146,7 +146,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
         ) : (
           <ul className="flex flex-col gap-3">
             {unclaimed!.map((company) => (
-              <li key={company.id} className="flex flex-col gap-3 rounded-xl border border-border p-4">
+              <li key={company.id} className="flex flex-col gap-3 rounded-xl bg-muted/60 p-4">
                 <span className="flex flex-col">
                   <Link href={{ pathname: "/companies/[slug]", params: { slug: company.slug } }} className="font-medium underline-offset-4 hover:underline">
                     {company.name}
@@ -177,7 +177,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
             <ul className="flex flex-col gap-2">
               {users.length === 0 && <li className="text-sm text-muted-foreground">{t("noResults")}</li>}
               {users.map((user) => (
-                <li key={user.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
+                <li key={user.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-2">
                   <span className="flex flex-col">
                     <span className="font-medium">{user.email}</span>
                     <span className="text-sm text-muted-foreground">
@@ -215,7 +215,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
             <ul className="flex flex-col gap-2">
               {companies.length === 0 && <li className="text-sm text-muted-foreground">{t("noResults")}</li>}
               {companies.map((company) => (
-                <li key={company.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
+                <li key={company.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-2">
                   <span className="flex flex-col">
                     <span className="font-medium">{company.name}</span>
                     <span className="text-sm text-muted-foreground">

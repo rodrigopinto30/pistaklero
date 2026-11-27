@@ -39,7 +39,7 @@ export default async function DashboardPage() {
             {t("verifiedBadge")}
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 rounded-full border border-warn px-3 py-1 text-sm text-warn">
+          <span className="inline-flex items-center gap-1 rounded-full bg-warn/12 px-3 py-1 text-sm text-warn">
             <CircleAlert aria-hidden="true" className="size-4" />
             {t("unverifiedBadge")}
           </span>
@@ -65,7 +65,7 @@ export default async function DashboardPage() {
         ) : (
           <ul className="flex flex-col gap-2">
             {jobs!.map((job) => (
-              <li key={job.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-3 py-3">
+              <li key={job.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-3">
                 <span className="flex flex-col gap-1">
                   <Link href={{ pathname: "/dashboard/jobs/[id]", params: { id: job.id } }} className="font-medium underline-offset-4 hover:underline">
                     {job.title}

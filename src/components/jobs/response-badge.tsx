@@ -4,10 +4,10 @@ import { getTranslations } from "next-intl/server";
 export type ResponseBadgeValue = "new" | "fast" | "medium" | "slow";
 
 const STYLE: Record<ResponseBadgeValue, { icon: typeof Zap; className: string }> = {
-  fast: { icon: Zap, className: "bg-primary text-primary-foreground" },
-  medium: { icon: Clock, className: "border border-warn text-warn" },
-  slow: { icon: CircleAlert, className: "border border-destructive text-destructive" },
-  new: { icon: Sparkles, className: "border border-input text-muted-foreground" },
+  fast: { icon: Zap, className: "bg-primary/12 text-primary" },
+  medium: { icon: Clock, className: "bg-warn/12 text-warn" },
+  slow: { icon: CircleAlert, className: "bg-destructive/10 text-destructive" },
+  new: { icon: Sparkles, className: "bg-secondary text-secondary-foreground" },
 };
 
 /** Velocidad de respuesta de la empresa (anti-ghosting). Ícono + texto, nunca solo color. */

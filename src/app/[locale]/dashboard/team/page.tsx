@@ -38,7 +38,7 @@ export default async function TeamPage() {
       <SectionCard id="members" title={t("membersTitle")}>
         <ul className="flex flex-col gap-2">
           {(members ?? []).map((member) => (
-            <li key={member.user_id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
+            <li key={member.user_id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-2">
               <span className="flex flex-col">
                 <span className="font-medium">{member.email}</span>
                 <span className="text-sm text-muted-foreground">{t(`roles.${member.member_role}`)}</span>
@@ -79,7 +79,7 @@ export default async function TeamPage() {
             ) : (
               <ul className="flex flex-col gap-2">
                 {invitations!.map((invitation) => (
-                  <li key={invitation.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
+                  <li key={invitation.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-2">
                     <span className="flex flex-col">
                       <span className="font-medium">{invitation.email}</span>
                       <span className="text-sm text-muted-foreground">

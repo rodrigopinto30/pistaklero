@@ -18,7 +18,7 @@ type SkillGroup = { category: string; label: string; skills: { id: string; name:
 
 function Fieldset({ legend, hint, children }: { legend: string; hint?: string; children: React.ReactNode }) {
   return (
-    <fieldset className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
+    <fieldset className="flex flex-col gap-4 rounded-2xl bg-card shadow-soft p-5">
       <legend className="px-1 text-lg font-semibold">{legend}</legend>
       {hint && <p className="-mt-2 text-sm text-muted-foreground">{hint}</p>}
       {children}
@@ -150,7 +150,7 @@ export function JobForm({
                 {group.skills.map((skill) => (
                   <label
                     key={skill.id}
-                    className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-input px-3 text-sm has-checked:border-primary has-checked:text-primary"
+                    className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg bg-secondary px-3 text-sm has-checked:bg-primary/10 has-checked:text-primary"
                   >
                     <input type="checkbox" name="skills" value={skill.id} defaultChecked={selectedSkills.has(skill.id)} className="size-4 accent-primary" />
                     {skill.name}
@@ -164,7 +164,7 @@ export function JobForm({
 
       <Fieldset legend={t("sections.questions")} hint={t("questionsHint")}>
         {([1, 2] as const).map((n) => (
-          <div key={n} role="group" aria-labelledby={`question${n}-title`} className="flex flex-col gap-3 rounded-xl border border-border p-4">
+          <div key={n} role="group" aria-labelledby={`question${n}-title`} className="flex flex-col gap-3 rounded-xl bg-muted/60 p-4">
             <p id={`question${n}-title`} className="font-medium">
               {t("questionN", { n })}
             </p>

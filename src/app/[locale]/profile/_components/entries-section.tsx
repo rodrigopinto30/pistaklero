@@ -133,7 +133,7 @@ export function EntriesSection({ block, entries }: { block: EntryBlock; entries:
       ) : (
         <ul className="flex flex-col gap-2">
           {entries.map((entry) => (
-            <li key={entry.id} className="rounded-lg border border-border p-3">
+            <li key={entry.id} className="rounded-xl bg-muted/60 p-3">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex flex-col">
                   <h3 className="font-medium">{entry.heading}</h3>

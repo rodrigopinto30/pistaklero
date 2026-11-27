@@ -60,11 +60,11 @@ export async function JobCard({ job, locale, index, viewer }: { job: JobCardData
   const location = job.work_mode === "remote" ? null : [job.city, countryName(job.country, locale)].filter(Boolean).join(", ");
 
   return (
-    <article id={index ? `resultado-${index}` : undefined} aria-labelledby={`job-${job.id}`} className="relative flex h-full flex-col gap-3 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-input">
+    <article id={index ? `resultado-${index}` : undefined} aria-labelledby={`job-${job.id}`} className="relative flex h-full flex-col gap-3 rounded-2xl bg-card shadow-soft p-5 transition-shadow hover:shadow-soft-lg">
       <div className="flex items-center gap-3">
         {logo ? (
           // eslint-disable-next-line @next/next/no-img-element -- WebP de 256 px ya optimizado, desde nuestro Storage.
-          <img src={logo} alt="" width={40} height={40} className="size-10 rounded-lg border border-border bg-muted object-contain" />
+          <img src={logo} alt="" width={40} height={40} className="size-10 rounded-lg bg-muted object-contain" />
         ) : (
           <span aria-hidden="true" className="flex size-10 items-center justify-center rounded-lg bg-muted">
             <Building2 className="size-5 text-muted-foreground" />
@@ -76,7 +76,7 @@ export async function JobCard({ job, locale, index, viewer }: { job: JobCardData
         </span>
         <span className="ml-auto flex items-center gap-2">
           {job.source === "imported" && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-input px-2 py-0.5 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
               <ExternalLink aria-hidden="true" className="size-3" />
               {t("detail.external")}
             </span>
@@ -112,7 +112,7 @@ export async function JobCard({ job, locale, index, viewer }: { job: JobCardData
       {skills.length > 0 && (
         <ul className="flex flex-wrap gap-1.5" aria-label={t("detail.skills")}>
           {skills.map((skill) => (
-            <li key={skill} className="rounded-full border border-input px-2.5 py-0.5 text-xs">
+            <li key={skill} className="rounded-full bg-secondary px-2.5 py-0.5 text-xs">
               {skill}
             </li>
           ))}

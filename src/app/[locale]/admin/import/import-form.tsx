@@ -26,7 +26,7 @@ function ReviewForm({ proposed, countries }: { proposed: Record<string, string>;
 
   if (state.status === "success") {
     return (
-      <p role="status" className="rounded-xl border border-primary p-4 text-primary">
+      <p role="status" className="rounded-xl bg-primary/10 p-4 text-primary">
         {t("published")}
       </p>
     );
@@ -99,7 +99,7 @@ function ReviewForm({ proposed, countries }: { proposed: Record<string, string>;
           {select("validDays", VALID_DAYS, (o) => tj("validDaysOption", { days: o }))}
         </Field>
       </FieldGrid>
-      <fieldset className="flex flex-col gap-3 rounded-xl border border-border p-4">
+      <fieldset className="flex flex-col gap-3 rounded-xl bg-muted/60 p-4">
         <legend className="px-1 font-medium">{t("salary")}</legend>
         <p className="text-sm text-muted-foreground">{t("salaryHint")}</p>
         <FieldGrid className="sm:grid-cols-5">
@@ -136,7 +136,7 @@ export function ImportForm({ aiEnabled, countries, locale }: { aiEnabled: boolea
 
   return (
     <div className="flex flex-col gap-6">
-      <section aria-labelledby="import-ai" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
+      <section aria-labelledby="import-ai" className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5">
         <h2 id="import-ai" className="flex items-center gap-2 text-lg font-semibold">
           <Sparkles aria-hidden="true" className="size-5 text-primary" />
           {t("aiTitle")}
@@ -161,7 +161,7 @@ export function ImportForm({ aiEnabled, countries, locale }: { aiEnabled: boolea
         )}
       </section>
 
-      <section aria-labelledby="import-review" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
+      <section aria-labelledby="import-review" className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5">
         <h2 id="import-review" className="text-lg font-semibold">
           {t("reviewTitle")}
         </h2>

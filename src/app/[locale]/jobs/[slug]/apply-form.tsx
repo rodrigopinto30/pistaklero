@@ -41,7 +41,7 @@ function Questions({ questions }: { questions: Question[] }) {
             {(q.options ?? []).map((option, index) => (
               <label
                 key={index}
-                className="flex min-h-10 cursor-pointer items-center gap-3 rounded-lg border border-input px-3 py-2 text-sm has-checked:border-primary"
+                className="flex min-h-10 cursor-pointer items-center gap-3 rounded-lg bg-secondary px-3 py-2 text-sm has-checked:bg-primary/10 has-checked:text-primary"
               >
                 <input type="radio" name={`answer_option_${q.id}`} value={index} required={q.required} className="size-4 accent-primary" />
                 {option}
@@ -114,7 +114,7 @@ export function ApplyForm({ jobId, questions, autoOpen = false }: { jobId: strin
       <dialog
         ref={dialogRef}
         aria-labelledby={titleId}
-        className="m-auto w-[min(32rem,calc(100%-2rem))] rounded-2xl border border-border bg-card p-0 text-foreground backdrop:bg-black/70"
+        className="m-auto w-[min(32rem,calc(100%-2rem))] rounded-2xl bg-card shadow-soft p-0 text-foreground backdrop:bg-black/70"
       >
         <form action={action} className="flex flex-col gap-4 p-6">
           <input type="hidden" name="jobId" value={jobId} />

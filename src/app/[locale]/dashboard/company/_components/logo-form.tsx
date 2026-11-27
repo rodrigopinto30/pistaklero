@@ -21,7 +21,7 @@ export function LogoForm({ logoUrl, companyName }: { logoUrl: string | null; com
         <figure className="flex items-center gap-3">
           {/* Ya está optimizado (WebP 256 px) y viene de nuestro Storage. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoUrl} alt={t("current")} width={96} height={96} className="size-24 rounded-xl border border-border bg-muted object-contain" />
+          <img src={logoUrl} alt={t("current")} width={96} height={96} className="size-24 rounded-xl bg-muted object-contain" />
           <figcaption className="sr-only">{companyName}</figcaption>
         </figure>
       ) : (
