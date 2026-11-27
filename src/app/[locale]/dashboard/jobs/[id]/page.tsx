@@ -45,11 +45,16 @@ export default async function EditJobPage({ params }: PageProps<"/[locale]/dashb
           <h1 className="text-3xl font-semibold tracking-tight">{t("editTitle")}</h1>
           <JobStatusBadge status={job.status} validThrough={job.valid_through} />
         </div>
-        {job.status === "published" && (
-          <Link href={{ pathname: "/jobs/[slug]", params: { slug: job.slug } }} className={buttonVariants({ variant: "outline" })}>
-            {t("viewPublic")}
+        <div className="flex flex-wrap gap-2">
+          <Link href={{ pathname: "/dashboard/jobs/[id]/applicants", params: { id: job.id } }} className={buttonVariants()}>
+            {t("viewApplicants")}
           </Link>
-        )}
+          {job.status === "published" && (
+            <Link href={{ pathname: "/jobs/[slug]", params: { slug: job.slug } }} className={buttonVariants({ variant: "outline" })}>
+              {t("viewPublic")}
+            </Link>
+          )}
+        </div>
       </div>
       <StatusControls jobId={job.id} status={job.status} locale={locale} />
       <JobForm
