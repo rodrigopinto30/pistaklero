@@ -277,6 +277,11 @@ export async function expectToast(page: Page, text: string | RegExp) {
 
 /** Revisa la página con axe: WCAG 2.0, 2.1 y 2.2, niveles A y AA. */
 export async function expectNoA11yViolations(page: Page) {
+  // Un aviso (toast) que entra o sale tiene colores a medio camino: axe lo mediría con poco contraste.
+  // Se espera a que terminen las transiciones y animaciones finitas.
+  await page.waitForFunction(() =>
+    document.getAnimations().every((a) => a.playState !== "running" || a.effect?.getTiming().iterations === Infinity)
+  );
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
