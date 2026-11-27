@@ -21,7 +21,7 @@ export function MagicLinkForm({ locale, next, variant = "sign-in" }: { locale: s
 
   if (state.status === "sent") {
     return (
-      <div role="status" className="rounded-xl border border-border bg-card p-4">
+      <div role="status" className="rounded-xl bg-card shadow-soft p-4">
         <h2 className="font-medium">{copy("sentTitle")}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{copy("sentBody", { email: state.email })}</p>
       </div>

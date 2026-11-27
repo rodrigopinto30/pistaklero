@@ -83,11 +83,11 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
       {/* JSON (no se ejecuta) ya escapado por serializeJsonLd: es el único HTML crudo del sitio. */}
       {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />}
       <article className="flex flex-col gap-6 lg:col-span-2" aria-labelledby="job-title">
-        <header className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
+        <header className="flex flex-col gap-4 rounded-2xl bg-card shadow-soft p-6">
           <div className="flex items-center gap-3">
             {logo ? (
               // eslint-disable-next-line @next/next/no-img-element -- WebP de 256 px ya optimizado, desde nuestro Storage.
-              <img src={logo} alt="" width={48} height={48} className="size-12 rounded-xl border border-border bg-muted object-contain" />
+              <img src={logo} alt="" width={48} height={48} className="size-12 rounded-xl bg-muted object-contain" />
             ) : null}
             {company && (
               <Link href={{ pathname: "/companies/[slug]", params: { slug: company.slug } }} className="inline-flex items-center gap-1 font-medium text-violet underline-offset-4 hover:underline">
@@ -113,20 +113,20 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
             )}
           </p>
           <ul className="flex flex-wrap gap-2 text-sm">
-            <li className="inline-flex items-center gap-1 rounded-full border border-input px-3 py-1">
+            <li className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1">
               <Laptop aria-hidden="true" className="size-4 text-violet" />
               {t(`workModeOptions.${job.work_mode}`)}
             </li>
-            <li className="inline-flex items-center gap-1 rounded-full border border-input px-3 py-1">
+            <li className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1">
               <Signal aria-hidden="true" className="size-4 text-violet" />
               {t(`seniorityOptions.${job.seniority}`)}
             </li>
-            <li className="inline-flex items-center gap-1 rounded-full border border-input px-3 py-1">
+            <li className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1">
               <Briefcase aria-hidden="true" className="size-4 text-violet" />
               {t(`employmentOptions.${job.employment_type}`)}
             </li>
             {location && (
-              <li className="inline-flex items-center gap-1 rounded-full border border-input px-3 py-1">
+              <li className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1">
                 <MapPin aria-hidden="true" className="size-4 text-violet" />
                 {location}
               </li>
@@ -134,7 +134,7 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
           </ul>
         </header>
 
-        <section aria-labelledby="job-about" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-6">
+        <section aria-labelledby="job-about" className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-6">
           <h2 id="job-about" className="text-lg font-semibold">
             {t("detail.about")}
           </h2>
@@ -143,7 +143,7 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
       </article>
 
       <aside className="flex flex-col gap-4">
-        <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 lg:sticky lg:top-4">
+        <div className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5 lg:sticky lg:top-44">
           {!isOpen ? (
             <p className="text-sm text-muted-foreground">{t("detail.closed")}</p>
           ) : job.source === "imported" && job.external_url ? (
@@ -166,13 +166,13 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
           {isOpen && (await getCurrentUser()) && <ReportForm jobId={job.id} />}
         </div>
         {(skills ?? []).length > 0 && (
-          <section aria-labelledby="job-skills" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
+          <section aria-labelledby="job-skills" className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5">
             <h2 id="job-skills" className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
               {t("detail.skills")}
             </h2>
             <ul className="flex flex-wrap gap-2">
               {skills!.map((s, i) => (
-                <li key={i} className="rounded-full border border-input px-3 py-1 text-sm">
+                <li key={i} className="rounded-full bg-secondary px-3 py-1 text-sm">
                   {(locale === "en" ? s.skills?.name_en : s.skills?.name_es) ?? ""}
                 </li>
               ))}

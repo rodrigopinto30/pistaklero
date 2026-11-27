@@ -55,7 +55,7 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
             ))}
           </ul>
         ) : (
-          <div className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-6">
+          <div className="flex flex-col items-start gap-3 rounded-2xl bg-card shadow-soft p-6">
             <p>{t("empty")}</p>
             <Link href="/" className={buttonVariants({ variant: "outline" })}>
               {t("clear")}

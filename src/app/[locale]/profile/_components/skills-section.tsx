@@ -65,7 +65,7 @@ export function SkillsSection({ catalog, selected }: { catalog: CatalogSkill[]; 
       ) : (
         <ul className="flex flex-col gap-2">
           {selected.map((skill) => (
-            <li key={skill.skillId} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
+            <li key={skill.skillId} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-2">
               <span className="font-medium">{skill.name}</span>
               <span className="flex items-center gap-1">
                 <LevelForm skill={skill} />

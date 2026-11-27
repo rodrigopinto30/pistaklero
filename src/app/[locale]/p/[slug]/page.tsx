@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/p/[slug]
 function Card({ title, className, children }: { title: string; className?: string; children: ReactNode }) {
   const id = `card-${title.toLowerCase().replace(/\W+/g, "-")}`;
   return (
-    <section aria-labelledby={id} className={`flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 ${className ?? ""}`}>
+    <section aria-labelledby={id} className={`flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5 ${className ?? ""}`}>
       <h2 id={id} className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
         {title}
       </h2>
@@ -102,7 +102,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
   return (
     <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 md:grid-cols-3">
       {/* Encabezado */}
-      <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 md:col-span-2 md:flex-row md:items-center">
+      <section className="flex flex-col gap-4 rounded-2xl bg-card shadow-soft p-6 md:col-span-2 md:flex-row md:items-center">
         <Avatar path={candidate.people?.avatar_path} name={candidate.people?.full_name ?? ""} size="xl" />
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight">{candidate.people?.full_name}</h1>
@@ -157,7 +157,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
         <Card title={t("skills")}>
           <ul className="flex flex-wrap gap-2">
             {skills.data!.map((s, i) => (
-              <li key={i} className="rounded-full border border-input px-3 py-1 text-sm">
+              <li key={i} className="rounded-full bg-secondary px-3 py-1 text-sm">
                 {(locale === "en" ? s.skills?.name_en : s.skills?.name_es) ?? ""}{" "}
                 <span className="text-muted-foreground">· {tp(`skills.levelOptions.${s.level}`)}</span>
               </li>
@@ -170,7 +170,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
         <Card title={t("projects")} className="md:col-span-3">
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {projects.data!.map((p) => (
-              <li key={p.id} className="flex flex-col gap-2 overflow-hidden rounded-xl border border-border p-4">
+              <li key={p.id} className="flex flex-col gap-2 overflow-hidden rounded-xl bg-muted/60 p-4">
                 {p.preview_path && (
                   // Decorativa: el título y el enlace dicen de qué se trata. WebP 1200×630 ya optimizado.
                   // eslint-disable-next-line @next/next/no-img-element
@@ -180,7 +180,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
                     width={1200}
                     height={630}
                     loading="lazy"
-                    className="-mx-4 -mt-4 mb-1 aspect-[1200/630] w-[calc(100%+2rem)] max-w-none border-b border-border object-cover"
+                    className="-mx-4 -mt-4 mb-1 aspect-[1200/630] w-[calc(100%+2rem)] max-w-none object-cover"
                   />
                 )}
                 <h3 className="font-medium">{p.title}</h3>

@@ -42,7 +42,7 @@ export default async function MyApplicationsPage() {
       </div>
 
       {(applications ?? []).length === 0 ? (
-        <div className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-6">
+        <div className="flex flex-col items-start gap-3 rounded-2xl bg-card shadow-soft p-6">
           <p>{t("empty")}</p>
           <Link href="/" className={buttonVariants()}>
             {t("browse")}
@@ -54,7 +54,7 @@ export default async function MyApplicationsPage() {
             const job = application.jobs;
             const events = [...(application.application_events ?? [])].sort((a, b) => a.created_at.localeCompare(b.created_at));
             return (
-              <li key={application.id} className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
+              <li key={application.id} className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="flex flex-col gap-1">
                     <h2 lang={job?.language} className="text-lg font-semibold">

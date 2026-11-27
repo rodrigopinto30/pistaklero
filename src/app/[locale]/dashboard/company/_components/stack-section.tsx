@@ -25,7 +25,7 @@ export function StackSection({ catalog, selected }: { catalog: Skill[]; selected
       ) : (
         <ul className="flex flex-wrap gap-2">
           {selected.map((skill) => (
-            <li key={skill.id} className="inline-flex items-center gap-1 rounded-full border border-input py-1 pr-1 pl-3 text-sm">
+            <li key={skill.id} className="inline-flex items-center gap-1 rounded-full bg-secondary py-1 pr-1 pl-3 text-sm">
               {skill.name}
               <form action={removeCompanySkill}>
                 <input type="hidden" name="skillId" value={skill.id} />

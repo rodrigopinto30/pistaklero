@@ -59,7 +59,7 @@ export function WelcomeForm({ locale, defaultName, presetRole }: { locale: strin
       <input type="hidden" name="locale" value={locale} />
 
       {formError === "unknown" && (
-        <p role="alert" className="rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
+        <p role="alert" className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
           {t("errors.unknown")}
         </p>
       )}
@@ -84,8 +84,8 @@ export function WelcomeForm({ locale, defaultName, presetRole }: { locale: strin
           <label
             key={role}
             className={cn(
-              "flex cursor-pointer gap-3 rounded-xl border border-input bg-card p-4 transition-colors hover:bg-muted",
-              "has-checked:border-primary has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
+              "flex cursor-pointer gap-3 rounded-xl bg-card p-4 shadow-soft transition-shadow hover:shadow-soft-lg",
+              "has-checked:ring-2 has-checked:ring-primary has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
             )}
           >
             <input
