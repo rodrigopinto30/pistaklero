@@ -34,7 +34,9 @@ Con todo arriba:
 ./run.sh pnpm test                                      # tests unitarios (Vitest)
 ./run.sh pnpm build                                     # build de producción
 ./run.sh pnpm exec supabase migration new crear_tabla   # nueva migración
-./run.sh pnpm exec supabase db reset                    # recrear la base local
+./run.sh pnpm db:reset                                  # recrear la base local con las migraciones
+./run.sh pnpm db:test                                   # tests de la base (pgTAP)
+./run.sh pnpm db:types                                  # regenerar los tipos de TypeScript
 ```
 
 
