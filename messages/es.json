@@ -984,5 +984,28 @@
       "details": "Tus datos",
       "done": "Listo:"
     }
+  },
+  "Toasts": {
+    "region": "Avisos",
+    "close": "Cerrar aviso",
+    "saved": "Cambios guardados.",
+    "removed": "Listo, se quitó.",
+    "blocked": "Empresa bloqueada: no va a ver tu perfil.",
+    "unblocked": "Empresa desbloqueada.",
+    "withdrawn": "Retiraste tu postulación.",
+    "signedOut": "Cerraste sesión. ¡Hasta pronto!",
+    "welcome": "¡Listo! Tu cuenta está creada.",
+    "accountDeleted": "Tu cuenta y tus datos se borraron.",
+    "teamUpdated": "Equipo actualizado.",
+    "done": "Listo.",
+    "invited": "Invitación enviada.",
+    "skillAdded": "Habilidad agregada.",
+    "techAdded": "Tecnología agregada.",
+    "logoUpdated": "Logo actualizado.",
+    "photoUpdated": "Foto de perfil actualizada.",
+    "statusUpdated": "Estado actualizado: le avisamos por email.",
+    "jobStatusUpdated": "Estado de la oferta actualizado.",
+    "jobSaved": "Oferta guardada.",
+    "published": "Oferta publicada."
   }
 }

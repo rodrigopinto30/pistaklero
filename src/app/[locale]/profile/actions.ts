@@ -1,5 +1,6 @@
 "use server";
 
+import { flash } from "@/lib/flash.server";
 import { refresh } from "next/cache";
 import { after } from "next/server";
 import { z } from "zod";
@@ -121,6 +122,7 @@ export async function deleteSalary() {
   const auth = await requireCandidate();
   if (!auth) return;
   await auth.supabase.from("candidate_salary_expectations").delete().eq("candidate_id", auth.userId);
+  await flash("removed");
   refresh();
 }
 
@@ -169,6 +171,7 @@ export async function removeSkill(formData: FormData) {
   const skillId = z.uuid().safeParse(formData.get("skillId"));
   if (!auth || !skillId.success) return;
   await auth.supabase.from("candidate_skills").delete().eq("candidate_id", auth.userId).eq("skill_id", skillId.data);
+  await flash("removed");
   refresh();
 }
 
@@ -262,6 +265,7 @@ export async function deleteEntry(formData: FormData) {
   } else {
     await auth.supabase.from(ENTRY_TABLES[block.data]).delete().eq("id", id.data).eq("candidate_id", auth.userId);
   }
+  await flash("removed");
   refresh();
 }
 
@@ -297,6 +301,7 @@ export async function blockCompany(formData: FormData) {
   const companyId = z.uuid().safeParse(formData.get("companyId"));
   if (!auth || !companyId.success) return;
   await auth.supabase.from("candidate_blocked_companies").insert({ candidate_id: auth.userId, company_id: companyId.data });
+  await flash("blocked");
   refresh();
 }
 
@@ -305,5 +310,6 @@ export async function unblockCompany(formData: FormData) {
   const companyId = z.uuid().safeParse(formData.get("companyId"));
   if (!auth || !companyId.success) return;
   await auth.supabase.from("candidate_blocked_companies").delete().eq("candidate_id", auth.userId).eq("company_id", companyId.data);
+  await flash("unblocked");
   refresh();
 }

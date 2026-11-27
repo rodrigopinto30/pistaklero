@@ -31,7 +31,7 @@ export function InviteForm({ locale }: { locale: string }) {
         </Field>
       </div>
       <SubmitButton label={t("invite")} />
-      <FormMessage state={state} />
+      <FormMessage state={state} success="invited" />
     </form>
   );
 }

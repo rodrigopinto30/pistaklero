@@ -1,5 +1,6 @@
 "use server";
 
+import { flash } from "@/lib/flash.server";
 import { refresh } from "next/cache";
 import { z } from "zod";
 import { getCurrentRecruiter } from "@/lib/auth/recruiter";
@@ -49,6 +50,7 @@ export async function revokeInvitation(formData: FormData) {
   if (!id.success) return;
   const supabase = await createClient();
   await supabase.from("company_invitations").delete().eq("id", id.data);
+  await flash("teamUpdated");
   refresh();
 }
 
@@ -58,6 +60,7 @@ export async function changeMember(formData: FormData) {
   if (!userId.success || !action.success) return;
   const supabase = await createClient();
   await supabase.rpc("update_member", { p_user_id: userId.data, p_action: action.data });
+  await flash("teamUpdated");
   refresh();
 }
 

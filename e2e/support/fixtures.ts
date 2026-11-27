@@ -256,6 +256,11 @@ export async function onboardAsCompany(page: Page, companyName: string, website:
   await page.waitForURL("/es/panel");
 }
 
+/** Espera el aviso (toast) con ese texto. Puede haber varios apilados: alcanza con el último. */
+export async function expectToast(page: Page, text: string | RegExp) {
+  await expect(page.getByRole("region", { name: /^(Avisos|Notifications)$/ }).getByText(text).last()).toBeVisible();
+}
+
 /** Revisa la página con axe: WCAG 2.0, 2.1 y 2.2, niveles A y AA. */
 export async function expectNoA11yViolations(page: Page) {
   const results = await new AxeBuilder({ page })

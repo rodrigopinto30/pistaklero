@@ -984,5 +984,28 @@
       "details": "Your details",
       "done": "Done:"
     }
+  },
+  "Toasts": {
+    "region": "Notifications",
+    "close": "Close notification",
+    "saved": "Changes saved.",
+    "removed": "Done, it was removed.",
+    "blocked": "Company blocked: it won't see your profile.",
+    "unblocked": "Company unblocked.",
+    "withdrawn": "You withdrew your application.",
+    "signedOut": "You signed out. See you soon!",
+    "welcome": "All set! Your account is ready.",
+    "accountDeleted": "Your account and your data were deleted.",
+    "teamUpdated": "Team updated.",
+    "done": "Done.",
+    "invited": "Invitation sent.",
+    "skillAdded": "Skill added.",
+    "techAdded": "Technology added.",
+    "logoUpdated": "Logo updated.",
+    "photoUpdated": "Profile photo updated.",
+    "statusUpdated": "Status updated: we emailed them.",
+    "jobStatusUpdated": "Job status updated.",
+    "jobSaved": "Job saved.",
+    "published": "Job published."
   }
 }

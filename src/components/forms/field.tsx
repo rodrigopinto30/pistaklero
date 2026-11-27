@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { type ReactNode, useEffect, useRef } from "react";
+import { notify } from "@/components/toaster";
 import { Label } from "@/components/ui/label";
 import type { FieldError, FormState } from "@/lib/forms";
 
@@ -63,12 +64,33 @@ export function Field({
   );
 }
 
-/** Mensaje de resultado del formulario, anunciado por lectores de pantalla (WCAG 4.1.3). */
-export function FormMessage({ state }: { state: FormState }) {
+/**
+ * Resultado del formulario. Lo guardado se avisa con un toast (chico, no invasivo y anunciado por
+ * los lectores de pantalla); los errores quedan junto al formulario, que es donde hay que corregirlos.
+ */
+/** Textos de aviso para lo guardado (namespace "Toasts"). */
+export type SuccessKey = "saved" | "invited" | "skillAdded" | "techAdded" | "logoUpdated" | "photoUpdated" | "statusUpdated" | "jobStatusUpdated" | "jobSaved" | "published";
+
+export function FormMessage({ state, success = "saved" }: { state: FormState; success?: SuccessKey }) {
   const t = useTranslations("Form");
+  const tToast = useTranslations("Toasts");
+  const savedAt = state.status === "success" ? state.savedAt : null;
+  const message = tToast(success);
+
+  useEffect(() => {
+    if (savedAt) notify(message);
+    // Un aviso por cada guardado (savedAt cambia en cada uno).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedAt]);
+
   return (
     <p role="status" className="text-sm empty:hidden">
-      {state.status === "success" && <span className="text-primary">{t("saved")}</span>}
+      {/* Sin JavaScript no hay toasts: el aviso queda escrito acá. */}
+      {state.status === "success" && (
+        <noscript>
+          <span className="text-primary">{message}</span>
+        </noscript>
+      )}
       {state.status === "error" && state.formError && (
         <span className="text-destructive">{t(`errors.${state.formError}`)}</span>
       )}

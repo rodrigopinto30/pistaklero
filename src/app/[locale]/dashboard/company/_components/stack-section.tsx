@@ -55,7 +55,7 @@ export function StackSection({ catalog, selected }: { catalog: Skill[]; selected
         </div>
         <SubmitButton label={t("add")} variant="secondary" />
       </form>
-      <FormMessage state={state} />
+      <FormMessage state={state} success="techAdded" />
     </div>
   );
 }

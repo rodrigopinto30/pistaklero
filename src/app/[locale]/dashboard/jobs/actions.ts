@@ -1,5 +1,6 @@
 "use server";
 
+import { flash } from "@/lib/flash.server";
 import { refresh } from "next/cache";
 import { z } from "zod";
 import { getCurrentRecruiter } from "@/lib/auth/recruiter";
@@ -128,6 +129,7 @@ export async function deleteDraft(formData: FormData) {
   const locale = parseLocale(formData.get("locale"));
   if (!member || !jobId.success) return;
   await member.supabase.from("jobs").delete().eq("id", jobId.data).eq("status", "draft");
+  await flash("removed");
   refresh();
   redirect({ href: "/dashboard", locale });
 }

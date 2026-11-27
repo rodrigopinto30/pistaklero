@@ -1,5 +1,6 @@
 "use server";
 
+import { flash } from "@/lib/flash.server";
 import { refresh } from "next/cache";
 import { z } from "zod";
 import { getCurrentProfile, signedInRecently } from "@/lib/auth/session";
@@ -62,6 +63,7 @@ export async function deleteAccount(_prev: DeleteState, formData: FormData): Pro
 
   const supabase = await createClient();
   await supabase.auth.signOut({ scope: "local" });
+  await flash("accountDeleted");
   refresh();
   return redirect({ href: "/", locale });
 }

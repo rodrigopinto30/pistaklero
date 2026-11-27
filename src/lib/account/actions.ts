@@ -1,5 +1,6 @@
 "use server";
 
+import { flash } from "@/lib/flash.server";
 import { refresh } from "next/cache";
 import { getCurrentProfile } from "@/lib/auth/session";
 import { dbErrorCode, errorState, type FormState, formValues, successState, zodFieldErrors } from "@/lib/forms";
@@ -72,5 +73,6 @@ export async function removeAvatar() {
   // Texto vacío = quitar la foto.
   const { error } = await supabase.rpc("set_my_avatar", { p_path: "" });
   if (!error) await createAdminClient().storage.from(AVATAR_BUCKET).remove([person.avatar_path]);
+  await flash("removed");
   refresh();
 }
