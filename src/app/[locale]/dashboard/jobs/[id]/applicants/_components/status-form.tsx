@@ -55,7 +55,7 @@ export function StatusForm({
             ))}
           </NativeSelect>
         </div>
-        <SubmitButton label={t("move")} variant="secondary" />
+        <SubmitButton label={t("move")} variant="secondary" requireChanges={false} />
         <FormMessage state={advance} success="statusUpdated" />
       </form>
 
@@ -97,7 +97,7 @@ export function StatusForm({
               {t("messageHint")}
             </p>
           </div>
-          <SubmitButton label={t("reject")} variant="secondary" />
+          <SubmitButton label={t("reject")} variant="secondary" requireChanges={false} />
           <FormMessage state={reject} success="statusUpdated" />
         </form>
       </details>
