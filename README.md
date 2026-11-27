@@ -15,6 +15,7 @@ Node, pnpm y la CLI de Supabase corren dentro de contenedores: no se instala nad
 | `./stop.sh` | Baja todo. Los datos de la base local se conservan |
 | `./run.sh <comando>` | Corre un comando dentro del contenedor de herramientas |
 | `./logs.sh` | Muestra los logs de la app en vivo |
+| `./e2e.sh [archivo]` | Tests de punta a punta y de accesibilidad (Playwright + axe), con la app levantada |
 
 Con todo arriba:
 
