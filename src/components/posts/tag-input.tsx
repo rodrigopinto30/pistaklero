@@ -20,17 +20,9 @@ export function TagInput({ name, initial = [] }: { name: string; initial?: strin
 
   const add = (raw: string) => {
     const parts = raw.split(/[\s,]+/).filter(Boolean);
-    let bad = false;
-    setTags((current) => {
-      const next = [...current];
-      for (const part of parts) {
-        const tag = normalizeTag(part);
-        if (!tag) bad = true;
-        else if (!next.includes(tag) && next.length < MAX_TAGS) next.push(tag);
-      }
-      return next;
-    });
-    setInvalid(bad);
+    const valid = parts.map(normalizeTag).filter((tag): tag is string => tag !== null);
+    setTags((current) => [...current, ...valid.filter((tag, i) => !current.includes(tag) && valid.indexOf(tag) === i)].slice(0, MAX_TAGS));
+    setInvalid(valid.length < parts.length);
     setDraft("");
   };
 
@@ -74,7 +66,15 @@ export function TagInput({ name, initial = [] }: { name: string; initial?: strin
           <Input
             id={id}
             value={draft}
-            onChange={(event) => setDraft(event.target.value)}
+            onChange={(event) => {
+              // Al escribir o pegar "ia, python ux": lo que ya está separado queda como etiqueta.
+              const value = event.target.value;
+              const parts = value.split(/[\s,]+/);
+              if (parts.length > 1) {
+                add(parts.slice(0, -1).join(" "));
+                setDraft(parts.at(-1) ?? "");
+              } else setDraft(value);
+            }}
             onKeyDown={onKeyDown}
             onBlur={() => draft.trim() && add(draft)}
             maxLength={31}

@@ -675,14 +675,14 @@ isOneToOne: false
                   ]
                 },"posts": {
                   Row: {
-                    "author_id": string,"body": string,"created_at": string,"excerpt": string | null,"id": string,"language": Database["public"]['Enums']["app_locale"],"likes_count": number,"slug": string,"status": Database["public"]['Enums']["post_status"],"title": string,"updated_at": string
+                    "author_id": string,"body": string,"created_at": string,"excerpt": string | null,"id": string,"language": Database["public"]['Enums']["app_locale"],"likes_count": number,"slug": string,"status": Database["public"]['Enums']["post_status"],"tags": (string)[],"title": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "author_id": string,"body": string,"created_at"?: string,"excerpt"?: never,"id"?: string,"language"?: Database["public"]['Enums']["app_locale"],"likes_count"?: number,"slug": string,"status"?: Database["public"]['Enums']["post_status"],"title": string,"updated_at"?: string
+                    "author_id": string,"body": string,"created_at"?: string,"excerpt"?: never,"id"?: string,"language"?: Database["public"]['Enums']["app_locale"],"likes_count"?: number,"slug": string,"status"?: Database["public"]['Enums']["post_status"],"tags"?: (string)[],"title": string,"updated_at"?: string
                   }
                   Update: {
-                    "author_id"?: string,"body"?: string,"created_at"?: string,"excerpt"?: never,"id"?: string,"language"?: Database["public"]['Enums']["app_locale"],"likes_count"?: number,"slug"?: string,"status"?: Database["public"]['Enums']["post_status"],"title"?: string,"updated_at"?: string
+                    "author_id"?: string,"body"?: string,"created_at"?: string,"excerpt"?: never,"id"?: string,"language"?: Database["public"]['Enums']["app_locale"],"likes_count"?: number,"slug"?: string,"status"?: Database["public"]['Enums']["post_status"],"tags"?: (string)[],"title"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -907,6 +907,9 @@ isOneToOne: false
         isOneToOne: false
         isSetofReturn: true
       } },
+"clean_post_tags":
+{ Args: { "p_tags": (string)[] }; Returns: (string)[]
+                           },
 "company_cards":
 { Args: { "p_company_id"?: string,"p_limit"?: number,"p_offset"?: number,"p_query"?: string,"p_saved_only"?: boolean }; Returns: {
               "city": string,"country": string,"cover_path": string,"id": string,"industry": string,"liked": boolean,"likes_count": number,"logo_path": string,"name": string,"open_jobs": number,"saved": boolean,"slug": string,"total_count": number,"verified": boolean
@@ -930,7 +933,7 @@ isOneToOne: false
 { Args: { "p_email": string,"p_token_hash": string }; Returns: string
                            },
 "create_post":
-{ Args: { "p_body": string,"p_language": Database["public"]['Enums']["app_locale"],"p_title": string }; Returns: string
+{ Args: { "p_body": string,"p_language": Database["public"]['Enums']["app_locale"],"p_tags"?: (string)[],"p_title": string }; Returns: string
                            },
 "daily_maintenance":
 { Args: Record<PropertyKey, never>; Returns: Json
@@ -984,6 +987,9 @@ isOneToOne: false
               "job_id": string,"status": Database["public"]['Enums']["application_status"],"total": number
             }[]
                            },
+"normalize_post_tag":
+{ Args: { "p_tag": string }; Returns: string
+                           },
 "onboard_candidate":
 { Args: { "p_first_name": string,"p_headline": string,"p_last_name": string,"p_locale": Database["public"]['Enums']["app_locale"],"p_middle_name": string }; Returns: undefined
                            },
@@ -991,8 +997,8 @@ isOneToOne: false
 { Args: { "p_company_name": string,"p_first_name": string,"p_last_name": string,"p_locale": Database["public"]['Enums']["app_locale"],"p_middle_name": string,"p_website_url": string }; Returns: string
                            },
 "post_cards":
-{ Args: { "p_author_id"?: string,"p_company_id"?: string,"p_limit"?: number,"p_offset"?: number,"p_post_id"?: string,"p_query"?: string,"p_saved_only"?: boolean }; Returns: {
-              "author_avatar": string,"author_company_name": string,"author_company_slug": string,"author_name": string,"author_profile_slug": string,"author_role": Database["public"]['Enums']["user_role"],"created_at": string,"excerpt": string,"id": string,"language": Database["public"]['Enums']["app_locale"],"liked": boolean,"likes_count": number,"saved": boolean,"slug": string,"title": string,"total_count": number
+{ Args: { "p_author_id"?: string,"p_company_id"?: string,"p_limit"?: number,"p_offset"?: number,"p_post_id"?: string,"p_query"?: string,"p_saved_only"?: boolean,"p_tag"?: string }; Returns: {
+              "author_avatar": string,"author_company_name": string,"author_company_slug": string,"author_name": string,"author_profile_slug": string,"author_role": Database["public"]['Enums']["user_role"],"created_at": string,"excerpt": string,"id": string,"language": Database["public"]['Enums']["app_locale"],"liked": boolean,"likes_count": number,"saved": boolean,"slug": string,"tags": (string)[],"title": string,"total_count": number
             }[]
                            },
 "prefix_tsquery":
@@ -1072,7 +1078,10 @@ isOneToOne: false
 { Args: { "p_action": string,"p_user_id": string }; Returns: undefined
                            },
 "update_post":
-{ Args: { "p_body": string,"p_language": Database["public"]['Enums']["app_locale"],"p_post_id": string,"p_title": string }; Returns: undefined
+{ Args: { "p_body": string,"p_language": Database["public"]['Enums']["app_locale"],"p_post_id": string,"p_tags"?: (string)[],"p_title": string }; Returns: undefined
+                           },
+"valid_post_tags":
+{ Args: { "p_tags": (string)[] }; Returns: boolean
                            },
 "visible_candidate_id":
 { Args: { "p_slug": string }; Returns: string
