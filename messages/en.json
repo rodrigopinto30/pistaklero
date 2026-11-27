@@ -19,7 +19,8 @@
     "companies": "Companies",
     "myCompany": "My company",
     "backToTop": "Back to top",
-    "newJob": "Post a job"
+    "newJob": "Post a job",
+    "talent": "Talent"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -628,17 +629,20 @@
     "label": {
       "jobs": "Search jobs",
       "companies": "Search companies",
-      "posts": "Search posts"
+      "posts": "Search posts",
+      "talent": "Search talent"
     },
     "query": {
       "jobs": "Role, company or technology",
       "companies": "Company name or industry",
-      "posts": "Post topic"
+      "posts": "Post topic",
+      "talent": "Name, role or skill"
     },
     "placeholder": {
       "jobs": "Search by role, company or technology",
       "companies": "Search companies by name or industry",
-      "posts": "Search tips: interviews, CV, portfolio…"
+      "posts": "Search tips: interviews, CV, portfolio…",
+      "talent": "Search by name, role or skill"
     },
     "filters": "Filters",
     "activeFilters": "{count, plural, one {active filter} other {active filters}}",
@@ -1341,7 +1345,8 @@
     "tabs": {
       "jobs": "Jobs",
       "companies": "Companies",
-      "posts": "Posts"
+      "posts": "Posts",
+      "talent": "Talent"
     },
     "accountMenu": "Your account menu",
     "signOut": "Sign out",
@@ -1494,5 +1499,20 @@
     "gifLimit": "up to {max} GIFs per text",
     "close": "Close",
     "markdownHint": "**bold**, - lists"
+  },
+  "Talent": {
+    "title": "Talent",
+    "subtitle": "People looking for a job who let companies see their profile. Open one to see everything and get in touch.",
+    "skill": "Skill",
+    "country": "Country",
+    "availability": "Availability",
+    "any": "Any",
+    "apply": "Filter",
+    "count": "{count, plural, one {# profile} other {# profiles}}",
+    "countFor": "{count, plural, one {# profile} other {# profiles}} for “{query}”",
+    "skills": "Skills",
+    "empty": "We couldn't find profiles with those filters.",
+    "clear": "See all",
+    "more": "See more"
   }
 }

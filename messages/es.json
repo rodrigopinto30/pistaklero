@@ -19,7 +19,8 @@
     "companies": "Empresas",
     "myCompany": "Mi empresa",
     "backToTop": "Volver arriba",
-    "newJob": "Publicar empleo"
+    "newJob": "Publicar empleo",
+    "talent": "Talento"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -628,17 +629,20 @@
     "label": {
       "jobs": "Buscar empleos",
       "companies": "Buscar empresas",
-      "posts": "Buscar publicaciones"
+      "posts": "Buscar publicaciones",
+      "talent": "Buscar talento"
     },
     "query": {
       "jobs": "Puesto, empresa o tecnología",
       "companies": "Nombre o rubro de la empresa",
-      "posts": "Tema de la publicación"
+      "posts": "Tema de la publicación",
+      "talent": "Nombre, puesto o habilidad"
     },
     "placeholder": {
       "jobs": "Buscá por puesto, empresa o tecnología",
       "companies": "Buscá empresas por nombre o rubro",
-      "posts": "Buscá consejos: entrevistas, CV, portfolio…"
+      "posts": "Buscá consejos: entrevistas, CV, portfolio…",
+      "talent": "Buscá por nombre, puesto o habilidad"
     },
     "filters": "Filtros",
     "activeFilters": "{count, plural, one {filtro activo} other {filtros activos}}",
@@ -1341,7 +1345,8 @@
     "tabs": {
       "jobs": "Empleos",
       "companies": "Empresas",
-      "posts": "Publicaciones"
+      "posts": "Publicaciones",
+      "talent": "Talento"
     },
     "accountMenu": "Menú de tu cuenta",
     "signOut": "Salir",
@@ -1494,5 +1499,20 @@
     "gifLimit": "hasta {max} GIFs por texto",
     "close": "Cerrar",
     "markdownHint": "**negrita**, - listas"
+  },
+  "Talent": {
+    "title": "Talento",
+    "subtitle": "Personas que buscan trabajo y aceptan que las empresas vean su perfil. Abrí uno para ver todo y contactarla.",
+    "skill": "Habilidad",
+    "country": "País",
+    "availability": "Disponibilidad",
+    "any": "Cualquiera",
+    "apply": "Filtrar",
+    "count": "{count, plural, one {# perfil} other {# perfiles}}",
+    "countFor": "{count, plural, one {# perfil} other {# perfiles}} para «{query}»",
+    "skills": "Habilidades",
+    "empty": "No encontramos perfiles con esos filtros.",
+    "clear": "Ver todos",
+    "more": "Ver más"
   }
 }
