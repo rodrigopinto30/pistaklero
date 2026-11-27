@@ -12,19 +12,26 @@ async function pdfText(path: string) {
   return text;
 }
 
-test("la candidata descarga su CV en PDF con texto real", async ({ page }) => {
+test("la candidata ve y descarga su CV en formato Harvard, con texto real", async ({ page }) => {
   await signInAsReadyCandidate(page, "Ñandú Łópez");
   await page.goto("/es/perfil");
 
+  // Vista previa: se abre en el navegador (pestaña nueva), sin descargar.
+  const preview = page.getByRole("link", { name: /^Ver CV/ });
+  await expect(preview).toHaveAttribute("target", "_blank");
+  const inline = await page.request.get((await preview.getAttribute("href"))!);
+  expect(inline.headers()["content-type"]).toBe("application/pdf");
+  expect(inline.headers()["content-disposition"]).toMatch(/^inline; filename="cv-harvard-.+\.pdf"$/);
+
   const downloadPromise = page.waitForEvent("download");
-  await page.getByRole("link", { name: "Descargar CV (PDF)" }).click();
+  await page.getByRole("link", { name: "Descargar CV" }).click();
   const download = await downloadPromise;
-  expect(download.suggestedFilename()).toMatch(/^cv-.+\.pdf$/);
+  expect(download.suggestedFilename()).toMatch(/^cv-harvard-.+\.pdf$/);
 
   const text = await pdfText((await download.path())!);
   expect(text).toContain("Ñandú Łópez");
-  expect(text).toContain("PROYECTOS");
-  expect(text).toContain("HABILIDADES");
+  expect(text).toContain("Proyectos");
+  expect(text).toContain("Habilidades e idiomas");
 });
 
 test("el CV es solo de la propia candidata", async ({ page, request }) => {

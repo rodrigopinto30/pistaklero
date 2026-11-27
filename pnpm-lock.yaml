@@ -34,6 +34,9 @@ importers:
       cn:
         specifier: ^0.5.2
         version: 0.5.2
+      dejavu-fonts-ttf:
+        specifier: 2.37.3
+        version: 2.37.3
       geist:
         specifier: ^1.9.2
         version: 1.9.2(next@16.4.6(patch_hash=ce5b8a270fa8b3d061c069a5d6e318a99ef89460484748ba6c4c7a4acd8f2801)(@babel/core@7.29.13)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@24.19.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))
@@ -1859,6 +1862,9 @@ packages:
   define-properties@1.2.1:
     resolution: {integrity: sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==}
     engines: {node: '>= 0.4'}
+
+  dejavu-fonts-ttf@2.37.3:
+    resolution: {integrity: sha512-f1hd7jJbeQa1VWcw+K2KrTXS50zTMaHpVC4XIKJpNcDeYR5ajMtj/iLlQDYNvLOKamUB3ARVVCf79lNwNVztSQ==}
 
   dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
@@ -5375,6 +5381,8 @@ snapshots:
       define-data-property: 1.1.4
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
+
+  dejavu-fonts-ttf@2.37.3: {}
 
   dequal@2.0.3: {}
 
