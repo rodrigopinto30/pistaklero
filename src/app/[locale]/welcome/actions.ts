@@ -13,7 +13,7 @@ export type OnboardingState =
   | {
       status: "error";
       fieldErrors: Partial<Record<OnboardingField, true>>;
-      formError?: "company_exists" | "unknown";
+      formError?: "company_exists" | "company_unclaimed" | "unknown";
       values: FormValues;
     };
 
@@ -59,8 +59,8 @@ export async function completeOnboarding(
 
   if (error) {
     if (error.message === "already_onboarded") return redirect({ href: "/", locale });
-    if (error.message === "company_exists") {
-      return { status: "error", fieldErrors: { websiteUrl: true }, formError: "company_exists", values };
+    if (error.message === "company_exists" || error.message === "company_unclaimed") {
+      return { status: "error", fieldErrors: { websiteUrl: true }, formError: error.message, values };
     }
     console.error("La bienvenida falló", { code: error.code, message: error.message });
     return { status: "error", fieldErrors: {}, formError: "unknown", values };
