@@ -41,6 +41,7 @@ Con todo arriba:
 ./run.sh pnpm db:types                                  # regenerar los tipos de TypeScript
 ./run.sh pnpm admin:grant persona@ejemplo.com           # dar rol de admin a una cuenta nueva
 ./run.sh pnpm cron                                      # correr la tarea diaria (anti-ghosting + emails)
+./run.sh pnpm cron import                               # sincronizar los tableros de Greenhouse, Lever, Ashby y Workable
 ```
 
 
@@ -74,6 +75,12 @@ Los emails de la app pasan por una cola en la base (`email_outbox`): se encolan,
 - En desarrollo llegan a Mailpit: http://127.0.0.1:54324
 - En producción se envían con Resend (`RESEND_API_KEY`, `EMAIL_FROM`).
 - `POST /api/internal/outbox` con `Authorization: Bearer $OUTBOX_SECRET` vacía la cola (lo llama el cron).
+
+## Tableros sincronizados
+
+Desde `/admin/importar` se cargan tableros públicos de Greenhouse, Lever, Ashby o Workable (solo el identificador, sin credenciales).
+`GET /api/internal/import-sync` (Vercel Cron, una vez por día) crea o actualiza sus ofertas como importadas (resumen + enlace al original),
+cierra las que desaparecieron y nunca reactiva lo que ocultó la moderación. Las ofertas presenciales sin país reconocible se saltean.
 
 ## Tarea diaria (anti-ghosting)
 
