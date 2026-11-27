@@ -23,7 +23,11 @@ test("ajustes: idioma de los emails y descarga de los datos", async ({ page }) =
   // Sin cambios no hay nada que guardar: el botón queda inactivo (y dice por qué).
   const save = page.getByRole("region", { name: "Preferencias" }).getByRole("button", { name: "Guardar" });
   await expect(save).toHaveAttribute("aria-disabled", "true");
-  await expect(save).toHaveAttribute("title", "No hay cambios para guardar");
+  // Al pasar el mouse (o llegar con el teclado) explica por qué; Esc lo cierra (WCAG 1.4.13).
+  await save.hover();
+  await expect(page.getByText("No hay cambios para guardar")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByText("No hay cambios para guardar")).toBeHidden();
   await page.getByLabel("Idioma de los emails").selectOption("en");
   await expect(save).not.toHaveAttribute("aria-disabled");
   // Volver al valor original también cuenta como "sin cambios".
