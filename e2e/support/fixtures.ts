@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { test as base, type Browser, expect, type Locator, type Page } from "@playwright/test";
+import { test as base, type Browser, type BrowserContext, expect, type Locator, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0.1:54321";
@@ -409,7 +409,10 @@ function gotoWaitsForHydration(page: Page) {
   return page;
 }
 
-export const test = base.extend<{ consoleErrors: string[] }, object>({
+/** Contextos (pestañas con su propia sesión) que abrió el test en curso. */
+const extraContexts: BrowserContext[] = [];
+
+export const test = base.extend<{ consoleErrors: string[]; closeExtraContexts: void }, object>({
   // Cada page.goto espera la hidratación (salvo en las pruebas sin JavaScript).
   page: async ({ page, javaScriptEnabled }, provide) => {
     await provide(javaScriptEnabled === false ? page : gotoWaitsForHydration(page));
@@ -421,6 +424,7 @@ export const test = base.extend<{ consoleErrors: string[] }, object>({
       const newContext = browser.newContext.bind(browser);
       browser.newContext = async (...args: Parameters<Browser["newContext"]>) => {
         const context = await newContext(...args);
+        extraContexts.push(context);
         if (args[0]?.javaScriptEnabled === false) return context;
         const newPage = context.newPage.bind(context);
         context.newPage = async () => gotoWaitsForHydration(await newPage());
@@ -429,6 +433,15 @@ export const test = base.extend<{ consoleErrors: string[] }, object>({
       await provide(browser);
     },
     { scope: "worker" },
+  ],
+  // Las pestañas que abrió el test se cierran al terminar: si no, se acumulan en el navegador del
+  // worker y la memoria crece hasta que alguna se cae.
+  closeExtraContexts: [
+    async ({}, use) => {
+      await use();
+      await Promise.all(extraContexts.splice(0).map((context) => context.close().catch(() => {})));
+    },
+    { auto: true },
   ],
   consoleErrors: [
     async ({ page }, use) => {

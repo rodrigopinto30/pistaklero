@@ -1,6 +1,5 @@
 -- Pestaña "Talento": las empresas exploran candidatas y candidatos con filtros.
--- Respeta la privacidad que eligió cada persona (no aparecen los perfiles ocultos) y los bloqueos
--- (can_view_candidate). Solo para cuentas de empresa (y el admin). Ver la tarjeta no cuenta como
+-- Respeta la privacidad que eligió cada persona (no aparecen los perfiles ocultos) y los bloqueos. Solo para cuentas de empresa (y el admin). Ver la tarjeta no cuenta como
 -- visita al perfil: eso pasa recién al abrirlo (y sigue el límite diario de vistas).
 
 create function public.talent_cards(
@@ -39,8 +38,14 @@ begin
   join public.people pe on pe.user_id = c.user_id
   join public.profiles pr on pr.id = c.user_id and pr.suspended_at is null
   cross join q
+  -- La tarjeta (nombre, titular, ciudad, habilidades) se ve si el perfil es público o "solo
+  -- empresas"; el perfil completo, al abrirlo, sigue las reglas de can_view_candidate (y suma al
+  -- límite diario de vistas). Los bloqueos valen también acá.
   where c.visibility <> 'hidden'
-    and public.can_view_candidate(c.user_id)
+    and (c.visibility = 'public' or public.my_company_id() is not null or public.is_admin())
+    and not exists (
+      select 1 from public.candidate_blocked_companies b
+      where b.candidate_id = c.user_id and b.company_id = public.my_company_id())
     and (p_country is null or c.country = p_country)
     and (p_availability is null or c.availability = p_availability)
     and (p_skill is null or exists (

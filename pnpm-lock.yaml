@@ -34,6 +34,15 @@ importers:
       cn:
         specifier: ^0.5.2
         version: 0.5.2
+      dejavu-fonts-ttf:
+        specifier: 2.37.3
+        version: 2.37.3
+      emojibase-data:
+        specifier: 16.0.3
+        version: 16.0.3(emojibase@18.0.0)
+      frimousse:
+        specifier: 0.4.0
+        version: 0.4.0(react@19.3.0)(typescript@5.9.3)
       geist:
         specifier: ^1.9.2
         version: 1.9.2(next@16.4.6(patch_hash=ce5b8a270fa8b3d061c069a5d6e318a99ef89460484748ba6c4c7a4acd8f2801)(@babel/core@7.29.13)(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@24.19.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))
@@ -1860,6 +1869,9 @@ packages:
     resolution: {integrity: sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==}
     engines: {node: '>= 0.4'}
 
+  dejavu-fonts-ttf@2.37.3:
+    resolution: {integrity: sha512-f1hd7jJbeQa1VWcw+K2KrTXS50zTMaHpVC4XIKJpNcDeYR5ajMtj/iLlQDYNvLOKamUB3ARVVCf79lNwNVztSQ==}
+
   dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
     engines: {node: '>=6'}
@@ -1903,6 +1915,15 @@ packages:
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
+
+  emojibase-data@16.0.3:
+    resolution: {integrity: sha512-MopInVCDZeXvqBMPJxnvYUyKw9ImJZqIDr2sABo6acVSPev5IDYX+mf+0tsu96JJyc3INNvgIf06Eso7bdTX2Q==}
+    peerDependencies:
+      emojibase: '*'
+
+  emojibase@18.0.0:
+    resolution: {integrity: sha512-5PG+EEt5zQ9qvqdHZw61+T9iz96g+r621QS/w8jEzPg+3mjzAdjl8LPLc+e9ABv/yboNfMwEair7aK9qKnwAbQ==}
+    engines: {node: '>=20.0.0'}
 
   enhanced-resolve@5.27.0:
     resolution: {integrity: sha512-Do6BB2xzlcc/odFg+XEYyneAx4T/WfywO71yw9ePS2tVfRsf7JVR4mUeELadIeHzixkzbG5DpluiEFPi2WGfYQ==}
@@ -2175,6 +2196,15 @@ packages:
   for-each@0.3.5:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
     engines: {node: '>= 0.4'}
+
+  frimousse@0.4.0:
+    resolution: {integrity: sha512-wA/1Xt9UTk51wYNpy+EvHKPUA4jdm4NuEFzSNNZxqT0Nxrj4RFwYByjRMuaq4qSLOco/ikDCpLKesB8W1w2q+Q==}
+    peerDependencies:
+      react: ^18 || ^19
+      typescript: '>=5.1.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   fs-extra@11.4.1:
     resolution: {integrity: sha512-KYAb4c9BJQI6QqGKthV68OHe0badztdXJWKo0WtBA9IuCFPTKvE5ZdUBglP833aMjhaSPNO4A5j/EkzZtGlKjA==}
@@ -5376,6 +5406,8 @@ snapshots:
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
 
+  dejavu-fonts-ttf@2.37.3: {}
+
   dequal@2.0.3: {}
 
   detect-libc@2.1.2: {}
@@ -5414,6 +5446,12 @@ snapshots:
   emoji-regex@10.6.0: {}
 
   emoji-regex@9.2.2: {}
+
+  emojibase-data@16.0.3(emojibase@18.0.0):
+    dependencies:
+      emojibase: 18.0.0
+
+  emojibase@18.0.0: {}
 
   enhanced-resolve@5.27.0:
     dependencies:
@@ -5854,6 +5892,12 @@ snapshots:
   for-each@0.3.5:
     dependencies:
       is-callable: 1.2.7
+
+  frimousse@0.4.0(react@19.3.0)(typescript@5.9.3):
+    dependencies:
+      react: 19.3.0
+    optionalDependencies:
+      typescript: 5.9.3
 
   fs-extra@11.4.1:
     dependencies:
