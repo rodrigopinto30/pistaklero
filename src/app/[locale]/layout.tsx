@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { locale as rootLocale } from "next/root-params";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
 import { fontVariables } from "../fonts";
@@ -60,6 +61,7 @@ export default async function LocaleLayout({
           <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col outline-none">
             {children}
           </main>
+          <SiteFooter />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -10,7 +10,8 @@
     "dashboard": "Dashboard",
     "myApplications": "My applications",
     "admin": "Admin",
-    "suspended": "Your account is suspended. If you think this is a mistake, contact us."
+    "suspended": "Your account is suspended. If you think this is a mistake, contact us.",
+    "settings": "Settings"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -709,5 +710,133 @@
     "salaryHint": "All or nothing: if you fill in the minimum, also fill in maximum, currency, period and gross/net.",
     "publish": "Publish imported job",
     "published": "Done: the imported job is published."
+  },
+  "Settings": {
+    "metaTitle": "Settings",
+    "title": "Settings",
+    "preferences": {
+      "title": "Preferences",
+      "emailLocale": "Email language",
+      "emailLocaleHint": "Notifications about your applications or your team arrive in this language.",
+      "notifications": "Optional emails",
+      "notificationsHint": "Digests and reminders. Important notices (for example, a change in your application) always arrive."
+    },
+    "data": {
+      "title": "Your data",
+      "hint": "Download everything we store about your account as a JSON file.",
+      "download": "Download my data"
+    },
+    "delete": {
+      "title": "Delete my account",
+      "hint": "Your profile, your applications and all your data are deleted. This can't be undone.",
+      "confirm": "I understand everything is deleted and this can't be undone.",
+      "button": "Delete my account forever",
+      "reauthLink": "Sign in again",
+      "errors": {
+        "reauth": "For security, sign in again before deleting your account (valid for 10 minutes).",
+        "confirm": "Check the box to confirm.",
+        "unknown": "We couldn't delete the account. Please try again."
+      }
+    }
+  },
+  "Footer": {
+    "tagline": "Pistaklero · Jobs with visible salaries and companies that reply.",
+    "label": "Information",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "accessibility": "Accessibility"
+  },
+  "Legal": {
+    "updated": "Last updated: {date}",
+    "terms": {
+      "title": "Terms and conditions",
+      "intro": "The rules for using Pistaklero. Written in plain language on purpose.",
+      "sections": {
+        "service": {
+          "title": "What Pistaklero is",
+          "body": "A job board that connects people looking for work with companies that post jobs with visible salaries. Pistaklero is not a party to the employment relationship between them."
+        },
+        "accounts": {
+          "title": "Accounts and roles",
+          "body": "Each account is either a candidate or a company account, and the role can't be changed. You are responsible for what happens with your account: don't share it."
+        },
+        "companies": {
+          "title": "Rules for companies",
+          "body": "Jobs must be real, state a true salary and never ask applicants for money or bank details. Companies commit to replying to applications: Pistaklero publicly shows how long they take."
+        },
+        "candidates": {
+          "title": "Rules for applicants",
+          "body": "The information in your profile must be true. You can apply up to 20 times per day and withdraw an application whenever you want."
+        },
+        "moderation": {
+          "title": "Moderation",
+          "body": "Any account can report a job. With 3 reports, the job is hidden until we review it. We may suspend accounts or companies that break these rules."
+        },
+        "liability": {
+          "title": "Liability",
+          "body": "We do our best to keep information reliable, but we don't guarantee the outcome of any hiring process. Be wary of any job that asks you for money, and report it."
+        },
+        "changes": {
+          "title": "Changes and contact",
+          "body": "If we change these terms, we'll announce it on the site. Questions: {email}."
+        }
+      }
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "What data we store, why, and what you can do with it.",
+      "sections": {
+        "data": {
+          "title": "What data we store",
+          "body": "Your email and, depending on your role, your profile or company data, your applications and their history. We don't ask for ID numbers, date of birth, gender, marital status or photos."
+        },
+        "purpose": {
+          "title": "What we use it for",
+          "body": "So you can apply or post jobs, and to email you about changes to your applications or your team. We don't sell data or use it for advertising."
+        },
+        "visibility": {
+          "title": "Who sees what",
+          "body": "By default, your profile is visible only to registered companies; you can make it public or hide it. Companies you block never see it. Your salary expectation is private unless you choose to share it with the companies you apply to."
+        },
+        "cookies": {
+          "title": "Cookies",
+          "body": "We only use essential cookies: your session cookie (protected, site code can't read it) and your language. No tracking or third-party cookies."
+        },
+        "providers": {
+          "title": "Providers",
+          "body": "Data is hosted on Supabase and the site on Vercel. Emails are sent with Resend. To import jobs from other sites we use Claude (Anthropic) only with the text of those jobs, never with candidates' data."
+        },
+        "rights": {
+          "title": "Your rights",
+          "body": "From Settings you can download all your data and delete your account. You can also correct it from your profile. Your rights are protected by Argentina's Law 25,326 and, if you are in the European Union, by the GDPR. Questions: {email}."
+        },
+        "retention": {
+          "title": "How long we keep it",
+          "body": "While your account exists. If you delete it, your data is removed immediately, except a minimal security log without personal data."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility statement",
+      "intro": "We want anyone to be able to search for jobs and apply on Pistaklero.",
+      "sections": {
+        "goal": {
+          "title": "Our goal",
+          "body": "To meet the W3C Web Content Accessibility Guidelines (WCAG) 2.2, level AA: usable with only a keyboard, with screen readers and with zoom, with verified color contrast."
+        },
+        "verification": {
+          "title": "How we verify it",
+          "body": "Every change goes through automated accessibility tests (axe) in Spanish and English, and we review the main flows with a keyboard and screen readers."
+        },
+        "limitations": {
+          "title": "Known limitations",
+          "body": "Some \"not found\" pages need JavaScript to display. We're working on fixing it."
+        },
+        "contact": {
+          "title": "Tell us if you find a barrier",
+          "body": "If something doesn't work for you, email us at {email} and we'll fix it."
+        }
+      }
+    }
   }
 }

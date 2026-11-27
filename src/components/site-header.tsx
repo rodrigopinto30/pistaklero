@@ -18,7 +18,7 @@ export async function SiteHeader() {
           {t("suspended")}
         </p>
       )}
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
+      <div className="mx-auto flex min-h-16 w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-2">
         <Link
           href="/"
           aria-label={t("homeLink")}
@@ -26,7 +26,7 @@ export async function SiteHeader() {
         >
           Pista<span className="text-primary">klero</span>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-x-1 gap-y-2">
           {user && !profile && (
             <Link href="/welcome" className={buttonVariants()}>
               {tAuth("completeSignUp")}
@@ -50,6 +50,11 @@ export async function SiteHeader() {
           {profile?.role === "recruiter" && (
             <Link href="/dashboard" className={buttonVariants({ variant: "ghost" })}>
               {t("dashboard")}
+            </Link>
+          )}
+          {profile && (
+            <Link href="/settings" className={buttonVariants({ variant: "ghost" })}>
+              {t("settings")}
             </Link>
           )}
           {user ? (

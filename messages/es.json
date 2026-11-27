@@ -10,7 +10,8 @@
     "dashboard": "Panel",
     "myApplications": "Mis postulaciones",
     "admin": "Admin",
-    "suspended": "Tu cuenta está suspendida. Si creés que es un error, escribinos."
+    "suspended": "Tu cuenta está suspendida. Si creés que es un error, escribinos.",
+    "settings": "Ajustes"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -709,5 +710,133 @@
     "salaryHint": "Todo o nada: si cargás el mínimo, completá también máximo, moneda, período y bruto/neto.",
     "publish": "Publicar oferta importada",
     "published": "Listo: la oferta importada ya está publicada."
+  },
+  "Settings": {
+    "metaTitle": "Ajustes",
+    "title": "Ajustes",
+    "preferences": {
+      "title": "Preferencias",
+      "emailLocale": "Idioma de los emails",
+      "emailLocaleHint": "Los avisos de tus postulaciones o de tu equipo te llegan en este idioma.",
+      "notifications": "Emails opcionales",
+      "notificationsHint": "Resúmenes y recordatorios. Los avisos importantes (por ejemplo, un cambio en tu postulación) siempre llegan."
+    },
+    "data": {
+      "title": "Tus datos",
+      "hint": "Descargá todo lo que guardamos de tu cuenta en un archivo JSON.",
+      "download": "Descargar mis datos"
+    },
+    "delete": {
+      "title": "Eliminar mi cuenta",
+      "hint": "Se borran tu perfil, tus postulaciones y todos tus datos. No se puede deshacer.",
+      "confirm": "Entiendo que se borra todo y que no se puede deshacer.",
+      "button": "Eliminar mi cuenta para siempre",
+      "reauthLink": "Volver a ingresar",
+      "errors": {
+        "reauth": "Por seguridad, ingresá de nuevo antes de borrar la cuenta (vale por 10 minutos).",
+        "confirm": "Marcá la casilla para confirmar.",
+        "unknown": "No pudimos borrar la cuenta. Probá de nuevo."
+      }
+    }
+  },
+  "Footer": {
+    "tagline": "Pistaklero · Trabajos con sueldo visible y empresas que responden.",
+    "label": "Información",
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "accessibility": "Accesibilidad"
+  },
+  "Legal": {
+    "updated": "Última actualización: {date}",
+    "terms": {
+      "title": "Términos y condiciones",
+      "intro": "Las reglas para usar Pistaklero. Están escritas en simple a propósito.",
+      "sections": {
+        "service": {
+          "title": "Qué es Pistaklero",
+          "body": "Una bolsa de empleo que conecta a personas que buscan trabajo con empresas que publican ofertas con sueldo visible. Pistaklero no es parte de la relación laboral entre ellas."
+        },
+        "accounts": {
+          "title": "Cuentas y roles",
+          "body": "Cada cuenta es de candidata/o o de empresa, y el rol no se puede cambiar. Sos responsable de lo que se haga con tu cuenta: no la compartas."
+        },
+        "companies": {
+          "title": "Reglas para las empresas",
+          "body": "Las ofertas tienen que ser reales, informar un sueldo verdadero y no pedir dinero ni datos bancarios a quienes se postulan. Las empresas se comprometen a responder las postulaciones: Pistaklero muestra públicamente cuánto tardan."
+        },
+        "candidates": {
+          "title": "Reglas para quienes se postulan",
+          "body": "La información de tu perfil tiene que ser verdadera. Podés postularte hasta 20 veces por día y retirar una postulación cuando quieras."
+        },
+        "moderation": {
+          "title": "Moderación",
+          "body": "Cualquier cuenta puede reportar una oferta. Con 3 reportes, la oferta se oculta hasta que la revisemos. Podemos suspender cuentas o empresas que incumplan estas reglas."
+        },
+        "liability": {
+          "title": "Responsabilidad",
+          "body": "Hacemos lo posible para que la información sea confiable, pero no garantizamos el resultado de un proceso de selección. Desconfiá de cualquier oferta que te pida dinero y reportala."
+        },
+        "changes": {
+          "title": "Cambios y contacto",
+          "body": "Si cambiamos estos términos, lo avisamos en el sitio. Consultas: {email}."
+        }
+      }
+    },
+    "privacy": {
+      "title": "Política de privacidad",
+      "intro": "Qué datos guardamos, para qué y qué podés hacer con ellos.",
+      "sections": {
+        "data": {
+          "title": "Qué datos guardamos",
+          "body": "Tu email y, según tu rol, los datos de tu perfil o de tu empresa, tus postulaciones y su historial. No pedimos DNI, fecha de nacimiento, género, estado civil ni foto."
+        },
+        "purpose": {
+          "title": "Para qué los usamos",
+          "body": "Para que puedas postularte o publicar ofertas, y para avisarte por email los cambios en tus postulaciones o en tu equipo. No vendemos datos ni los usamos para publicidad."
+        },
+        "visibility": {
+          "title": "Quién ve qué",
+          "body": "Por defecto, tu perfil lo ven solo las empresas registradas; podés hacerlo público u ocultarlo. Las empresas que bloquees nunca lo ven. Tu expectativa salarial es privada salvo que elijas compartirla con las empresas donde te postulás."
+        },
+        "cookies": {
+          "title": "Cookies",
+          "body": "Solo usamos cookies esenciales: la de tu sesión (protegida, no la puede leer código del sitio) y la de tu idioma. No usamos cookies de rastreo ni de terceros."
+        },
+        "providers": {
+          "title": "Proveedores",
+          "body": "Los datos se alojan en Supabase y el sitio en Vercel. Los emails se envían con Resend. Para cargar ofertas de otros sitios usamos Claude (Anthropic) solo con el texto de esas ofertas, nunca con datos de candidatas o candidatos."
+        },
+        "rights": {
+          "title": "Tus derechos",
+          "body": "Desde Ajustes podés descargar todos tus datos y borrar tu cuenta. También podés corregirlos desde tu perfil. Tus derechos están protegidos por la Ley 25.326 de Argentina (Agencia de Acceso a la Información Pública) y, si estás en la Unión Europea, por el GDPR. Consultas: {email}."
+        },
+        "retention": {
+          "title": "Cuánto tiempo los guardamos",
+          "body": "Mientras tu cuenta exista. Si la borrás, se eliminan tus datos de inmediato, salvo un registro mínimo de seguridad sin datos personales."
+        }
+      }
+    },
+    "accessibility": {
+      "title": "Declaración de accesibilidad",
+      "intro": "Queremos que cualquier persona pueda buscar trabajo y postularse en Pistaklero.",
+      "sections": {
+        "goal": {
+          "title": "Nuestro objetivo",
+          "body": "Cumplir las Pautas de Accesibilidad para el Contenido Web (WCAG) 2.2 del W3C, nivel AA: se puede usar solo con teclado, con lectores de pantalla y con zoom, con contrastes de color verificados."
+        },
+        "verification": {
+          "title": "Cómo lo verificamos",
+          "body": "Cada cambio pasa por pruebas automáticas de accesibilidad (axe) en español e inglés, y revisamos los flujos principales con teclado y lectores de pantalla."
+        },
+        "limitations": {
+          "title": "Limitaciones conocidas",
+          "body": "Algunas páginas de \"no encontrado\" necesitan JavaScript para mostrarse. Estamos trabajando para resolverlo."
+        },
+        "contact": {
+          "title": "Contanos si encontrás una barrera",
+          "body": "Si algo no te funciona, escribinos a {email} y lo arreglamos."
+        }
+      }
+    }
   }
 }
