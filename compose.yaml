@@ -26,6 +26,13 @@ services:
     # Con "--hostname 127.0.0.1" Next arma las reescrituras con "localhost", las toma como externas
     # y las rutas traducidas (/es/ingresar → /es/sign-in) entran en bucle.
     command: ["pnpm", "dev", "--hostname", "localhost"]
+    # Techo de memoria: el servidor de desarrollo acumula memoria con cada compilación (Turbopack usa
+    # mucha fuera del heap de Node). Si lo pasa, Docker lo corta y se levanta solo: mejor eso que
+    # trabar toda la máquina. Con 3 GB no alcanzaba para la suite de tests.
+    mem_limit: 5g
+    restart: unless-stopped
+    environment:
+      NODE_OPTIONS: --max-old-space-size=3072
 
   # Contenedor de herramientas: pnpm, CLI de Supabase, tests. Se usa con ./run.sh.
   # Es el único con acceso al socket de Docker, porque la CLI de Supabase levanta sus propios contenedores.
@@ -38,12 +45,18 @@ services:
       - pnpm-store:/pnpm-store
       - dev-home:/home/dev
       - /var/run/docker.sock:/var/run/docker.sock
+    # El build de producción (en ./check.sh) es lo que más memoria pide.
+    mem_limit: 4g
+    environment:
+      NODE_OPTIONS: --max-old-space-size=3072
 
   # Tests de punta a punta (Playwright + axe) contra la app levantada. Se usa con ./e2e.sh.
   # La versión de la imagen tiene que coincidir con @playwright/test en package.json.
   e2e:
     image: mcr.microsoft.com/playwright:v1.65.1-noble
     profiles: ["e2e"]
+    # Dos navegadores a la vez entran holgados (con 3 GB alguna pestaña se caía).
+    mem_limit: 4g
     init: true
     ipc: host
     user: "${HOST_UID:?Usá ./start.sh}:${HOST_GID:?Usá ./start.sh}"
@@ -57,6 +70,7 @@ services:
     environment:
       HOME: /tmp
       CI: ${CI:-}
+      E2E_WORKERS: ${E2E_WORKERS:-}
 
 volumes:
   pnpm-store:

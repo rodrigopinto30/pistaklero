@@ -19,7 +19,7 @@ test("publicar un consejo, darle like, guardarlo, denunciarlo, editarlo y borrar
   await page.getByLabel(/^Texto/).fill("Practiqué en voz alta y llevé **dos proyectos** para mostrar.\n\n- Repasé lo básico\n- Pregunté por el equipo");
   // Etiquetas como en dev.to: con o sin #, con Enter o coma; quedan en minúsculas y sin repetir.
   const tagTag = `t${Date.now().toString(36)}`;
-  const tags = page.getByLabel(/^Etiquetas/);
+  const tags = page.getByRole("textbox", { name: /^Etiquetas/ });
   await tags.fill("#Entrevistas");
   await tags.press("Enter");
   await tags.fill(`${tagTag},entrevistas,`);

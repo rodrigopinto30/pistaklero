@@ -42,7 +42,8 @@ export function buildContentSecurityPolicy({
     ["img-src", ["'self'", "data:", "blob:", ...imgSrc]],
     ["font-src", ["'self'"]],
     // En desarrollo, la recarga en caliente usa WebSocket.
-    ["connect-src", ["'self'", ...(isDev ? ["ws:"] : []), ...connectSrc]],
+    // blob: para la vista previa de una imagen elegida (React la precarga antes de mostrarla).
+    ["connect-src", ["'self'", "blob:", ...(isDev ? ["ws:"] : []), ...connectSrc]],
     ["object-src", ["'none'"]],
     ["base-uri", ["'none'"]],
     ["form-action", ["'self'"]],
