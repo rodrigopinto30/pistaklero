@@ -51,7 +51,8 @@ function useFlashToasts() {
       let ticks = 0;
       timer = setInterval(() => {
         check();
-        if (++ticks > 40) clearInterval(timer);
+        // Hasta 15 segundos: una acción lenta (o un servidor cargado) igual muestra su aviso.
+        if (++ticks > 100) clearInterval(timer);
       }, 150);
     };
     const onFocus = () => check();
