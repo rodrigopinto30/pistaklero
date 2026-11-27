@@ -132,6 +132,18 @@ export async function seedUnclaimedCompany(name: string, domain: string, jobTitl
   return company;
 }
 
+/** Simula que un reclutador ya vio `count` perfiles hoy (para probar el límite diario). */
+export async function seedProfileViews(viewerId: string, count: number) {
+  const run = Date.now().toString(36);
+  for (let start = 0; start < count; start += 25) {
+    const ids = await Promise.all(
+      Array.from({ length: Math.min(25, count - start) }, (_, i) => seedCandidate(`visto.${run}.${start + i}@example.com`, "Perfil visto"))
+    );
+    const { error } = await admin.from("candidate_profile_views").insert(ids.map((candidate_id) => ({ viewer_id: viewerId, candidate_id })));
+    if (error) throw error;
+  }
+}
+
 export async function emailOf(userId: string) {
   const { data } = await admin.auth.admin.getUserById(userId);
   return data.user!.email!;
