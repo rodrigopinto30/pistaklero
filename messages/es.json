@@ -14,5 +14,27 @@
     "title": "No encontramos esta página",
     "description": "Puede que el enlace esté mal escrito o que la página ya no exista.",
     "backHome": "Volver al inicio"
+  },
+  "Auth": {
+    "signIn": "Ingresar",
+    "signOut": "Salir",
+    "metaTitle": "Ingresar",
+    "title": "Entrá a Pistaklero",
+    "subtitle": "Sin contraseñas: usá tu cuenta o pedí un link por email.",
+    "continueWith": "Continuar con {provider}",
+    "or": "o con tu email",
+    "emailLabel": "Email",
+    "emailHint": "Te mandamos un link para entrar. Vence en 15 minutos.",
+    "sendLink": "Enviarme el link",
+    "sending": "Enviando…",
+    "sentTitle": "Revisá tu email",
+    "sentBody": "Si {email} es correcto, en unos segundos te llega el link para entrar.",
+    "errors": {
+      "invalid_email": "Escribí un email válido, por ejemplo ana@empresa.com.",
+      "rate_limited": "Pediste muchos links seguidos. Esperá unos minutos y probá de nuevo.",
+      "callback": "No pudimos completar el ingreso. Probá de nuevo.",
+      "link_expired": "El link venció o ya se usó. Pedí uno nuevo.",
+      "unknown": "Algo salió mal. Probá de nuevo en unos minutos."
+    }
   }
 }
