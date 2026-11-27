@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { Field, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
+import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,7 +38,7 @@ export function BasicsForm({ saved, countries, languages }: { saved: BasicsValue
       <Field id="basics-bio" name="bio" label={t("bio")} hint={t("bioHint")} error={errors.bio}>
         {(p) => <Textarea {...p} maxLength={500} defaultValue={v("bio")} />}
       </Field>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <FieldGrid>
         <Field id="basics-country" name="country" label={t("country")} error={errors.country}>
           {(p) => (
             <NativeSelect {...p} autoComplete="country" defaultValue={v("country")}>
@@ -54,7 +54,7 @@ export function BasicsForm({ saved, countries, languages }: { saved: BasicsValue
         <Field id="basics-city" name="city" label={t("city")} error={errors.city}>
           {(p) => <Input {...p} autoComplete="address-level2" maxLength={80} defaultValue={v("city")} />}
         </Field>
-      </div>
+      </FieldGrid>
 
       <fieldset className="flex flex-col gap-2" aria-describedby={errors.languages ? "basics-languages-error" : undefined}>
         <legend className="mb-2 text-sm font-medium">{t("languages")}</legend>
@@ -77,7 +77,8 @@ export function BasicsForm({ saved, countries, languages }: { saved: BasicsValue
         </div>
       </fieldset>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      {/* Uno debajo del otro: así se lee la dirección completa. */}
+      <div className="flex flex-col gap-4">
         <Field id="basics-githubUrl" name="githubUrl" label={t("githubUrl")} error={errors.githubUrl}>
           {(p) => <Input {...p} type="url" inputMode="url" placeholder="github.com/…" defaultValue={v("githubUrl")} />}
         </Field>

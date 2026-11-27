@@ -104,8 +104,9 @@ export default async function ProfilePage() {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Section id="person" title={t("person.title")} description={t("person.hint")} className="lg:col-span-3">
+      {/* Dos columnas que crecen por separado: el contenido principal a la izquierda y las preferencias a la derecha. */}
+      <div className="grid items-start gap-6 lg:grid-cols-3">
+        <Section id="person" className="lg:col-span-3" title={t("person.title")} description={t("person.hint")}>
           <AvatarForm path={person.data?.avatar_path ?? null} name={person.data?.full_name ?? ""} />
           <PersonalForm
             saved={{
@@ -115,65 +116,67 @@ export default async function ProfilePage() {
             }}
           />
         </Section>
-        <Section id="basics" title={t("basics.title")} className="lg:col-span-2">
-          <BasicsForm
-            saved={{
-              headline: c.headline,
-              bio: c.bio,
-              country: c.country ?? "",
-              city: c.city ?? "",
-              languages: c.languages,
-              githubUrl: c.github_url ?? "",
-              linkedinUrl: c.linkedin_url ?? "",
-              websiteUrl: c.website_url ?? "",
-            }}
-            countries={countryOptions(locale)}
-            languages={languageOptions(locale)}
-          />
-        </Section>
-        <Section id="preferences" title={t("preferences.title")}>
-          <PreferencesForm availability={c.availability} visibility={c.visibility} />
-        </Section>
-
-        <Section id="skills" title={t("skills.title")} className="lg:col-span-2">
-          <SkillsSection
-            catalog={(catalog.data ?? []).map((s) => ({ id: s.id, name: skillName(s), category: s.category }))}
-            selected={(skills.data ?? []).map((s) => ({ skillId: s.skill_id, name: skillName(s.skills), level: s.level }))}
-          />
-        </Section>
-        <Section id="salary" title={t("salary.title")} description={t("salary.hint")}>
-          <SalaryForm
-            saved={
-              salary.data
-                ? {
-                    amount: String(salary.data.amount),
-                    currency: salary.data.currency,
-                    period: salary.data.period,
-                    basis: salary.data.basis,
-                    salaryVisibility: salary.data.visibility,
-                  }
-                : null
-            }
-          />
-        </Section>
-
-        <Section id="projects" title={t("entries.project.title")} className="lg:col-span-2">
-          <EntriesSection block="project" entries={entries.project} />
-        </Section>
-        <Section id="experience" title={t("entries.experience.title")}>
-          <EntriesSection block="experience" entries={entries.experience} />
-        </Section>
-        <Section id="education" title={t("entries.education.title")}>
-          <EntriesSection block="education" entries={entries.education} />
-        </Section>
-        <Section id="certifications" title={t("entries.certification.title")}>
-          <EntriesSection block="certification" entries={entries.certification} />
-        </Section>
-        <Section id="blocked" title={t("blocked.title")} description={t("blocked.hint")}>
-          <BlockedCompanies
-            blocked={(blocked.data ?? []).map((b) => ({ id: b.company_id, name: b.companies?.name ?? "" }))}
-          />
-        </Section>
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <Section id="basics" title={t("basics.title")}>
+            <BasicsForm
+              saved={{
+                headline: c.headline,
+                bio: c.bio,
+                country: c.country ?? "",
+                city: c.city ?? "",
+                languages: c.languages,
+                githubUrl: c.github_url ?? "",
+                linkedinUrl: c.linkedin_url ?? "",
+                websiteUrl: c.website_url ?? "",
+              }}
+              countries={countryOptions(locale)}
+              languages={languageOptions(locale)}
+            />
+          </Section>
+          <Section id="skills" title={t("skills.title")}>
+            <SkillsSection
+              catalog={(catalog.data ?? []).map((s) => ({ id: s.id, name: skillName(s), category: s.category }))}
+              selected={(skills.data ?? []).map((s) => ({ skillId: s.skill_id, name: skillName(s.skills), level: s.level }))}
+            />
+          </Section>
+          <Section id="projects" title={t("entries.project.title")}>
+            <EntriesSection block="project" entries={entries.project} />
+          </Section>
+          <Section id="experience" title={t("entries.experience.title")}>
+            <EntriesSection block="experience" entries={entries.experience} />
+          </Section>
+          <Section id="education" title={t("entries.education.title")}>
+            <EntriesSection block="education" entries={entries.education} />
+          </Section>
+          <Section id="certifications" title={t("entries.certification.title")}>
+            <EntriesSection block="certification" entries={entries.certification} />
+          </Section>
+        </div>
+        <div className="flex flex-col gap-6">
+          <Section id="preferences" title={t("preferences.title")}>
+            <PreferencesForm availability={c.availability} visibility={c.visibility} />
+          </Section>
+          <Section id="salary" title={t("salary.title")} description={t("salary.hint")}>
+            <SalaryForm
+              saved={
+                salary.data
+                  ? {
+                      amount: String(salary.data.amount),
+                      currency: salary.data.currency,
+                      period: salary.data.period,
+                      basis: salary.data.basis,
+                      salaryVisibility: salary.data.visibility,
+                    }
+                  : null
+              }
+            />
+          </Section>
+          <Section id="blocked" title={t("blocked.title")} description={t("blocked.hint")}>
+            <BlockedCompanies
+              blocked={(blocked.data ?? []).map((b) => ({ id: b.company_id, name: b.companies?.name ?? "" }))}
+            />
+          </Section>
+        </div>
       </div>
     </div>
   );

@@ -81,8 +81,9 @@ export function SkillsSection({ catalog, selected }: { catalog: CatalogSkill[]; 
         </ul>
       )}
 
+      {/* Habilidad, nivel y botón en una fila: alineados por abajo (el botón a la altura de los selectores). */}
       <form action={action} className="flex flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="flex flex-1 flex-col gap-2">
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
           <Label htmlFor="skill-add">{t("skill")}</Label>
           <NativeSelect id="skill-add" name="skillId" defaultValue="" required>
             <option value="" disabled>
@@ -113,7 +114,7 @@ export function SkillsSection({ catalog, selected }: { catalog: CatalogSkill[]; 
             ))}
           </NativeSelect>
         </div>
-        <SubmitButton label={t("add")} variant="secondary" />
+        <SubmitButton label={t("add")} variant="secondary" className="sm:self-end" />
       </form>
       <FormMessage state={state} success="skillAdded" />
     </div>
