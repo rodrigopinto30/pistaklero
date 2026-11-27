@@ -4,52 +4,32 @@ import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Avatar } from "@/components/avatar";
 import { FormMessage } from "@/components/forms/field";
+import { ImagePicker } from "@/components/forms/image-picker";
 import { SubmitButton } from "@/components/forms/submit-button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { removeAvatar, uploadAvatar } from "@/lib/account/actions";
 import { idleState } from "@/lib/forms";
-import { ConfirmButton } from "@/components/confirm-button";
+import { COVER_MAX_BYTES } from "@/lib/validation/company";
 
-/** Foto de perfil: vista previa redonda, subir una nueva o quitarla. */
-export function AvatarForm({ path, name }: { path: string | null; name: string }) {
+/** Foto de perfil: se ve apenas se elige (redonda); "Guardar foto" se activa recién entonces. */
+export function AvatarForm({ photoUrl, name }: { photoUrl: string | null; name: string }) {
   const t = useTranslations("Person.avatar");
   const tConfirm = useTranslations("Confirm");
   const [state, action] = useActionState(uploadAvatar, idleState);
-  const hasError = state.status === "error";
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-      <Avatar path={path} name={name} size="xl" />
-      <div className="flex flex-1 flex-col gap-3">
-        <form action={action} className="flex flex-col gap-3">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="person-avatar">{t("file")}</Label>
-            <Input
-              id="person-avatar"
-              name="avatar"
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              required
-              aria-invalid={hasError || undefined}
-              aria-describedby="person-avatar-hint"
-              className="h-auto py-2"
-            />
-            <p id="person-avatar-hint" className="text-sm text-muted-foreground">
-              {t("hint")}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <SubmitButton label={t("upload")} variant="secondary" />
-            {path && (
-              <ConfirmButton variant="ghost" formAction={removeAvatar} title={tConfirm("removePhoto.title")} description={tConfirm("removePhoto.description")} confirmLabel={tConfirm("remove")}>
-                {t("remove")}
-              </ConfirmButton>
-            )}
-          </div>
-          <FormMessage state={state} success="photoUpdated" />
-        </form>
-      </div>
-    </div>
+    <form action={action} className="flex flex-col gap-3">
+      <ImagePicker
+        name="avatar"
+        label={t("file")}
+        hint={t("hint")}
+        currentUrl={photoUrl}
+        shape="round"
+        maxBytes={COVER_MAX_BYTES}
+        placeholder={<Avatar path={null} name={name} size="xl" />}
+        removeSaved={{ action: removeAvatar, title: tConfirm("removePhoto.title"), description: tConfirm("removePhoto.description") }}
+      />
+      <SubmitButton label={t("upload")} variant="secondary" />
+      <FormMessage state={state} success="photoUpdated" />
+    </form>
   );
 }

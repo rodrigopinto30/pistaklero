@@ -347,9 +347,9 @@
       "title": "Logo",
       "current": "Current logo",
       "none": "No logo yet.",
-      "file": "Image",
+      "file": "Logo",
       "hint": "PNG, JPEG or WebP, up to 900 KB. It's fitted into a 256 px square.",
-      "upload": "Upload logo",
+      "upload": "Save logo",
       "remove": "Remove logo"
     },
     "stack": {
@@ -364,9 +364,23 @@
     "cover": {
       "title": "Cover",
       "hint": "JPG, PNG or WebP up to 4 MB. It shows as the background of your page and in the companies list. Without a cover, we use a gradient with your logo.",
-      "file": "Cover image",
-      "upload": "Upload cover",
+      "file": "Cover",
+      "upload": "Save cover",
       "remove": "Remove cover"
+    },
+    "setup": {
+      "title": "Set up your company page",
+      "subtitle": "Fill in what you have at hand: everything can be changed later. Only the name is required.",
+      "images": "Logo and cover",
+      "imagesHint": "Optional, but the page looks much better with images.",
+      "imageError": "We couldn't use this image. Try another one.",
+      "web": "Website and social media",
+      "websiteHint": "If your email is from the same domain, the company gets verified.",
+      "stack": "Tech stack (optional)",
+      "submit": "Finish sign-up",
+      "submitting": "Saving…",
+      "pending": "Finish setting up your company page: people want to know who they're applying to.",
+      "pendingLink": "Complete now"
     }
   },
   "Dashboard": {
@@ -1041,7 +1055,7 @@
     "avatar": {
       "file": "Profile photo",
       "hint": "JPG, PNG or WebP up to 4 MB. We crop it into a circle.",
-      "upload": "Upload photo",
+      "upload": "Save photo",
       "remove": "Remove photo"
     }
   },
@@ -1157,7 +1171,8 @@
     "passwordUpdated": "Done, your new password is set. 🔑",
     "passwordChanged": "Password changed. We signed you out everywhere else.",
     "pendingLiked": "Done: you liked it. ❤️",
-    "pendingSaved": "Done: it's in Saved. 🔖"
+    "pendingSaved": "Done: it's in Saved. 🔖",
+    "companyReady": "Done! Your company page is live on Pistaklero. 🎉"
   },
   "Saved": {
     "metaTitle": "Saved",
@@ -1353,5 +1368,45 @@
       "description": "It's deleted forever."
     },
     "withdrawConfirm": "Yes, withdraw"
+  },
+  "Industries": {
+    "software": "Software & technology",
+    "fintech": "Fintech",
+    "ecommerce": "E-commerce & retail",
+    "health": "Health & healthtech",
+    "education": "Education & edtech",
+    "it_services": "IT consulting & services",
+    "marketing": "Marketing & agencies",
+    "logistics": "Logistics & transport",
+    "banking": "Banking & insurance",
+    "telecom": "Telecommunications",
+    "gaming": "Gaming & entertainment",
+    "agro": "Agriculture & agtech",
+    "energy": "Energy",
+    "manufacturing": "Industry & manufacturing",
+    "media": "Media & content",
+    "tourism": "Tourism & hospitality",
+    "real_estate": "Real estate & proptech",
+    "hr": "HR & recruiting",
+    "legal": "Legal & legaltech",
+    "public_ngo": "Government & NGOs",
+    "other": "Other…",
+    "otherLabel": "Which one?"
+  },
+  "ImagePicker": {
+    "choose": "Choose image",
+    "change": "Change",
+    "discard": "Remove",
+    "remove": "Remove",
+    "previewAlt": "Preview of the chosen image",
+    "currentAlt": "Current image",
+    "wrongType": "Use a PNG, JPEG or WebP image.",
+    "tooLarge": "The image is larger than {size}. Choose a lighter one."
+  },
+  "SkillChips": {
+    "choose": "Choose one…",
+    "add": "Add",
+    "selected": "Chosen",
+    "remove": "Remove {name}"
   }
 }

@@ -11,6 +11,7 @@ import { getPathname, redirect } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { DeleteAccountForm, PreferencesForm } from "./settings-forms";
 import { Emoji } from "@/components/emoji";
+import { avatarUrl } from "@/lib/storage";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Settings");
@@ -37,7 +38,7 @@ export default async function SettingsPage() {
 
       {profile!.role !== "candidate" && (
         <SectionCard id="person" title={tPerson("title")} description={tPerson("hint")}>
-          <AvatarForm path={person?.avatar_path ?? null} name={person?.full_name ?? ""} />
+          <AvatarForm photoUrl={avatarUrl(person?.avatar_path)} name={person?.full_name ?? ""} />
           <PersonalForm
             saved={{
               firstName: person?.first_name ?? "",

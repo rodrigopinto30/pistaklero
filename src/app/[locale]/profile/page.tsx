@@ -16,6 +16,7 @@ import { SalaryForm } from "./_components/salary-form";
 import { SectionCard as Section } from "@/components/section-card";
 import { SkillsSection } from "./_components/skills-section";
 import { Emoji } from "@/components/emoji";
+import { avatarUrl } from "@/lib/storage";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Profile");
@@ -109,7 +110,7 @@ export default async function ProfilePage() {
       {/* Dos columnas que crecen por separado: el contenido principal a la izquierda y las preferencias a la derecha. */}
       <div className="grid items-start gap-6 lg:grid-cols-3">
         <Section id="person" className="lg:col-span-3" title={t("person.title")} description={t("person.hint")}>
-          <AvatarForm path={person.data?.avatar_path ?? null} name={person.data?.full_name ?? ""} />
+          <AvatarForm photoUrl={avatarUrl(person.data?.avatar_path)} name={person.data?.full_name ?? ""} />
           <PersonalForm
             saved={{
               firstName: person.data?.first_name ?? "",

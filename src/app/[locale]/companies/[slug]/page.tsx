@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { CompanyActions } from "@/components/companies/company-actions";
+import { industryLabel } from "@/lib/companies/industry";
 
 const TABS = ["about", "jobs", "posts"] as const;
 type Tab = (typeof TABS)[number];
@@ -65,6 +66,7 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
   const locale = await getLocale();
   const t = await getTranslations("CompanyPage");
   const td = await getTranslations("Company.details");
+  const tIndustry = await getTranslations("Industries");
   const supabase = await createClient();
   const [{ data: stack }, { data: stats }, { data: jobs }, { data: card }] = await Promise.all([
     supabase.from("company_skills").select("skills(name_es, name_en)").eq("company_id", company.id),
@@ -89,7 +91,7 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
     company.instagram_url && { label: "Instagram", url: company.instagram_url },
   ].filter(Boolean) as { label: string; url: string }[];
   const facts = [
-    company.industry && { icon: Factory, label: td("industry"), value: company.industry },
+    company.industry && { icon: Factory, label: td("industry"), value: industryLabel(company.industry, tIndustry as (key: string) => string) },
     company.size && { icon: Users, label: td("size"), value: td(`sizeOptions.${company.size}`) },
     company.stage && { icon: Rocket, label: td("stage"), value: td(`stageOptions.${company.stage}`) },
     location && { icon: MapPin, label: t("location"), value: location },
@@ -131,7 +133,7 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
               )}
               {company.status !== "unclaimed" && <ResponseBadge badge={stats?.badge ?? "new"} />}
               {(company.industry || location) && (
-                <span className="text-muted-foreground">{[company.industry, location].filter(Boolean).join(" · ")}</span>
+                <span className="text-muted-foreground">{[industryLabel(company.industry, tIndustry as (key: string) => string), location].filter(Boolean).join(" · ")}</span>
               )}
             </div>
           </div>

@@ -93,5 +93,6 @@ export async function completeOnboarding(
   const back = (await runPendingAction(supabase)) ?? (formData.get("next") ? safeNextPath(formData.get("next"), "") : "");
   if (back) nextRedirect(back);
   // Cada rol sigue en su espacio: la candidata arma su perfil y la empresa va a su panel.
-  return redirect({ href: data.role === "candidate" ? "/profile" : "/dashboard", locale });
+  // La empresa sigue directo a armar su página (un solo formulario con "Finalizar registro").
+  return redirect({ href: data.role === "candidate" ? "/profile" : "/dashboard/company", locale });
 }
