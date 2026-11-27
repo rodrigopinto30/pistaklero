@@ -8,7 +8,7 @@ import { Markdown } from "@/components/markdown";
 import { authorSubtitle } from "@/components/posts/post-card";
 import { PostActions } from "@/components/posts/post-actions";
 import { ReportPostForm } from "@/components/posts/report-post-form";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { deletePost } from "@/lib/posts/actions";
 import { createClient } from "@/lib/supabase/server";

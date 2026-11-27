@@ -1350,6 +1350,7 @@
     "adminDeletePost": {
       "title": "Delete “{title}”?",
       "description": "It's deleted forever."
-    }
+    },
+    "withdrawConfirm": "Yes, withdraw"
   }
 }

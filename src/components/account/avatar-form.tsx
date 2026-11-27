@@ -5,7 +5,6 @@ import { useActionState } from "react";
 import { Avatar } from "@/components/avatar";
 import { FormMessage } from "@/components/forms/field";
 import { SubmitButton } from "@/components/forms/submit-button";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { removeAvatar, uploadAvatar } from "@/lib/account/actions";

@@ -1350,6 +1350,7 @@
     "adminDeletePost": {
       "title": "¿Borrar «{title}»?",
       "description": "Se borra para siempre."
-    }
+    },
+    "withdrawConfirm": "Sí, retirarla"
   }
 }

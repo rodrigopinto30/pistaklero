@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { ApplicationStatusBadge } from "@/components/applications/status-badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { timeAgo } from "@/lib/jobs/time";
 import { createClient } from "@/lib/supabase/server";
@@ -104,7 +104,7 @@ export default async function MyApplicationsPage() {
                 {OPEN.includes(application.status) && (
                   <form action={withdrawApplication}>
                     <input type="hidden" name="applicationId" value={application.id} />
-                    <ConfirmButton variant="ghost" ariaLabel={t("withdrawFrom", { job: job?.title ?? "" })} title={tConfirm("withdraw.title", { job: job?.title ?? "" })} description={tConfirm("withdraw.description")} confirmLabel={tConfirm("withdraw")}>
+                    <ConfirmButton variant="ghost" ariaLabel={t("withdrawFrom", { job: job?.title ?? "" })} title={tConfirm("withdraw.title", { job: job?.title ?? "" })} description={tConfirm("withdraw.description")} confirmLabel={tConfirm("withdrawConfirm")}>
                       {t("withdraw")}
                     </ConfirmButton>
                   </form>
