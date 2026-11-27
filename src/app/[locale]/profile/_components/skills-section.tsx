@@ -115,7 +115,7 @@ export function SkillsSection({ catalog, selected }: { catalog: CatalogSkill[]; 
         </div>
         <SubmitButton label={t("add")} variant="secondary" />
       </form>
-      <FormMessage state={state} />
+      <FormMessage state={state} success="skillAdded" />
     </div>
   );
 }

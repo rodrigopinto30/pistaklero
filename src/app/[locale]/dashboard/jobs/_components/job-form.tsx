@@ -183,7 +183,7 @@ export function JobForm({
         ))}
       </Fieldset>
 
-      <FormMessage state={state} />
+      <FormMessage state={state} success="jobSaved" />
       <div className="flex flex-wrap gap-2">
         {mode === "draft" ? (
           <>

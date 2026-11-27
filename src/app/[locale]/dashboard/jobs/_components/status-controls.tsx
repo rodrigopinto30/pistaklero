@@ -42,7 +42,7 @@ export function StatusControls({ jobId, status, locale }: { jobId: string; statu
           </form>
         )}
       </div>
-      <FormMessage state={state} />
+      <FormMessage state={state} success="jobStatusUpdated" />
     </div>
   );
 }

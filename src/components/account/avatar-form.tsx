@@ -46,7 +46,7 @@ export function AvatarForm({ path, name }: { path: string | null; name: string }
               </Button>
             )}
           </div>
-          <FormMessage state={state} />
+          <FormMessage state={state} success="photoUpdated" />
         </form>
       </div>
     </div>

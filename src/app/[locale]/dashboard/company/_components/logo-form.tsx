@@ -45,7 +45,7 @@ export function LogoForm({ logoUrl, companyName }: { logoUrl: string | null; com
           </p>
         </div>
         <SubmitButton label={t("upload")} variant="secondary" />
-        <FormMessage state={state} />
+        <FormMessage state={state} success="logoUpdated" />
       </form>
       {logoUrl && (
         <form action={removeCompanyLogo}>
