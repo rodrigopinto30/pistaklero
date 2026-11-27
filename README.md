@@ -38,6 +38,14 @@ Con todo arriba:
 ```
 
 
+## Variables de entorno
+
+`./start.sh` escribe en `.env.local` las variables de Supabase local, dentro de un bloque marcado.
+Tus propias claves (Resend, Anthropic, OAuth…) agregalas en el mismo archivo **fuera de ese bloque**: se conservan entre arranques.
+La lista completa está en `.env.example`.
+
+Después de cambiar el esquema de la base: `./run.sh pnpm db:types` regenera los tipos de TypeScript.
+
 ## Cómo funciona
 
 - `docker/dev.Dockerfile`: imagen con Node 24 LTS y pnpm.
