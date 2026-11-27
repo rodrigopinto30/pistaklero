@@ -35,9 +35,8 @@ test("la tarea diaria recuerda, avisa, cierra y calcula el badge", async ({ page
   expect((await request.get("/api/internal/cron")).status()).toBe(401);
 
   const response = await request.get("/api/internal/cron", { headers: { Authorization: `Bearer ${process.env.OUTBOX_SECRET}` } });
+  // Otros tests también corren la tarea en paralelo: el resultado se verifica por los emails y la interfaz.
   expect(response.status()).toBe(200);
-  const body = await response.json();
-  expect(body.maintenance.closed).toBeGreaterThanOrEqual(1);
 
   await expect.poll(() => subjectsTo(slowEmail)).toContain(`${companyName} está demorando más de lo habitual`);
   await expect.poll(() => subjectsTo(closedEmail)).toContain(`Novedades de tu postulación: Oferta lenta ${run}`);
@@ -52,4 +51,26 @@ test("la tarea diaria recuerda, avisa, cierra y calcula el badge", async ({ page
   // El badge se muestra en la búsqueda (con pocas postulaciones, "Nueva en Pistaklero")
   await page.goto(`/es?q=${encodeURIComponent(`lenta ${run}`)}`);
   await expect(page.getByRole("article").filter({ hasText: `Oferta lenta ${run}` }).getByText("Nueva en Pistaklero")).toBeVisible();
+});
+
+test("el resumen diario llega a quien lo tiene prendido", async ({ page, request }) => {
+  const run = Date.now().toString(36);
+  const companyName = `Resumen ${run}`;
+  const domain = `resumen-${run}.com`;
+  const recruiterEmail = uniqueEmail("rrhh", domain);
+  await signIn(page, recruiterEmail);
+  await onboardAsCompany(page, companyName, domain);
+  const job = await publishJobFor(companyName, `Oferta del resumen ${run}`);
+  await seedOldApplication(job.id, await seedCandidate(uniqueEmail("nueva")), 0);
+
+  const response = await request.get("/api/internal/cron", { headers: { Authorization: `Bearer ${process.env.OUTBOX_SECRET}` } });
+  expect(response.status()).toBe(200);
+  await expect.poll(() => subjectsTo(recruiterEmail)).toContain(`1 postulación nueva en ${companyName}`);
+
+  // Se puede apagar desde Ajustes (que entonces no se manda lo prueba la base, en 16_digest.test.sql)
+  await page.goto("/es/ajustes");
+  await page.getByLabel(/Emails opcionales/).uncheck();
+  await page.getByRole("region", { name: "Preferencias" }).getByRole("button", { name: "Guardar" }).click();
+  await expect(page.getByText("Guardado.")).toBeVisible();
+  await expect(page.getByLabel(/Emails opcionales/)).not.toBeChecked();
 });

@@ -730,7 +730,7 @@
       "emailLocale": "Idioma de los emails",
       "emailLocaleHint": "Los avisos de tus postulaciones o de tu equipo te llegan en este idioma.",
       "notifications": "Emails opcionales",
-      "notificationsHint": "Resúmenes y recordatorios. Los avisos importantes (por ejemplo, un cambio en tu postulación) siempre llegan."
+      "notificationsHint": "El resumen diario de postulaciones nuevas y los recordatorios a las empresas. Los avisos sobre tus postulaciones o tu equipo siempre llegan."
     },
     "data": {
       "title": "Tus datos",

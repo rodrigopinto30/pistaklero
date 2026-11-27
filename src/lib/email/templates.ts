@@ -1,4 +1,4 @@
-import { button, layout, paragraph } from "./html";
+import { button, escapeHtml, layout, paragraph } from "./html";
 
 /*
  * Plantillas de email. Cada una recibe datos tipados y devuelve asunto, HTML y texto plano,
@@ -14,7 +14,11 @@ export type EmailTemplates = {
   application_status: { jobTitle: string; companyName: string; status: ApplicationStatus; message?: string | null };
   application_slow: { jobTitle: string; companyName: string };
   recruiter_reminder: { companyName: string; pending: number };
+  recruiter_digest: { companyName: string; total: number; jobs: { title: string; count: number }[] };
 };
+
+/** Cuántas ofertas se listan en el resumen; el resto se resume en "y N más". */
+const DIGEST_MAX_JOBS = 5;
 
 const STATUS_COPY: Record<Locale, Record<ApplicationStatus, string>> = {
   es: {
@@ -94,6 +98,42 @@ const renderers: { [K in EmailTemplate]: (locale: Locale, data: EmailTemplates[K
       subject: copy.subject,
       html: layout({ lang: locale, title: copy.subject, body: paragraph(copy.intro) + button(url, copy.cta) }),
       text: `${copy.intro}\n\n${copy.cta}: ${url}`,
+    };
+  },
+  recruiter_digest(locale, { companyName, total, jobs }) {
+    const shown = jobs.slice(0, DIGEST_MAX_JOBS);
+    const rest = jobs.length - shown.length;
+    const copy =
+      locale === "en"
+        ? {
+            subject: total === 1 ? `1 new application at ${companyName}` : `${total} new applications at ${companyName}`,
+            intro: "These are the applications from the last 24 hours:",
+            line: (j: { title: string; count: number }) => `${j.title}: ${j.count}`,
+            more: `and ${rest} more job(s)`,
+            note: "Replying within 48 hours earns your company the \"Replies within 48 h\" badge.",
+            cta: "Review applications",
+            optOut: "You can turn off these summaries in Settings.",
+          }
+        : {
+            subject: total === 1 ? `1 postulación nueva en ${companyName}` : `${total} postulaciones nuevas en ${companyName}`,
+            intro: "Estas son las postulaciones de las últimas 24 horas:",
+            line: (j: { title: string; count: number }) => `${j.title}: ${j.count}`,
+            more: `y ${rest} oferta(s) más`,
+            note: "Responder en menos de 48 horas le da a tu empresa el badge \"Responde en menos de 48 h\".",
+            cta: "Revisar postulaciones",
+            optOut: "Podés apagar estos resúmenes en Ajustes.",
+          };
+    const lines = [...shown.map(copy.line), ...(rest > 0 ? [copy.more] : [])];
+    const list = `<ul>${lines.map((line) => `<li>${escapeHtml(line)}</li>`).join("")}</ul>`;
+    const url = dashboardUrl(locale);
+    return {
+      subject: copy.subject,
+      html: layout({
+        lang: locale,
+        title: copy.subject,
+        body: [paragraph(copy.intro), list, paragraph(copy.note), button(url, copy.cta), paragraph(copy.optOut, true)].join(""),
+      }),
+      text: [copy.intro, ...lines.map((line) => `- ${line}`), "", copy.note, "", `${copy.cta}: ${url}`, "", copy.optOut].join("\n"),
     };
   },
   application_status(locale, { jobTitle, companyName, status, message }) {

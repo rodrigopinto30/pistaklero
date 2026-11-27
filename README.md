@@ -83,6 +83,7 @@ Los emails de la app pasan por una cola en la base (`email_outbox`): se encolan,
 - 14 días: aviso a la candidata.
 - 30 días: se cierra como "Sin respuesta".
 - Recalcula el badge público de velocidad de respuesta de cada empresa (últimos 90 días).
+- Resumen de las postulaciones nuevas de las últimas 24 h para cada reclutador (se apaga en Ajustes, junto con el recordatorio de 7 días).
 
 En local: `./run.sh pnpm cron`.
 
