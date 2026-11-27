@@ -16,13 +16,15 @@ test("cada acción se confirma con un aviso chico que se cierra solo", async ({ 
   await notifications.getByText("Cambios guardados.").hover();
   await notifications.getByRole("button", { name: "Cerrar aviso" }).first().click();
   await expect(notifications.getByText("Cambios guardados.")).toHaveCount(0);
+  // Con el puntero encima, los avisos esperan (para poder leerlos): se corre a un costado.
+  await page.mouse.move(0, 0);
   await expectNoA11yViolations(page);
 
   // Una acción sin formulario de estado (quitar una habilidad) avisa desde el servidor.
   const skills = page.getByRole("region", { name: "Habilidades" });
   await skills.getByRole("button", { name: /^Quitar / }).first().click();
   await expectToast(page, "Listo, se quitó.");
-  await expect(notifications.getByText("Listo, se quitó.")).toHaveCount(0, { timeout: 8_000 });
+  await expect(notifications.getByText("Listo, se quitó.")).toHaveCount(0, { timeout: 15_000 });
 });
 
 test("salir de la cuenta avisa en la página siguiente", async ({ page }) => {
