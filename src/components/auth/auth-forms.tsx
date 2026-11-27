@@ -109,7 +109,7 @@ export function SignInForm({ locale, next, fixedEmail }: { locale: string; next:
         )}
       </AuthField>
       <PasswordField label={t("passwordLabel")} name="password" autoComplete="current-password" error={passwordError} />
-      <Link href="/forgot-password" className="-mt-2 self-start text-sm font-medium text-primary underline underline-offset-4">
+      <Link href="/forgot-password" className="-mt-2 inline-flex min-h-6 items-center self-start text-sm font-medium text-primary underline underline-offset-4">
         {t("forgot")}
       </Link>
       <FormAlert>{formError}</FormAlert>

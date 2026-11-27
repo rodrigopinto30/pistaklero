@@ -96,7 +96,7 @@ export function WelcomeForm({ locale, defaultName, presetRole, next }: { locale:
               id={`role-${role}`}
               defaultChecked={(values.role ?? presetRole) === role}
               data-invalid={errors.role ? true : undefined}
-              className="mt-1 size-4 accent-primary"
+              className="mt-1 size-4 shrink-0 accent-primary"
             />
             <span className="flex flex-col gap-1">
               <span className="font-medium">{t(role === "candidate" ? "roleCandidate" : "roleRecruiter")}</span>

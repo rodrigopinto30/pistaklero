@@ -31,7 +31,7 @@ export function RadioGroup<T extends string>({
           key={option}
           className="flex min-h-10 cursor-pointer items-center gap-3 rounded-lg bg-secondary px-3 py-2 text-sm has-checked:bg-primary/10 has-checked:text-primary"
         >
-          <input type="radio" name={name} value={option} defaultChecked={saved === option} className="size-4 accent-primary" />
+          <input type="radio" name={name} value={option} defaultChecked={saved === option} className="size-4 shrink-0 accent-primary" />
           {labels(option)}
         </label>
       ))}

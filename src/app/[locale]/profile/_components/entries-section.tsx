@@ -117,7 +117,7 @@ export function EntryFields({
       {LAYOUT[block].map((row, index) =>
         row === "current" ? (
           <label key="current" className="inline-flex min-h-10 cursor-pointer items-center gap-3 self-start text-sm">
-            <input type="checkbox" name={`${namePrefix}current`} defaultChecked={current} className="size-4 accent-primary" />
+            <input type="checkbox" name={`${namePrefix}current`} defaultChecked={current} className="size-4 shrink-0 accent-primary" />
             {t(`${block}.current` as Parameters<typeof t>[0])}
           </label>
         ) : row.length > 1 ? (

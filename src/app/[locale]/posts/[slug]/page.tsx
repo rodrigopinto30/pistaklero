@@ -51,7 +51,7 @@ export default async function PostPage({ params }: PageProps<"/[locale]/posts/[s
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
-      <Link href="/posts" className="self-start text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+      <Link href="/posts" className="inline-flex min-h-6 items-center self-start text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
         ← {t("back")}
       </Link>
 

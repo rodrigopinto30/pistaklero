@@ -113,7 +113,7 @@ export default async function TalentPage({ searchParams }: PageProps<"/[locale]/
       </p>
 
       {people.length > 0 ? (
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {people.map((person) => {
             const location = [person.city, countryName(person.country, locale)].filter(Boolean).join(", ");
             const chips = (person.skills ?? []) as { slug: string; es: string; en: string }[];

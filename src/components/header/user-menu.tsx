@@ -42,7 +42,7 @@ export function UserMenu({ name, email, photo, entries }: { name: string; email:
         <input type="hidden" name="locale" value={locale} />
       </form>
       <Menu.Root>
-        <Menu.Trigger className="flex items-center gap-2.5 rounded-full bg-card p-1 shadow-soft transition-shadow hover:shadow-soft-lg data-popup-open:shadow-soft-lg lg:pr-3">
+        <Menu.Trigger className="flex items-center gap-2.5 rounded-full bg-card p-1 shadow-soft transition-shadow hover:shadow-soft-lg data-popup-open:shadow-soft-lg lg:pr-2">
           {photo ? (
             // eslint-disable-next-line @next/next/no-img-element -- WebP de 256 px ya optimizado, desde nuestro Storage.
             <img src={photo} alt="" width={36} height={36} className="size-9 rounded-full object-cover" />
@@ -52,16 +52,18 @@ export function UserMenu({ name, email, photo, entries }: { name: string; email:
             </span>
           )}
           <span className="sr-only">{t("accountMenu")}: </span>
-          <span className="sr-only flex-col text-left lg:not-sr-only lg:flex">
-            <span className="max-w-44 truncate text-sm leading-tight font-medium">{name || email}</span>
-            {name && <span className="max-w-44 truncate text-xs leading-tight text-muted-foreground">{email}</span>}
+          {/* Como en Airbnb: en el botón, la foto; el nombre y el email, arriba del menú (con la pestaña
+              Talento y "Publicar empleo" no entran en el encabezado). Los lectores de pantalla los oyen igual. */}
+          <span className="sr-only">
+            {name || email}
+            {name && ` ${email}`}
           </span>
           <ChevronDown aria-hidden="true" className="hidden size-4 text-muted-foreground lg:block" />
         </Menu.Trigger>
         <Menu.Portal>
           <Menu.Positioner sideOffset={8} align="end" className="z-50 outline-none">
             <Menu.Popup className="w-72 origin-[var(--transform-origin)] rounded-2xl bg-popover p-2 text-popover-foreground shadow-soft-lg outline-none transition-[scale,opacity] duration-150 ease-out data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0 motion-reduce:transition-none">
-              <div className="flex flex-col px-3 py-2 lg:hidden">
+              <div className="flex flex-col border-b border-border px-3 pt-2 pb-3 mb-1">
                 <span className="truncate text-sm font-medium">{name || email}</span>
                 {name && <span className="truncate text-xs text-muted-foreground">{email}</span>}
               </div>

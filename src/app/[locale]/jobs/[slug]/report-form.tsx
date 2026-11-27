@@ -35,7 +35,7 @@ export function ReportForm({ jobId }: { jobId: string }) {
           <legend className="mb-1 font-medium">{t("reason")}</legend>
           {REASONS.map((reason) => (
             <label key={reason} className="flex min-h-9 cursor-pointer items-center gap-2">
-              <input type="radio" name="reason" value={reason} required className="size-4 accent-primary" />
+              <input type="radio" name="reason" value={reason} required className="size-4 shrink-0 accent-primary" />
               {t(`reasons.${reason}`)}
             </label>
           ))}

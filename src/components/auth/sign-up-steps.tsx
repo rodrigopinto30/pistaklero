@@ -15,7 +15,7 @@ export async function SignUpSteps({ current }: { current: 1 | 2 | 3 }) {
           const done = number < current;
           const active = number === current;
           return (
-            <li key={label} aria-current={active ? "step" : undefined} className="flex flex-1 items-center gap-2">
+            <li key={label} aria-current={active ? "step" : undefined} className={cn("flex min-w-0 flex-1 items-center gap-2", active && "max-sm:flex-[2]")}>
               <span
                 className={cn(
                   "flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
@@ -26,7 +26,8 @@ export async function SignUpSteps({ current }: { current: 1 | 2 | 3 }) {
               >
                 {done ? <Check aria-hidden="true" className="size-4" /> : number}
               </span>
-              <span className={cn("truncate", active ? "font-medium" : "text-muted-foreground")}>
+              {/* En pantallas chicas solo se lee el nombre del paso actual (los otros quedan para lectores de pantalla). */}
+              <span className={cn("truncate", active ? "font-medium" : "text-muted-foreground max-sm:sr-only")}>
                 {done && <span className="sr-only">{t("done")} </span>}
                 {label}
               </span>

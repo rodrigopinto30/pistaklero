@@ -234,7 +234,7 @@ export function SearchBar({ countries }: { countries: Option[] }) {
 
       <p className="hidden text-xs text-muted-foreground sm:block">
         {th("shortcutBefore")}{" "}
-        <button type="button" onClick={openCommandPalette} aria-keyshortcuts="Control+K Meta+K" className="rounded-md px-0.5 underline-offset-4 hover:text-foreground hover:underline">
+        <button type="button" onClick={openCommandPalette} aria-keyshortcuts="Control+K Meta+K" className="inline-flex min-h-6 items-center rounded-md px-0.5 underline-offset-4 hover:text-foreground hover:underline">
           <kbd className="rounded border border-border bg-card px-1.5 py-0.5 font-sans text-[0.7rem] font-medium">{isMac ? "⌘" : "Ctrl"}</kbd>{" "}
           <kbd className="rounded border border-border bg-card px-1.5 py-0.5 font-sans text-[0.7rem] font-medium">K</kbd>
           <span className="sr-only"> ({th("shortcutAction")})</span>
