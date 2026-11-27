@@ -9,9 +9,10 @@ import {
   test,
   uniqueEmail,
   expectToast,
+  fillNewPassword,
 } from "./support/fixtures";
 
-const PASSWORD = "una frase de prueba larga";
+const PASSWORD = "Frase-de-prueba-2026";
 
 test("ingreso con email y contraseña, y salida", async ({ page }) => {
   const email = uniqueEmail("clave");
@@ -82,22 +83,22 @@ test("recuperar la contraseña con un código, sin links", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Revisá tu email" })).toBeFocused();
   const code = await codeFromEmail(email, /contraseña nueva/, asked);
 
-  // Una contraseña de las más usadas y un código equivocado: mensajes claros.
+  // Una contraseña sin mayúscula y un código equivocado: mensajes claros.
   await page.getByLabel("Código de 6 dígitos").fill("000000");
-  await page.getByLabel("Contraseña nueva").fill("contraseña123");
+  await fillNewPassword(page, "sin-mayuscula-2026");
   await page.getByRole("button", { name: "Guardar la contraseña" }).click();
-  await expect(page.getByText("Esa contraseña es de las más usadas")).toBeVisible();
-  await expect(page.getByLabel("Contraseña nueva")).toHaveValue("");
+  await expect(page.getByText("Agregale al menos una mayúscula (A-Z).")).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Contraseña nueva" })).toHaveValue("");
   // El código escrito se conserva: solo hay que corregir la contraseña.
   await expect(page.getByLabel("Código de 6 dígitos")).toHaveValue("000000");
-  await page.getByLabel("Contraseña nueva").fill("mi nueva frase secreta");
+  await fillNewPassword(page, "Mi-Nueva-Frase-2026");
   await page.getByRole("button", { name: "Guardar la contraseña" }).click();
   await expect(page.getByText("El código no es correcto o ya venció")).toBeVisible();
   await expect(page.getByLabel("Código de 6 dígitos")).toHaveValue("");
   await expectNoA11yViolations(page);
 
   await page.getByLabel("Código de 6 dígitos").fill(code);
-  await page.getByLabel("Contraseña nueva").fill("mi nueva frase secreta");
+  await fillNewPassword(page, "Mi-Nueva-Frase-2026");
   await page.getByRole("button", { name: "Guardar la contraseña" }).click();
   await page.waitForURL("/es/bienvenida");
   await expectToast(page, "Listo, ya tenés tu contraseña nueva.");
@@ -110,7 +111,7 @@ test("recuperar la contraseña con un código, sin links", async ({ page }) => {
   await page.getByRole("button", { name: "Ingresar", exact: true }).click();
   await expect(page.getByRole("alert").filter({ hasText: "no son correctos" })).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Contraseña", exact: true })).toHaveValue("");
-  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("mi nueva frase secreta");
+  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("Mi-Nueva-Frase-2026");
   await page.getByRole("button", { name: "Ingresar", exact: true }).click();
   await page.waitForURL("/es/bienvenida");
 });
@@ -128,14 +129,14 @@ test("cambiar la contraseña desde Ajustes pide la actual", async ({ page }) => 
   await page.goto("/es/ajustes");
   const section = page.getByRole("region", { name: "Contraseña" });
   await section.getByLabel("Contraseña actual").fill("no es la actual");
-  await section.getByLabel("Contraseña nueva").fill("otra frase bien larga");
+  await fillNewPassword(section, "Otra-Frase-Larga-1");
   await section.getByRole("button", { name: "Cambiar la contraseña" }).click();
   await expect(section.getByText("La contraseña actual no es correcta.")).toBeVisible();
   await expect(section.getByLabel("Contraseña actual")).toBeFocused();
   await expect(section.getByLabel("Contraseña actual")).toHaveValue("");
 
   await section.getByLabel("Contraseña actual").fill(PASSWORD);
-  await section.getByLabel("Contraseña nueva").fill("otra frase bien larga");
+  await fillNewPassword(section, "Otra-Frase-Larga-1");
   await section.getByRole("button", { name: "Cambiar la contraseña" }).click();
   await expectToast(page, "Cambiaste tu contraseña.");
 });

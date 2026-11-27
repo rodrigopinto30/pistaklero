@@ -2,6 +2,7 @@ import {
   codeFromEmail,
   expect,
   expectToast,
+  fillNewPassword,
   fillPersonName,
   seedCandidateWithPassword,
   seedCompanyWithJobs,
@@ -16,14 +17,14 @@ test("sin sesión, el me gusta queda pendiente y se hace solo al ingresar", asyn
   const name = `Pendiente ${token()}`;
   await seedCompanyWithJobs(name, [{ title: `Empleo de ${name}` }]);
   const email = uniqueEmail("pendiente");
-  await seedCandidateWithPassword(email, "frase de la candidata", "Pía Pendiente");
+  await seedCandidateWithPassword(email, "Frase-De-La-Candidata-1", "Pía Pendiente");
 
   await page.goto(`/es/empresas?q=${encodeURIComponent(name)}`);
   const card = page.getByRole("article").filter({ hasText: name });
   await card.getByRole("button", { name: `Ingresá para darle me gusta a ${name}` }).click();
   await expect(page).toHaveURL(/\/es\/ingresar/);
 
-  await signInWithPassword(page, email, "frase de la candidata");
+  await signInWithPassword(page, email, "Frase-De-La-Candidata-1");
   // Vuelve a la misma búsqueda, con el me gusta hecho y avisado.
   await page.waitForURL(/\/es\/empresas\?q=Pendiente/);
   await expectToast(page, "Listo: le diste me gusta.");
@@ -33,7 +34,7 @@ test("sin sesión, el me gusta queda pendiente y se hace solo al ingresar", asyn
   await page.context().clearCookies();
   await page.goto(`/es/empresas?q=${encodeURIComponent(name)}`);
   await card.getByRole("button", { name: `Ingresá para darle me gusta a ${name}` }).click();
-  await signInWithPassword(page, email, "frase de la candidata");
+  await signInWithPassword(page, email, "Frase-De-La-Candidata-1");
   await expectToast(page, "Listo: le diste me gusta.");
   await expect(card.getByRole("button", { name: `Me gusta: ${name}` })).toHaveAttribute("aria-pressed", "true");
 });
@@ -50,7 +51,7 @@ test("sin cuenta: guardar un empleo, crear la cuenta y volver con el empleo guar
 
   const created = new Date(Date.now() - 1000);
   await page.getByRole("textbox", { name: "Email" }).fill(email);
-  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("mi frase para guardar");
+  await fillNewPassword(page, "Mi-Frase-Para-Guardar-1");
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await page.getByLabel("Código de 6 dígitos").fill(await codeFromEmail(email, /confirmar el email/, created));
   await page.getByRole("button", { name: "Confirmar" }).click();

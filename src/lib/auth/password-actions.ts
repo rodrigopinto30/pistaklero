@@ -6,19 +6,18 @@ import { parseLocale } from "@/i18n/locale";
 import { flash } from "@/lib/flash.server";
 import { safeNextPath } from "@/lib/auth/redirect";
 import { destinationAfterSignIn } from "@/lib/auth/redirects.server";
-import { passwordProblem } from "@/lib/auth/password";
 import { parseSignUpRole } from "@/lib/auth/sign-up";
 import { clearFailures, minutesToWait, registerFailure } from "@/lib/auth/throttle";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
-import { codeSchema, emailSchema, type PasswordProblem } from "@/lib/validation/auth";
+import { codeSchema, emailSchema, type PasswordProblem, passwordProblem } from "@/lib/validation/auth";
 
 /*
  * Ingreso con email y contraseña (OWASP ASVS V6):
  *   - mensajes que no revelan si una cuenta existe ("el email o la contraseña no son correctos");
  *   - límite de intentos fallidos por email y por IP (throttle.ts);
  *   - el email se confirma una vez, con un código de 6 dígitos;
- *   - las contraseñas más comunes se rechazan, sin reglas de composición.
+ *   - contraseña fuerte (10+, mayúscula, minúscula, número y símbolo), repetida para evitar errores.
  */
 
 type RateLimited = { code: "rate_limited"; minutes: number };
@@ -34,6 +33,12 @@ function finish(destination: string): never {
 }
 
 const text = (formData: FormData, name: string) => String(formData.get(name) ?? "");
+
+/** Reglas de la contraseña nueva y que la repetición coincida. */
+function newPasswordProblem(formData: FormData, email?: string): PasswordProblem | null {
+  const password = text(formData, "password");
+  return passwordProblem(password, email) ?? (password === text(formData, "password_confirm") ? null : "mismatch");
+}
 const emailOf = (formData: FormData) => text(formData, "email").trim().toLowerCase();
 
 // ─── Ingresar ────────────────────────────────────────────────────────────────
@@ -88,7 +93,7 @@ export async function signUpWithPassword(_previous: SignUpState, formData: FormD
   const password = text(formData, "password");
 
   if (!emailSchema.safeParse(email).success) return { status: "error", code: "invalid_email", email };
-  const problem = passwordProblem(password, email);
+  const problem = newPasswordProblem(formData, email);
   if (problem) return { status: "error", code: problem, email };
 
   const supabase = await createClient();
@@ -186,7 +191,7 @@ export async function resetPassword(_previous: ResetState, formData: FormData): 
   const code = codeSchema.safeParse(typedCode);
   if (!code.success || !emailSchema.safeParse(email).success) return { status: "error", code: "invalid_code", typedCode: "" };
   // La contraseña se revisa antes de usar el código: el código sirve una sola vez.
-  const problem = passwordProblem(password, email);
+  const problem = newPasswordProblem(formData, email);
   if (problem) return { status: "error", code: problem, typedCode };
 
   const minutes = await minutesToWait(email);
@@ -228,7 +233,7 @@ export async function changePassword(_previous: ChangePasswordState, formData: F
   const password = text(formData, "password");
 
   if (!current) return { status: "error", code: "missing_current" };
-  const problem = passwordProblem(password, user.email);
+  const problem = newPasswordProblem(formData, user.email);
   if (problem) return { status: "error", code: problem };
 
   const minutes = await minutesToWait(user.email);

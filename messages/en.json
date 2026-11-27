@@ -1092,15 +1092,18 @@
     "send": "Send me the code",
     "codeSent": "If {email} has a Pistaklero account, a 6-digit code is on its way. Type it here along with your new password.",
     "newPassword": "New password",
-    "hint": "At least 8 characters. A phrase you remember is safer than a weird word.",
     "save": "Save password",
     "saving": "Saving…",
     "backToSignIn": "Back to sign in",
     "problems": {
-      "too_short": "Your password needs at least 8 characters.",
-      "too_long": "Your password is too long: use up to 72 characters (accents and emojis take more space).",
-      "too_common": "That password is one of the most used and easy to guess. Choose another one.",
-      "same_as_email": "Your password can't be your email."
+      "too_short": "It needs at least 10 characters.",
+      "too_long": "It's too long: use up to 72 characters (accents and emojis take more space).",
+      "needs_upper": "Add at least one uppercase letter (A-Z).",
+      "needs_lower": "Add at least one lowercase letter (a-z).",
+      "needs_digit": "Add at least one number.",
+      "needs_symbol": "Add at least one symbol, like ! ? # $ % &.",
+      "same_as_email": "Your password can't be your email.",
+      "mismatch": "The passwords don't match."
     },
     "change": {
       "current": "Current password",
@@ -1111,6 +1114,19 @@
         "wrong_current": "Your current password is incorrect.",
         "missing_current": "Enter your current password."
       }
+    },
+    "repeat": "Repeat password",
+    "matches": "They match",
+    "doesNotMatch": "They don't match yet",
+    "rules": {
+      "label": "Your password needs",
+      "length": "At least 10 characters",
+      "upper": "An uppercase letter (A-Z)",
+      "lower": "A lowercase letter (a-z)",
+      "digit": "A number",
+      "symbol": "A symbol (! ? # $ % & …)",
+      "met": "done",
+      "missing": "missing"
     }
   },
   "Toasts": {
