@@ -40,6 +40,9 @@ export default async function DashboardPage() {
         <Link href={{ pathname: "/companies/[slug]", params: { slug: company.slug } }} className={buttonVariants({ variant: "outline" })}>
           {t("viewCompany")}
         </Link>
+        <Link href="/dashboard/team" className={buttonVariants({ variant: "outline" })}>
+          {t("team")}
+        </Link>
       </div>
       <SectionCard id="jobs" title={t("jobsTitle")}>
         <p className="text-sm text-muted-foreground">{t("jobsEmpty")}</p>
