@@ -65,6 +65,14 @@ Para probar OAuth:
 4. En `.env.local`, fuera del bloque generado: `AUTH_OAUTH_PROVIDERS=github` (o `google,github`).
 5. `./stop.sh && ./start.sh`.
 
+## Emails
+
+Los emails de la app pasan por una cola en la base (`email_outbox`): se encolan, se envían apenas termina la respuesta y, si fallan, se reintentan con espera creciente (hasta 5 veces).
+
+- En desarrollo llegan a Mailpit: http://127.0.0.1:54324
+- En producción se envían con Resend (`RESEND_API_KEY`, `EMAIL_FROM`).
+- `POST /api/internal/outbox` con `Authorization: Bearer $OUTBOX_SECRET` vacía la cola (lo llama el cron).
+
 ## Cómo funciona
 
 - `docker/dev.Dockerfile`: imagen con Node 24 LTS y pnpm.
