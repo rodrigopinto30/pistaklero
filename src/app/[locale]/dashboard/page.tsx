@@ -21,11 +21,12 @@ export default async function DashboardPage() {
   const tJobs = await getTranslations("Jobs");
   const format = await getFormatter();
   const supabase = await createClient();
-  const { data: jobs } = await supabase
-    .from("jobs")
-    .select("id, title, status, published_at, valid_through")
-    .eq("company_id", company.id)
-    .order("created_at", { ascending: false });
+  const [{ data: jobs }, { data: counts }] = await Promise.all([
+    supabase.from("jobs").select("id, title, status, published_at, valid_through").eq("company_id", company.id).order("created_at", { ascending: false }),
+    supabase.rpc("my_job_application_counts"),
+  ]);
+  const countFor = (jobId: string, statuses: string[]) =>
+    (counts ?? []).filter((c) => c.job_id === jobId && statuses.includes(c.status)).reduce((sum, c) => sum + Number(c.total), 0);
   const date = (value: string) => format.dateTime(new Date(value), { dateStyle: "medium" });
 
   return (
@@ -73,6 +74,15 @@ export default async function DashboardPage() {
                     {job.published_at ? tJobs("list.published", { date: date(job.published_at) }) : tJobs("list.draft")} ·{" "}
                     {tJobs("list.validThrough", { date: date(job.valid_through) })}
                   </span>
+                  <Link
+                    href={{ pathname: "/dashboard/jobs/[id]/applicants", params: { id: job.id } }}
+                    className="text-sm text-violet underline-offset-4 hover:underline"
+                  >
+                    {tJobs("list.applicants", {
+                      pending: countFor(job.id, ["received"]),
+                      total: countFor(job.id, ["received", "in_review", "interview", "hired", "rejected", "no_response", "withdrawn"]),
+                    })}
+                  </Link>
                 </span>
                 <JobStatusBadge status={job.status} validThrough={job.valid_through} />
               </li>
