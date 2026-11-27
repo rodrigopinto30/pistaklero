@@ -243,7 +243,8 @@
       "noResults": "No companies found with that name.",
       "block": "Block {company}",
       "unblock": "Unblock {company}"
-    }
+    },
+    "downloadCv": "Download CV (PDF)"
   },
   "PublicProfile": {
     "availability": "Availability: {value}",
@@ -912,5 +913,15 @@
     "newJob": "Post a job",
     "team": "Team",
     "import": "Import a job"
+  },
+  "Cv": {
+    "about": "About me",
+    "experience": "Experience",
+    "education": "Education",
+    "projects": "Projects",
+    "certifications": "Certifications",
+    "skills": "Skills",
+    "languages": "Languages",
+    "present": "present"
   }
 }

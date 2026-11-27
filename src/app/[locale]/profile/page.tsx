@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
+import { Download } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { countryOptions, formatMonth, languageOptions } from "@/lib/geo";
@@ -88,9 +89,16 @@ export default async function ProfilePage() {
           <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
           <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <Link href={{ pathname: "/p/[slug]", params: { slug: c.slug } }} className={buttonVariants({ variant: "outline" })}>
-          {t("viewPublic")}
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          {/* Descarga directa (no es una página): la ruta arma el PDF con el perfil guardado. */}
+          <a href={`/api/me/cv?lang=${locale}`} download className={buttonVariants({ variant: "outline" })}>
+            <Download aria-hidden="true" />
+            {t("downloadCv")}
+          </a>
+          <Link href={{ pathname: "/p/[slug]", params: { slug: c.slug } }} className={buttonVariants({ variant: "outline" })}>
+            {t("viewPublic")}
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
