@@ -1,6 +1,7 @@
 import { VerifiedBadge } from "@/components/verified-badge";
 import { getTranslations } from "next-intl/server";
 import { brandHue } from "@/lib/companies/brand";
+import { industryLabel } from "@/lib/companies/industry";
 import { countryName } from "@/lib/geo";
 import type { Database } from "@/lib/supabase/database.types";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,7 @@ const SHAPES = ["aspect-[4/5]", "aspect-[3/4]", "aspect-square", "aspect-[2/3]",
  */
 export async function CompanyCard({ company, locale, signedIn }: { company: CompanyCardData; locale: string; signedIn: boolean }) {
   const t = await getTranslations("Companies");
+  const tIndustry = await getTranslations("Industries");
   const href = { pathname: "/companies/[slug]" as const, params: { slug: company.slug } };
   const location = [company.city, countryName(company.country, locale)].filter(Boolean).join(", ");
   // Sin sesión, "me gusta" y "guardar" quedan pendientes y se vuelve al listado (con JavaScript, a la página exacta).
@@ -46,7 +48,7 @@ export async function CompanyCard({ company, locale, signedIn }: { company: Comp
             </>
           )}
         </h3>
-        {(company.industry || location) && <p className="text-sm text-white/90">{[company.industry, location].filter(Boolean).join(" · ")}</p>}
+        {(company.industry || location) && <p className="text-sm text-white/90">{[industryLabel(company.industry, tIndustry as (key: string) => string), location].filter(Boolean).join(" · ")}</p>}
         <p className="text-sm text-white/90">
           {t("openJobs", { count: Number(company.open_jobs) })}
           {company.likes_count > 0 && ` · ${t("likes", { count: company.likes_count })}`}

@@ -27,7 +27,8 @@ const nextConfig: NextConfig = {
   experimental: {
     // Las fotos de perfil sacadas con el celular pesan varios MB (se aceptan hasta 4 MB y se achican).
     // Vercel corta igual los pedidos de más de 4,5 MB.
-    serverActions: { bodySizeLimit: "5mb" },
+    // El alta de empresa manda logo (hasta 0,9 MB) y portada (hasta 4 MB) en el mismo envío.
+    serverActions: { bodySizeLimit: "6mb" },
     // Todas las páginas se renderizan por pedido (CSP con nonce): validar la navegación instantánea
     // de cada página solo genera ruido. Se valida únicamente donde se exporte `instant`.
     instantInsights: {

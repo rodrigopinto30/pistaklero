@@ -297,14 +297,21 @@ export async function onboardAsCandidate(page: Page, fullName = "Ana Pérez") {
   await page.waitForURL("/es/perfil");
 }
 
-/** Completa la bienvenida como empresa desde la página actual. */
-export async function onboardAsCompany(page: Page, companyName: string, website: string, fullName = "Rita Reclutadora") {
+/**
+ * Completa la bienvenida como empresa desde la página actual. Por defecto también da por terminada
+ * el alta de la página de la empresa (para los tests que no la prueban) y deja la página en el panel.
+ */
+export async function onboardAsCompany(page: Page, companyName: string, website: string, fullName = "Rita Reclutadora", { finishSetup = true } = {}) {
   await page.getByLabel(/Busco talento/).check();
   await fillPersonName(page, fullName);
   await page.getByLabel(/Nombre de la empresa/).fill(companyName);
   await page.getByLabel(/Sitio web/).fill(website);
   await page.getByRole("button", { name: "Continuar" }).click();
-  await page.waitForURL("/es/panel");
+  await page.waitForURL("/es/panel/empresa");
+  if (finishSetup) {
+    await admin.from("companies").update({ setup_completed_at: new Date().toISOString() }).eq("name", companyName);
+    await page.goto("/es/panel");
+  }
 }
 
 /** Abre el menú de la cuenta (foto, nombre y email arriba a la derecha). */

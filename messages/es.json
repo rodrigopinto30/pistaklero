@@ -347,9 +347,9 @@
       "title": "Logo",
       "current": "Logo actual",
       "none": "Todavía no hay logo.",
-      "file": "Imagen",
+      "file": "Logo",
       "hint": "PNG, JPEG o WebP, hasta 900 KB. Se ajusta a un cuadrado de 256 px.",
-      "upload": "Subir logo",
+      "upload": "Guardar logo",
       "remove": "Quitar logo"
     },
     "stack": {
@@ -364,9 +364,23 @@
     "cover": {
       "title": "Portada",
       "hint": "JPG, PNG o WebP de hasta 4 MB. Se ve de fondo en tu página y en el listado de empresas. Sin portada, usamos un degradé con tu logo.",
-      "file": "Imagen de portada",
-      "upload": "Subir portada",
+      "file": "Portada",
+      "upload": "Guardar portada",
       "remove": "Quitar portada"
+    },
+    "setup": {
+      "title": "Armá la página de tu empresa",
+      "subtitle": "Completá lo que tengas a mano: todo se puede cambiar después. Lo único obligatorio es el nombre.",
+      "images": "Logo y portada",
+      "imagesHint": "Opcionales, pero con imágenes la página se ve mucho mejor.",
+      "imageError": "No pudimos usar esta imagen. Probá con otra.",
+      "web": "Sitio web y redes",
+      "websiteHint": "Si tu email es del mismo dominio, la empresa queda verificada.",
+      "stack": "Stack tecnológico (opcional)",
+      "submit": "Finalizar registro",
+      "submitting": "Guardando…",
+      "pending": "Terminá de armar la página de tu empresa: así las personas saben a quién se postulan.",
+      "pendingLink": "Completar ahora"
     }
   },
   "Dashboard": {
@@ -1041,7 +1055,7 @@
     "avatar": {
       "file": "Foto de perfil",
       "hint": "JPG, PNG o WebP de hasta 4 MB. La recortamos en un círculo.",
-      "upload": "Subir foto",
+      "upload": "Guardar foto",
       "remove": "Quitar foto"
     }
   },
@@ -1157,7 +1171,8 @@
     "passwordUpdated": "Listo, ya tenés tu contraseña nueva. 🔑",
     "passwordChanged": "Cambiaste tu contraseña. Cerramos tus otras sesiones.",
     "pendingLiked": "Listo: le diste me gusta. ❤️",
-    "pendingSaved": "Listo: quedó en Guardados. 🔖"
+    "pendingSaved": "Listo: quedó en Guardados. 🔖",
+    "companyReady": "¡Listo! La página de tu empresa ya está en Pistaklero. 🎉"
   },
   "Saved": {
     "metaTitle": "Guardados",
@@ -1353,5 +1368,45 @@
       "description": "Se borra para siempre."
     },
     "withdrawConfirm": "Sí, retirarla"
+  },
+  "Industries": {
+    "software": "Software y tecnología",
+    "fintech": "Fintech",
+    "ecommerce": "E-commerce y retail",
+    "health": "Salud y healthtech",
+    "education": "Educación y edtech",
+    "it_services": "Consultoría y servicios IT",
+    "marketing": "Marketing y agencias",
+    "logistics": "Logística y transporte",
+    "banking": "Banca y seguros",
+    "telecom": "Telecomunicaciones",
+    "gaming": "Videojuegos y entretenimiento",
+    "agro": "Agro y agtech",
+    "energy": "Energía",
+    "manufacturing": "Industria y manufactura",
+    "media": "Medios y contenido",
+    "tourism": "Turismo y hotelería",
+    "real_estate": "Inmobiliaria y proptech",
+    "hr": "RR. HH. y reclutamiento",
+    "legal": "Legal y legaltech",
+    "public_ngo": "Gobierno y ONG",
+    "other": "Otra…",
+    "otherLabel": "¿Cuál?"
+  },
+  "ImagePicker": {
+    "choose": "Elegir imagen",
+    "change": "Cambiar",
+    "discard": "Quitar",
+    "remove": "Quitar",
+    "previewAlt": "Vista previa de la imagen elegida",
+    "currentAlt": "Imagen actual",
+    "wrongType": "Usá una imagen PNG, JPEG o WebP.",
+    "tooLarge": "La imagen pesa más de {size}. Elegí una más liviana."
+  },
+  "SkillChips": {
+    "choose": "Elegí una…",
+    "add": "Agregar",
+    "selected": "Elegidas",
+    "remove": "Quitar {name}"
   }
 }

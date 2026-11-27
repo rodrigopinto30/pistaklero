@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import { COMPANY_SIZES, COMPANY_STAGES } from "@/lib/validation/company";
 import { updateCompanyDetails } from "../actions";
+import { IndustryField } from "./industry-field";
 
 export type CompanyDetailsValues = Record<
   "name" | "description" | "industry" | "size" | "stage" | "country" | "city" | "linkedinUrl" | "xUrl" | "instagramUrl",
@@ -31,10 +32,8 @@ export function DetailsForm({ saved, countries }: { saved: CompanyDetailsValues;
       <Field id="company-description" name="description" label={t("description")} hint={t("descriptionHint")} error={errors.description}>
         {(p) => <Textarea {...p} className="min-h-40" maxLength={2000} defaultValue={v("description")} />}
       </Field>
-      <FieldGrid className="sm:grid-cols-3">
-        <Field id="company-industry" name="industry" label={t("industry")} hint={t("industryHint")} error={errors.industry}>
-          {(p) => <Input {...p} maxLength={60} defaultValue={v("industry")} />}
-        </Field>
+      <IndustryField idPrefix="company" saved={v("industry")} error={errors.industry} />
+      <FieldGrid>
         <Field id="company-size" name="size" label={t("size")} error={errors.size}>
           {(p) => (
             <NativeSelect {...p} defaultValue={v("size")}>

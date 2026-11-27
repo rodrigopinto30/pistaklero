@@ -35,16 +35,20 @@ test("una empresa arma su página y se ve en público", async ({ page }) => {
 
   // Logo: SVG rechazado, archivo grande rechazado, PNG aceptado
   const logo = page.getByRole("region", { name: "Logo" });
-  await logo.getByLabel("Imagen").setInputFiles({ name: "logo.svg", mimeType: "image/png", buffer: SVG });
-  await logo.getByRole("button", { name: "Subir logo" }).click();
+  // Sin imagen elegida no hay nada que guardar.
+  await expect(logo.getByRole("button", { name: "Guardar logo" })).toHaveAttribute("aria-disabled", "true");
+  await logo.getByLabel(/^Logo/).setInputFiles({ name: "logo.svg", mimeType: "image/png", buffer: SVG });
+  await expect(logo.getByRole("img", { name: "Vista previa de la imagen elegida" })).toBeVisible();
+  await logo.getByRole("button", { name: "Guardar logo" }).click();
   await expect(logo.getByText("Usá una imagen PNG, JPEG o WebP.")).toBeVisible();
-  await logo.getByLabel("Imagen").setInputFiles({ name: "grande.png", mimeType: "image/png", buffer: Buffer.alloc(950_000, 1) });
-  await logo.getByRole("button", { name: "Subir logo" }).click();
+  // El archivo grande se rechaza al elegirlo, antes de mandarlo.
+  await logo.getByLabel(/^Logo/).setInputFiles({ name: "grande.png", mimeType: "image/png", buffer: Buffer.alloc(950_000, 1) });
   await expect(logo.getByText("La imagen pesa más de 900 KB. Elegí una más liviana.")).toBeVisible();
-  await logo.getByLabel("Imagen").setInputFiles({ name: "logo.png", mimeType: "image/png", buffer: PNG });
-  await logo.getByRole("button", { name: "Subir logo" }).click();
-  await expect(logo.getByRole("img", { name: "Logo actual" })).toBeVisible();
-  const logoSrc = await logo.getByRole("img", { name: "Logo actual" }).getAttribute("src");
+  await logo.getByLabel(/^Logo/).setInputFiles({ name: "logo.png", mimeType: "image/png", buffer: PNG });
+  await logo.getByRole("button", { name: "Guardar logo" }).click();
+  await expectToast(page, "Logo actualizado.");
+  await expect(logo.getByRole("img", { name: "Imagen actual" })).toBeVisible();
+  const logoSrc = await logo.getByRole("img", { name: "Imagen actual" }).getAttribute("src");
   expect(logoSrc).toMatch(/\/company-logos\/[0-9a-f-]{36}\/[0-9a-f]{32}\.webp$/);
 
   // Stack
@@ -73,8 +77,8 @@ test("una empresa arma su página y se ve en público", async ({ page }) => {
   // Portada: se sube desde el panel y se ve en la página.
   await page.goto("/es/panel/empresa");
   const cover = page.getByRole("region", { name: "Portada" });
-  await cover.getByLabel("Imagen de portada").setInputFiles({ name: "portada.png", mimeType: "image/png", buffer: PNG });
-  await cover.getByRole("button", { name: "Subir portada" }).click();
+  await cover.getByLabel(/^Portada/).setInputFiles({ name: "portada.png", mimeType: "image/png", buffer: PNG });
+  await cover.getByRole("button", { name: "Guardar portada" }).click();
   await expectToast(page, "Portada actualizada.");
   await page.getByRole("link", { name: "Ver página pública" }).click();
   await expect(page.locator("header img[src*='/company-covers/']")).toBeVisible();

@@ -21,6 +21,7 @@ export default async function DashboardPage() {
   const { company } = await requireRecruiterPage(locale, "/dashboard");
   const t = await getTranslations("Dashboard");
   const tJobs = await getTranslations("Jobs");
+  const tCompany = await getTranslations("Company");
   const format = await getFormatter();
   const supabase = await createClient();
   const [{ data: jobs }, { data: counts }] = await Promise.all([
@@ -47,6 +48,17 @@ export default async function DashboardPage() {
           </span>
         )}
       </div>
+      {!company.setup_completed_at && (
+        <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-primary/10 p-4">
+          <p className="text-sm">
+            <Emoji symbol="✨" className="mr-1.5" />
+            {tCompany("setup.pending")}
+          </p>
+          <Link href="/dashboard/company" className={buttonVariants({ size: "sm" })}>
+            {tCompany("setup.pendingLink")}
+          </Link>
+        </div>
+      )}
       <div className="flex flex-wrap gap-2">
         <Link href="/dashboard/jobs/new" className={buttonVariants()}>
           {tJobs("list.new")}

@@ -118,15 +118,15 @@ test.describe("perfil del candidato", () => {
     // Sin foto: se ven las iniciales.
     await expect(person.getByText("FF", { exact: true })).toBeVisible();
 
-    await person.getByLabel("Foto de perfil").setInputFiles({ name: "foto.svg", mimeType: "image/png", buffer: SVG });
-    await person.getByRole("button", { name: "Subir foto" }).click();
+    await person.getByLabel(/^Foto de perfil/).setInputFiles({ name: "foto.svg", mimeType: "image/png", buffer: SVG });
+    await person.getByRole("button", { name: "Guardar foto" }).click();
     await expect(person.getByText("Usá una imagen PNG, JPEG o WebP.")).toBeVisible();
-    await person.getByLabel("Foto de perfil").setInputFiles({ name: "grande.jpg", mimeType: "image/jpeg", buffer: Buffer.alloc(4_100_000, 1) });
-    await person.getByRole("button", { name: "Subir foto" }).click();
-    await expect(person.getByText("La foto pesa más de 4 MB. Elegí una más liviana.")).toBeVisible();
+    await person.getByLabel(/^Foto de perfil/).setInputFiles({ name: "grande.jpg", mimeType: "image/jpeg", buffer: Buffer.alloc(4_100_000, 1) });
+    await expect(person.getByText("La imagen pesa más de 4 MB. Elegí una más liviana.")).toBeVisible();
 
-    await person.getByLabel("Foto de perfil").setInputFiles({ name: "foto.png", mimeType: "image/png", buffer: PNG });
-    await person.getByRole("button", { name: "Subir foto" }).click();
+    await person.getByLabel(/^Foto de perfil/).setInputFiles({ name: "foto.png", mimeType: "image/png", buffer: PNG });
+    await person.getByRole("button", { name: "Guardar foto" }).click();
+    await expectToast(page, "Foto de perfil actualizada.");
     const photo = person.locator("img[src*='/avatars/']");
     await expect(photo).toBeVisible();
     expect(await photo.getAttribute("src")).toMatch(/\/avatars\/[0-9a-f-]{36}\/[0-9a-f]{32}\.webp$/);
