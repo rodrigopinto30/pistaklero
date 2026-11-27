@@ -22,12 +22,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      # pnpm primero (toma la versión de "packageManager"): setup-node lo necesita para la caché.
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-
-      - name: Activar pnpm (la versión de packageManager)
-        run: corepack enable
+          cache: pnpm
 
       - name: Instalar dependencias
         run: pnpm install --frozen-lockfile
