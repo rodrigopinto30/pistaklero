@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import type { OnboardingField } from "@/lib/validation/onboarding";
 import { splitFullName } from "@/lib/validation/person";
+import type { SignUpRole } from "@/lib/auth/sign-up";
+import { Link } from "@/i18n/navigation";
 import { completeOnboarding, type OnboardingState } from "./actions";
 
 const initialState: OnboardingState = { status: "idle" };
@@ -16,7 +18,7 @@ const initialState: OnboardingState = { status: "idle" };
  * Los campos de cada rol se muestran solo con CSS (`:has(:checked)`), así el formulario
  * funciona igual sin JavaScript. Lo oculto con display:none tampoco lo leen los lectores de pantalla.
  */
-export function WelcomeForm({ locale, defaultName }: { locale: string; defaultName: string }) {
+export function WelcomeForm({ locale, defaultName, presetRole }: { locale: string; defaultName: string; presetRole: SignUpRole | null }) {
   const t = useTranslations("Welcome");
   const [state, formAction, pending] = useActionState(completeOnboarding, initialState);
   const formRef = useRef<HTMLFormElement>(null);
@@ -62,7 +64,18 @@ export function WelcomeForm({ locale, defaultName }: { locale: string; defaultNa
         </p>
       )}
 
+      {presetRole && (
+        <p className="rounded-xl bg-secondary px-4 py-3 text-sm">
+          {t("chosen", { role: t(presetRole === "candidate" ? "roleCandidate" : "roleRecruiter") })}{" "}
+          <Link href="/sign-up" className="font-medium text-primary underline underline-offset-4">
+            {t("change")}
+          </Link>
+        </p>
+      )}
+
+      {/* Con el rol elegido en el registro, la elección queda oculta pero sigue en el formulario. */}
       <fieldset
+        hidden={Boolean(presetRole)}
         className="flex flex-col gap-3"
         aria-describedby={errors.role ? "welcome-role-hint welcome-role-error" : "welcome-role-hint"}
       >
@@ -80,7 +93,7 @@ export function WelcomeForm({ locale, defaultName }: { locale: string; defaultNa
               name="role"
               value={role}
               id={`role-${role}`}
-              defaultChecked={values.role === role}
+              defaultChecked={(values.role ?? presetRole) === role}
               data-invalid={errors.role ? true : undefined}
               className="mt-1 size-4 accent-primary"
             />

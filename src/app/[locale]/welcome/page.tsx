@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
+import { SignUpSteps } from "@/components/auth/sign-up-steps";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
+import { parseSignUpRole } from "@/lib/auth/sign-up";
 import { getPathname, redirect } from "@/i18n/navigation";
 import { WelcomeForm } from "./welcome-form";
 
@@ -9,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("metaTitle"), robots: { index: false } };
 }
 
-export default async function WelcomePage() {
+export default async function WelcomePage({ searchParams }: PageProps<"/[locale]/welcome">) {
   const locale = await getLocale();
   const user = await getCurrentUser();
   if (!user) {
@@ -19,14 +21,17 @@ export default async function WelcomePage() {
   if (await getCurrentProfile()) redirect({ href: "/", locale });
 
   const t = await getTranslations("Welcome");
+  // Si viene del registro, el rol ya está elegido: este es el último paso.
+  const presetRole = parseSignUpRole((await searchParams).role);
 
   return (
     <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8 px-4 py-12">
+      {presetRole && <SignUpSteps current={3} />}
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("subtitle")}</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{presetRole ? t("detailsTitle") : t("title")}</h1>
+        <p className="text-muted-foreground">{presetRole ? t("detailsSubtitle") : t("subtitle")}</p>
       </div>
-      <WelcomeForm locale={locale} defaultName={user?.name ?? ""} />
+      <WelcomeForm locale={locale} defaultName={user?.name ?? ""} presetRole={presetRole} />
     </div>
   );
 }

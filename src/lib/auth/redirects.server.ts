@@ -23,6 +23,8 @@ export async function afterSignIn(supabase: Awaited<ReturnType<typeof createClie
   if (profile || next.startsWith("/api/team/accept?")) return redirectTo(next);
 
   const welcome = getPathname({ locale: localeFromPath(next), href: "/welcome" });
+  // Desde el registro, `next` ya es la bienvenida con el rol elegido (?role=…): se conserva.
+  if (new URL(next, "http://placeholder.invalid").pathname === welcome) return redirectTo(next);
   return redirectTo(welcome);
 }
 
