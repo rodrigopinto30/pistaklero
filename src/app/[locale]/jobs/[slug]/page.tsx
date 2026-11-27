@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { ResponseBadge } from "@/components/jobs/response-badge";
 import { Markdown } from "@/components/markdown";
 import { buttonVariants } from "@/components/ui/button";
 import { countryName } from "@/lib/geo";
@@ -19,7 +20,7 @@ async function loadJob(slug: string) {
   // RLS: el público solo ve ofertas publicadas y vigentes (la empresa ve también las suyas).
   const { data } = await supabase
     .from("jobs")
-    .select("*, companies(id, name, slug, logo_path, verified_at)")
+    .select("*, companies(id, name, slug, logo_path, verified_at, company_response_stats(badge))")
     .eq("slug", slug)
     .maybeSingle();
   return data;
@@ -71,6 +72,7 @@ export default async function JobPage({ params }: PageProps<"/[locale]/jobs/[slu
                 {company.verified_at && <BadgeCheck aria-label="✓" className="size-4 text-primary" />}
               </Link>
             )}
+            {company && job.source === "native" && <ResponseBadge badge={company.company_response_stats?.badge ?? "new"} />}
           </div>
           <h1 id="job-title" lang={job.language} className="text-3xl font-semibold tracking-tight">
             {job.title}

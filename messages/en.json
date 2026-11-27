@@ -838,5 +838,11 @@
         }
       }
     }
+  },
+  "ResponseBadge": {
+    "new": "New on Pistaklero",
+    "fast": "Replies within 48 h",
+    "medium": "Takes ~1 week",
+    "slow": "Low response rate"
   }
 }

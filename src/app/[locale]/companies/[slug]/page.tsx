@@ -2,6 +2,7 @@ import { BadgeCheck, Building2, CircleAlert, ExternalLink, MapPin, Rocket, Users
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
+import { ResponseBadge } from "@/components/jobs/response-badge";
 import { countryName } from "@/lib/geo";
 import { companyLogoUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
@@ -35,7 +36,10 @@ export default async function CompanyPage({ params }: PageProps<"/[locale]/compa
   const t = await getTranslations("CompanyPage");
   const td = await getTranslations("Company.details");
   const supabase = await createClient();
-  const { data: stack } = await supabase.from("company_skills").select("skills(name_es, name_en)").eq("company_id", company.id);
+  const [{ data: stack }, { data: stats }] = await Promise.all([
+    supabase.from("company_skills").select("skills(name_es, name_en)").eq("company_id", company.id),
+    supabase.from("company_response_stats").select("badge").eq("company_id", company.id).maybeSingle(),
+  ]);
 
   const logo = companyLogoUrl(company.logo_path);
   const location = [company.city, countryName(company.country, locale)].filter(Boolean).join(", ");
@@ -71,6 +75,7 @@ export default async function CompanyPage({ params }: PageProps<"/[locale]/compa
                 {t("unverified")}
               </span>
             )}
+            {company.status !== "unclaimed" && <ResponseBadge badge={stats?.badge ?? "new"} />}
             {company.stage && (
               <span className="inline-flex items-center gap-1 rounded-full border border-input px-3 py-1">
                 <Rocket aria-hidden="true" className="size-4 text-violet" />
