@@ -9,6 +9,19 @@ test("por ahora el sitio es solo claro y no ofrece el modo oscuro", async ({ pag
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute("content", "#f6f7f4");
 });
 
+test("sin la clase en <html> (React la rearma al cambiar de idioma) la página sigue en claro", async ({ page }) => {
+  await page.goto("/es");
+  const colors = () =>
+    page.evaluate(() => ({
+      background: getComputedStyle(document.body).backgroundColor,
+      primary: getComputedStyle(document.documentElement).getPropertyValue("--primary").trim(),
+    }));
+  const withClass = await colors();
+  await page.evaluate(() => document.documentElement.classList.remove("light"));
+  expect(await colors()).toEqual(withClass);
+  expect(withClass.primary).toBe("#3d6b0a");
+});
+
 test("el modo claro cumple los contrastes en las páginas principales", async ({ page }) => {
   const title = `Modo claro ${Date.now().toString(36)}`;
   await seedCompanyWithJobs("Clarita", [{ title }]);
