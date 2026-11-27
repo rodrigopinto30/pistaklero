@@ -14,7 +14,6 @@ const month = z
 const optionalMonth = z.preprocess(emptyToUndefined, month.optional());
 
 export const basicsSchema = z.object({
-  fullName: requiredText(80, 2),
   headline: optionalText(100),
   bio: optionalText(500),
   country: z.preprocess(emptyToUndefined, z.enum(COUNTRY_CODES).optional()),

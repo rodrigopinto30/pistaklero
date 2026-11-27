@@ -1,4 +1,4 @@
-import { expect, signIn, test, uniqueEmail } from "./support/fixtures";
+import { expect, signIn, test, uniqueEmail, fillPersonName } from "./support/fixtures";
 
 test("una candidata elige su rol y queda registrada", async ({ page }) => {
   await signIn(page, uniqueEmail("candidata"));
@@ -9,7 +9,7 @@ test("una candidata elige su rol y queda registrada", async ({ page }) => {
 
   await page.getByLabel(/Busco trabajo/).check();
   await expect(page.getByLabel(/Nombre de la empresa/)).toBeHidden();
-  await page.getByLabel(/Nombre y apellido/).fill("Ana Pérez");
+  await fillPersonName(page, "Ana Pérez");
   await page.getByLabel(/Titular/).fill("Frontend Junior");
   await page.getByRole("button", { name: "Continuar" }).click();
 
@@ -25,6 +25,7 @@ test("una empresa con email de su dominio, y el mismo dominio no se repite", asy
   await signIn(first, uniqueEmail("rrhh", domain));
   await first.waitForURL("/es/bienvenida");
   await first.getByLabel(/Busco talento/).check();
+  await fillPersonName(first, "Rita Reclutadora");
   await first.getByLabel(/Sitio web/).fill(domain);
   await first.getByRole("button", { name: "Continuar" }).click();
   await expect(first.getByLabel(/Nombre de la empresa/)).toBeFocused();
@@ -37,6 +38,7 @@ test("una empresa con email de su dominio, y el mismo dominio no se repite", asy
   await signIn(second, uniqueEmail("otra", domain));
   await second.waitForURL("/es/bienvenida");
   await second.getByLabel(/Busco talento/).check();
+  await fillPersonName(second, "Rita Reclutadora");
   await second.getByLabel(/Nombre de la empresa/).fill("Acme Copia");
   await second.getByLabel(/Sitio web/).fill(`https://www.${domain}`);
   await second.getByRole("button", { name: "Continuar" }).click();

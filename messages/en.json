@@ -52,7 +52,6 @@
     "roleRecruiter": "I'm looking for talent",
     "roleRecruiterHint": "Post jobs for your company.",
     "roleNote": "This can't be changed later: to do both, use another account.",
-    "fullName": "Full name",
     "headline": "Headline",
     "headlineHint": "For example: Junior Frontend · React",
     "companyName": "Company name",
@@ -64,14 +63,19 @@
     "submitting": "Saving…",
     "errors": {
       "role": "Choose one of the two options.",
-      "fullName": "Enter your name (2 to 80 characters).",
       "headline": "The headline can be up to 100 characters.",
       "companyName": "Enter the company name (2 to 80 characters).",
       "websiteUrl": "Enter a valid address, for example acme.com.",
       "company_exists": "That company is already on Pistaklero. Ask someone on your team to invite you.",
       "unknown": "We couldn't save your details. Please try again.",
-      "company_unclaimed": "That page is unclaimed. To make it yours, sign in with an email from that domain (for example, name@company.com)."
-    }
+      "company_unclaimed": "That page is unclaimed. To make it yours, sign in with an email from that domain (for example, name@company.com).",
+      "firstName": "Enter your first name (up to 50 characters).",
+      "middleName": "The middle name can have up to 50 characters.",
+      "lastName": "Enter your last name (up to 50 characters)."
+    },
+    "firstName": "First name",
+    "middleName": "Middle name",
+    "lastName": "Last name"
   },
   "Form": {
     "required": "(required)",
@@ -112,7 +116,6 @@
     "viewPublic": "See how my profile looks",
     "basics": {
       "title": "Basic details",
-      "fullName": "Full name",
       "headline": "Headline",
       "headlineHint": "For example: Junior Frontend · React",
       "bio": "About me",
@@ -244,7 +247,11 @@
       "block": "Block {company}",
       "unblock": "Unblock {company}"
     },
-    "downloadCv": "Download CV (PDF)"
+    "downloadCv": "Download CV (PDF)",
+    "person": {
+      "title": "Personal details",
+      "hint": "This is how companies and readers of your posts see you."
+    }
   },
   "PublicProfile": {
     "availability": "Availability: {value}",
@@ -928,5 +935,12 @@
     "skills": "Skills",
     "languages": "Languages",
     "present": "present"
+  },
+  "Person": {
+    "title": "Personal details",
+    "hint": "This is how companies and readers of your posts see you.",
+    "firstName": "First name",
+    "middleName": "Middle name",
+    "lastName": "Last name"
   }
 }

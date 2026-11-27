@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { basicsSchema, entrySchemas, salarySchema } from "./profile";
 
-const basics = { fullName: "Ana Pérez", headline: "", bio: "", country: "", city: "", languages: [], githubUrl: "", linkedinUrl: "", websiteUrl: "" };
+const basics = { headline: "", bio: "", country: "", city: "", languages: [], githubUrl: "", linkedinUrl: "", websiteUrl: "" };
 
 describe("basicsSchema", () => {
   it("acepta datos mínimos y normaliza los enlaces", () => {

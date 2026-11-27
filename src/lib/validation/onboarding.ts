@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { personNameSchema } from "./person";
 
 /** Acepta "acme.com" o "https://acme.com" y devuelve siempre una URL https. Vacío = sin sitio. */
 export const optionalHttpsUrl = z
@@ -11,13 +12,12 @@ export const optionalHttpsUrl = z
   })
   .pipe(z.url({ protocol: /^https$/, hostname: z.regexes.domain }).optional());
 
-export const candidateOnboardingSchema = z.object({
+export const candidateOnboardingSchema = personNameSchema.extend({
   role: z.literal("candidate"),
-  fullName: z.string().trim().min(2).max(80),
   headline: z.string().trim().max(100),
 });
 
-export const recruiterOnboardingSchema = z.object({
+export const recruiterOnboardingSchema = personNameSchema.extend({
   role: z.literal("recruiter"),
   companyName: z.string().trim().min(2).max(80),
   websiteUrl: optionalHttpsUrl,
@@ -28,4 +28,4 @@ export const onboardingSchema = z.discriminatedUnion("role", [
   recruiterOnboardingSchema,
 ]);
 
-export type OnboardingField = "role" | "fullName" | "headline" | "companyName" | "websiteUrl";
+export type OnboardingField = "role" | "firstName" | "middleName" | "lastName" | "headline" | "companyName" | "websiteUrl";

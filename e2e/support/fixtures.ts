@@ -95,7 +95,9 @@ export async function seedCandidate(email: string, fullName = "Candidata de prue
   const { data: user, error } = await admin.auth.admin.createUser({ email, email_confirm: true });
   if (error) throw error;
   await admin.from("profiles").insert({ id: user.user.id, role: "candidate" });
-  await admin.from("candidates").insert({ user_id: user.user.id, slug: `seed-${user.user.id.slice(0, 8)}`, full_name: fullName });
+  const [firstName, ...rest] = fullName.split(" ");
+  await admin.from("people").insert({ user_id: user.user.id, first_name: firstName, last_name: rest.join(" ") || "Prueba" });
+  await admin.from("candidates").insert({ user_id: user.user.id, slug: `seed-${user.user.id.slice(0, 8)}` });
   return user.user.id;
 }
 
@@ -225,17 +227,25 @@ export async function linkFromEmail(email: string, contains: string) {
   return link!;
 }
 
+/** Nombre y apellido en la bienvenida ("Nombre" a secas: no "Nombre de la empresa" ni "Segundo nombre"). */
+export async function fillPersonName(page: Page, fullName: string) {
+  const [firstName, ...rest] = fullName.split(" ");
+  await page.getByLabel(/^Nombre(?! de)/).fill(firstName);
+  await page.getByLabel(/^Apellido/).fill(rest.join(" ") || "Prueba");
+}
+
 /** Completa la bienvenida como candidata desde la página actual. */
 export async function onboardAsCandidate(page: Page, fullName = "Ana Pérez") {
   await page.getByLabel(/Busco trabajo/).check();
-  await page.getByLabel(/Nombre y apellido/).fill(fullName);
+  await fillPersonName(page, fullName);
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.waitForURL("/es/perfil");
 }
 
 /** Completa la bienvenida como empresa desde la página actual. */
-export async function onboardAsCompany(page: Page, companyName: string, website: string) {
+export async function onboardAsCompany(page: Page, companyName: string, website: string, fullName = "Rita Reclutadora") {
   await page.getByLabel(/Busco talento/).check();
+  await fillPersonName(page, fullName);
   await page.getByLabel(/Nombre de la empresa/).fill(companyName);
   await page.getByLabel(/Sitio web/).fill(website);
   await page.getByRole("button", { name: "Continuar" }).click();
