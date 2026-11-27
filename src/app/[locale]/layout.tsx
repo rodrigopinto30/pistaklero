@@ -9,6 +9,7 @@ import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
 import { getPublicEnv } from "@/lib/env";
 import { getTheme } from "@/lib/theme/server";
+import { DARK_MODE_ENABLED, THEME_COLOR } from "@/lib/theme/theme";
 import { fontVariables } from "../fonts";
 import "../globals.css";
 
@@ -37,8 +38,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // El tema real lo define la clase de <html> (y su color-scheme en CSS); leer la cookie acá bloquearía la página.
 export const viewport: Viewport = {
-  themeColor: "#0a0c0b",
-  colorScheme: "dark light",
+  themeColor: THEME_COLOR,
+  colorScheme: DARK_MODE_ENABLED ? "dark light" : "light",
 };
 
 export default async function LocaleLayout({
