@@ -70,7 +70,7 @@ export async function SiteHeader() {
           en el centro exacto (la grilla de tres columnas las centra aunque los costados midan distinto). */}
       <div className="w-full px-4 sm:px-6 lg:px-10">
         <div className="flex min-h-16 items-center gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr]">
-          <Link href="/" aria-label={t("homeLink")} className="justify-self-start rounded-md text-xl font-semibold tracking-tight">
+          <Link href="/" data-home-link aria-label={t("homeLink")} className="justify-self-start rounded-md text-xl font-semibold tracking-tight">
             Pista<span className="text-primary">klero</span>
           </Link>
           <SectionTabs className="hidden lg:block" />
