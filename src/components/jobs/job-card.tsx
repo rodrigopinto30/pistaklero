@@ -1,4 +1,5 @@
-import { BadgeCheck, Building2, ExternalLink, Laptop, MapPin, Signal } from "lucide-react";
+import { Building2, ExternalLink, Laptop, MapPin, Signal } from "lucide-react";
+import { VerifiedBadge } from "@/components/verified-badge";
 import { getTranslations } from "next-intl/server";
 import { countryName } from "@/lib/geo";
 import { formatSalaryRange } from "@/lib/jobs/format";
@@ -80,7 +81,7 @@ export async function JobCard({ job, locale, index, viewer }: { job: JobCardData
         )}
         <span className="flex items-center gap-1 text-sm text-muted-foreground">
           {job.company_name}
-          {job.company_verified && <BadgeCheck aria-hidden="true" className="size-4 text-primary" />}
+          {job.company_verified && <VerifiedBadge label={t("verified")} />}
         </span>
         <span className="ml-auto flex items-center gap-2">
           {job.source === "imported" && (

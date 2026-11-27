@@ -1,4 +1,5 @@
-import { BadgeCheck, Bookmark, Briefcase, CalendarClock, ExternalLink, Laptop, MapPin, Signal } from "lucide-react";
+import { Bookmark, Briefcase, CalendarClock, ExternalLink, Laptop, MapPin, Signal } from "lucide-react";
+import { VerifiedBadge } from "@/components/verified-badge";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
@@ -94,7 +95,7 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
             {company && (
               <Link href={{ pathname: "/companies/[slug]", params: { slug: company.slug } }} className="inline-flex items-center gap-1 font-medium text-violet underline-offset-4 hover:underline">
                 {company.name}
-                {company.verified_at && <BadgeCheck aria-label="✓" className="size-4 text-primary" />}
+                {company.verified_at && <VerifiedBadge label={t("detail.verified")} />}
               </Link>
             )}
             {company && job.source === "native" && <ResponseBadge badge={company.company_response_stats?.badge ?? "new"} />}

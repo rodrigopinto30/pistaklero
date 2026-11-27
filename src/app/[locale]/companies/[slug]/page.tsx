@@ -1,4 +1,5 @@
-import { BadgeCheck, Building2, CircleAlert, ExternalLink, Factory, MapPin, Rocket, Users } from "lucide-react";
+import { Building2, CircleAlert, ExternalLink, Factory, MapPin, Rocket, Users } from "lucide-react";
+import { VerifiedBadge } from "@/components/verified-badge";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -118,8 +119,8 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
             <h1 className="text-3xl font-semibold tracking-tight">{company.name}</h1>
             <div className="flex flex-wrap items-center gap-2 text-sm">
               {company.verified_at ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-3 py-1 font-medium text-primary">
-                  <BadgeCheck aria-hidden="true" className="size-4" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-verified/10 px-3 py-1 font-medium text-verified">
+                  <VerifiedBadge />
                   {t("verified")}
                 </span>
               ) : (

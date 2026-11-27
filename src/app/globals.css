@@ -35,6 +35,7 @@
   --color-violet: var(--violet);
   --color-info: var(--info);
   --color-warn: var(--warn);
+  --color-verified: var(--verified);
 
   /* Sombras suaves en lugar de bordes: separan sin recargar. */
   --shadow-soft: 0 1px 2px rgb(17 21 19 / 0.05), 0 4px 14px rgb(17 21 19 / 0.06);
@@ -88,6 +89,7 @@
   --violet: #5847cc; /* 6.1:1 */
   --info: #1d4ed8; /* 6.7:1; 5.8:1 sobre su fondo suave */
   --warn: #875200; /* 6.0:1 */
+  --verified: #15803d; /* tilde de empresa verificada: 5.0:1 sobre card */
 
   --radius: 0.75rem;
 }
@@ -126,6 +128,7 @@
   --violet: #a99bff; /* secundario: estado "Entrevista", enlaces */
   --info: #8fb4ff; /* estado "Recibida" */
   --warn: #f5c451; /* avisos y badge "Tarda ~1 semana" */
+  --verified: #4ade80;
 }
 
 @layer base {
