@@ -26,6 +26,23 @@ export async function signIn(page: Page, email: string, next = "/es") {
   await page.goto(`/api/auth/confirm?${params}`);
 }
 
+/** Busca en Mailpit el último email enviado a `email` y devuelve el primer link que contenga `contains`. */
+export async function linkFromEmail(email: string, contains: string) {
+  let link: string | undefined;
+  await expect
+    .poll(async () => {
+      const search = await (await fetch(`${MAILPIT_URL}/api/v1/search?query=${encodeURIComponent(`to:${email}`)}`)).json();
+      const id = search.messages?.[0]?.ID;
+      if (!id) return undefined;
+      const message = await (await fetch(`${MAILPIT_URL}/api/v1/message/${id}`)).json();
+      const hrefs = [...String(message.HTML).matchAll(/href="([^"]+)"/g)].map((m) => m[1]!.replaceAll("&amp;", "&"));
+      link = hrefs.find((href) => href.includes(contains));
+      return link;
+    }, { timeout: 15_000 })
+    .toBeTruthy();
+  return link!;
+}
+
 /** Completa la bienvenida como candidata desde la página actual. */
 export async function onboardAsCandidate(page: Page, fullName = "Ana Pérez") {
   await page.getByLabel(/Busco trabajo/).check();
