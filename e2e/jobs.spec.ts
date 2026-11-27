@@ -8,7 +8,7 @@ async function newCompany(page: Page) {
 }
 
 async function fillJob(page: Page, title: string, { min = "1000", max = "1500" } = {}) {
-  await page.getByLabel(/^Puesto/).fill(title);
+  await page.getByRole("main").getByLabel(/^Puesto/).fill(title);
   await page
     .getByLabel(/^Descripción/)
     .fill("Vas a trabajar con **React** y TypeScript.\n\n- Remoto\n- Equipo chico\n\n<script>alert('xss')</script> [trampa](javascript:alert(1))");

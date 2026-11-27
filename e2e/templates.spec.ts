@@ -10,7 +10,7 @@ test("una plantilla completa el formulario y la oferta se publica", async ({ pag
   await templates.getByRole("link", { name: "Data Analyst Jr" }).click();
   await page.waitForURL("/es/panel/ofertas/nueva?plantilla=data-analyst-jr");
   await expect(templates.getByRole("link", { name: "Data Analyst Jr" })).toHaveAttribute("aria-current", "true");
-  await expect(page.getByLabel(/^Puesto/)).toHaveValue("Data Analyst Jr");
+  await expect(page.getByRole("main").getByLabel(/^Puesto/)).toHaveValue("Data Analyst Jr");
   await expect(page.getByLabel(/^Descripción/)).toHaveValue(/Escribir consultas SQL/);
   await expect(page.getByLabel("SQL", { exact: true })).toBeChecked();
   await expect(page.getByLabel("Power BI", { exact: true })).toBeChecked();
@@ -20,7 +20,7 @@ test("una plantilla completa el formulario y la oferta se publica", async ({ pag
   // Cambiar de plantilla rearma el formulario
   await templates.getByRole("link", { name: "Desarrollador/a Frontend Junior" }).click();
   await page.waitForURL("/es/panel/ofertas/nueva?plantilla=frontend-junior");
-  await expect(page.getByLabel(/^Puesto/)).toHaveValue("Desarrollador/a Frontend Junior");
+  await expect(page.getByRole("main").getByLabel(/^Puesto/)).toHaveValue("Desarrollador/a Frontend Junior");
   await expect(page.getByLabel("React", { exact: true })).toBeChecked();
   await expect(page.getByLabel("SQL", { exact: true })).not.toBeChecked();
 
@@ -35,5 +35,5 @@ test("una plantilla completa el formulario y la oferta se publica", async ({ pag
   await page.goto("/es/panel/ofertas/nueva?plantilla=sdr");
   await templates.getByRole("link", { name: "Empezar de cero" }).click();
   await page.waitForURL("/es/panel/ofertas/nueva");
-  await expect(page.getByLabel(/^Puesto/)).toHaveValue("");
+  await expect(page.getByRole("main").getByLabel(/^Puesto/)).toHaveValue("");
 });
