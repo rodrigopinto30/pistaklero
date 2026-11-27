@@ -53,8 +53,8 @@ services:
   e2e:
     image: mcr.microsoft.com/playwright:v1.65.1-noble
     profiles: ["e2e"]
-    # Dos navegadores a la vez entran holgados.
-    mem_limit: 3g
+    # Dos navegadores a la vez entran holgados (con 3 GB alguna pestaña se caía).
+    mem_limit: 4g
     init: true
     ipc: host
     user: "${HOST_UID:?Usá ./start.sh}:${HOST_GID:?Usá ./start.sh}"
