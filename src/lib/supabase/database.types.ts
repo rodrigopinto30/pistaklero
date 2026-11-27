@@ -19,6 +19,158 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"candidate_blocked_companies": {
+                  Row: {
+                    "candidate_id": string,"company_id": string,"created_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"company_id": string,"created_at"?: string
+                  }
+                  Update: {
+                    "candidate_id"?: string,"company_id"?: string,"created_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "candidate_blocked_companies_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    },{
+      foreignKeyName: "candidate_blocked_companies_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"candidate_certifications": {
+                  Row: {
+                    "candidate_id": string,"created_at": string,"credential_url": string | null,"id": string,"issued_on": string | null,"issuer": string,"name": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"created_at"?: string,"credential_url"?: string | null,"id"?: string,"issued_on"?: string | null,"issuer"?: string,"name": string
+                  }
+                  Update: {
+                    "candidate_id"?: string,"created_at"?: string,"credential_url"?: string | null,"id"?: string,"issued_on"?: string | null,"issuer"?: string,"name"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "candidate_certifications_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    }
+                  ]
+                },"candidate_education": {
+                  Row: {
+                    "candidate_id": string,"created_at": string,"degree": string,"end_date": string | null,"id": string,"institution": string,"start_date": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"created_at"?: string,"degree": string,"end_date"?: string | null,"id"?: string,"institution": string,"start_date": string
+                  }
+                  Update: {
+                    "candidate_id"?: string,"created_at"?: string,"degree"?: string,"end_date"?: string | null,"id"?: string,"institution"?: string,"start_date"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "candidate_education_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    }
+                  ]
+                },"candidate_experiences": {
+                  Row: {
+                    "candidate_id": string,"company_name": string,"created_at": string,"description": string,"end_date": string | null,"id": string,"start_date": string,"title": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"company_name": string,"created_at"?: string,"description"?: string,"end_date"?: string | null,"id"?: string,"start_date": string,"title": string
+                  }
+                  Update: {
+                    "candidate_id"?: string,"company_name"?: string,"created_at"?: string,"description"?: string,"end_date"?: string | null,"id"?: string,"start_date"?: string,"title"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "candidate_experiences_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    }
+                  ]
+                },"candidate_projects": {
+                  Row: {
+                    "candidate_id": string,"created_at": string,"description": string,"id": string,"preview_path": string | null,"repo_url": string | null,"title": string,"url": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"created_at"?: string,"description"?: string,"id"?: string,"preview_path"?: string | null,"repo_url"?: string | null,"title": string,"url"?: string | null
+                  }
+                  Update: {
+                    "candidate_id"?: string,"created_at"?: string,"description"?: string,"id"?: string,"preview_path"?: string | null,"repo_url"?: string | null,"title"?: string,"url"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "candidate_projects_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    }
+                  ]
+                },"candidate_salary_expectations": {
+                  Row: {
+                    "amount": number,"basis": Database["public"]['Enums']["salary_basis"],"candidate_id": string,"currency": Database["public"]['Enums']["currency"],"period": Database["public"]['Enums']["salary_period"],"updated_at": string,"visibility": Database["public"]['Enums']["salary_visibility"]
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount": number,"basis": Database["public"]['Enums']["salary_basis"],"candidate_id": string,"currency": Database["public"]['Enums']["currency"],"period": Database["public"]['Enums']["salary_period"],"updated_at"?: string,"visibility"?: Database["public"]['Enums']["salary_visibility"]
+                  }
+                  Update: {
+                    "amount"?: number,"basis"?: Database["public"]['Enums']["salary_basis"],"candidate_id"?: string,"currency"?: Database["public"]['Enums']["currency"],"period"?: Database["public"]['Enums']["salary_period"],"updated_at"?: string,"visibility"?: Database["public"]['Enums']["salary_visibility"]
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "candidate_salary_expectations_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: true
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    }
+                  ]
+                },"candidate_skills": {
+                  Row: {
+                    "candidate_id": string,"level": Database["public"]['Enums']["skill_level"],"skill_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"level"?: Database["public"]['Enums']["skill_level"],"skill_id": string
+                  }
+                  Update: {
+                    "candidate_id"?: string,"level"?: Database["public"]['Enums']["skill_level"],"skill_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "candidate_skills_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    },{
+      foreignKeyName: "candidate_skills_skill_id_fkey"
+      columns: ["skill_id"]
+isOneToOne: false
+      referencedRelation: "skills"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"candidates": {
                   Row: {
                     "availability": Database["public"]['Enums']["availability"],"avatar_url": string | null,"bio": string,"city": string | null,"country": string | null,"created_at": string,"full_name": string,"github_url": string | null,"headline": string,"languages": (string)[],"linkedin_url": string | null,"slug": string,"updated_at": string,"user_id": string,"visibility": Database["public"]['Enums']["profile_visibility"],"website_url": string | null
@@ -93,6 +245,20 @@ isOneToOne: true
                   Relationships: [
                     
                   ]
+                },"skills": {
+                  Row: {
+                    "category": Database["public"]['Enums']["skill_category"],"id": string,"name_en": string,"name_es": string,"slug": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "category": Database["public"]['Enums']["skill_category"],"id"?: string,"name_en": string,"name_es": string,"slug": string
+                  }
+                  Update: {
+                    "category"?: Database["public"]['Enums']["skill_category"],"id"?: string,"name_en"?: string,"name_es"?: string,"slug"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 }
           }
           Views: {
@@ -137,7 +303,7 @@ isOneToOne: true
                            }
           }
           Enums: {
-            "app_locale": "es"|"en","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","member_role": "owner"|"member","profile_visibility": "companies_only"|"public"|"hidden","user_role": "candidate"|"recruiter"|"admin"
+            "app_locale": "es"|"en","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","member_role": "owner"|"member","profile_visibility": "companies_only"|"public"|"hidden","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -253,7 +419,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "app_locale": ["es", "en"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"member_role": ["owner", "member"],"profile_visibility": ["companies_only", "public", "hidden"],"user_role": ["candidate", "recruiter", "admin"]
+            "app_locale": ["es", "en"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"member_role": ["owner", "member"],"profile_visibility": ["companies_only", "public", "hidden"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"]
           }
         }
 } as const

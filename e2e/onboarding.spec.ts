@@ -13,8 +13,9 @@ test("una candidata elige su rol y queda registrada", async ({ page }) => {
   await page.getByLabel(/Titular/).fill("Frontend Junior");
   await page.getByRole("button", { name: "Continuar" }).click();
 
-  await page.waitForURL("/es");
+  await page.waitForURL("/es/perfil");
   await expect(page.getByRole("link", { name: "Completá tu registro" })).toBeHidden();
+  await expect(page.getByRole("link", { name: "Mi perfil", exact: true })).toBeVisible();
 });
 
 test("una empresa con email de su dominio, y el mismo dominio no se repite", async ({ browser }) => {

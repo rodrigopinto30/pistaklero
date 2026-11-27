@@ -1,0 +1,235 @@
+import { ExternalLink, MapPin } from "lucide-react";
+import type { Metadata } from "next";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
+import { countryName, formatMonth, languageOptions } from "@/lib/geo";
+import { createClient } from "@/lib/supabase/server";
+
+async function loadCandidate(slug: string) {
+  const supabase = await createClient();
+  // RLS decide si quien mira puede ver este perfil: si no, no hay fila y es un 404.
+  const { data } = await supabase.from("candidates").select("*").eq("slug", slug).maybeSingle();
+  return data;
+}
+
+export async function generateMetadata({ params }: PageProps<"/[locale]/p/[slug]">): Promise<Metadata> {
+  const candidate = await loadCandidate((await params).slug);
+  if (!candidate) return {};
+  return {
+    title: candidate.full_name,
+    description: candidate.headline || undefined,
+    // Solo los perfiles públicos se indexan.
+    robots: { index: candidate.visibility === "public", follow: candidate.visibility === "public" },
+  };
+}
+
+function Card({ title, className, children }: { title: string; className?: string; children: ReactNode }) {
+  const id = `card-${title.toLowerCase().replace(/\W+/g, "-")}`;
+  return (
+    <section aria-labelledby={id} className={`flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 ${className ?? ""}`}>
+      <h2 id={id} className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+function safeHost(url: string) {
+  try {
+    return new URL(url).host;
+  } catch {
+    return url;
+  }
+}
+
+export default async function PublicProfilePage({ params }: PageProps<"/[locale]/p/[slug]">) {
+  const { slug } = await params;
+  const candidate = await loadCandidate(slug);
+  if (!candidate) notFound();
+
+  const locale = await getLocale();
+  const t = await getTranslations("PublicProfile");
+  const tp = await getTranslations("Profile");
+  const supabase = await createClient();
+  const id = candidate.user_id;
+
+  const [skills, experiences, education, certifications, projects] = await Promise.all([
+    supabase.from("candidate_skills").select("level, skills(name_es, name_en)").eq("candidate_id", id),
+    supabase.from("candidate_experiences").select("*").eq("candidate_id", id).order("start_date", { ascending: false }),
+    supabase.from("candidate_education").select("*").eq("candidate_id", id).order("start_date", { ascending: false }),
+    supabase.from("candidate_certifications").select("*").eq("candidate_id", id).order("issued_on", { ascending: false, nullsFirst: false }),
+    supabase.from("candidate_projects").select("*").eq("candidate_id", id).order("created_at", { ascending: false }),
+  ]);
+
+  const period = (start: string, end: string | null) =>
+    `${formatMonth(start, locale)} – ${end ? formatMonth(end, locale) : tp("entries.present")}`;
+  const location = [candidate.city, countryName(candidate.country, locale)].filter(Boolean).join(", ");
+  const languages = languageOptions(locale).filter((l) => candidate.languages.includes(l.code));
+  const links = [
+    candidate.github_url && { label: "GitHub", url: candidate.github_url },
+    candidate.linkedin_url && { label: "LinkedIn", url: candidate.linkedin_url },
+    candidate.website_url && { label: safeHost(candidate.website_url), url: candidate.website_url },
+  ].filter(Boolean) as { label: string; url: string }[];
+  const initials = candidate.full_name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+
+  return (
+    <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 md:grid-cols-3">
+      {/* Encabezado */}
+      <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 md:col-span-2 md:flex-row md:items-center">
+        {candidate.avatar_url ? (
+          <Image src={candidate.avatar_url} alt="" width={96} height={96} className="size-24 rounded-2xl object-cover" />
+        ) : (
+          <div aria-hidden="true" className="flex size-24 items-center justify-center rounded-2xl bg-muted text-3xl font-semibold text-primary">
+            {initials}
+          </div>
+        )}
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-semibold tracking-tight">{candidate.full_name}</h1>
+          {candidate.headline && <p className="text-lg text-muted-foreground">{candidate.headline}</p>}
+          <div className="flex flex-wrap items-center gap-2 text-sm">
+            <span className="rounded-full bg-primary px-3 py-1 font-medium text-primary-foreground">
+              {t("availability", { value: tp(`preferences.availabilityOptions.${candidate.availability}`) })}
+            </span>
+            {location && (
+              <span className="inline-flex items-center gap-1 text-muted-foreground">
+                <MapPin aria-hidden="true" className="size-4" />
+                {location}
+              </span>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <Card title={t("links")}>
+        {links.length > 0 && (
+          <ul className="flex flex-col gap-2">
+            {links.map((link) => (
+              <li key={link.url}>
+                <a href={link.url} rel="noopener noreferrer nofollow ugc" target="_blank" className="inline-flex items-center gap-1 text-violet underline-offset-4 hover:underline">
+                  {link.label}
+                  <ExternalLink aria-hidden="true" className="size-3.5" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+        {languages.length > 0 && (
+          <p className="text-sm text-muted-foreground">
+            {t("languages")}:{" "}
+            {languages.map((l, i) => (
+              <span key={l.code} lang={l.code}>
+                {i > 0 && ", "}
+                {l.name}
+              </span>
+            ))}
+          </p>
+        )}
+      </Card>
+
+      {candidate.bio && (
+        <Card title={t("about")} className="md:col-span-2">
+          <p className="whitespace-pre-line">{candidate.bio}</p>
+        </Card>
+      )}
+
+      {(skills.data ?? []).length > 0 && (
+        <Card title={t("skills")}>
+          <ul className="flex flex-wrap gap-2">
+            {skills.data!.map((s, i) => (
+              <li key={i} className="rounded-full border border-input px-3 py-1 text-sm">
+                {(locale === "en" ? s.skills?.name_en : s.skills?.name_es) ?? ""}{" "}
+                <span className="text-muted-foreground">· {tp(`skills.levelOptions.${s.level}`)}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+
+      {(projects.data ?? []).length > 0 && (
+        <Card title={t("projects")} className="md:col-span-3">
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {projects.data!.map((p) => (
+              <li key={p.id} className="flex flex-col gap-2 rounded-xl border border-border p-4">
+                <h3 className="font-medium">{p.title}</h3>
+                {p.description && <p className="text-sm text-muted-foreground">{p.description}</p>}
+                <div className="mt-auto flex flex-wrap gap-3 text-sm">
+                  {p.url && (
+                    <a href={p.url} rel="noopener noreferrer nofollow ugc" target="_blank" className="text-violet underline-offset-4 hover:underline">
+                      <span className="sr-only">{t("viewProject", { project: p.title })}: </span>
+                      {safeHost(p.url)}
+                    </a>
+                  )}
+                  {p.repo_url && (
+                    <a href={p.repo_url} rel="noopener noreferrer nofollow ugc" target="_blank" className="text-violet underline-offset-4 hover:underline">
+                      <span className="sr-only">{t("viewRepo", { project: p.title })}: </span>
+                      {safeHost(p.repo_url)}
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+
+      {(experiences.data ?? []).length > 0 && (
+        <Card title={t("experience")} className="md:col-span-2">
+          <ol className="flex flex-col gap-4">
+            {experiences.data!.map((e) => (
+              <li key={e.id} className="flex flex-col gap-1">
+                <h3 className="font-medium">
+                  {e.title} · <span className="text-muted-foreground">{e.company_name}</span>
+                </h3>
+                <p className="text-sm text-muted-foreground">{period(e.start_date, e.end_date)}</p>
+                {e.description && <p className="text-sm whitespace-pre-line">{e.description}</p>}
+              </li>
+            ))}
+          </ol>
+        </Card>
+      )}
+
+      {(education.data ?? []).length > 0 && (
+        <Card title={t("education")}>
+          <ol className="flex flex-col gap-3">
+            {education.data!.map((e) => (
+              <li key={e.id}>
+                <h3 className="font-medium">{e.degree}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {e.institution} · {period(e.start_date, e.end_date)}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </Card>
+      )}
+
+      {(certifications.data ?? []).length > 0 && (
+        <Card title={t("certifications")}>
+          <ul className="flex flex-col gap-3">
+            {certifications.data!.map((c) => (
+              <li key={c.id}>
+                <h3 className="font-medium">
+                  {c.credential_url ? (
+                    <a href={c.credential_url} rel="noopener noreferrer nofollow ugc" target="_blank" aria-label={t("viewCredential", { name: c.name })} className="text-violet underline-offset-4 hover:underline">
+                      {c.name}
+                    </a>
+                  ) : (
+                    c.name
+                  )}
+                </h3>
+                <p className="text-sm text-muted-foreground">{[c.issuer, formatMonth(c.issued_on, locale)].filter(Boolean).join(" · ")}</p>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+    </div>
+  );
+}

@@ -31,6 +31,15 @@ export async function onboardAsCandidate(page: Page, fullName = "Ana Pérez") {
   await page.getByLabel(/Busco trabajo/).check();
   await page.getByLabel(/Nombre y apellido/).fill(fullName);
   await page.getByRole("button", { name: "Continuar" }).click();
+  await page.waitForURL("/es/perfil");
+}
+
+/** Completa la bienvenida como empresa desde la página actual. */
+export async function onboardAsCompany(page: Page, companyName: string, website: string) {
+  await page.getByLabel(/Busco talento/).check();
+  await page.getByLabel(/Nombre de la empresa/).fill(companyName);
+  await page.getByLabel(/Sitio web/).fill(website);
+  await page.getByRole("button", { name: "Continuar" }).click();
   await page.waitForURL("/es");
 }
 

@@ -27,6 +27,11 @@ export async function SiteHeader() {
               {tAuth("completeSignUp")}
             </Link>
           )}
+          {profile?.role === "candidate" && (
+            <Link href="/profile" className={buttonVariants({ variant: "ghost" })}>
+              {t("myProfile")}
+            </Link>
+          )}
           {user ? (
             <SignOutButton />
           ) : (
