@@ -18,7 +18,7 @@ insert into public.job_questions (job_id, position, type, prompt, options) value
 -- Candidata sin perfil completo
 select tests.create_user('ana@pgtap.test') as ana \gset
 select tests.authenticate_as(:'ana');
-select public.onboard_candidate('Ana Pérez', '', 'es');
+select public.onboard_candidate('Ana', '', 'Pérez', '', 'es');
 select throws_ok(format($$select public.apply_to_job(%L, '{}')$$, :'job'), 'P0001', 'profile_incomplete', 'con el perfil incompleto no se puede postular');
 select is(public.candidate_missing_requirements(auth.uid()), array['headline', 'skills', 'experience'], 'se sabe exactamente qué falta');
 

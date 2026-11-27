@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import type { OnboardingField } from "@/lib/validation/onboarding";
+import { splitFullName } from "@/lib/validation/person";
 import { completeOnboarding, type OnboardingState } from "./actions";
 
 const initialState: OnboardingState = { status: "idle" };
@@ -23,6 +24,8 @@ export function WelcomeForm({ locale, defaultName }: { locale: string; defaultNa
   const errors = state.status === "error" ? state.fieldErrors : {};
   const values = state.status === "error" ? state.values : {};
   const formError = state.status === "error" ? state.formError : undefined;
+  // Con Google o GitHub ya tenemos el nombre: se precarga, separado en nombre y apellido.
+  const suggested = splitFullName(defaultName);
 
   // Después de un error, el foco va al primer campo con problemas (WCAG 3.3.1).
   useEffect(() => {
@@ -99,15 +102,37 @@ export function WelcomeForm({ locale, defaultName }: { locale: string; defaultNa
         )}
       </fieldset>
 
-      <div className="hidden flex-col gap-4 group-has-[#role-candidate:checked]:flex">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="welcome-fullName">
-            {t("fullName")} <span className="font-normal text-muted-foreground">{t("required")}</span>
-          </Label>
-          <Input {...field("fullName")} autoComplete="name" maxLength={80} defaultValue={values.fullName ?? defaultName} />
-          <span id="welcome-fullName-hint" hidden />
-          {error("fullName")}
+      {/* Nombre, segundo nombre y apellido: los piden los dos roles, apenas se elige uno. */}
+      <div className="hidden flex-col gap-4 group-has-[[name=role]:checked]:flex">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="welcome-firstName">
+              {t("firstName")} <span className="font-normal text-muted-foreground">{t("required")}</span>
+            </Label>
+            <Input {...field("firstName")} autoComplete="given-name" maxLength={50} defaultValue={values.firstName ?? suggested.firstName} />
+            <span id="welcome-firstName-hint" hidden />
+            {error("firstName")}
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="welcome-middleName">
+              {t("middleName")} <span className="font-normal text-muted-foreground">{t("optional")}</span>
+            </Label>
+            <Input {...field("middleName")} autoComplete="additional-name" maxLength={50} defaultValue={values.middleName} />
+            <span id="welcome-middleName-hint" hidden />
+            {error("middleName")}
+          </div>
         </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="welcome-lastName">
+            {t("lastName")} <span className="font-normal text-muted-foreground">{t("required")}</span>
+          </Label>
+          <Input {...field("lastName")} autoComplete="family-name" maxLength={50} defaultValue={values.lastName ?? suggested.lastName} />
+          <span id="welcome-lastName-hint" hidden />
+          {error("lastName")}
+        </div>
+      </div>
+
+      <div className="hidden flex-col gap-4 group-has-[#role-candidate:checked]:flex">
         <div className="flex flex-col gap-2">
           <Label htmlFor="welcome-headline">
             {t("headline")} <span className="font-normal text-muted-foreground">{t("optional")}</span>

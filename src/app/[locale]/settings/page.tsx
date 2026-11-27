@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SectionCard } from "@/components/section-card";
 import { buttonVariants } from "@/components/ui/button";
-import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
+import { PersonalForm } from "@/components/account/personal-form";
+import { getCurrentPerson, getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { getPathname, redirect } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { DeleteAccountForm, PreferencesForm } from "./settings-forms";
@@ -21,11 +22,26 @@ export default async function SettingsPage() {
   if (!profile) redirect({ href: "/welcome", locale });
 
   const t = await getTranslations("Settings");
+  const tPerson = await getTranslations("Person");
+  // La candidata edita su nombre en su perfil, junto al resto de su portfolio.
+  const person = profile!.role === "candidate" ? null : await getCurrentPerson();
   const reauthHref = `${getPathname({ locale, href: "/sign-in" })}?${new URLSearchParams({ next: here })}`;
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
       <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+
+      {profile!.role !== "candidate" && (
+        <SectionCard id="person" title={tPerson("title")} description={tPerson("hint")}>
+          <PersonalForm
+            saved={{
+              firstName: person?.first_name ?? "",
+              middleName: person?.middle_name ?? "",
+              lastName: person?.last_name ?? "",
+            }}
+          />
+        </SectionCard>
+      )}
 
       <SectionCard id="preferences" title={t("preferences.title")}>
         <PreferencesForm emailLocale={profile!.locale} emailNotifications={profile!.email_notifications} />

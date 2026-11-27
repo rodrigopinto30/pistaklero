@@ -6,6 +6,7 @@ import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { countryOptions, formatMonth, languageOptions } from "@/lib/geo";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
+import { PersonalForm } from "@/components/account/personal-form";
 import { BasicsForm } from "./_components/basics-form";
 import { BlockedCompanies } from "./_components/blocked-companies";
 import { EntriesSection, type EntryItem } from "./_components/entries-section";
@@ -33,7 +34,8 @@ export default async function ProfilePage() {
   const userId = profile!.id;
 
   const supabase = await createClient();
-  const [candidate, catalog, skills, experiences, education, certifications, projects, salary, blocked] = await Promise.all([
+  const [person, candidate, catalog, skills, experiences, education, certifications, projects, salary, blocked] = await Promise.all([
+    supabase.from("people").select("first_name, middle_name, last_name").eq("user_id", userId).single(),
     supabase.from("candidates").select("*").eq("user_id", userId).single(),
     supabase.from("skills").select("id, name_es, name_en, category").order("slug"),
     supabase.from("candidate_skills").select("skill_id, level, skills(name_es, name_en)").eq("candidate_id", userId),
@@ -102,10 +104,18 @@ export default async function ProfilePage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
+        <Section id="person" title={t("person.title")} description={t("person.hint")} className="lg:col-span-3">
+          <PersonalForm
+            saved={{
+              firstName: person.data?.first_name ?? "",
+              middleName: person.data?.middle_name ?? "",
+              lastName: person.data?.last_name ?? "",
+            }}
+          />
+        </Section>
         <Section id="basics" title={t("basics.title")} className="lg:col-span-2">
           <BasicsForm
             saved={{
-              fullName: c.full_name,
               headline: c.headline,
               bio: c.bio,
               country: c.country ?? "",

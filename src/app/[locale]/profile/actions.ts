@@ -49,7 +49,6 @@ export async function updateBasics(_prev: FormState, formData: FormData): Promis
   const { error } = await auth.supabase
     .from("candidates")
     .update({
-      full_name: d.fullName,
       headline: d.headline,
       bio: d.bio,
       country: d.country ?? null,

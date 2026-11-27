@@ -52,7 +52,6 @@
     "roleRecruiter": "Busco talento",
     "roleRecruiterHint": "Publicá ofertas para tu empresa.",
     "roleNote": "No se puede cambiar después: para hacer las dos cosas, usá otra cuenta.",
-    "fullName": "Nombre y apellido",
     "headline": "Titular",
     "headlineHint": "Por ejemplo: Frontend Junior · React",
     "companyName": "Nombre de la empresa",
@@ -64,14 +63,19 @@
     "submitting": "Guardando…",
     "errors": {
       "role": "Elegí una de las dos opciones.",
-      "fullName": "Escribí tu nombre (entre 2 y 80 caracteres).",
       "headline": "El titular puede tener hasta 100 caracteres.",
       "companyName": "Escribí el nombre de la empresa (entre 2 y 80 caracteres).",
       "websiteUrl": "Escribí una dirección válida, por ejemplo acme.com.",
       "company_exists": "Esa empresa ya está en Pistaklero. Pedile a alguien de tu equipo que te invite.",
       "unknown": "No pudimos guardar los datos. Probá de nuevo.",
-      "company_unclaimed": "Esa página está sin reclamar. Para que sea tuya, ingresá con un email de ese dominio (por ejemplo, nombre@empresa.com)."
-    }
+      "company_unclaimed": "Esa página está sin reclamar. Para que sea tuya, ingresá con un email de ese dominio (por ejemplo, nombre@empresa.com).",
+      "firstName": "Escribí tu nombre (hasta 50 caracteres).",
+      "middleName": "El segundo nombre puede tener hasta 50 caracteres.",
+      "lastName": "Escribí tu apellido (hasta 50 caracteres)."
+    },
+    "firstName": "Nombre",
+    "middleName": "Segundo nombre",
+    "lastName": "Apellido"
   },
   "Form": {
     "required": "(obligatorio)",
@@ -112,7 +116,6 @@
     "viewPublic": "Ver cómo se ve mi perfil",
     "basics": {
       "title": "Datos básicos",
-      "fullName": "Nombre y apellido",
       "headline": "Titular",
       "headlineHint": "Por ejemplo: Frontend Junior · React",
       "bio": "Sobre mí",
@@ -244,7 +247,11 @@
       "block": "Bloquear {company}",
       "unblock": "Desbloquear {company}"
     },
-    "downloadCv": "Descargar CV (PDF)"
+    "downloadCv": "Descargar CV (PDF)",
+    "person": {
+      "title": "Datos personales",
+      "hint": "Así te ven las empresas y quienes lean tus publicaciones."
+    }
   },
   "PublicProfile": {
     "availability": "Disponibilidad: {value}",
@@ -928,5 +935,12 @@
     "skills": "Habilidades",
     "languages": "Idiomas",
     "present": "actualidad"
+  },
+  "Person": {
+    "title": "Datos personales",
+    "hint": "Así te ven las empresas y quienes lean tus publicaciones.",
+    "firstName": "Nombre",
+    "middleName": "Segundo nombre",
+    "lastName": "Apellido"
   }
 }

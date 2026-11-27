@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, seedUnclaimedCompany, signIn, test, uniqueEmail } from "./support/fixtures";
+import { expect, expectNoA11yViolations, seedUnclaimedCompany, signIn, test, uniqueEmail, fillPersonName } from "./support/fixtures";
 
 test("una empresa sin reclamar se reclama al registrarse con un email del dominio", async ({ page, browser }) => {
   const run = Date.now().toString(36);
@@ -16,6 +16,7 @@ test("una empresa sin reclamar se reclama al registrarse con un email del domini
   const other = await browser.newContext().then((c) => c.newPage());
   await signIn(other, uniqueEmail("intrusa"), "/es/bienvenida");
   await other.getByLabel(/Busco talento/).check();
+  await fillPersonName(other, "Rita Reclutadora");
   await other.getByLabel(/Nombre de la empresa/).fill("Reclamo");
   await other.getByLabel(/Sitio web/).fill(domain);
   await other.getByRole("button", { name: "Continuar" }).click();
@@ -25,6 +26,7 @@ test("una empresa sin reclamar se reclama al registrarse con un email del domini
   // Con un email del dominio, la empresa (y su oferta) pasa a ser suya
   await signIn(page, uniqueEmail("fundadora", domain), "/es/bienvenida");
   await page.getByLabel(/Busco talento/).check();
+  await fillPersonName(page, "Rita Reclutadora");
   await page.getByLabel(/Nombre de la empresa/).fill("Reclamo");
   await page.getByLabel(/Sitio web/).fill(`https://www.${domain}`);
   await page.getByRole("button", { name: "Continuar" }).click();

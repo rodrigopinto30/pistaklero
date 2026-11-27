@@ -10,7 +10,7 @@ reset role;
 
 select tests.create_user('ana@vistas.pgtap.test') as ana \gset
 select tests.authenticate_as(:'ana');
-select public.onboard_candidate('Ana Vistas', 'Frontend', 'es');
+select public.onboard_candidate('Ana', '', 'Vistas', 'Frontend', 'es');
 reset role;
 update public.candidates set slug = 'ana-vistas-pgtap' where user_id = :'ana';
 
@@ -30,7 +30,8 @@ begin
   for i in 1..p_n loop
     v := tests.create_user('relleno' || i || '@vistas.pgtap.test');
     insert into public.profiles (id, role) values (v, 'candidate');
-    insert into public.candidates (user_id, slug, full_name) values (v, 'relleno-' || i || '-pgtap', 'Relleno');
+    insert into public.people (user_id, first_name, last_name) values (v, 'Relleno', 'Prueba');
+    insert into public.candidates (user_id, slug) values (v, 'relleno-' || i || '-pgtap');
     insert into public.candidate_profile_views (viewer_id, candidate_id) values (p_viewer, v);
   end loop;
 end $$;
@@ -38,7 +39,7 @@ select pg_temp.fill(:'recruiter', 199);
 
 select tests.create_user('beto@vistas.pgtap.test') as beto \gset
 select tests.authenticate_as(:'beto');
-select public.onboard_candidate('Beto Vistas', 'Backend', 'es');
+select public.onboard_candidate('Beto', '', 'Vistas', 'Backend', 'es');
 reset role;
 update public.candidates set slug = 'beto-vistas-pgtap' where user_id = :'beto';
 

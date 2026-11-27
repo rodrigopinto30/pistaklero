@@ -17,7 +17,7 @@ export type OnboardingState =
       values: FormValues;
     };
 
-const FIELDS: OnboardingField[] = ["role", "fullName", "headline", "companyName", "websiteUrl"];
+const FIELDS: OnboardingField[] = ["role", "firstName", "middleName", "lastName", "headline", "companyName", "websiteUrl"];
 
 export async function completeOnboarding(
   _previous: OnboardingState,
@@ -47,11 +47,16 @@ export async function completeOnboarding(
   const { error } =
     data.role === "candidate"
       ? await supabase.rpc("onboard_candidate", {
-          p_full_name: data.fullName,
+          p_first_name: data.firstName,
+          p_middle_name: data.middleName,
+          p_last_name: data.lastName,
           p_headline: data.headline,
           p_locale: locale,
         })
-      : await supabase.rpc("create_company", {
+      : await supabase.rpc("onboard_recruiter", {
+          p_first_name: data.firstName,
+          p_middle_name: data.middleName,
+          p_last_name: data.lastName,
           p_company_name: data.companyName,
           p_website_url: data.websiteUrl ?? "",
           p_locale: locale,

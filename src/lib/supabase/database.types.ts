@@ -265,17 +265,23 @@ isOneToOne: false
                   ]
                 },"candidates": {
                   Row: {
-                    "availability": Database["public"]['Enums']["availability"],"avatar_url": string | null,"bio": string,"city": string | null,"country": string | null,"created_at": string,"full_name": string,"github_url": string | null,"headline": string,"languages": (string)[],"linkedin_url": string | null,"slug": string,"updated_at": string,"user_id": string,"visibility": Database["public"]['Enums']["profile_visibility"],"website_url": string | null
+                    "availability": Database["public"]['Enums']["availability"],"avatar_url": string | null,"bio": string,"city": string | null,"country": string | null,"created_at": string,"github_url": string | null,"headline": string,"languages": (string)[],"linkedin_url": string | null,"slug": string,"updated_at": string,"user_id": string,"visibility": Database["public"]['Enums']["profile_visibility"],"website_url": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "availability"?: Database["public"]['Enums']["availability"],"avatar_url"?: string | null,"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"full_name": string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug": string,"updated_at"?: string,"user_id": string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
+                    "availability"?: Database["public"]['Enums']["availability"],"avatar_url"?: string | null,"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug": string,"updated_at"?: string,"user_id": string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
                   }
                   Update: {
-                    "availability"?: Database["public"]['Enums']["availability"],"avatar_url"?: string | null,"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"full_name"?: string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug"?: string,"updated_at"?: string,"user_id"?: string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
+                    "availability"?: Database["public"]['Enums']["availability"],"avatar_url"?: string | null,"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug"?: string,"updated_at"?: string,"user_id"?: string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
                   }
                   Relationships: [
                     {
+      foreignKeyName: "candidates_person_fkey"
+      columns: ["user_id"]
+isOneToOne: true
+      referencedRelation: "people"
+      referencedColumns: ["user_id"]
+    },{
       foreignKeyName: "candidates_user_id_fkey"
       columns: ["user_id"]
 isOneToOne: true
@@ -535,6 +541,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"people": {
+                  Row: {
+                    "created_at": string,"first_name": string,"full_name": string | null,"last_name": string,"middle_name": string,"updated_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"first_name": string,"full_name"?: never,"last_name"?: string,"middle_name"?: string,"updated_at"?: string,"user_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"first_name"?: string,"full_name"?: never,"last_name"?: string,"middle_name"?: string,"updated_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"email_notifications": boolean,"id": string,"locale": Database["public"]['Enums']["app_locale"],"role": Database["public"]['Enums']["user_role"],"suspended_at": string | null
@@ -692,6 +712,9 @@ isOneToOne: false
 "is_job_public":
 { Args: { "p_job": Omit<Database["public"]['Tables']["jobs"]['Row'], Database["public"]['Tables']["jobs"]['ComputedFields']> }; Returns: boolean
                            },
+"like_needle":
+{ Args: { "p_query": string }; Returns: string
+                           },
 "list_company_members":
 { Args: Record<PropertyKey, never>; Returns: {
               "email": string,"joined_at": string,"member_role": Database["public"]['Enums']["member_role"],"user_id": string
@@ -706,7 +729,13 @@ isOneToOne: false
             }[]
                            },
 "onboard_candidate":
-{ Args: { "p_full_name": string,"p_headline": string,"p_locale": Database["public"]['Enums']["app_locale"] }; Returns: undefined
+{ Args: { "p_first_name": string,"p_headline": string,"p_last_name": string,"p_locale": Database["public"]['Enums']["app_locale"],"p_middle_name": string }; Returns: undefined
+                           },
+"onboard_recruiter":
+{ Args: { "p_company_name": string,"p_first_name": string,"p_last_name": string,"p_locale": Database["public"]['Enums']["app_locale"],"p_middle_name": string,"p_website_url": string }; Returns: string
+                           },
+"prefix_tsquery":
+{ Args: { "p_query": string }; Returns: unknown
                            },
 "random_slug":
 { Args: { "p_value": string }; Returns: string
@@ -725,6 +754,9 @@ isOneToOne: false
                            },
 "register_profile_view":
 { Args: { "p_slug": string }; Returns: string
+                           },
+"save_my_name":
+{ Args: { "p_first_name": string,"p_last_name": string,"p_middle_name": string }; Returns: undefined
                            },
 "search_jobs":
 { Args: { "p_country"?: string,"p_currency"?: Database["public"]['Enums']["currency"],"p_employment_types"?: (Database["public"]['Enums']["employment_type"])[],"p_language"?: Database["public"]['Enums']["app_locale"],"p_limit"?: number,"p_offset"?: number,"p_query"?: string,"p_salary_visible"?: boolean,"p_seniorities"?: (Database["public"]['Enums']["seniority"])[],"p_work_modes"?: (Database["public"]['Enums']["work_mode"])[] }; Returns: {

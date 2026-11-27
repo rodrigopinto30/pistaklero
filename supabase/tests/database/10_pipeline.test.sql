@@ -15,7 +15,7 @@ returning id as job \gset
 -- Candidata lista que se postula
 select tests.create_user('ana@pipe-candidata.pgtap.test') as ana \gset
 select tests.authenticate_as(:'ana');
-select public.onboard_candidate('Ana Pérez', 'Frontend', 'en');
+select public.onboard_candidate('Ana', '', 'Pérez', 'Frontend', 'en');
 insert into public.candidate_skills (candidate_id, skill_id) select auth.uid(), id from public.skills where slug = 'react';
 insert into public.candidate_projects (candidate_id, title) values (auth.uid(), 'Portfolio');
 select public.apply_to_job(:'job') as application \gset
