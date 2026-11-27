@@ -29,7 +29,8 @@ insert into public.applications (job_id, candidate_id, created_at, status_change
   (:'job', :'c15', now() - interval '15 days', now() - interval '15 days'),
   (:'job', :'c31', now() - interval '31 days', now() - interval '31 days');
 
-select is(public.daily_maintenance() ->> 'closed', '1', 'cierra la postulación de 31 días');
+-- La tarea recorre toda la base: se verifica solo lo de esta empresa (la base local puede tener datos de los e2e).
+select lives_ok('select public.daily_maintenance()', 'la tarea diaria corre');
 select is((select status from public.applications where candidate_id = :'c31'), 'no_response'::public.application_status, 'queda como "Sin respuesta"');
 select is((select actor_type from public.application_events where to_status = 'no_response' and application_id = (select id from public.applications where candidate_id = :'c31')),
   'system'::public.actor_type, 'el cierre lo registra el sistema');

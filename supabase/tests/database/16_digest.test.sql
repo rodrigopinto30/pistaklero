@@ -33,7 +33,8 @@ from generate_series(1, 2) n;
 insert into public.applications (job_id, candidate_id, created_at, status_changed_at)
 values (:'job', pg_temp.candidate('vieja@resumen.pgtap.test'), now() - interval '8 days', now() - interval '8 days');
 
-select is((public.daily_maintenance() ->> 'digests')::int, 1, 'manda un resumen');
+-- La tarea recorre toda la base: se verifica solo lo de esta empresa (la base local puede tener datos de los e2e).
+select lives_ok('select public.daily_maintenance()', 'la tarea diaria corre');
 select is((select (payload ->> 'total')::int from public.email_outbox where template = 'recruiter_digest' and to_user_id = :'owner'), 2,
   'con las postulaciones de las últimas 24 h');
 select is((select payload -> 'jobs' -> 0 ->> 'title' from public.email_outbox where template = 'recruiter_digest' and to_user_id = :'owner'), 'Oferta del resumen',
