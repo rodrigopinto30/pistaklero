@@ -53,8 +53,8 @@ test("eliminar la cuenta borra todo", async ({ page }) => {
   await page.goto("/es/ajustes");
 
   const danger = page.getByRole("region", { name: "Eliminar mi cuenta" });
-  await danger.getByRole("button", { name: "Eliminar mi cuenta para siempre" }).click();
-  await expect(danger.getByText("Marcá la casilla para confirmar.")).toBeVisible();
+  // Sin tildar la confirmación, el botón no hace nada.
+  await expect(danger.getByRole("button", { name: "Eliminar mi cuenta para siempre" })).toHaveAttribute("aria-disabled", "true");
   await danger.getByLabel(/Entiendo que se borra todo/).check();
   await danger.getByRole("button", { name: "Eliminar mi cuenta para siempre" }).click();
   await page.waitForURL("/es");
@@ -76,13 +76,13 @@ test("nombre, segundo nombre y apellido se guardan por separado", async ({ page 
   await expect(person.getByLabel(/^Apellido/)).toHaveValue("Reclutadora");
 
   await person.getByLabel(/^Apellido/).fill("");
-  await person.getByRole("button", { name: "Guardar" }).click();
+  await person.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(person.getByText("Este campo es obligatorio.")).toBeVisible();
   await expect(person.getByLabel(/^Apellido/)).toBeFocused();
 
   await person.getByLabel(/^Segundo nombre/).fill("María");
   await person.getByLabel(/^Apellido/).fill("Gómez");
-  await person.getByRole("button", { name: "Guardar" }).click();
+  await person.getByRole("button", { name: "Guardar", exact: true }).click();
   await expectToast(page, "Cambios guardados.");
   await page.reload();
   await expect(page.getByRole("region", { name: "Datos personales" }).getByLabel(/^Segundo nombre/)).toHaveValue("María");

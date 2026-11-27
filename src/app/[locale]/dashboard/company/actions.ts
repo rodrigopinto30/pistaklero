@@ -178,7 +178,7 @@ export async function completeCompanySetup(_prev: FormState, formData: FormData)
   const member = await requireMember();
   if (!member) return errorState(values, {}, "unknown");
   const locale = parseLocale(formData.get("locale"));
-  if (member.company.setup_completed_at) redirect({ href: "/dashboard", locale });
+  if (member.company.setup_completed_at) return redirect({ href: "/dashboard", locale });
 
   const fieldErrors: Record<string, FieldError> = {};
   const details = companyDetailsSchema.safeParse(values);
@@ -244,5 +244,5 @@ export async function completeCompanySetup(_prev: FormState, formData: FormData)
 
   await flash("companyReady");
   refresh();
-  redirect({ href: "/dashboard", locale });
+  return redirect({ href: "/dashboard", locale });
 }

@@ -19,6 +19,8 @@ const valid = {
   skills: [],
   question1: { type: "none", prompt: "", options: "" },
   question2: { type: "none", prompt: "", options: "" },
+  applyMode: "pistaklero",
+  externalUrl: "",
 };
 
 const errorPaths = (input: object) => jobSchema.safeParse(input).error?.issues.map((i) => i.path.join(".")) ?? [];
@@ -59,5 +61,14 @@ describe("jobSchema", () => {
   it("acepta hasta 10 tecnologías", () => {
     const skills = Array.from({ length: 11 }, () => crypto.randomUUID());
     expect(errorPaths({ ...valid, skills })).toContain("skills");
+  });
+
+  it("postular en otro sitio pide el link (y lo pasa a https)", () => {
+    expect(errorPaths({ ...valid, applyMode: "external" })).toEqual(["externalUrl"]);
+    expect(jobSchema.parse({ ...valid, applyMode: "external", externalUrl: "empresa.com/empleos" }).externalUrl).toBe("https://empresa.com/empleos");
+  });
+
+  it("con postulación externa, las preguntas filtro no se validan", () => {
+    expect(errorPaths({ ...valid, applyMode: "external", externalUrl: "https://empresa.com", question1: { type: "short_text", prompt: "", options: "" } })).toEqual([]);
   });
 });
