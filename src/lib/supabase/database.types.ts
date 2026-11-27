@@ -265,14 +265,14 @@ isOneToOne: false
                   ]
                 },"candidates": {
                   Row: {
-                    "availability": Database["public"]['Enums']["availability"],"avatar_url": string | null,"bio": string,"city": string | null,"country": string | null,"created_at": string,"github_url": string | null,"headline": string,"languages": (string)[],"linkedin_url": string | null,"slug": string,"updated_at": string,"user_id": string,"visibility": Database["public"]['Enums']["profile_visibility"],"website_url": string | null
+                    "availability": Database["public"]['Enums']["availability"],"bio": string,"city": string | null,"country": string | null,"created_at": string,"github_url": string | null,"headline": string,"languages": (string)[],"linkedin_url": string | null,"slug": string,"updated_at": string,"user_id": string,"visibility": Database["public"]['Enums']["profile_visibility"],"website_url": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "availability"?: Database["public"]['Enums']["availability"],"avatar_url"?: string | null,"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug": string,"updated_at"?: string,"user_id": string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
+                    "availability"?: Database["public"]['Enums']["availability"],"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug": string,"updated_at"?: string,"user_id": string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
                   }
                   Update: {
-                    "availability"?: Database["public"]['Enums']["availability"],"avatar_url"?: string | null,"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug"?: string,"updated_at"?: string,"user_id"?: string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
+                    "availability"?: Database["public"]['Enums']["availability"],"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug"?: string,"updated_at"?: string,"user_id"?: string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
                   }
                   Relationships: [
                     {
@@ -543,14 +543,14 @@ isOneToOne: false
                   ]
                 },"people": {
                   Row: {
-                    "created_at": string,"first_name": string,"full_name": string | null,"last_name": string,"middle_name": string,"updated_at": string,"user_id": string
+                    "avatar_path": string | null,"created_at": string,"first_name": string,"full_name": string | null,"last_name": string,"middle_name": string,"updated_at": string,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"first_name": string,"full_name"?: never,"last_name"?: string,"middle_name"?: string,"updated_at"?: string,"user_id": string
+                    "avatar_path"?: string | null,"created_at"?: string,"first_name": string,"full_name"?: never,"last_name"?: string,"middle_name"?: string,"updated_at"?: string,"user_id": string
                   }
                   Update: {
-                    "created_at"?: string,"first_name"?: string,"full_name"?: never,"last_name"?: string,"middle_name"?: string,"updated_at"?: string,"user_id"?: string
+                    "avatar_path"?: string | null,"created_at"?: string,"first_name"?: string,"full_name"?: never,"last_name"?: string,"middle_name"?: string,"updated_at"?: string,"user_id"?: string
                   }
                   Relationships: [
                     
@@ -764,6 +764,9 @@ isOneToOne: false
             }[]
                            },
 "set_company_logo":
+{ Args: { "p_path": string }; Returns: undefined
+                           },
+"set_my_avatar":
 { Args: { "p_path": string }; Returns: undefined
                            },
 "slugify":

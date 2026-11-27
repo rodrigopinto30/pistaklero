@@ -6,14 +6,6 @@ const nextConfig: NextConfig = {
   // El servidor de desarrollo escucha en "localhost" y el sitio se abre en 127.0.0.1:
   // sin esto Next bloquea la recarga en caliente por venir de otro origen.
   allowedDevOrigins: ["127.0.0.1"],
-  // Avatares de Google y GitHub: se sirven desde /_next/image (no se exponen las IPs de quien mira
-  // a terceros y la CSP no necesita permitir esos dominios para imágenes).
-  images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "lh3.googleusercontent.com" },
-      { protocol: "https", hostname: "avatars.githubusercontent.com" },
-    ],
-  },
   // No anunciar el framework en cada respuesta.
   poweredByHeader: false,
   // La fuente del CV en PDF se lee del disco: hay que incluirla en la función que lo genera.
@@ -33,6 +25,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   experimental: {
+    // Las fotos de perfil sacadas con el celular pesan varios MB (se aceptan hasta 4 MB y se achican).
+    // Vercel corta igual los pedidos de más de 4,5 MB.
+    serverActions: { bodySizeLimit: "5mb" },
     // Todas las páginas se renderizan por pedido (CSP con nonce): validar la navegación instantánea
     // de cada página solo genera ruido. Se valida únicamente donde se exporte `instant`.
     instantInsights: {

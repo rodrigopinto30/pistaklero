@@ -1,8 +1,6 @@
-import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail } from "./support/fixtures";
+import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG } from "./support/fixtures";
 
 // PNG de 1×1 px: alcanza para probar la subida y la recodificación.
-const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64");
-const SVG = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
 
 test("una empresa arma su página y se ve en público", async ({ page }) => {
   const domain = `cohetes-${Date.now()}.com`;
@@ -42,7 +40,7 @@ test("una empresa arma su página y se ve en público", async ({ page }) => {
   await expect(logo.getByText("Usá una imagen PNG, JPEG o WebP.")).toBeVisible();
   await logo.getByLabel("Imagen").setInputFiles({ name: "grande.png", mimeType: "image/png", buffer: Buffer.alloc(950_000, 1) });
   await logo.getByRole("button", { name: "Subir logo" }).click();
-  await expect(logo.getByText("La imagen pesa más de 900 KB.")).toBeVisible();
+  await expect(logo.getByText("La imagen pesa más de 900 KB. Elegí una más liviana.")).toBeVisible();
   await logo.getByLabel("Imagen").setInputFiles({ name: "logo.png", mimeType: "image/png", buffer: PNG });
   await logo.getByRole("button", { name: "Subir logo" }).click();
   await expect(logo.getByRole("img", { name: "Logo actual" })).toBeVisible();

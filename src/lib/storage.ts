@@ -11,3 +11,9 @@ export function companyLogoUrl(path: string | null) {
   if (!path) return null;
   return `${getPublicEnv().NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/company-logos/${path}`;
 }
+
+/** URL pública de una foto de perfil guardada en el bucket avatars. */
+export function avatarUrl(path: string | null | undefined) {
+  if (!path) return null;
+  return `${getPublicEnv().NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${path}`;
+}

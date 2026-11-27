@@ -15,6 +15,7 @@ export type FormErrorCode =
   | "duplicate"
   | "company_exists"
   | "file_too_large"
+  | "avatar_too_large"
   | "file_type"
   | "required_file"
   | "unverified_limit"

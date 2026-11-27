@@ -6,6 +6,7 @@ import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { countryOptions, formatMonth, languageOptions } from "@/lib/geo";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
+import { AvatarForm } from "@/components/account/avatar-form";
 import { PersonalForm } from "@/components/account/personal-form";
 import { BasicsForm } from "./_components/basics-form";
 import { BlockedCompanies } from "./_components/blocked-companies";
@@ -35,7 +36,7 @@ export default async function ProfilePage() {
 
   const supabase = await createClient();
   const [person, candidate, catalog, skills, experiences, education, certifications, projects, salary, blocked] = await Promise.all([
-    supabase.from("people").select("first_name, middle_name, last_name").eq("user_id", userId).single(),
+    supabase.from("people").select("first_name, middle_name, last_name, full_name, avatar_path").eq("user_id", userId).single(),
     supabase.from("candidates").select("*").eq("user_id", userId).single(),
     supabase.from("skills").select("id, name_es, name_en, category").order("slug"),
     supabase.from("candidate_skills").select("skill_id, level, skills(name_es, name_en)").eq("candidate_id", userId),
@@ -105,6 +106,7 @@ export default async function ProfilePage() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Section id="person" title={t("person.title")} description={t("person.hint")} className="lg:col-span-3">
+          <AvatarForm path={person.data?.avatar_path ?? null} name={person.data?.full_name ?? ""} />
           <PersonalForm
             saved={{
               firstName: person.data?.first_name ?? "",

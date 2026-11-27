@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail } from "./support/fixtures";
+import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG } from "./support/fixtures";
 
 test.describe("perfil del candidato", () => {
   test("se edita por secciones y se ve en el perfil público", async ({ page }) => {
@@ -93,5 +93,39 @@ test.describe("perfil del candidato", () => {
     await blocked.getByRole("button", { name: /^Bloquear/ }).click();
     await expect(blocked.getByRole("button", { name: /^Desbloquear/ })).toBeVisible();
     expect((await companyPage.goto(publicUrl!))?.status()).toBe(404);
+  });
+
+  test("la foto de perfil se sube, se ve en público y se puede quitar", async ({ page }) => {
+    await signIn(page, uniqueEmail("foto"));
+    await onboardAsCandidate(page, "Flor Foto");
+    const person = page.getByRole("region", { name: "Datos personales" });
+
+    // Sin foto: se ven las iniciales.
+    await expect(person.getByText("FF", { exact: true })).toBeVisible();
+
+    await person.getByLabel("Foto de perfil").setInputFiles({ name: "foto.svg", mimeType: "image/png", buffer: SVG });
+    await person.getByRole("button", { name: "Subir foto" }).click();
+    await expect(person.getByText("Usá una imagen PNG, JPEG o WebP.")).toBeVisible();
+    await person.getByLabel("Foto de perfil").setInputFiles({ name: "grande.jpg", mimeType: "image/jpeg", buffer: Buffer.alloc(4_100_000, 1) });
+    await person.getByRole("button", { name: "Subir foto" }).click();
+    await expect(person.getByText("La foto pesa más de 4 MB. Elegí una más liviana.")).toBeVisible();
+
+    await person.getByLabel("Foto de perfil").setInputFiles({ name: "foto.png", mimeType: "image/png", buffer: PNG });
+    await person.getByRole("button", { name: "Subir foto" }).click();
+    const photo = person.locator("img[src*='/avatars/']");
+    await expect(photo).toBeVisible();
+    expect(await photo.getAttribute("src")).toMatch(/\/avatars\/[0-9a-f-]{36}\/[0-9a-f]{32}\.webp$/);
+
+    // El perfil público la muestra.
+    const preferences = page.getByRole("region", { name: "Disponibilidad y privacidad" });
+    await preferences.getByLabel(/Cualquiera con el enlace/).check();
+    await preferences.getByRole("button", { name: "Guardar" }).click();
+    await expect(preferences.getByText("Guardado.")).toBeVisible();
+    await page.getByRole("link", { name: "Ver cómo se ve mi perfil" }).click();
+    await expect(page.locator("img[src*='/avatars/']")).toBeVisible();
+
+    await page.goBack();
+    await page.getByRole("region", { name: "Datos personales" }).getByRole("button", { name: "Quitar foto" }).click();
+    await expect(page.getByRole("region", { name: "Datos personales" }).locator("img[src*='/avatars/']")).toHaveCount(0);
   });
 });

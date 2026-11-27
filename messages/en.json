@@ -98,7 +98,7 @@
       "not_found": "We couldn't find what you were looking for.",
       "duplicate": "It's already there.",
       "company_exists": "That domain already belongs to another company on Pistaklero.",
-      "file_too_large": "La imagen pesa más de 900 KB.",
+      "file_too_large": "The image is larger than 900 KB. Choose a lighter one.",
       "file_type": "Use a PNG, JPEG or WebP image.",
       "required_file": "Choose an image.",
       "max_below_min": "The maximum can't be lower than the minimum.",
@@ -106,7 +106,8 @@
       "options": "Write 2 to 5 options, one per line (up to 80 characters each).",
       "required_unless_remote": "Choose the country: the job isn't remote.",
       "unverified_limit": "Your company isn't verified yet: it can have up to 2 active jobs. Save it as a draft or close another one.",
-      "expired": "The expiration date has passed. Choose a new duration."
+      "expired": "The expiration date has passed. Choose a new duration.",
+      "avatar_too_large": "The photo is larger than 4 MB. Choose a lighter one."
     }
   },
   "Profile": {
@@ -941,6 +942,12 @@
     "hint": "This is how companies and readers of your posts see you.",
     "firstName": "First name",
     "middleName": "Middle name",
-    "lastName": "Last name"
+    "lastName": "Last name",
+    "avatar": {
+      "file": "Profile photo",
+      "hint": "JPG, PNG or WebP up to 4 MB. We crop it into a circle.",
+      "upload": "Upload photo",
+      "remove": "Remove photo"
+    }
   }
 }
