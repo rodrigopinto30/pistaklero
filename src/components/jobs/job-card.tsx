@@ -11,7 +11,7 @@ import { ResponseBadge } from "./response-badge";
 export type JobCardData = Database["public"]["Functions"]["search_jobs"]["Returns"][number];
 
 /** Tarjeta uniforme, escaneable en 3 segundos: puesto, empresa, sueldo, modalidad y antigüedad. */
-export async function JobCard({ job, locale, index }: { job: JobCardData; locale: string; index: number }) {
+export async function JobCard({ job, locale, index }: { job: JobCardData; locale: string; index?: number }) {
   const t = await getTranslations("Jobs");
   const salary = formatSalaryRange(job, locale);
   const logo = companyLogoUrl(job.company_logo_path);
@@ -19,7 +19,7 @@ export async function JobCard({ job, locale, index }: { job: JobCardData; locale
   const location = job.work_mode === "remote" ? null : [job.city, countryName(job.country, locale)].filter(Boolean).join(", ");
 
   return (
-    <article id={`resultado-${index}`} aria-labelledby={`job-${job.id}`} className="relative flex h-full flex-col gap-3 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-input">
+    <article id={index ? `resultado-${index}` : undefined} aria-labelledby={`job-${job.id}`} className="relative flex h-full flex-col gap-3 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-input">
       <div className="flex items-center gap-3">
         {logo ? (
           // eslint-disable-next-line @next/next/no-img-element -- WebP de 256 px ya optimizado, desde nuestro Storage.
