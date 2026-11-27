@@ -35,6 +35,37 @@
       "callback": "No pudimos completar el ingreso. Probá de nuevo.",
       "link_expired": "El link venció o ya se usó. Pedí uno nuevo.",
       "unknown": "Algo salió mal. Probá de nuevo en unos minutos."
+    },
+    "completeSignUp": "Completá tu registro"
+  },
+  "Welcome": {
+    "metaTitle": "Bienvenida",
+    "title": "Te damos la bienvenida a Pistaklero",
+    "subtitle": "Contanos qué venís a buscar. Se completa en un minuto.",
+    "roleLegend": "¿Qué buscás?",
+    "roleCandidate": "Busco trabajo",
+    "roleCandidateHint": "Armá tu perfil y postulate en 1 clic.",
+    "roleRecruiter": "Busco talento",
+    "roleRecruiterHint": "Publicá ofertas para tu empresa.",
+    "roleNote": "No se puede cambiar después: para hacer las dos cosas, usá otra cuenta.",
+    "fullName": "Nombre y apellido",
+    "headline": "Titular",
+    "headlineHint": "Por ejemplo: Frontend Junior · React",
+    "companyName": "Nombre de la empresa",
+    "websiteUrl": "Sitio web de la empresa",
+    "websiteHint": "Si entraste con un email de ese dominio, la empresa queda verificada.",
+    "required": "(obligatorio)",
+    "optional": "(opcional)",
+    "submit": "Continuar",
+    "submitting": "Guardando…",
+    "errors": {
+      "role": "Elegí una de las dos opciones.",
+      "fullName": "Escribí tu nombre (entre 2 y 80 caracteres).",
+      "headline": "El titular puede tener hasta 100 caracteres.",
+      "companyName": "Escribí el nombre de la empresa (entre 2 y 80 caracteres).",
+      "websiteUrl": "Escribí una dirección válida, por ejemplo acme.com.",
+      "company_exists": "Esa empresa ya está en Pistaklero. Pedile a alguien de tu equipo que te invite.",
+      "unknown": "No pudimos guardar los datos. Probá de nuevo."
     }
   }
 }

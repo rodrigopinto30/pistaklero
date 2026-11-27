@@ -35,6 +35,37 @@
       "callback": "We couldn't complete the sign-in. Please try again.",
       "link_expired": "The link expired or was already used. Request a new one.",
       "unknown": "Something went wrong. Please try again in a few minutes."
+    },
+    "completeSignUp": "Finish signing up"
+  },
+  "Welcome": {
+    "metaTitle": "Welcome",
+    "title": "Welcome to Pistaklero",
+    "subtitle": "Tell us what you're looking for. It takes a minute.",
+    "roleLegend": "What are you looking for?",
+    "roleCandidate": "I'm looking for a job",
+    "roleCandidateHint": "Build your profile and apply in 1 click.",
+    "roleRecruiter": "I'm looking for talent",
+    "roleRecruiterHint": "Post jobs for your company.",
+    "roleNote": "This can't be changed later: to do both, use another account.",
+    "fullName": "Full name",
+    "headline": "Headline",
+    "headlineHint": "For example: Junior Frontend · React",
+    "companyName": "Company name",
+    "websiteUrl": "Company website",
+    "websiteHint": "If you signed in with an email from that domain, the company is verified.",
+    "required": "(required)",
+    "optional": "(optional)",
+    "submit": "Continue",
+    "submitting": "Saving…",
+    "errors": {
+      "role": "Choose one of the two options.",
+      "fullName": "Enter your name (2 to 80 characters).",
+      "headline": "The headline can be up to 100 characters.",
+      "companyName": "Enter the company name (2 to 80 characters).",
+      "websiteUrl": "Enter a valid address, for example acme.com.",
+      "company_exists": "That company is already on Pistaklero. Ask someone on your team to invite you.",
+      "unknown": "We couldn't save your details. Please try again."
     }
   }
 }
