@@ -1,5 +1,8 @@
 "use server";
 
+import { redirect as nextRedirect } from "next/navigation";
+import { safeNextPath } from "@/lib/auth/redirect";
+import { runPendingAction } from "@/lib/pending/run";
 import { flash } from "@/lib/flash.server";
 import { refresh } from "next/cache";
 import { after } from "next/server";
@@ -85,6 +88,10 @@ export async function completeOnboarding(
   await flash("welcome");
   // El encabezado (en el layout) tiene que dejar de mostrar "Completá tu registro".
   refresh();
+  // Si había tocado "me gusta" o "guardar" antes de tener cuenta, se completa y vuelve a esa página
+  // (el aviso de la acción reemplaza al de bienvenida). Si venía de otro lado (postularse, publicar), vuelve ahí.
+  const back = (await runPendingAction(supabase)) ?? (formData.get("next") ? safeNextPath(formData.get("next"), "") : "");
+  if (back) nextRedirect(back);
   // Cada rol sigue en su espacio: la candidata arma su perfil y la empresa va a su panel.
   return redirect({ href: data.role === "candidate" ? "/profile" : "/dashboard", locale });
 }

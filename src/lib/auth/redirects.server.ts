@@ -4,6 +4,7 @@ import type { createClient } from "@/lib/supabase/server";
 import { getPublicEnv } from "@/lib/env";
 import { getPathname } from "@/i18n/navigation";
 import { localeFromPath } from "@/i18n/locale";
+import { runPendingAction } from "@/lib/pending/run";
 
 /** Redirección absoluta dentro del sitio (los Route Handlers necesitan URLs completas). */
 export function redirectTo(path: string) {
@@ -19,9 +20,11 @@ export async function destinationAfterSignIn(supabase: Awaited<ReturnType<typeof
   const userId = claims?.claims?.sub;
   if (!userId) return next;
 
-  const { data: profile } = await supabase.from("profiles").select("id").eq("id", userId).maybeSingle();
   // Aceptar una invitación también crea el perfil: no hace falta pasar por la bienvenida.
-  if (profile || next.startsWith("/api/team/accept?")) return next;
+  if (next.startsWith("/api/team/accept?")) return next;
+  const { data: profile } = await supabase.from("profiles").select("id").eq("id", userId).maybeSingle();
+  // Si tocó "me gusta" o "guardar" sin sesión, se completa ahora y vuelve a esa página.
+  if (profile) return (await runPendingAction(supabase)) ?? next;
 
   const welcome = getPathname({ locale: localeFromPath(next), href: "/welcome" });
   // Desde el registro, `next` ya es la bienvenida con el rol elegido (?role=…): se conserva.
