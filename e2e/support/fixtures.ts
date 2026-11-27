@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { test as base, expect, type Locator, type Page } from "@playwright/test";
+import { test as base, type Browser, expect, type Locator, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0.1:54321";
@@ -320,6 +320,11 @@ export async function expectToast(page: Page, text: string | RegExp) {
 
 /** Revisa la página con axe: WCAG 2.0, 2.1 y 2.2, niveles A y AA. */
 export async function expectNoA11yViolations(page: Page) {
+  // Un aviso (toast) que entra o sale tiene colores a medio camino: axe lo mediría con poco contraste.
+  // Se espera a que terminen las transiciones y animaciones finitas.
+  await page.waitForFunction(() =>
+    document.getAnimations().every((a) => a.playState !== "running" || a.effect?.getTiming().iterations === Infinity)
+  );
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
@@ -353,19 +358,38 @@ export async function clickWhenReady(locator: Locator) {
  * Test con chequeo automático: falla si la página tiene errores de consola o bloqueos de la CSP.
  * Los 404 esperados (por ejemplo, la página de "no encontrado") no cuentan.
  */
-export const test = base.extend<{ consoleErrors: string[] }>({
+/** page.goto espera, además, a que React haya hidratado la página (si la respuesta es HTML). */
+function gotoWaitsForHydration(page: Page) {
+  const goto = page.goto.bind(page);
+  page.goto = async (...args: Parameters<Page["goto"]>) => {
+    const response = await goto(...args);
+    if (response?.ok() && response.headers()["content-type"]?.includes("text/html")) await waitForHydration(page);
+    return response;
+  };
+  return page;
+}
+
+export const test = base.extend<{ consoleErrors: string[] }, object>({
   // Cada page.goto espera la hidratación (salvo en las pruebas sin JavaScript).
   page: async ({ page, javaScriptEnabled }, provide) => {
-    if (javaScriptEnabled !== false) {
-      const goto = page.goto.bind(page);
-      page.goto = async (...args: Parameters<Page["goto"]>) => {
-        const response = await goto(...args);
-        if (response?.ok() && response.headers()["content-type"]?.includes("text/html")) await waitForHydration(page);
-        return response;
-      };
-    }
-    await provide(page);
+    await provide(javaScriptEnabled === false ? page : gotoWaitsForHydration(page));
   },
+  // También en las pestañas que abre un test (browser.newContext().newPage()), por ejemplo para tener
+  // a la empresa y a la candidata a la vez: si no, un clic podía llegar antes que React.
+  browser: [
+    async ({ browser }, provide) => {
+      const newContext = browser.newContext.bind(browser);
+      browser.newContext = async (...args: Parameters<Browser["newContext"]>) => {
+        const context = await newContext(...args);
+        if (args[0]?.javaScriptEnabled === false) return context;
+        const newPage = context.newPage.bind(context);
+        context.newPage = async () => gotoWaitsForHydration(await newPage());
+        return context;
+      };
+      await provide(browser);
+    },
+    { scope: "worker" },
+  ],
   consoleErrors: [
     async ({ page }, use) => {
       const errors: string[] = [];
