@@ -11,6 +11,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { reviewReport, setCompanyStatus, setUserSuspended } from "./actions";
 import { TransferForm } from "./transfer-form";
+import { ConfirmButton } from "@/components/confirm-button";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Admin");
@@ -29,6 +30,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
   if (profile?.role !== "admin") redirect({ href: "/", locale });
 
   const t = await getTranslations("Admin");
+  const tConfirm = await getTranslations("Confirm");
   const tReasons = await getTranslations("Report.reasons");
   const tPostReasons = await getTranslations("Posts.report.reasons");
   const params = await searchParams;
@@ -86,9 +88,9 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
                   <form action={reviewReport}>
                     <input type="hidden" name="reportId" value={report.first_report_id} />
                     <input type="hidden" name="reviewAction" value="hide_job" />
-                    <Button type="submit" variant="destructive" aria-label={t("reports.hideFor", { job: report.job_title })}>
+                    <ConfirmButton ariaLabel={t("reports.hideFor", { job: report.job_title })} title={tConfirm("hideJob.title", { job: report.job_title })} description={tConfirm("hideJob.description")} confirmLabel={tConfirm("remove")}>
                       {t("reports.hide")}
-                    </Button>
+                    </ConfirmButton>
                   </form>
                   <form action={reviewReport}>
                     <input type="hidden" name="reportId" value={report.first_report_id} />
@@ -129,9 +131,9 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
                   <form action={deletePost}>
                     <input type="hidden" name="id" value={post.id} />
                     <input type="hidden" name="locale" value={locale} />
-                    <Button type="submit" variant="destructive" aria-label={t("posts.deleteItem", { title: post.title })}>
+                    <ConfirmButton ariaLabel={t("posts.deleteItem", { title: post.title })} title={tConfirm("adminDeletePost.title", { title: post.title })} description={tConfirm("adminDeletePost.description")} confirmLabel={tConfirm("delete")}>
                       {t("posts.delete")}
-                    </Button>
+                    </ConfirmButton>
                   </form>
                 </div>
               </li>

@@ -4,13 +4,13 @@ import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import type { EntryBlock } from "@/lib/validation/profile";
 import { deleteEntry, saveEntry } from "../actions";
 import { SubmitButton } from "@/components/forms/submit-button";
+import { ConfirmButton } from "@/components/confirm-button";
 
 type FieldConfig = { name: string; label: string; type: "text" | "textarea" | "month" | "url"; required?: boolean; max?: number };
 
@@ -125,6 +125,7 @@ function EntryForm({ block, entry }: { block: EntryBlock; entry?: EntryItem }) {
 
 export function EntriesSection({ block, entries }: { block: EntryBlock; entries: EntryItem[] }) {
   const t = useTranslations("Profile.entries");
+  const tConfirm = useTranslations("Confirm");
 
   return (
     <div className="flex flex-col gap-3">
@@ -143,9 +144,9 @@ export function EntriesSection({ block, entries }: { block: EntryBlock; entries:
                 <form action={deleteEntry}>
                   <input type="hidden" name="block" value={block} />
                   <input type="hidden" name="id" value={entry.id} />
-                  <Button type="submit" variant="ghost" size="icon-sm" aria-label={t("deleteItem", { item: entry.heading })}>
+                  <ConfirmButton variant="ghost" size="icon-sm" ariaLabel={t("deleteItem", { item: entry.heading })} title={tConfirm("deleteEntry.title", { item: entry.heading })} description={tConfirm("noUndo")} confirmLabel={tConfirm("delete")}>
                     <Trash2 aria-hidden="true" />
-                  </Button>
+                  </ConfirmButton>
                 </form>
               </div>
               <details className="mt-2">

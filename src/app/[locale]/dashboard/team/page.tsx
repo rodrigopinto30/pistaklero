@@ -8,6 +8,7 @@ import type { AppLocale } from "@/i18n/routing";
 import { changeMember, revokeInvitation } from "./actions";
 import { InviteForm } from "./_components/invite-form";
 import { Emoji } from "@/components/emoji";
+import { ConfirmButton } from "@/components/confirm-button";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Team");
@@ -19,6 +20,7 @@ export default async function TeamPage() {
   const recruiter = await requireRecruiterPage(locale, "/dashboard/team");
   const isOwner = recruiter.memberRole === "owner";
   const t = await getTranslations("Team");
+  const tConfirm = await getTranslations("Confirm");
   const format = await getFormatter();
 
   const supabase = await createClient();
@@ -58,9 +60,9 @@ export default async function TeamPage() {
                   <form action={changeMember}>
                     <input type="hidden" name="userId" value={member.user_id} />
                     <input type="hidden" name="memberAction" value="remove" />
-                    <Button type="submit" variant="destructive" aria-label={t("removeOf", { email: member.email })}>
+                    <ConfirmButton ariaLabel={t("removeOf", { email: member.email })} title={tConfirm("removeMember.title", { email: member.email })} description={tConfirm("removeMember.description")} confirmLabel={tConfirm("remove")}>
                       {t("remove")}
-                    </Button>
+                    </ConfirmButton>
                   </form>
                 </span>
               )}
@@ -89,9 +91,9 @@ export default async function TeamPage() {
                     </span>
                     <form action={revokeInvitation}>
                       <input type="hidden" name="invitationId" value={invitation.id} />
-                      <Button type="submit" variant="ghost" aria-label={t("revokeOf", { email: invitation.email })}>
+                      <ConfirmButton variant="ghost" ariaLabel={t("revokeOf", { email: invitation.email })} title={tConfirm("revokeInvitation.title", { email: invitation.email })} description={tConfirm("revokeInvitation.description")} confirmLabel={tConfirm("remove")}>
                         {t("revoke")}
-                      </Button>
+                      </ConfirmButton>
                     </form>
                   </li>
                 ))}
