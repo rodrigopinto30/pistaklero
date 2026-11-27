@@ -594,6 +594,9 @@ isOneToOne: false
 "enqueue_email":
 { Args: { "p_dedupe_key"?: string,"p_locale": Database["public"]['Enums']["app_locale"],"p_payload": Json,"p_template": string,"p_to_email": string,"p_to_user_id": string }; Returns: undefined
                            },
+"export_my_data":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
