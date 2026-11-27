@@ -57,13 +57,16 @@ Después de cambiar el esquema de la base: `./run.sh pnpm db:types` regenera los
 
 ## Ingreso
 
-Con email y contraseña. Al crear la cuenta, el email se confirma una vez con un código de 6 dígitos;
+Con Google (si está configurado, ver abajo) o con email y contraseña. La contraseña pide 10+ caracteres
+con mayúscula, minúscula, número y símbolo, y se repite al crearla. Al crear la cuenta, el email se
+confirma una vez con un código de 6 dígitos;
 "¿Olvidaste tu contraseña?" manda otro código para elegir una nueva. En local, los emails llegan a
 Mailpit (http://127.0.0.1:54324). Las cuentas creadas antes de la contraseña (con el link mágico)
 entran eligiendo una desde "¿Olvidaste tu contraseña?".
 
 En producción, en el panel de Supabase (Authentication):
-- confirmar el email, largo mínimo 8 y "Require current password when updating" activados;
+- confirmar el email, largo mínimo 10 con "lowercase, uppercase letters, digits and symbols" y
+  "Require current password when updating" activados;
 - las plantillas de `supabase/templates` (código en vez de link) y el aviso de contraseña cambiada;
 - el límite por IP de Supabase ve la IP del servidor: la app lleva su propio límite de intentos
   (tabla `auth_throttle`). Para que Supabase vea la IP de cada persona, activar

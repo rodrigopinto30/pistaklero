@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
-import { getEnabledOAuthProviders, OAUTH_PROVIDER_NAMES } from "@/lib/auth/providers";
+import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { safeNextPath } from "@/lib/auth/redirect";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { Link, redirect } from "@/i18n/navigation";
@@ -28,7 +28,6 @@ export default async function SignInPage({ searchParams }: PageProps<"/[locale]/
   const t = await getTranslations("Auth");
   const next = safeNextPath(params.next, `/${locale}`);
   const error = CALLBACK_ERRORS.find((code) => code === params.error);
-  const providers = getEnabledOAuthProviders();
 
   return (
     <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-4 py-12">
@@ -43,23 +42,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/[locale]/
         </p>
       )}
 
-      {providers.length > 0 && (
-        <>
-          <ul className="flex flex-col gap-2">
-            {providers.map((provider) => {
-              const href = `/api/auth/oauth/${provider}?${new URLSearchParams({ next })}`;
-              return (
-                <li key={provider}>
-                  <a href={href} className={buttonVariants({ variant: "outline", className: "w-full" })}>
-                    {t("continueWith", { provider: OAUTH_PROVIDER_NAMES[provider] })}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-          <p className="text-center text-sm text-muted-foreground">{t("or")}</p>
-        </>
-      )}
+      <OAuthButtons next={next} namespace="Auth" />
 
       <SignInForm locale={locale} next={next} fixedEmail={reauth ? (user?.email ?? undefined) : undefined} />
 
