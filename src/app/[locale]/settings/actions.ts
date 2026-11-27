@@ -47,6 +47,13 @@ export async function deleteAccount(_prev: DeleteState, formData: FormData): Pro
 
   const admin = createAdminClient();
   await admin.from("audit_log").insert({ actor_id: profile.id, action: "account.deleted", target_type: "user", target_id: profile.id });
+  // Los archivos de la persona (foto de perfil y vistas previas de proyectos) se borran con la cuenta.
+  await Promise.all(
+    ["avatars", "project-previews"].map(async (bucket) => {
+      const { data: files } = await admin.storage.from(bucket).list(profile.id, { limit: 1000 });
+      if (files?.length) await admin.storage.from(bucket).remove(files.map((f) => `${profile.id}/${f.name}`));
+    })
+  );
   const { error } = await admin.auth.admin.deleteUser(profile.id);
   if (error) {
     console.error("No se pudo borrar la cuenta", { message: error.message });
