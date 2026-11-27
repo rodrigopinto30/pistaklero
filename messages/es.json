@@ -720,7 +720,51 @@
     "salary": "Salario (si la oferta lo informa)",
     "salaryHint": "Todo o nada: si cargás el mínimo, completá también máximo, moneda, período y bruto/neto.",
     "publish": "Publicar oferta importada",
-    "published": "Listo: la oferta importada ya está publicada."
+    "published": "Listo: la oferta importada ya está publicada.",
+    "sources": {
+      "title": "Tableros sincronizados",
+      "hint": "Ofertas de Greenhouse, Lever, Ashby o Workable. Se actualizan todos los días: se crean las nuevas y se cierran las que desaparecen.",
+      "companyName": "Empresa",
+      "websiteUrl": "Sitio web",
+      "websiteHint": "Opcional. Con el dominio, la empresa la puede reclamar quien tenga un email de ahí.",
+      "provider": "Sistema",
+      "boardToken": "Identificador del tablero",
+      "boardTokenHint": "La parte de la URL pública: boards.greenhouse.io/acme → acme, jobs.lever.co/acme → acme, jobs.ashbyhq.com/acme → acme, apply.workable.com/acme → acme.",
+      "add": "Agregar y sincronizar",
+      "added": "Tablero agregado.",
+      "empty": "Todavía no hay tableros.",
+      "listLabel": "Tableros",
+      "paused": "pausado",
+      "openJobs": "{count, plural, =0 {sin ofertas abiertas} one {1 oferta abierta} other {# ofertas abiertas}}",
+      "lastSync": "última sincronización: {date}",
+      "neverSynced": "nunca se sincronizó",
+      "result": "{created} nuevas, {updated} actualizadas, {closed} cerradas, {skipped} salteadas",
+      "syncNow": "Sincronizar ahora",
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "providers": {
+        "greenhouse": "Greenhouse",
+        "lever": "Lever",
+        "ashby": "Ashby",
+        "workable": "Workable"
+      },
+      "errors": {
+        "unknown": "No pudimos agregar el tablero.",
+        "source_exists": "Ese tablero ya está cargado.",
+        "invalid_companyName": "Escribí el nombre de la empresa.",
+        "invalid_websiteUrl": "El sitio tiene que empezar con https://.",
+        "invalid_provider": "Elegí un sistema.",
+        "invalid_boardToken": "El identificador solo puede tener letras, números, puntos, guiones y guiones bajos."
+      },
+      "syncErrors": {
+        "not_found": "No encontramos ese tablero: revisá el identificador.",
+        "unavailable": "El sistema no respondió. Se reintenta mañana.",
+        "invalid_response": "El sistema respondió algo que no entendemos.",
+        "invalid_token": "El identificador no es válido.",
+        "failed": "No pudimos guardar las ofertas.",
+        "not_found_source": "El tablero ya no existe."
+      }
+    }
   },
   "Settings": {
     "metaTitle": "Ajustes",

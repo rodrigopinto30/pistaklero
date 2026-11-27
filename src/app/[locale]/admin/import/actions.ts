@@ -1,6 +1,10 @@
 "use server";
 
+import { refresh } from "next/cache";
+import { z } from "zod";
 import { getCurrentProfile } from "@/lib/auth/session";
+import { BOARD_TOKEN, PROVIDERS } from "@/lib/import/providers";
+import { syncImportSource } from "@/lib/import/sync";
 import { extractJob, MAX_POSTING_CHARS } from "@/lib/ai/extract-job";
 import { dbErrorCode, errorState, type FormState, formValues, successState, zodFieldErrors } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
@@ -92,4 +96,62 @@ export async function publishImportedJob(_prev: FormState, formData: FormData): 
   });
   if (error) return errorState(values, {}, dbErrorCode(error));
   return successState();
+}
+
+// ---------------------------------------------------------------------------
+// Tableros sincronizados (Greenhouse, Lever, Ashby, Workable)
+// ---------------------------------------------------------------------------
+
+export type SourceState = { status: "idle" } | { status: "done"; run: number } | { status: "error"; code: string; run: number };
+
+const sourceSchema = z.object({
+  companyName: z.string().trim().min(2).max(80),
+  websiteUrl: z.union([z.literal(""), z.url({ protocol: /^https$/ })]),
+  provider: z.enum(PROVIDERS),
+  boardToken: z.string().trim().regex(BOARD_TOKEN),
+});
+
+/** Agrega un tablero y lo sincroniza en el momento, para ver enseguida si el identificador es correcto. */
+export async function addImportSource(_prev: SourceState, formData: FormData): Promise<SourceState> {
+  const run = Date.now();
+  if (!(await isAdmin())) return { status: "error", code: "unknown", run };
+  const parsed = sourceSchema.safeParse({
+    companyName: formData.get("companyName"),
+    websiteUrl: String(formData.get("websiteUrl") ?? "").trim(),
+    provider: formData.get("provider"),
+    boardToken: formData.get("boardToken"),
+  });
+  if (!parsed.success) {
+    const field = parsed.error.issues[0]?.path[0];
+    return { status: "error", code: typeof field === "string" ? `invalid_${field}` : "unknown", run };
+  }
+
+  const supabase = await createClient();
+  const { data: sourceId, error } = await supabase.rpc("admin_add_import_source", {
+    p_company_name: parsed.data.companyName,
+    p_website_url: parsed.data.websiteUrl,
+    p_provider: parsed.data.provider,
+    p_board_token: parsed.data.boardToken,
+  });
+  if (error || !sourceId) {
+    return { status: "error", code: error?.message === "source_exists" ? "source_exists" : "unknown", run };
+  }
+  await syncImportSource(sourceId);
+  refresh();
+  return { status: "done", run };
+}
+
+export async function syncSourceNow(formData: FormData) {
+  const sourceId = z.uuid().safeParse(formData.get("sourceId"));
+  if (!(await isAdmin()) || !sourceId.success) return;
+  await syncImportSource(sourceId.data);
+  refresh();
+}
+
+export async function setSourceActive(formData: FormData) {
+  const sourceId = z.uuid().safeParse(formData.get("sourceId"));
+  if (!(await isAdmin()) || !sourceId.success) return;
+  const supabase = await createClient();
+  await supabase.rpc("admin_set_import_source_active", { p_source_id: sourceId.data, p_active: formData.get("active") === "true" });
+  refresh();
 }
