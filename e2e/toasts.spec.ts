@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, expectToast, signInAsReadyCandidate, signOutFromMenu, test } from "./support/fixtures";
+import { expect, expectNoA11yViolations, expectToast, signInAsReadyCandidate, signOutFromMenu, test, confirmDialog } from "./support/fixtures";
 
 test("cada acción se confirma con un aviso chico que se cierra solo", async ({ page }) => {
   await signInAsReadyCandidate(page);
@@ -23,6 +23,7 @@ test("cada acción se confirma con un aviso chico que se cierra solo", async ({ 
   // Una acción sin formulario de estado (quitar una habilidad) avisa desde el servidor.
   const skills = page.getByRole("region", { name: "Habilidades" });
   await skills.getByRole("button", { name: /^Quitar / }).first().click();
+  await confirmDialog(page, "Sí, quitar");
   await expectToast(page, "Listo, se quitó.");
   await expect(notifications.getByText("Listo, se quitó.")).toHaveCount(0, { timeout: 15_000 });
 });
