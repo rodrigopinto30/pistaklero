@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useActionState, useEffect, useId, useRef } from "react";
 import { notify } from "@/components/toaster";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { type ApplyState, applyToJob } from "./apply-actions";
@@ -63,6 +63,7 @@ export function ApplyForm({ jobId, questions, autoOpen = false }: { jobId: strin
   const [state, action, pending] = useActionState<ApplyState, FormData>(applyToJob, { status: "idle" });
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const dialogId = useId();
 
   useEffect(() => {
     if (state.status !== "success") return;
@@ -106,15 +107,24 @@ export function ApplyForm({ jobId, questions, autoOpen = false }: { jobId: strin
     );
   }
 
+  // Atributos de HTML (Invoker Commands): el botón abre y cierra el diálogo aunque React todavía no
+  // haya cargado (por ejemplo, en un celular lento). El onClick queda para los navegadores sin soporte.
+  const opens = { commandfor: dialogId, command: "show-modal" };
+  const closes = { commandfor: dialogId, command: "close" };
+  const open = () => {
+    if (!dialogRef.current?.open) dialogRef.current?.showModal();
+  };
+
   return (
     <>
-      <Button type="button" size="lg" className="w-full" onClick={() => dialogRef.current?.showModal()}>
+      <button type="button" {...opens} onClick={open} className={buttonVariants({ size: "lg", className: "w-full" })}>
         {t("apply")}
-      </Button>
+      </button>
       <dialog
         ref={dialogRef}
+        id={dialogId}
         aria-labelledby={titleId}
-        className="m-auto w-[min(32rem,calc(100%-2rem))] rounded-2xl bg-card shadow-soft p-0 text-foreground backdrop:bg-black/70"
+        className="m-auto w-[min(32rem,calc(100%-2rem))] rounded-2xl bg-card p-0 text-foreground shadow-soft-lg backdrop:bg-black/50"
       >
         <form action={action} className="flex flex-col gap-4 p-6">
           <input type="hidden" name="jobId" value={jobId} />
@@ -130,9 +140,9 @@ export function ApplyForm({ jobId, questions, autoOpen = false }: { jobId: strin
             <Button type="submit" disabled={pending}>
               {pending ? t("sending") : t("send")}
             </Button>
-            <Button type="button" variant="ghost" onClick={() => dialogRef.current?.close()}>
+            <button type="button" {...closes} onClick={() => dialogRef.current?.close()} className={buttonVariants({ variant: "ghost" })}>
               {t("cancel")}
-            </Button>
+            </button>
           </div>
         </form>
       </dialog>
