@@ -2,8 +2,7 @@ import { Briefcase, Search } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SignUpSteps } from "@/components/auth/sign-up-steps";
-import { buttonVariants } from "@/components/ui/button";
-import { getEnabledOAuthProviders, OAUTH_PROVIDER_NAMES } from "@/lib/auth/providers";
+import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { safeNextPath } from "@/lib/auth/redirect";
 import { parseSignUpRole } from "@/lib/auth/sign-up";
@@ -76,7 +75,6 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
 
   // Después de Google/GitHub, la bienvenida ya sabe qué eligió (con contraseña, lo lleva el formulario).
   const next = returnTo?.startsWith("/api/team/accept?") ? returnTo : `${getPathname({ locale, href: "/welcome" })}?${new URLSearchParams({ role })}`;
-  const providers = getEnabledOAuthProviders();
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-8 px-4 py-12">
@@ -91,23 +89,7 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
         </p>
       </div>
 
-      {providers.length > 0 && (
-        <>
-          <ul className="flex flex-col gap-2">
-            {providers.map((provider) => (
-              <li key={provider}>
-                <a
-                  href={`/api/auth/oauth/${provider}?${new URLSearchParams({ next })}`}
-                  className={buttonVariants({ variant: "outline", className: "w-full" })}
-                >
-                  {t("continueWith", { provider: OAUTH_PROVIDER_NAMES[provider] })}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="text-center text-sm text-muted-foreground">{t("or")}</p>
-        </>
-      )}
+      <OAuthButtons next={next} namespace="SignUp" />
 
       <SignUpForm locale={locale} role={role} next={returnTo} />
 

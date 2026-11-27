@@ -1092,15 +1092,18 @@
     "send": "Enviarme el código",
     "codeSent": "Si {email} tiene cuenta en Pistaklero, te llegó un código de 6 dígitos. Escribilo acá junto con tu contraseña nueva.",
     "newPassword": "Contraseña nueva",
-    "hint": "Al menos 8 caracteres. Una frase que recuerdes es más segura que una palabra rara.",
     "save": "Guardar la contraseña",
     "saving": "Guardando…",
     "backToSignIn": "Volver a ingresar",
     "problems": {
-      "too_short": "La contraseña tiene que tener al menos 8 caracteres.",
-      "too_long": "La contraseña es muy larga: usá hasta 72 caracteres (los acentos y los emojis ocupan más).",
-      "too_common": "Esa contraseña es de las más usadas y es fácil de adivinar. Elegí otra.",
-      "same_as_email": "La contraseña no puede ser tu email."
+      "too_short": "Tiene que tener al menos 10 caracteres.",
+      "too_long": "Es muy larga: usá hasta 72 caracteres (los acentos y los emojis ocupan más).",
+      "needs_upper": "Agregale al menos una mayúscula (A-Z).",
+      "needs_lower": "Agregale al menos una minúscula (a-z).",
+      "needs_digit": "Agregale al menos un número.",
+      "needs_symbol": "Agregale al menos un símbolo, como ! ? # $ % &.",
+      "same_as_email": "La contraseña no puede ser tu email.",
+      "mismatch": "Las contraseñas no coinciden."
     },
     "change": {
       "current": "Contraseña actual",
@@ -1111,6 +1114,19 @@
         "wrong_current": "La contraseña actual no es correcta.",
         "missing_current": "Escribí tu contraseña actual."
       }
+    },
+    "repeat": "Repetir contraseña",
+    "matches": "Coinciden",
+    "doesNotMatch": "Todavía no coinciden",
+    "rules": {
+      "label": "La contraseña necesita",
+      "length": "Al menos 10 caracteres",
+      "upper": "Una mayúscula (A-Z)",
+      "lower": "Una minúscula (a-z)",
+      "digit": "Un número",
+      "symbol": "Un símbolo (! ? # $ % & …)",
+      "met": "cumplido",
+      "missing": "falta"
     }
   },
   "Toasts": {
@@ -1136,7 +1152,7 @@
     "jobSaved": "Oferta guardada.",
     "published": "Oferta publicada.",
     "coverUpdated": "Portada actualizada.",
-    "postPublished": "¡Publicado! 🎉 Ya lo puede leer toda la comunidad.",
+    "postPublished": "¡Publicado! Ya lo puede leer toda la comunidad. 🎉",
     "passwordUpdated": "Listo, ya tenés tu contraseña nueva. 🔑",
     "passwordChanged": "Cambiaste tu contraseña. Cerramos tus otras sesiones.",
     "pendingLiked": "Listo: le diste me gusta. ❤️",

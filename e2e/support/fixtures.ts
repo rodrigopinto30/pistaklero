@@ -261,6 +261,12 @@ export async function createUserWithPassword(email: string, password: string) {
   return data.user.id;
 }
 
+/** Contraseña nueva y su repetición (registro, recuperar o cambiar la contraseña). */
+export async function fillNewPassword(scope: Page | Locator, password: string, repeat = password, label = /^(Contraseña|Contraseña nueva)$/) {
+  await scope.getByRole("textbox", { name: label }).fill(password);
+  await scope.getByRole("textbox", { name: "Repetir contraseña" }).fill(repeat);
+}
+
 /** Candidata con perfil y contraseña, para entrar por el formulario de ingreso. */
 export async function seedCandidateWithPassword(email: string, password: string, fullName = "Candidata de prueba") {
   const userId = await seedCandidate(email, fullName);

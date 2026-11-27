@@ -24,7 +24,7 @@ import {
 } from "@/lib/auth/password-actions";
 import type { SignUpRole } from "@/lib/auth/sign-up";
 import { PASSWORD_PROBLEMS, type PasswordProblem } from "@/lib/validation/auth";
-import { PasswordInput } from "./password-input";
+import { NewPasswordFields, PasswordField } from "./password-input";
 
 type ControlProps = { id: string; "aria-invalid": true | undefined; "aria-describedby": string | undefined };
 
@@ -108,9 +108,7 @@ export function SignInForm({ locale, next, fixedEmail }: { locale: string; next:
           />
         )}
       </AuthField>
-      <AuthField label={t("passwordLabel")} error={passwordError}>
-        {(props) => <PasswordInput {...props} name="password" autoComplete="current-password" required />}
-      </AuthField>
+      <PasswordField label={t("passwordLabel")} name="password" autoComplete="current-password" error={passwordError} />
       <Link href="/forgot-password" className="-mt-2 self-start text-sm font-medium text-primary underline underline-offset-4">
         {t("forgot")}
       </Link>
@@ -127,7 +125,6 @@ export function SignInForm({ locale, next, fixedEmail }: { locale: string; next:
 export function SignUpForm({ locale, role, next }: { locale: string; role: SignUpRole; next?: string }) {
   const t = useTranslations("SignUp");
   const tAuth = useTranslations("Auth");
-  const tPassword = useTranslations("Password");
   const [state, action, pending] = useActionState<SignUpState, FormData>(signUpWithPassword, { status: "idle" });
   const formRef = useFocusInvalid(state);
 
@@ -135,7 +132,7 @@ export function SignUpForm({ locale, role, next }: { locale: string; role: SignU
 
   const error = state.status === "error" ? state : null;
   const emailError = error?.code === "invalid_email" ? tAuth("errors.invalid_email") : null;
-  const passwordError = error && isPasswordProblem(error.code) ? tPassword(`problems.${error.code}`) : null;
+  const passwordProblem = error && isPasswordProblem(error.code) ? error.code : null;
   const formError =
     error?.code === "rate_limited" ? tAuth("errors.rate_limited", { minutes: error.minutes }) : error?.code === "unknown" ? tAuth("errors.unknown") : null;
 
@@ -145,9 +142,7 @@ export function SignUpForm({ locale, role, next }: { locale: string; role: SignU
       <AuthField label={tAuth("emailLabel")} error={emailError}>
         {(props) => <Input {...props} name="email" type="email" autoComplete="username" inputMode="email" required defaultValue={error?.email} />}
       </AuthField>
-      <AuthField label={tAuth("passwordLabel")} hint={tPassword("hint")} error={passwordError}>
-        {(props) => <PasswordInput {...props} name="password" autoComplete="new-password" required />}
-      </AuthField>
+      <NewPasswordFields label={tAuth("passwordLabel")} errorCode={passwordProblem} errorFrom={state} />
       <FormAlert>{formError}</FormAlert>
       <Button type="submit" size="lg" disabled={pending}>
         {pending ? t("submitting") : t("submit")}
@@ -281,7 +276,7 @@ function ResetPasswordForm({ locale, email }: { locale: string; email: string })
 
   const error = state.status === "error" ? state : null;
   const codeError = error?.code === "invalid_code" ? tCode("errors.invalid_code") : null;
-  const passwordError = error && isPasswordProblem(error.code) ? t(`problems.${error.code}`) : null;
+  const passwordProblem = error && isPasswordProblem(error.code) ? error.code : null;
   const formError =
     error?.code === "rate_limited" ? tAuth("errors.rate_limited", { minutes: error.minutes }) : error?.code === "unknown" ? tAuth("errors.unknown") : null;
 
@@ -301,9 +296,7 @@ function ResetPasswordForm({ locale, email }: { locale: string; email: string })
         <AuthField label={tCode("label")} error={codeError}>
           {(props) => <CodeInput {...props} defaultValue={error?.typedCode} />}
         </AuthField>
-        <AuthField label={t("newPassword")} hint={t("hint")} error={passwordError}>
-          {(props) => <PasswordInput {...props} name="password" autoComplete="new-password" required />}
-        </AuthField>
+        <NewPasswordFields label={t("newPassword")} errorCode={passwordProblem} errorFrom={state} />
         <FormAlert>{formError}</FormAlert>
         <Button type="submit" size="lg" disabled={pending}>
           {pending ? t("saving") : t("save")}
@@ -332,19 +325,15 @@ export function ChangePasswordForm({ email }: { email: string }) {
   const error = state.status === "error" ? state : null;
   const currentError =
     error?.code === "wrong_current" ? t("change.errors.wrong_current") : error?.code === "missing_current" ? t("change.errors.missing_current") : null;
-  const passwordError = error && isPasswordProblem(error.code) ? t(`problems.${error.code}`) : null;
+  const passwordProblem = error && isPasswordProblem(error.code) ? error.code : null;
   const formError =
     error?.code === "rate_limited" ? tAuth("errors.rate_limited", { minutes: error.minutes }) : error?.code === "unknown" ? tAuth("errors.unknown") : null;
 
   return (
     <form ref={formRef} action={action} noValidate className="flex max-w-sm flex-col gap-4">
       <input type="text" name="username" value={email} autoComplete="username" readOnly hidden />
-      <AuthField label={t("change.current")} error={currentError}>
-        {(props) => <PasswordInput {...props} name="current_password" autoComplete="current-password" required />}
-      </AuthField>
-      <AuthField label={t("newPassword")} hint={t("hint")} error={passwordError}>
-        {(props) => <PasswordInput {...props} name="password" autoComplete="new-password" required />}
-      </AuthField>
+      <PasswordField label={t("change.current")} name="current_password" autoComplete="current-password" error={currentError} />
+      <NewPasswordFields label={t("newPassword")} errorCode={passwordProblem} errorFrom={state} />
       <FormAlert>{formError}</FormAlert>
       <Button type="submit" disabled={pending} className="self-start">
         {pending ? t("saving") : t("change.submit")}
