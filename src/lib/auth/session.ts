@@ -24,6 +24,18 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   return { id: data.claims.sub, email, name };
 });
 
+/**
+ * ¿La persona ingresó (link mágico u OAuth) hace menos de `minutes` minutos?
+ * Se usa para acciones sensibles como borrar la cuenta (OWASP A07: reautenticación).
+ */
+export async function signedInRecently(minutes = 10) {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+  const methods = (data?.claims?.amr ?? []) as { method?: string; timestamp?: number }[];
+  const lastSignIn = Math.max(0, ...methods.map((m) => m.timestamp ?? 0));
+  return lastSignIn > 0 && Date.now() / 1000 - lastSignIn < minutes * 60;
+}
+
 /** Perfil de la cuenta actual (rol, idioma…), o null si no completó la bienvenida. */
 export const getCurrentProfile = cache(async () => {
   const user = await getCurrentUser();
