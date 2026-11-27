@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /** Tarjeta del Bento Grid con su título (h2) como nombre accesible de la región. */
-export function Section({
+export function SectionCard({
   id,
   title,
   description,

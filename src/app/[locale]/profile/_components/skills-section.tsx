@@ -10,7 +10,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { idleState } from "@/lib/forms";
 import { SKILL_LEVELS } from "@/lib/validation/profile";
 import { addSkill, removeSkill, updateSkillLevel } from "../actions";
-import { SubmitButton } from "./submit-button";
+import { SubmitButton } from "@/components/forms/submit-button";
 
 export type CatalogSkill = { id: string; name: string; category: string };
 export type SelectedSkill = { skillId: string; name: string; level: (typeof SKILL_LEVELS)[number] };

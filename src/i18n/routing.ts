@@ -16,6 +16,9 @@ export const routing = defineRouting({
     "/welcome": { es: "/bienvenida", en: "/welcome" },
     "/profile": { es: "/perfil", en: "/profile" },
     "/p/[slug]": "/p/[slug]",
+    "/dashboard": { es: "/panel", en: "/dashboard" },
+    "/dashboard/company": { es: "/panel/empresa", en: "/dashboard/company" },
+    "/companies/[slug]": { es: "/empresas/[slug]", en: "/companies/[slug]" },
   },
 });
 

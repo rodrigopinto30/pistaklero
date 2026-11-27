@@ -8,7 +8,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import { updateBasics } from "../actions";
-import { SubmitButton } from "./submit-button";
+import { SubmitButton } from "@/components/forms/submit-button";
 
 type Option = { code: string; name: string };
 

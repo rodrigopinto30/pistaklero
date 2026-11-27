@@ -9,7 +9,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { idleState } from "@/lib/forms";
 import { CURRENCIES, SALARY_BASES, SALARY_PERIODS } from "@/lib/validation/profile";
 import { deleteSalary, saveSalary } from "../actions";
-import { SubmitButton } from "./submit-button";
+import { SubmitButton } from "@/components/forms/submit-button";
 
 export type SalaryValues = {
   amount: string;

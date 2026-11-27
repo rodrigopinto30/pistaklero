@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import type { EntryBlock } from "@/lib/validation/profile";
 import { deleteEntry, saveEntry } from "../actions";
-import { SubmitButton } from "./submit-button";
+import { SubmitButton } from "@/components/forms/submit-button";
 
 type FieldConfig = { name: string; label: string; type: "text" | "textarea" | "month" | "url"; required?: boolean; max?: number };
 

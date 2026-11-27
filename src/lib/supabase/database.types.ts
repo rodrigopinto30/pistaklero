@@ -231,6 +231,32 @@ isOneToOne: true
       referencedColumns: ["id"]
     }
                   ]
+                },"company_skills": {
+                  Row: {
+                    "company_id": string,"skill_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "company_id": string,"skill_id": string
+                  }
+                  Update: {
+                    "company_id"?: string,"skill_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "company_skills_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "company_skills_skill_id_fkey"
+      columns: ["skill_id"]
+isOneToOne: false
+      referencedRelation: "skills"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"email_notifications": boolean,"id": string,"locale": Database["public"]['Enums']["app_locale"],"role": Database["public"]['Enums']["user_role"],"suspended_at": string | null
@@ -295,8 +321,14 @@ isOneToOne: true
 "random_slug":
 { Args: { "p_value": string }; Returns: string
                            },
+"set_company_logo":
+{ Args: { "p_path": string }; Returns: undefined
+                           },
 "slugify":
 { Args: { "p_value": string }; Returns: string
+                           },
+"update_company_website":
+{ Args: { "p_website_url": string }; Returns: undefined
                            },
 "write_audit_log":
 { Args: { "p_action": string,"p_metadata"?: Json,"p_target_id"?: string,"p_target_type"?: string }; Returns: undefined

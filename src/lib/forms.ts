@@ -6,7 +6,15 @@ import type { z } from "zod";
  */
 export type FieldErrorCode = "required" | "too_short" | "too_long" | "invalid";
 export type FieldError = { code: FieldErrorCode; limit?: number };
-export type FormErrorCode = "unknown" | "limit_reached" | "not_found" | "duplicate";
+export type FormErrorCode =
+  | "unknown"
+  | "limit_reached"
+  | "not_found"
+  | "duplicate"
+  | "company_exists"
+  | "file_too_large"
+  | "file_type"
+  | "required_file";
 
 export type FormState =
   | { status: "idle" }
