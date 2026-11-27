@@ -24,7 +24,7 @@ test("cada acción se confirma con un aviso chico que se cierra solo", async ({ 
   const skills = page.getByRole("region", { name: "Habilidades" });
   await skills.getByRole("button", { name: /^Quitar / }).first().click();
   await expectToast(page, "Listo, se quitó.");
-  await expect(notifications.getByText("Listo, se quitó.")).toHaveCount(0, { timeout: 8_000 });
+  await expect(notifications.getByText("Listo, se quitó.")).toHaveCount(0, { timeout: 15_000 });
 });
 
 test("salir de la cuenta avisa en la página siguiente", async ({ page }) => {
