@@ -14,6 +14,7 @@ export const routing = defineRouting({
     "/": "/",
     "/sign-in": { es: "/ingresar", en: "/sign-in" },
     "/sign-up": { es: "/registro", en: "/sign-up" },
+    "/forgot-password": { es: "/recuperar-contrasena", en: "/forgot-password" },
     "/welcome": { es: "/bienvenida", en: "/welcome" },
     "/profile": { es: "/perfil", en: "/profile" },
     "/p/[slug]": "/p/[slug]",

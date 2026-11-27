@@ -27,7 +27,7 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
 });
 
 /**
- * ¿La persona ingresó (link mágico u OAuth) hace menos de `minutes` minutos?
+ * ¿La persona ingresó (contraseña, código u OAuth) hace menos de `minutes` minutos?
  * Se usa para acciones sensibles como borrar la cuenta (OWASP A07: reautenticación).
  */
 export async function signedInRecently(minutes = 10) {

@@ -29,26 +29,32 @@
     "signOut": "Salir",
     "metaTitle": "Ingresar",
     "title": "Entrá a Pistaklero",
-    "subtitle": "Sin contraseñas: usá tu cuenta o pedí un link por email.",
+    "subtitle": "Ingresá con tu email y tu contraseña.",
     "continueWith": "Continuar con {provider}",
     "or": "o con tu email",
     "emailLabel": "Email",
-    "emailHint": "Te mandamos un link para entrar. Vence en 15 minutos.",
-    "sendLink": "Enviarme el link",
     "sending": "Enviando…",
-    "sentTitle": "Revisá tu email",
-    "sentBody": "Si {email} es correcto, en unos segundos te llega el link para entrar.",
+    "passwordLabel": "Contraseña",
+    "showPassword": "Mostrar contraseña",
+    "forgot": "¿Olvidaste tu contraseña?",
+    "submit": "Ingresar",
+    "submitting": "Ingresando…",
+    "reauthTitle": "Confirmá que sos vos",
+    "reauthSubtitle": "Por seguridad, escribí tu contraseña de nuevo.",
     "errors": {
       "invalid_email": "Escribí un email válido, por ejemplo ana@empresa.com.",
-      "rate_limited": "Pediste muchos links seguidos. Esperá unos minutos y probá de nuevo.",
+      "rate_limited": "Hubo demasiados intentos seguidos. Esperá {minutes, plural, one {# minuto} other {# minutos}} y probá de nuevo, o recuperá tu contraseña.",
       "callback": "No pudimos completar el ingreso. Probá de nuevo.",
       "link_expired": "El link venció o ya se usó. Pedí uno nuevo.",
-      "unknown": "Algo salió mal. Probá de nuevo en unos minutos."
+      "unknown": "Algo salió mal. Probá de nuevo en unos minutos.",
+      "missing_password": "Escribí tu contraseña.",
+      "invalid_credentials": "El email o la contraseña no son correctos."
     },
     "completeSignUp": "Completá tu registro",
     "noAccount": "¿Primera vez en Pistaklero?",
     "signUp": "Creá tu cuenta",
-    "createAccount": "Crear cuenta"
+    "createAccount": "Crear cuenta",
+    "continue": "Continuar"
   },
   "Welcome": {
     "metaTitle": "Bienvenida",
@@ -431,7 +437,8 @@
       "invalid_invitation": "La invitación no existe, ya se usó o venció. Pedile a tu equipo que te mande una nueva.",
       "email_mismatch": "Entraste como {email}, pero la invitación es para otro email. Salí y entrá con el email que recibió la invitación.",
       "already_onboarded": "Tu cuenta ya tiene un rol en Pistaklero. Para sumarte a un equipo, usá otra cuenta con el email invitado."
-    }
+    },
+    "accepting": "Aceptando la invitación…"
   },
   "Jobs": {
     "metaNew": "Publicar oferta",
@@ -864,6 +871,10 @@
   "Settings": {
     "metaTitle": "Ajustes",
     "title": "Ajustes",
+    "password": {
+      "title": "Contraseña",
+      "hint": "La usás para ingresar con tu email. Al cambiarla, se cierran tus otras sesiones."
+    },
     "preferences": {
       "title": "Preferencias",
       "emailLocale": "Idioma de los emails",
@@ -881,9 +892,9 @@
       "hint": "Se borran tu perfil, tus postulaciones y todos tus datos. No se puede deshacer.",
       "confirm": "Entiendo que se borra todo y que no se puede deshacer.",
       "button": "Eliminar mi cuenta para siempre",
-      "reauthLink": "Volver a ingresar",
+      "reauthLink": "Confirmar mi contraseña",
       "errors": {
-        "reauth": "Por seguridad, ingresá de nuevo antes de borrar la cuenta (vale por 10 minutos).",
+        "reauth": "Por seguridad, confirmá tu contraseña antes de borrar la cuenta (vale por 10 minutos).",
         "confirm": "Marcá la casilla para confirmar.",
         "unknown": "No pudimos borrar la cuenta. Probá de nuevo."
       }
@@ -1033,29 +1044,70 @@
   "SignUp": {
     "metaTitle": "Crear cuenta",
     "chooseTitle": "¿Qué venís a buscar?",
-    "chooseSubtitle": "Elegí una opción para empezar. Después te pedimos el email y tus datos.",
+    "chooseSubtitle": "Elegí una opción para empezar. Después te pedimos el email, una contraseña y tus datos.",
     "candidate": "Busco trabajo",
     "candidateHint": "Armá tu perfil y postulate en 1 clic a empleos con sueldo visible.",
     "recruiter": "Busco talento",
     "recruiterHint": "Publicá ofertas para tu empresa y recibí postulaciones ordenadas.",
     "roleNote": "Una cuenta es para buscar trabajo o para buscar talento, no las dos cosas.",
-    "emailTitle": "Tu email",
+    "emailTitle": "Tu cuenta",
     "chosen": "Te registrás para: {role}.",
     "change": "Cambiar",
     "continueWith": "Continuar con {provider}",
     "or": "o con tu email",
-    "emailHint": "Te mandamos un link para confirmarlo. Sin contraseñas.",
-    "sendLink": "Enviarme el link de confirmación",
-    "sentTitle": "Revisá tu email",
-    "sentBody": "Te mandamos un link a {email}. Abrilo para confirmar tu email y completar tus datos.",
+    "submit": "Crear cuenta",
+    "submitting": "Creando la cuenta…",
     "haveAccount": "¿Ya tenés cuenta?",
     "signIn": "Ingresá",
     "steps": {
       "label": "Pasos del registro",
       "role": "Qué buscás",
-      "email": "Tu email",
+      "account": "Tu cuenta",
       "details": "Tus datos",
       "done": "Listo:"
+    }
+  },
+  "Code": {
+    "title": "Revisá tu email",
+    "body": "Te mandamos un código de 6 dígitos a {email}. Escribilo acá para confirmar tu email.",
+    "label": "Código de 6 dígitos",
+    "submit": "Confirmar",
+    "submitting": "Confirmando…",
+    "resend": "Reenviar el código",
+    "resent": "Listo, te mandamos un código nuevo.",
+    "alreadyHadAccount": "¿Ya tenías cuenta con este email?",
+    "signIn": "Ingresá",
+    "forgot": "recuperá tu contraseña",
+    "errors": {
+      "invalid_code": "El código no es correcto o ya venció. Revisalo o pedí uno nuevo."
+    }
+  },
+  "Password": {
+    "metaTitle": "Recuperar la contraseña",
+    "title": "Elegí una contraseña nueva",
+    "subtitle": "Te mandamos un código por email para confirmar que sos vos. También sirve si entrabas con Google o GitHub.",
+    "send": "Enviarme el código",
+    "codeSent": "Si {email} tiene cuenta en Pistaklero, te llegó un código de 6 dígitos. Escribilo acá junto con tu contraseña nueva.",
+    "newPassword": "Contraseña nueva",
+    "hint": "Al menos 8 caracteres. Una frase que recuerdes es más segura que una palabra rara.",
+    "save": "Guardar la contraseña",
+    "saving": "Guardando…",
+    "backToSignIn": "Volver a ingresar",
+    "problems": {
+      "too_short": "La contraseña tiene que tener al menos 8 caracteres.",
+      "too_long": "La contraseña es muy larga: usá hasta 72 caracteres (los acentos y los emojis ocupan más).",
+      "too_common": "Esa contraseña es de las más usadas y es fácil de adivinar. Elegí otra.",
+      "same_as_email": "La contraseña no puede ser tu email."
+    },
+    "change": {
+      "current": "Contraseña actual",
+      "submit": "Cambiar la contraseña",
+      "noPassword": "¿Entrás con Google o GitHub, o no recordás la actual?",
+      "noPasswordLink": "Elegí una nueva con un código por email",
+      "errors": {
+        "wrong_current": "La contraseña actual no es correcta.",
+        "missing_current": "Escribí tu contraseña actual."
+      }
     }
   },
   "Toasts": {
@@ -1081,7 +1133,9 @@
     "jobSaved": "Oferta guardada.",
     "published": "Oferta publicada.",
     "coverUpdated": "Portada actualizada.",
-    "postPublished": "¡Publicado! Ya lo puede leer toda la comunidad."
+    "postPublished": "¡Publicado! Ya lo puede leer toda la comunidad.",
+    "passwordUpdated": "Listo, ya tenés tu contraseña nueva.",
+    "passwordChanged": "Cambiaste tu contraseña. Cerramos tus otras sesiones."
   },
   "Saved": {
     "metaTitle": "Guardados",

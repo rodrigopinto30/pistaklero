@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 /** Pasos del registro: qué buscás → tu email → tus datos. El actual lleva aria-current="step". */
 export async function SignUpSteps({ current }: { current: 1 | 2 | 3 }) {
   const t = await getTranslations("SignUp.steps");
-  const steps = [t("role"), t("email"), t("details")];
+  const steps = [t("role"), t("account"), t("details")];
 
   return (
     <nav aria-label={t("label")}>

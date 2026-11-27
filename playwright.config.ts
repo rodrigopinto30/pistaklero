@@ -6,6 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./e2e",
+  globalSetup: "./e2e/support/global-setup.ts",
   fullyParallel: true,
   // El servidor de desarrollo compila cada página a pedido: con muchos workers se satura.
   workers: 3,
