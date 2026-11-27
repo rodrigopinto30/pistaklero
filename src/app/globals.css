@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* <html> lleva la clase .dark (por defecto) o .light, según la cookie "theme". */
+/* El modo claro es el de base; <html> lleva la clase .dark solo si se activa el oscuro (cookie "theme"). */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -52,46 +52,12 @@
 }
 
 /*
- * Paleta. Contrastes verificados contra WCAG 2.2 AA:
- * texto ≥ 4.5:1 y bordes de controles / foco ≥ 3:1.
+ * Paleta. Contrastes verificados contra WCAG 2.2 AA: texto ≥ 4.5:1 y bordes de controles / foco ≥ 3:1.
+ * El modo claro va en :root, sin depender de la clase: si React rearma <html> (por ejemplo, al cambiar
+ * de idioma) y la clase falta un instante, la página se sigue viendo igual.
+ * Contrastes del claro sobre background #f6f7f4 y card #ffffff.
  */
 :root {
-  color-scheme: dark;
-
-  --background: #0a0c0b;
-  --foreground: #eef1ef; /* 17.3:1 sobre background */
-
-  --card: #131715;
-  --card-foreground: #eef1ef; /* 15.9:1 */
-  --popover: #131715;
-  --popover-foreground: #eef1ef;
-
-  --primary: #c5f25e; /* verde lima: acciones principales */
-  --primary-foreground: #0a0c0b; /* 15.2:1 sobre lima */
-  --primary-hover: #b3e04a; /* un poco más oscuro: el texto sigue en 12:1 */
-
-  --secondary: #1c211e;
-  --secondary-foreground: #eef1ef; /* 14.4:1 */
-  --muted: #1c211e;
-  --muted-foreground: #9aa39e; /* 7.0:1 sobre card, 6.3:1 sobre muted */
-  --accent: #1c211e;
-  --accent-foreground: #eef1ef;
-
-  --destructive: #ff7a7a; /* 7.2:1 sobre card */
-  --border: #262c29; /* decorativo (tarjetas) */
-  --input: #66706b; /* bordes de controles: 3.8:1 sobre background */
-  --field: color-mix(in oklab, #66706b 30%, transparent); /* fondo de los campos de texto */
-  --ring: #c5f25e; /* foco: 15.2:1 sobre background */
-
-  --violet: #a99bff; /* secundario: estado "Entrevista", enlaces */
-  --info: #8fb4ff; /* estado "Recibida" */
-  --warn: #f5c451; /* avisos y badge "Tarda ~1 semana" */
-
-  --radius: 0.75rem;
-}
-
-/* Modo claro. Mismos roles, contrastes verificados (AA) sobre background #f6f7f4 y card #ffffff. */
-:root.light {
   color-scheme: light;
 
   --background: #f6f7f4;
@@ -122,6 +88,44 @@
   --violet: #5847cc; /* 6.1:1 */
   --info: #1d4ed8; /* 6.7:1; 5.8:1 sobre su fondo suave */
   --warn: #875200; /* 6.0:1 */
+
+  --radius: 0.75rem;
+}
+
+/*
+ * Modo oscuro (apagado por ahora: ver DARK_MODE_ENABLED). Mismos roles y mismos criterios de contraste.
+ */
+:root.dark {
+  color-scheme: dark;
+
+  --background: #0a0c0b;
+  --foreground: #eef1ef; /* 17.3:1 sobre background */
+
+  --card: #131715;
+  --card-foreground: #eef1ef; /* 15.9:1 */
+  --popover: #131715;
+  --popover-foreground: #eef1ef;
+
+  --primary: #c5f25e; /* verde lima: acciones principales */
+  --primary-foreground: #0a0c0b; /* 15.2:1 sobre lima */
+  --primary-hover: #b3e04a; /* un poco más oscuro: el texto sigue en 12:1 */
+
+  --secondary: #1c211e;
+  --secondary-foreground: #eef1ef; /* 14.4:1 */
+  --muted: #1c211e;
+  --muted-foreground: #9aa39e; /* 7.0:1 sobre card, 6.3:1 sobre muted */
+  --accent: #1c211e;
+  --accent-foreground: #eef1ef;
+
+  --destructive: #ff7a7a; /* 7.2:1 sobre card */
+  --border: #262c29; /* decorativo (tarjetas) */
+  --input: #66706b; /* bordes de controles: 3.8:1 sobre background */
+  --field: color-mix(in oklab, #66706b 30%, transparent); /* fondo de los campos de texto */
+  --ring: #c5f25e; /* foco: 15.2:1 sobre background */
+
+  --violet: #a99bff; /* secundario: estado "Entrevista", enlaces */
+  --info: #8fb4ff; /* estado "Recibida" */
+  --warn: #f5c451; /* avisos y badge "Tarda ~1 semana" */
 }
 
 @layer base {
