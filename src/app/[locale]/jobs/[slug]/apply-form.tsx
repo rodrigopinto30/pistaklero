@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState, useEffect, useId, useRef } from "react";
+import { notify } from "@/components/toaster";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,15 +58,22 @@ function Questions({ questions }: { questions: Question[] }) {
  * Botón "Postularme". Sin preguntas, envía directo. Con preguntas, abre un <dialog> nativo:
  * el navegador maneja el foco, Esc y el fondo inerte (WCAG 2.1.2 y 2.4.3).
  */
-export function ApplyForm({ jobId, questions }: { jobId: string; questions: Question[] }) {
+export function ApplyForm({ jobId, questions, autoOpen = false }: { jobId: string; questions: Question[]; autoOpen?: boolean }) {
   const t = useTranslations("Apply");
   const [state, action, pending] = useActionState<ApplyState, FormData>(applyToJob, { status: "idle" });
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
   useEffect(() => {
-    if (state.status === "success") dialogRef.current?.close();
-  }, [state]);
+    if (state.status !== "success") return;
+    dialogRef.current?.close();
+    notify(t("successToast"));
+  }, [state, t]);
+
+  // Desde el botón de la tarjeta (?postular=1): el diálogo de preguntas ya se abre.
+  useEffect(() => {
+    if (autoOpen && questions.length > 0) dialogRef.current?.showModal();
+  }, [autoOpen, questions.length]);
 
   const message =
     state.status === "success" ? (

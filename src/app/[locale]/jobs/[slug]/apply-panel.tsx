@@ -7,10 +7,10 @@ import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { ApplyForm } from "./apply-form";
 
-const MISSING = ["headline", "skills", "experience"] as const;
+const MISSING = ["headline", "experience"] as const;
 
 /** Lo que ve cada persona en el lugar del botón "Postularme". */
-export async function ApplyPanel({ jobId, slug }: { jobId: string; slug: string }) {
+export async function ApplyPanel({ jobId, slug, autoOpen = false }: { jobId: string; slug: string; autoOpen?: boolean }) {
   const locale = (await getLocale()) as AppLocale;
   const t = await getTranslations("Apply");
 
@@ -27,9 +27,10 @@ export async function ApplyPanel({ jobId, slug }: { jobId: string; slug: string 
   if (profile?.role !== "candidate") return <p className="text-sm text-muted-foreground">{t("onlyCandidates")}</p>;
 
   const supabase = await createClient();
-  const [{ data: existing }, { data: missing }, { data: questions }] = await Promise.all([
+  const [{ data: existing }, { data: missing }, { data: suggestions }, { data: questions }] = await Promise.all([
     supabase.from("applications").select("status").eq("job_id", jobId).eq("candidate_id", profile.id).maybeSingle(),
     supabase.rpc("candidate_missing_requirements", { p_candidate_id: profile.id }),
+    supabase.rpc("candidate_suggestions", { p_candidate_id: profile.id }),
     supabase.from("job_questions").select("id, type, prompt, options, required").eq("job_id", jobId).order("position"),
   ]);
 
@@ -63,5 +64,18 @@ export async function ApplyPanel({ jobId, slug }: { jobId: string; slug: string 
     );
   }
 
-  return <ApplyForm jobId={jobId} questions={questions ?? []} />;
+  return (
+    <div className="flex flex-col gap-3">
+      <ApplyForm jobId={jobId} questions={questions ?? []} autoOpen={autoOpen} />
+      {/* No es obligatorio, pero ayuda: las empresas filtran por habilidades. */}
+      {suggestions?.includes("skills") && (
+        <p className="rounded-xl bg-warn/10 p-3 text-sm text-foreground">
+          <span className="font-medium">{t("suggestSkillsTitle")}</span> {t("suggestSkills")}{" "}
+          <Link href={{ pathname: "/profile", hash: "skills-title" }} className="font-medium text-primary underline underline-offset-4">
+            {t("suggestSkillsLink")}
+          </Link>
+        </p>
+      )}
+    </div>
+  );
 }
