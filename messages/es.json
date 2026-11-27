@@ -40,7 +40,10 @@
       "link_expired": "El link venció o ya se usó. Pedí uno nuevo.",
       "unknown": "Algo salió mal. Probá de nuevo en unos minutos."
     },
-    "completeSignUp": "Completá tu registro"
+    "completeSignUp": "Completá tu registro",
+    "noAccount": "¿Primera vez en Pistaklero?",
+    "signUp": "Creá tu cuenta",
+    "createAccount": "Crear cuenta"
   },
   "Welcome": {
     "metaTitle": "Bienvenida",
@@ -75,7 +78,11 @@
     },
     "firstName": "Nombre",
     "middleName": "Segundo nombre",
-    "lastName": "Apellido"
+    "lastName": "Apellido",
+    "chosen": "Te registrás para: {role}.",
+    "change": "Cambiar",
+    "detailsTitle": "Tus datos",
+    "detailsSubtitle": "Último paso: contanos quién sos."
   },
   "Form": {
     "required": "(obligatorio)",
@@ -948,6 +955,34 @@
       "hint": "JPG, PNG o WebP de hasta 4 MB. La recortamos en un círculo.",
       "upload": "Subir foto",
       "remove": "Quitar foto"
+    }
+  },
+  "SignUp": {
+    "metaTitle": "Crear cuenta",
+    "chooseTitle": "¿Qué venís a buscar?",
+    "chooseSubtitle": "Elegí una opción para empezar. Después te pedimos el email y tus datos.",
+    "candidate": "Busco trabajo",
+    "candidateHint": "Armá tu perfil y postulate en 1 clic a empleos con sueldo visible.",
+    "recruiter": "Busco talento",
+    "recruiterHint": "Publicá ofertas para tu empresa y recibí postulaciones ordenadas.",
+    "roleNote": "Una cuenta es para buscar trabajo o para buscar talento, no las dos cosas.",
+    "emailTitle": "Tu email",
+    "chosen": "Te registrás para: {role}.",
+    "change": "Cambiar",
+    "continueWith": "Continuar con {provider}",
+    "or": "o con tu email",
+    "emailHint": "Te mandamos un link para confirmarlo. Sin contraseñas.",
+    "sendLink": "Enviarme el link de confirmación",
+    "sentTitle": "Revisá tu email",
+    "sentBody": "Te mandamos un link a {email}. Abrilo para confirmar tu email y completar tus datos.",
+    "haveAccount": "¿Ya tenés cuenta?",
+    "signIn": "Ingresá",
+    "steps": {
+      "label": "Pasos del registro",
+      "role": "Qué buscás",
+      "email": "Tu email",
+      "details": "Tus datos",
+      "done": "Listo:"
     }
   }
 }

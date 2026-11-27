@@ -4,7 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getEnabledOAuthProviders, OAUTH_PROVIDER_NAMES } from "@/lib/auth/providers";
 import { safeNextPath } from "@/lib/auth/redirect";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
-import { redirect } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import { MagicLinkForm } from "./magic-link-form";
 
 const CALLBACK_ERRORS = ["callback", "link_expired"] as const;
@@ -58,6 +58,13 @@ export default async function SignInPage({ searchParams }: PageProps<"/[locale]/
       )}
 
       <MagicLinkForm locale={locale} next={next} />
+
+      <p className="text-center text-sm">
+        {t("noAccount")}{" "}
+        <Link href="/sign-up" className="font-medium text-primary underline underline-offset-4">
+          {t("signUp")}
+        </Link>
+      </p>
     </div>
   );
 }
