@@ -22,6 +22,7 @@ export const routing = defineRouting({
     "/dashboard/jobs/new": { es: "/panel/ofertas/nueva", en: "/dashboard/jobs/new" },
     "/dashboard/jobs/[id]": { es: "/panel/ofertas/[id]", en: "/dashboard/jobs/[id]" },
     "/jobs/[slug]": { es: "/empleos/[slug]", en: "/jobs/[slug]" },
+    "/my-applications": { es: "/mis-postulaciones", en: "/my-applications" },
     "/invitation": { es: "/invitacion", en: "/invitation" },
     "/companies/[slug]": { es: "/empresas/[slug]", en: "/companies/[slug]" },
   },

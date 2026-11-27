@@ -28,9 +28,14 @@ export async function SiteHeader() {
             </Link>
           )}
           {profile?.role === "candidate" && (
-            <Link href="/profile" className={buttonVariants({ variant: "ghost" })}>
-              {t("myProfile")}
-            </Link>
+            <>
+              <Link href="/my-applications" className={buttonVariants({ variant: "ghost" })}>
+                {t("myApplications")}
+              </Link>
+              <Link href="/profile" className={buttonVariants({ variant: "ghost" })}>
+                {t("myProfile")}
+              </Link>
+            </>
           )}
           {profile?.role === "recruiter" && (
             <Link href="/dashboard" className={buttonVariants({ variant: "ghost" })}>

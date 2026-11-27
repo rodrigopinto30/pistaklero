@@ -7,7 +7,8 @@
     "skipToContent": "Saltar al contenido",
     "homeLink": "Pistaklero, ir al inicio",
     "myProfile": "Mi perfil",
-    "dashboard": "Panel"
+    "dashboard": "Panel",
+    "myApplications": "Mis postulaciones"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -500,5 +501,61 @@
     "empty": "No encontramos empleos con esa búsqueda. Probá con menos filtros u otras palabras.",
     "clear": "Ver todos los empleos",
     "loadMore": "Cargar más"
+  },
+  "Apply": {
+    "apply": "Postularme",
+    "send": "Enviar postulación",
+    "sending": "Enviando…",
+    "cancel": "Cancelar",
+    "required": "(obligatoria)",
+    "optional": "(opcional)",
+    "shortHint": "Hasta 280 caracteres.",
+    "dialogTitle": "Postularme",
+    "dialogHint": "La empresa recibe tu perfil completo y estas respuestas.",
+    "success": "¡Listo! Tu postulación fue enviada. Seguí su estado en Mis postulaciones.",
+    "signInToApply": "Ingresá para postularte",
+    "onlyCandidates": "Solo las cuentas de candidato pueden postularse.",
+    "alreadyApplied": "Ya te postulaste:",
+    "viewApplications": "Ver mis postulaciones",
+    "incompleteTitle": "Para postularte, completá tu perfil:",
+    "completeProfile": "Completar mi perfil",
+    "missing": {
+      "headline": "Un titular (por ejemplo: Frontend Junior · React)",
+      "skills": "Al menos una habilidad",
+      "experience": "Una experiencia, un proyecto o una formación"
+    },
+    "errors": {
+      "not_candidate": "Solo las cuentas de candidato pueden postularse.",
+      "job_not_available": "Esta oferta ya no recibe postulaciones.",
+      "company_blocked": "Bloqueaste a esta empresa: no ve tu perfil. Desbloqueala desde Mi perfil para postularte.",
+      "profile_incomplete": "Completá tu perfil para postularte.",
+      "already_applied": "Ya te postulaste a esta oferta.",
+      "rate_limited": "Llegaste a 20 postulaciones en las últimas 24 horas. Probá de nuevo mañana.",
+      "answer_required": "Respondé las preguntas obligatorias.",
+      "invalid_answer": "Revisá tus respuestas.",
+      "unknown": "No pudimos enviar la postulación. Probá de nuevo."
+    }
+  },
+  "Applications": {
+    "metaTitle": "Mis postulaciones",
+    "title": "Mis postulaciones",
+    "subtitle": "El estado de cada postulación, siempre a la vista.",
+    "empty": "Todavía no te postulaste a ninguna oferta.",
+    "browse": "Buscar empleos",
+    "removedJob": "Oferta eliminada",
+    "appliedOn": "Te postulaste el {date}",
+    "lastChange": "último cambio {when}",
+    "history": "Ver historial",
+    "withdraw": "Retirar postulación",
+    "withdrawFrom": "Retirar postulación: {job}",
+    "status": {
+      "received": "Recibida",
+      "in_review": "En revisión",
+      "interview": "Entrevista",
+      "hired": "Seleccionada",
+      "rejected": "No seleccionada",
+      "no_response": "Sin respuesta",
+      "withdrawn": "Retirada"
+    }
   }
 }
