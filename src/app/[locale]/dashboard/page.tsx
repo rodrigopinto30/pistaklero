@@ -1,9 +1,11 @@
 import { BadgeCheck, CircleAlert } from "lucide-react";
 import type { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { SectionCard } from "@/components/section-card";
 import { buttonVariants } from "@/components/ui/button";
 import { requireRecruiterPage } from "@/lib/auth/guards";
+import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 
@@ -16,6 +18,15 @@ export default async function DashboardPage() {
   const locale = (await getLocale()) as AppLocale;
   const { company } = await requireRecruiterPage(locale, "/dashboard");
   const t = await getTranslations("Dashboard");
+  const tJobs = await getTranslations("Jobs");
+  const format = await getFormatter();
+  const supabase = await createClient();
+  const { data: jobs } = await supabase
+    .from("jobs")
+    .select("id, title, status, published_at, valid_through")
+    .eq("company_id", company.id)
+    .order("created_at", { ascending: false });
+  const date = (value: string) => format.dateTime(new Date(value), { dateStyle: "medium" });
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
@@ -34,7 +45,10 @@ export default async function DashboardPage() {
         )}
       </div>
       <div className="flex flex-wrap gap-2">
-        <Link href="/dashboard/company" className={buttonVariants()}>
+        <Link href="/dashboard/jobs/new" className={buttonVariants()}>
+          {tJobs("list.new")}
+        </Link>
+        <Link href="/dashboard/company" className={buttonVariants({ variant: "outline" })}>
           {t("editCompany")}
         </Link>
         <Link href={{ pathname: "/companies/[slug]", params: { slug: company.slug } }} className={buttonVariants({ variant: "outline" })}>
@@ -45,7 +59,26 @@ export default async function DashboardPage() {
         </Link>
       </div>
       <SectionCard id="jobs" title={t("jobsTitle")}>
-        <p className="text-sm text-muted-foreground">{t("jobsEmpty")}</p>
+        {(jobs ?? []).length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t("jobsEmpty")}</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {jobs!.map((job) => (
+              <li key={job.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-3 py-3">
+                <span className="flex flex-col gap-1">
+                  <Link href={{ pathname: "/dashboard/jobs/[id]", params: { id: job.id } }} className="font-medium underline-offset-4 hover:underline">
+                    {job.title}
+                  </Link>
+                  <span className="text-sm text-muted-foreground">
+                    {job.published_at ? tJobs("list.published", { date: date(job.published_at) }) : tJobs("list.draft")} ·{" "}
+                    {tJobs("list.validThrough", { date: date(job.valid_through) })}
+                  </span>
+                </span>
+                <JobStatusBadge status={job.status} validThrough={job.valid_through} />
+              </li>
+            ))}
+          </ul>
+        )}
       </SectionCard>
     </div>
   );

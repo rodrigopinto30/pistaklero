@@ -93,7 +93,13 @@
       "company_exists": "Ese dominio ya es de otra empresa en Pistaklero.",
       "file_too_large": "La imagen pesa más de 900 KB.",
       "file_type": "Usá una imagen PNG, JPEG o WebP.",
-      "required_file": "Elegí una imagen."
+      "required_file": "Elegí una imagen.",
+      "max_below_min": "El máximo no puede ser menor que el mínimo.",
+      "range_too_wide": "El máximo no puede superar 3 veces el mínimo.",
+      "options": "Escribí entre 2 y 5 opciones, una por línea (hasta 80 caracteres cada una).",
+      "required_unless_remote": "Elegí el país: la oferta no es remota.",
+      "unverified_limit": "Tu empresa todavía no está verificada: puede tener hasta 2 ofertas activas. Guardala como borrador o cerrá otra.",
+      "expired": "La fecha de vencimiento ya pasó. Elegí una duración nueva."
     }
   },
   "Profile": {
@@ -368,6 +374,110 @@
       "invalid_invitation": "La invitación no existe, ya se usó o venció. Pedile a tu equipo que te mande una nueva.",
       "email_mismatch": "Entraste como {email}, pero la invitación es para otro email. Salí y entrá con el email que recibió la invitación.",
       "already_onboarded": "Tu cuenta ya tiene un rol en Pistaklero. Para sumarte a un equipo, usá otra cuenta con el email invitado."
+    }
+  },
+  "Jobs": {
+    "metaNew": "Publicar oferta",
+    "metaEdit": "Editar oferta",
+    "newTitle": "Publicar una oferta",
+    "newSubtitle": "Una sola página. El salario es obligatorio: así las personas deciden rápido.",
+    "editTitle": "Editar oferta",
+    "sections": {
+      "basics": "La oferta",
+      "conditions": "Condiciones",
+      "salary": "Salario",
+      "skills": "Tecnologías",
+      "questions": "Preguntas filtro"
+    },
+    "title": "Puesto",
+    "titleHint": "Por ejemplo: Frontend Junior (React)",
+    "description": "Descripción",
+    "descriptionHint": "Qué va a hacer la persona, qué buscan y cómo trabajan. Podés usar Markdown: **negrita**, listas con -, enlaces.",
+    "language": "Idioma de la oferta",
+    "seniority": "Seniority",
+    "employmentType": "Tipo de contrato",
+    "workMode": "Modalidad",
+    "country": "País",
+    "noCountry": "Sin especificar (remota)",
+    "city": "Ciudad",
+    "validDays": "Vence en",
+    "validDaysOption": "{days} días",
+    "salaryMin": "Mínimo",
+    "salaryMax": "Máximo",
+    "salaryCurrency": "Moneda",
+    "salaryPeriod": "Período",
+    "salaryBasis": "Bruto o neto",
+    "salaryHint": "Obligatorio. El máximo puede ser hasta 3 veces el mínimo.",
+    "skillsHint": "Hasta 10.",
+    "questionsHint": "Hasta 2 preguntas cortas para filtrar sin pedir carta de presentación.",
+    "questionN": "Pregunta {n}",
+    "questionType": "Tipo",
+    "questionPrompt": "Enunciado",
+    "questionOptions": "Opciones (una por línea)",
+    "questionTypes": {
+      "none": "Sin pregunta",
+      "short_text": "Respuesta corta",
+      "single_choice": "Opción única"
+    },
+    "saveDraft": "Guardar borrador",
+    "publish": "Publicar",
+    "saveChanges": "Guardar cambios",
+    "close": "Cerrar oferta",
+    "reopen": "Volver a publicar",
+    "deleteDraft": "Eliminar borrador",
+    "viewPublic": "Ver oferta publicada",
+    "status": {
+      "draft": "Borrador",
+      "published": "Publicada",
+      "closed": "Cerrada",
+      "hidden": "Oculta por moderación",
+      "expired": "Vencida"
+    },
+    "seniorityOptions": {
+      "trainee": "Trainee",
+      "junior": "Junior",
+      "semi_senior": "Semi-senior",
+      "senior": "Senior",
+      "lead": "Lead"
+    },
+    "employmentOptions": {
+      "full_time": "Tiempo completo",
+      "part_time": "Medio tiempo",
+      "contract": "Contrato",
+      "internship": "Pasantía",
+      "freelance": "Freelance"
+    },
+    "workModeOptions": {
+      "remote": "Remoto",
+      "hybrid": "Híbrido",
+      "onsite": "Presencial"
+    },
+    "periodShort": {
+      "hour": "por hora",
+      "month": "por mes",
+      "year": "por año"
+    },
+    "basisShort": {
+      "gross": "bruto",
+      "net": "neto"
+    },
+    "list": {
+      "new": "Publicar oferta",
+      "published": "Publicada el {date}",
+      "validThrough": "Vence el {date}",
+      "draft": "Sin publicar"
+    },
+    "detail": {
+      "postedOn": "Publicada el {date}",
+      "validThrough": "Vence el {date}",
+      "apply": "Postularme",
+      "about": "Sobre la oferta",
+      "skills": "Tecnologías",
+      "company": "La empresa",
+      "salaryNotInformed": "Sueldo no informado",
+      "applyExternal": "Postularme en el sitio original",
+      "external": "Oferta externa",
+      "closed": "Esta oferta ya no recibe postulaciones."
     }
   }
 }
