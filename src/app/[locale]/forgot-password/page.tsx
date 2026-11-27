@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ForgotPasswordForm } from "@/components/auth/auth-forms";
 import { Link } from "@/i18n/navigation";
+import { Emoji } from "@/components/emoji";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Password");
@@ -19,7 +20,7 @@ export default async function ForgotPasswordPage() {
   return (
     <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-4 py-12">
       <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("title")} <Emoji symbol="🔑" /></h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
       <ForgotPasswordForm locale={locale} />

@@ -6,6 +6,7 @@ import { parseSignUpRole } from "@/lib/auth/sign-up";
 import { getPathname, redirect } from "@/i18n/navigation";
 import { safeNextPath } from "@/lib/auth/redirect";
 import { WelcomeForm } from "./welcome-form";
+import { Emoji } from "@/components/emoji";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Welcome");
@@ -32,7 +33,7 @@ export default async function WelcomePage({ searchParams }: PageProps<"/[locale]
     <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8 px-4 py-12">
       {presetRole && <SignUpSteps current={3} />}
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">{presetRole ? t("detailsTitle") : t("title")}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{presetRole ? t("detailsTitle") : t("title")} <Emoji symbol="🎉" /></h1>
         <p className="text-muted-foreground">{presetRole ? t("detailsSubtitle") : t("subtitle")}</p>
       </div>
       <WelcomeForm locale={locale} defaultName={user?.name ?? ""} presetRole={presetRole} next={next} />

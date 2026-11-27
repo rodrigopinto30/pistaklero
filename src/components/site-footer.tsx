@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { Emoji } from "@/components/emoji";
 import { Link } from "@/i18n/navigation";
 
 export async function SiteFooter() {
@@ -10,7 +11,7 @@ export async function SiteFooter() {
           <span className="font-semibold text-foreground">
             Pista<span className="text-primary">klero</span>
           </span>{" "}
-          · {t("tagline")}
+          · {t("tagline")} <Emoji symbol="🤝" />
         </p>
         <nav aria-label={t("label")}>
           <ul className="flex flex-wrap gap-x-4 gap-y-2">

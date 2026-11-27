@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { AppLocale } from "@/i18n/routing";
 import { changeMember, revokeInvitation } from "./actions";
 import { InviteForm } from "./_components/invite-form";
+import { Emoji } from "@/components/emoji";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Team");
@@ -31,7 +32,7 @@ export default async function TeamPage() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="👥" /></h1>
         <p className="text-muted-foreground">{t("subtitle", { company: recruiter.company.name })}</p>
       </div>
 

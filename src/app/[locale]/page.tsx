@@ -7,6 +7,7 @@ import { getJobViewer } from "@/lib/jobs/viewer";
 import { createClient } from "@/lib/supabase/server";
 import { nextPageQuery, PAGE_SIZE, parseSearchParams, toSearchArgs } from "@/lib/validation/search";
 import { Link } from "@/i18n/navigation";
+import { Emoji } from "@/components/emoji";
 
 export default async function Home({ searchParams }: PageProps<"/[locale]">) {
   // Los resultados (y "hace 2 días") dependen del momento del pedido.
@@ -44,6 +45,7 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
         </h2>
         {/* Se anuncia el resultado de cada búsqueda (WCAG 4.1.3). */}
         <p role="status" className="text-sm text-muted-foreground">
+          <Emoji symbol="💼" className="mr-1.5" />
           {t("count", { count: total })}
         </p>
         {results.length > 0 ? (
@@ -56,7 +58,10 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
           </ul>
         ) : (
           <div className="flex flex-col items-start gap-3 rounded-2xl bg-card shadow-soft p-6">
-            <p>{t("empty")}</p>
+            <p>
+              <Emoji symbol="🔍" className="mr-1.5" />
+              {t("empty")}
+            </p>
             <Link href="/" className={buttonVariants({ variant: "outline" })}>
               {t("clear")}
             </Link>
@@ -65,7 +70,7 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
         {suggestions.length > 0 && (
           <section aria-labelledby="suggestions-title" className="flex flex-col gap-4">
             <h2 id="suggestions-title" className="text-xl font-semibold tracking-tight">
-              {t("suggestions")}
+              {t("suggestions")} <Emoji symbol="✨" />
             </h2>
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {suggestions.map((job) => (

@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { PostForm } from "@/components/posts/post-form";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
+import { Emoji } from "@/components/emoji";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Posts.form");
@@ -23,7 +24,7 @@ export default async function EditPostPage({ params }: PageProps<"/[locale]/post
   const t = await getTranslations("Posts.form");
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
-      <h1 className="text-3xl font-semibold tracking-tight">{t("editTitle")}</h1>
+      <h1 className="text-3xl font-semibold tracking-tight">{t("editTitle")} <Emoji symbol="✏️" /></h1>
       <div className="rounded-2xl bg-card p-6 shadow-soft">
         <PostForm locale={locale} saved={{ id: post.id, title: post.title, body: post.body, language: post.language }} />
       </div>

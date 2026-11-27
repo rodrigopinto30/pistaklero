@@ -5,7 +5,7 @@ test("un reclutador ve hasta 200 perfiles por día", async ({ browser }) => {
   const candidate = await (await browser.newContext()).newPage();
   await signIn(candidate, uniqueEmail("visible"));
   await onboardAsCandidate(candidate, "Vera Límite");
-  const publicHref = await candidate.getByRole("link", { name: "Ver cómo se ve mi perfil" }).getAttribute("href");
+  const publicHref = await candidate.getByRole("link", { name: "Vista previa" }).getAttribute("href");
 
   // Sin cuenta, no existe
   const visitor = await (await browser.newContext()).newPage();
@@ -23,7 +23,7 @@ test("un reclutador ve hasta 200 perfiles por día", async ({ browser }) => {
   const other = await (await browser.newContext()).newPage();
   await signIn(other, uniqueEmail("otra"));
   await onboardAsCandidate(other, "Olga Nueva");
-  const otherHref = await other.getByRole("link", { name: "Ver cómo se ve mi perfil" }).getAttribute("href");
+  const otherHref = await other.getByRole("link", { name: "Vista previa" }).getAttribute("href");
   await seedProfileViews(recruiterId, 200);
 
   await recruiter.goto(otherHref!);

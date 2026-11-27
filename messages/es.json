@@ -17,7 +17,8 @@
     "posts": "Publicaciones",
     "myPosts": "Mis publicaciones",
     "companies": "Empresas",
-    "myCompany": "Mi empresa"
+    "myCompany": "Mi empresa",
+    "backToTop": "Volver arriba"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -137,7 +138,7 @@
     "metaTitle": "Mi perfil",
     "title": "Mi perfil",
     "subtitle": "Lo que completes acá es lo que ven las empresas cuando te postulás.",
-    "viewPublic": "Ver cómo se ve mi perfil",
+    "viewPublic": "Vista previa",
     "basics": {
       "title": "Datos básicos",
       "headline": "Titular",
@@ -542,7 +543,8 @@
       "salaryNotInformed": "Sueldo no informado",
       "applyExternal": "Postularme en el sitio original",
       "external": "Oferta externa",
-      "closed": "Esta oferta ya no recibe postulaciones."
+      "closed": "Esta oferta ya no recibe postulaciones.",
+      "verified": "Empresa verificada"
     },
     "viewApplicants": "Ver postulantes",
     "templates": {
@@ -568,7 +570,8 @@
         "limit_reached": "Llegaste a 500 empleos guardados. Sacá alguno para sumar otro.",
         "unknown": "No pudimos guardar el empleo. Probá de nuevo."
       }
-    }
+    },
+    "verified": "Empresa verificada"
   },
   "Search": {
     "submit": "Buscar",
@@ -640,7 +643,7 @@
       "invalid_answer": "Revisá tus respuestas.",
       "unknown": "No pudimos enviar la postulación. Probá de nuevo."
     },
-    "successToast": "¡Listo! Tu postulación fue enviada.",
+    "successToast": "¡Listo! Tu postulación fue enviada. 🚀",
     "suggestSkillsTitle": "Tip:",
     "suggestSkills": "sumá tus habilidades. No es obligatorio, pero las empresas las miran primero.",
     "suggestSkillsLink": "Completar habilidades"
@@ -901,7 +904,7 @@
     }
   },
   "Footer": {
-    "tagline": "Donde el talento y las empresas se encuentran, con reglas claras para los dos.",
+    "tagline": "Donde el talento y las empresas se encuentran",
     "label": "Información",
     "terms": "Términos",
     "privacy": "Privacidad",
@@ -1118,8 +1121,8 @@
     "blocked": "Empresa bloqueada: no va a ver tu perfil.",
     "unblocked": "Empresa desbloqueada.",
     "withdrawn": "Retiraste tu postulación.",
-    "signedOut": "Cerraste sesión. ¡Hasta pronto!",
-    "welcome": "¡Listo! Tu cuenta está creada.",
+    "signedOut": "Cerraste sesión. ¡Hasta pronto! 👋",
+    "welcome": "¡Listo! Tu cuenta está creada. 🎉",
     "accountDeleted": "Tu cuenta y tus datos se borraron.",
     "teamUpdated": "Equipo actualizado.",
     "done": "Listo.",
@@ -1133,11 +1136,11 @@
     "jobSaved": "Oferta guardada.",
     "published": "Oferta publicada.",
     "coverUpdated": "Portada actualizada.",
-    "postPublished": "¡Publicado! Ya lo puede leer toda la comunidad.",
-    "passwordUpdated": "Listo, ya tenés tu contraseña nueva.",
+    "postPublished": "¡Publicado! 🎉 Ya lo puede leer toda la comunidad.",
+    "passwordUpdated": "Listo, ya tenés tu contraseña nueva. 🔑",
     "passwordChanged": "Cambiaste tu contraseña. Cerramos tus otras sesiones.",
-    "pendingLiked": "Listo: le diste me gusta.",
-    "pendingSaved": "Listo: quedó en Guardados."
+    "pendingLiked": "Listo: le diste me gusta. ❤️",
+    "pendingSaved": "Listo: quedó en Guardados. 🔖"
   },
   "Saved": {
     "metaTitle": "Guardados",
