@@ -1082,6 +1082,11 @@ isOneToOne: false
 "sync_import_source":
 { Args: { "p_jobs": Json,"p_skipped"?: number,"p_source_id": string }; Returns: Json
                            },
+"talent_cards":
+{ Args: { "p_availability"?: Database["public"]['Enums']["availability"],"p_country"?: string,"p_limit"?: number,"p_offset"?: number,"p_query"?: string,"p_skill"?: string }; Returns: {
+              "availability": Database["public"]['Enums']["availability"],"avatar_path": string,"city": string,"country": string,"full_name": string,"headline": string,"skills": Json,"slug": string,"total_count": number,"user_id": string
+            }[]
+                           },
 "toggle_company_like":
 { Args: { "p_company_id": string }; Returns: boolean
                            },
