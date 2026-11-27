@@ -9,9 +9,6 @@
     "myProfile": "My profile",
     "dashboard": "Dashboard"
   },
-  "Home": {
-    "tagline": "Jobs with visible salaries and companies that reply."
-  },
   "NotFound": {
     "title": "We couldn't find this page",
     "description": "The link may be mistyped or the page may no longer exist.",
@@ -479,5 +476,29 @@
       "external": "External job",
       "closed": "This job no longer accepts applications."
     }
+  },
+  "Search": {
+    "label": "Search jobs",
+    "query": "Role, company or technology",
+    "placeholder": "Role, company or technology (for example: React)",
+    "submit": "Search",
+    "quickFilters": "Quick filters",
+    "chips": {
+      "remote": "Remote",
+      "junior": "Trainee / Junior",
+      "salary": "Salary shown",
+      "usd": "Paid in USD"
+    },
+    "moreFilters": "More filters",
+    "apply": "Apply filters",
+    "any": "Any",
+    "title": "Jobs with visible salaries and",
+    "titleAccent": "companies that reply.",
+    "subtitle": "No feed, no fuss: search, filter and apply in 1 click.",
+    "results": "Results",
+    "count": "{count, plural, =0 {No jobs match these filters} one {# job} other {# jobs}}",
+    "empty": "We couldn't find jobs for that search. Try fewer filters or other words.",
+    "clear": "See all jobs",
+    "loadMore": "Load more"
   }
 }
