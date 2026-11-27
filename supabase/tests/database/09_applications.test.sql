@@ -1,7 +1,7 @@
 begin;
 \ir ../support/helpers.inc
 
-select plan(17);
+select plan(19);
 
 -- Empresa con una oferta que tiene 2 preguntas
 select tests.create_user('rrhh@postu.pgtap.test') as owner \gset
@@ -20,13 +20,15 @@ select tests.create_user('ana@pgtap.test') as ana \gset
 select tests.authenticate_as(:'ana');
 select public.onboard_candidate('Ana', '', 'Pérez', '', 'es');
 select throws_ok(format($$select public.apply_to_job(%L, '{}')$$, :'job'), 'P0001', 'profile_incomplete', 'con el perfil incompleto no se puede postular');
-select is(public.candidate_missing_requirements(auth.uid()), array['headline', 'skills', 'experience'], 'se sabe exactamente qué falta');
+select is(public.candidate_missing_requirements(auth.uid()), array['headline', 'experience'], 'se sabe exactamente qué falta');
+select is(public.candidate_suggestions(auth.uid()), array['skills'], 'las habilidades se recomiendan, no se exigen');
 
--- Completa el perfil
+-- Completa el perfil (sin habilidades: igual puede postularse)
 update public.candidates set headline = 'Frontend Junior' where user_id = auth.uid();
-insert into public.candidate_skills (candidate_id, skill_id) select auth.uid(), id from public.skills where slug = 'react';
 insert into public.candidate_projects (candidate_id, title) values (auth.uid(), 'Portfolio');
-select is(public.candidate_missing_requirements(auth.uid()), array[]::text[], 'con titular, una habilidad y un proyecto ya está lista');
+select is(public.candidate_missing_requirements(auth.uid()), array[]::text[], 'con titular y un proyecto ya está lista');
+insert into public.candidate_skills (candidate_id, skill_id) select auth.uid(), id from public.skills where slug = 'react';
+select is(public.candidate_suggestions(auth.uid()), array[]::text[], 'con una habilidad ya no hay recomendaciones');
 
 select throws_ok(format($$select public.apply_to_job(%L, '{}')$$, :'job'), 'P0001', 'answer_required', 'las preguntas obligatorias se responden');
 select throws_ok(format($$select public.apply_to_job(%L, jsonb_build_object(%L, 'Me encanta', %L, 7))$$, :'job', :'q1', :'q2'),

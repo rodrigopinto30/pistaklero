@@ -569,6 +569,32 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"saved_jobs": {
+                  Row: {
+                    "created_at": string,"job_id": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"job_id": string,"user_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"job_id"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "saved_jobs_job_id_fkey"
+      columns: ["job_id"]
+isOneToOne: false
+      referencedRelation: "jobs"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "saved_jobs_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"skills": {
                   Row: {
                     "category": Database["public"]['Enums']["skill_category"],"id": string,"name_en": string,"name_es": string,"slug": string
@@ -649,6 +675,9 @@ isOneToOne: false
 { Args: { "p_candidate_id": string }; Returns: boolean
                            },
 "candidate_missing_requirements":
+{ Args: { "p_candidate_id": string }; Returns: (string)[]
+                           },
+"candidate_suggestions":
 { Args: { "p_candidate_id": string }; Returns: (string)[]
                            },
 "change_application_status":
@@ -758,6 +787,11 @@ isOneToOne: false
 "save_my_name":
 { Args: { "p_first_name": string,"p_last_name": string,"p_middle_name": string }; Returns: undefined
                            },
+"saved_job_cards":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
+            }[]
+                           },
 "search_jobs":
 { Args: { "p_country"?: string,"p_currency"?: Database["public"]['Enums']["currency"],"p_employment_types"?: (Database["public"]['Enums']["employment_type"])[],"p_language"?: Database["public"]['Enums']["app_locale"],"p_limit"?: number,"p_offset"?: number,"p_query"?: string,"p_salary_visible"?: boolean,"p_seniorities"?: (Database["public"]['Enums']["seniority"])[],"p_work_modes"?: (Database["public"]['Enums']["work_mode"])[] }; Returns: {
               "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
@@ -774,6 +808,9 @@ isOneToOne: false
                            },
 "sync_import_source":
 { Args: { "p_jobs": Json,"p_skipped"?: number,"p_source_id": string }; Returns: Json
+                           },
+"toggle_saved_job":
+{ Args: { "p_job_id": string }; Returns: boolean
                            },
 "update_company_website":
 { Args: { "p_website_url": string }; Returns: undefined
