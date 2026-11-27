@@ -247,7 +247,10 @@ export async function expectNoA11yViolations(page: Page) {
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
-  const summary = results.violations.map((v) => `${v.id}: ${v.help} (${v.nodes.length})`);
+  // Con el selector de los primeros nodos y el detalle de axe, el fallo se entiende sin abrir la traza.
+  const summary = results.violations.map(
+    (v) => `${v.id}: ${v.help} (${v.nodes.length}) → ${v.nodes.slice(0, 3).map((n) => `${n.target.join(" ")} ${n.failureSummary?.split("\n").slice(1, 2).join("") ?? ""}`).join(" | ")}`
+  );
   expect(summary, "violaciones de accesibilidad").toEqual([]);
 }
 
