@@ -900,5 +900,17 @@
     "fast": "Responde en menos de 48 h",
     "medium": "Tarda ~1 semana",
     "slow": "Baja tasa de respuesta"
+  },
+  "CommandPalette": {
+    "open": "Búsqueda rápida",
+    "title": "Búsqueda rápida",
+    "searchLabel": "Buscar empleos",
+    "placeholder": "Puesto, empresa o tecnología",
+    "goTo": "Ir a",
+    "hint": "Abrila desde cualquier página con Ctrl+K (⌘K en Mac). Esc para cerrar.",
+    "home": "Inicio",
+    "newJob": "Publicar oferta",
+    "team": "Equipo",
+    "import": "Importar oferta"
   }
 }

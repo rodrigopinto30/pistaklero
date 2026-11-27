@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { CommandPalette, type PaletteLink } from "@/components/command-palette";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
@@ -11,6 +12,23 @@ export async function SiteHeader() {
   const tAuth = await getTranslations("Auth");
   const user = await getCurrentUser();
   const profile = user ? await getCurrentProfile() : null;
+  const tPalette = await getTranslations("CommandPalette");
+
+  // Accesos de la búsqueda rápida, según el rol.
+  const paletteLinks: PaletteLink[] = [{ href: "/", label: tPalette("home") }];
+  if (profile?.role === "candidate") {
+    paletteLinks.push({ href: "/my-applications", label: t("myApplications") }, { href: "/profile", label: t("myProfile") });
+  } else if (profile?.role === "recruiter") {
+    paletteLinks.push(
+      { href: "/dashboard", label: t("dashboard") },
+      { href: "/dashboard/jobs/new", label: tPalette("newJob") },
+      { href: "/dashboard/team", label: tPalette("team") }
+    );
+  } else if (profile?.role === "admin") {
+    paletteLinks.push({ href: "/admin", label: t("admin") }, { href: "/admin/import", label: tPalette("import") });
+  }
+  if (profile) paletteLinks.push({ href: "/settings", label: t("settings") });
+  if (!user) paletteLinks.push({ href: "/sign-in", label: tAuth("signIn") });
 
   return (
     <header className="border-b border-border">
@@ -65,6 +83,7 @@ export async function SiteHeader() {
               {tAuth("signIn")}
             </Link>
           )}
+          <CommandPalette links={paletteLinks} />
           <ThemeToggle />
           <LocaleSwitcher />
         </div>

@@ -900,5 +900,17 @@
     "fast": "Replies within 48 h",
     "medium": "Takes ~1 week",
     "slow": "Low response rate"
+  },
+  "CommandPalette": {
+    "open": "Quick search",
+    "title": "Quick search",
+    "searchLabel": "Search jobs",
+    "placeholder": "Title, company or technology",
+    "goTo": "Go to",
+    "hint": "Open it from any page with Ctrl+K (⌘K on Mac). Esc to close.",
+    "home": "Home",
+    "newJob": "Post a job",
+    "team": "Team",
+    "import": "Import a job"
   }
 }
