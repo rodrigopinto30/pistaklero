@@ -15,7 +15,9 @@ import { getJobViewer } from "@/lib/jobs/viewer";
 import { companyLogoUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
-import { Link } from "@/i18n/navigation";
+import { getPathname, Link } from "@/i18n/navigation";
+import type { AppLocale } from "@/i18n/routing";
+import { CompanyActions } from "@/components/companies/company-actions";
 
 const TABS = ["about", "jobs", "posts"] as const;
 type Tab = (typeof TABS)[number];
@@ -63,16 +65,19 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
   const t = await getTranslations("CompanyPage");
   const td = await getTranslations("Company.details");
   const supabase = await createClient();
-  const [{ data: stack }, { data: stats }, { data: jobs }] = await Promise.all([
+  const [{ data: stack }, { data: stats }, { data: jobs }, { data: card }] = await Promise.all([
     supabase.from("company_skills").select("skills(name_es, name_en)").eq("company_id", company.id),
     supabase.from("company_response_stats").select("badge").eq("company_id", company.id).maybeSingle(),
     supabase.rpc("company_job_cards", { p_company_id: company.id }),
+    // Me gusta y guardada, para los botones del encabezado.
+    supabase.rpc("company_cards", { p_company_id: company.id, p_limit: 1 }).then(({ data }) => ({ data: data?.[0] ?? null })),
   ]);
+  const user = await getCurrentUser();
   const openJobs = jobs ?? [];
   const viewer = tab === "jobs" ? await getJobViewer(openJobs.map((job) => job.id)) : null;
   // Publicaciones de quienes trabajan en la empresa (sus reclutadores).
   const posts = tab === "posts" ? ((await supabase.rpc("post_cards", { p_company_id: company.id, p_limit: 24 })).data ?? []) : [];
-  const signedIn = tab === "posts" ? Boolean(await getCurrentUser()) : false;
+  const signedIn = Boolean(user);
 
   const logo = companyLogoUrl(company.logo_path);
   const location = [company.city, countryName(company.country, locale)].filter(Boolean).join(", ");
@@ -129,17 +134,30 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
               )}
             </div>
           </div>
-          {company.website_url && (
-            <a
-              href={company.website_url}
-              rel="noopener noreferrer nofollow"
-              target="_blank"
-              className="inline-flex h-10 items-center gap-2 self-start rounded-full bg-secondary px-4 text-sm font-medium hover:bg-muted sm:self-end"
-            >
-              {t("website")}
-              <ExternalLink aria-hidden="true" className="size-4" />
-            </a>
-          )}
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-end">
+            {card && (
+              <CompanyActions
+                companyId={company.id}
+                name={company.name}
+                liked={card.liked}
+                saved={card.saved}
+                likes={card.likes_count}
+                variant="inline"
+                signInHref={user ? undefined : `${getPathname({ locale: locale as AppLocale, href: "/sign-in" })}?${new URLSearchParams({ next: getPathname({ locale: locale as AppLocale, href: { pathname: "/companies/[slug]", params: { slug } } }) })}`}
+              />
+            )}
+            {company.website_url && (
+              <a
+                href={company.website_url}
+                rel="noopener noreferrer nofollow"
+                target="_blank"
+                className="inline-flex h-10 items-center gap-2 rounded-full bg-secondary px-4 text-sm font-medium hover:bg-muted"
+              >
+                {t("website")}
+                <ExternalLink aria-hidden="true" className="size-4" />
+              </a>
+            )}
+          </div>
         </div>
       </header>
 

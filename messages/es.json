@@ -15,7 +15,8 @@
     "lightMode": "Modo claro",
     "saved": "Guardados",
     "posts": "Publicaciones",
-    "myPosts": "Mis publicaciones"
+    "myPosts": "Mis publicaciones",
+    "companies": "Empresas"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -1078,7 +1079,9 @@
     "closed": "Ofertas que ya cerraron",
     "unavailable": "Oferta no disponible",
     "posts": "{count, plural, =0 {Publicaciones} one {# publicación} other {# publicaciones}}",
-    "emptyPosts": "Todavía no guardaste publicaciones."
+    "emptyPosts": "Todavía no guardaste publicaciones.",
+    "companies": "{count, plural, =0 {Empresas} one {# empresa} other {# empresas}}",
+    "emptyCompanies": "Todavía no guardaste empresas."
   },
   "Posts": {
     "metaTitle": "Publicaciones",
@@ -1156,6 +1159,35 @@
       "empty": "Todavía no publicaste nada.",
       "likes": "{count, plural, =0 {sin me gusta} one {# me gusta} other {# me gusta}}",
       "hidden": "Oculta por denuncias"
+    }
+  },
+  "Companies": {
+    "metaTitle": "Empresas",
+    "title": "Empresas",
+    "subtitle": "Conocé dónde podrías trabajar: qué hacen, cómo son y qué tienen abierto.",
+    "verified": "Empresa verificada",
+    "count": "{count, plural, =0 {Todavía no hay empresas} one {# empresa} other {# empresas}}",
+    "countFor": "{count, plural, =0 {No hay empresas para «{query}»} one {# empresa para «{query}»} other {# empresas para «{query}»}}",
+    "empty": "Todavía no hay empresas.",
+    "emptySearch": "No encontramos empresas con esa búsqueda.",
+    "seeAll": "Ver todas las empresas",
+    "loadMore": "Cargar más",
+    "openJobs": "{count, plural, =0 {Sin empleos abiertos} one {# empleo abierto} other {# empleos abiertos}}",
+    "likes": "{count, plural, =0 {sin me gusta} one {# me gusta} other {# me gusta}}",
+    "actions": {
+      "like": "Me gusta: {name}",
+      "save": "Guardar empresa: {name}",
+      "likesCount": "{count, plural, one {me gusta} other {me gusta}}",
+      "savedToast": "Empresa guardada. La encontrás en Guardados.",
+      "unsavedToast": "La sacaste de tus guardados.",
+      "signInToLike": "Ingresá para darle me gusta a {name}",
+      "signInToSave": "Ingresá para guardar {name}",
+      "errors": {
+        "not_authorized": "Completá tu registro para dar me gusta o guardar.",
+        "not_found": "Esta empresa ya no está disponible.",
+        "limit_reached": "Llegaste a 500 empresas guardadas.",
+        "unknown": "No pudimos hacerlo. Probá de nuevo."
+      }
     }
   }
 }

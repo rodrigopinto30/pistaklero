@@ -33,6 +33,7 @@ export const routing = defineRouting({
     "/accessibility": { es: "/accesibilidad", en: "/accessibility" },
     "/admin/import": { es: "/admin/importar", en: "/admin/import" },
     "/invitation": { es: "/invitacion", en: "/invitation" },
+    "/companies": { es: "/empresas", en: "/companies" },
     "/companies/[slug]": { es: "/empresas/[slug]", en: "/companies/[slug]" },
     "/posts": { es: "/publicaciones", en: "/posts" },
     "/posts/new": { es: "/publicaciones/nueva", en: "/posts/new" },
