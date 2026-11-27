@@ -40,7 +40,7 @@ export async function onboardAsCompany(page: Page, companyName: string, website:
   await page.getByLabel(/Nombre de la empresa/).fill(companyName);
   await page.getByLabel(/Sitio web/).fill(website);
   await page.getByRole("button", { name: "Continuar" }).click();
-  await page.waitForURL("/es");
+  await page.waitForURL("/es/panel");
 }
 
 /** Revisa la página con axe: WCAG 2.0, 2.1 y 2.2, niveles A y AA. */
