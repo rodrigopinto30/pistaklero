@@ -607,6 +607,26 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"notifications": {
+                  Row: {
+                    "count": number,"created_at": string,"data": NonNullable<Json>,"group_key": string | null,"id": string,"kind": Database["public"]['Enums']["notification_kind"],"read_at": string | null,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "count"?: number,"created_at"?: string,"data"?: NonNullable<Json>,"group_key"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["notification_kind"],"read_at"?: string | null,"user_id": string
+                  }
+                  Update: {
+                    "count"?: number,"created_at"?: string,"data"?: NonNullable<Json>,"group_key"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["notification_kind"],"read_at"?: string | null,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "notifications_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"people": {
                   Row: {
                     "avatar_path": string | null,"created_at": string,"first_name": string,"full_name": string | null,"last_name": string,"middle_name": string,"updated_at": string,"user_id": string
@@ -990,6 +1010,12 @@ isOneToOne: false
 "normalize_post_tag":
 { Args: { "p_tag": string }; Returns: string
                            },
+"notify":
+{ Args: { "p_data": Json,"p_group_key"?: string,"p_kind": Database["public"]['Enums']["notification_kind"],"p_user_id": string }; Returns: undefined
+                           },
+"notify_job_matches":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
 "onboard_candidate":
 { Args: { "p_first_name": string,"p_headline": string,"p_last_name": string,"p_locale": Database["public"]['Enums']["app_locale"],"p_middle_name": string }; Returns: undefined
                            },
@@ -1071,6 +1097,9 @@ isOneToOne: false
 "toggle_saved_post":
 { Args: { "p_post_id": string }; Returns: boolean
                            },
+"unread_notifications_count":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
 "update_company_website":
 { Args: { "p_website_url": string }; Returns: undefined
                            },
@@ -1094,7 +1123,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "actor_type": "candidate"|"recruiter"|"system","app_locale": "es"|"en","application_status": "received"|"in_review"|"interview"|"hired"|"rejected"|"no_response"|"withdrawn","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","email_status": "pending"|"sent"|"failed","employment_type": "full_time"|"part_time"|"contract"|"internship"|"freelance","import_provider": "manual"|"greenhouse"|"lever"|"ashby"|"workable","job_source": "native"|"imported","job_status": "draft"|"published"|"closed"|"hidden","member_role": "owner"|"member","post_report_reason": "spam"|"offensive"|"scam"|"other","post_status": "published"|"hidden","profile_visibility": "companies_only"|"public"|"hidden","question_type": "short_text"|"single_choice","report_reason": "scam"|"fake"|"discrimination"|"other","report_status": "open"|"dismissed"|"actioned","response_badge": "new"|"fast"|"medium"|"slow","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","seniority": "trainee"|"junior"|"semi_senior"|"senior"|"lead","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin","work_mode": "remote"|"hybrid"|"onsite"
+            "actor_type": "candidate"|"recruiter"|"system","app_locale": "es"|"en","application_status": "received"|"in_review"|"interview"|"hired"|"rejected"|"no_response"|"withdrawn","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","email_status": "pending"|"sent"|"failed","employment_type": "full_time"|"part_time"|"contract"|"internship"|"freelance","import_provider": "manual"|"greenhouse"|"lever"|"ashby"|"workable","job_source": "native"|"imported","job_status": "draft"|"published"|"closed"|"hidden","member_role": "owner"|"member","notification_kind": "application_status"|"new_applicant"|"post_liked"|"company_liked"|"job_matches"|"member_joined"|"role_changed","post_report_reason": "spam"|"offensive"|"scam"|"other","post_status": "published"|"hidden","profile_visibility": "companies_only"|"public"|"hidden","question_type": "short_text"|"single_choice","report_reason": "scam"|"fake"|"discrimination"|"other","report_status": "open"|"dismissed"|"actioned","response_badge": "new"|"fast"|"medium"|"slow","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","seniority": "trainee"|"junior"|"semi_senior"|"senior"|"lead","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin","work_mode": "remote"|"hybrid"|"onsite"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1210,7 +1239,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "actor_type": ["candidate", "recruiter", "system"],"app_locale": ["es", "en"],"application_status": ["received", "in_review", "interview", "hired", "rejected", "no_response", "withdrawn"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"email_status": ["pending", "sent", "failed"],"employment_type": ["full_time", "part_time", "contract", "internship", "freelance"],"import_provider": ["manual", "greenhouse", "lever", "ashby", "workable"],"job_source": ["native", "imported"],"job_status": ["draft", "published", "closed", "hidden"],"member_role": ["owner", "member"],"post_report_reason": ["spam", "offensive", "scam", "other"],"post_status": ["published", "hidden"],"profile_visibility": ["companies_only", "public", "hidden"],"question_type": ["short_text", "single_choice"],"report_reason": ["scam", "fake", "discrimination", "other"],"report_status": ["open", "dismissed", "actioned"],"response_badge": ["new", "fast", "medium", "slow"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"seniority": ["trainee", "junior", "semi_senior", "senior", "lead"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"],"work_mode": ["remote", "hybrid", "onsite"]
+            "actor_type": ["candidate", "recruiter", "system"],"app_locale": ["es", "en"],"application_status": ["received", "in_review", "interview", "hired", "rejected", "no_response", "withdrawn"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"email_status": ["pending", "sent", "failed"],"employment_type": ["full_time", "part_time", "contract", "internship", "freelance"],"import_provider": ["manual", "greenhouse", "lever", "ashby", "workable"],"job_source": ["native", "imported"],"job_status": ["draft", "published", "closed", "hidden"],"member_role": ["owner", "member"],"notification_kind": ["application_status", "new_applicant", "post_liked", "company_liked", "job_matches", "member_joined", "role_changed"],"post_report_reason": ["spam", "offensive", "scam", "other"],"post_status": ["published", "hidden"],"profile_visibility": ["companies_only", "public", "hidden"],"question_type": ["short_text", "single_choice"],"report_reason": ["scam", "fake", "discrimination", "other"],"report_status": ["open", "dismissed", "actioned"],"response_badge": ["new", "fast", "medium", "slow"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"seniority": ["trainee", "junior", "semi_senior", "senior", "lead"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"],"work_mode": ["remote", "hybrid", "onsite"]
           }
         }
 } as const
