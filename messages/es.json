@@ -5,7 +5,8 @@
   },
   "Layout": {
     "skipToContent": "Saltar al contenido",
-    "homeLink": "Pistaklero, ir al inicio"
+    "homeLink": "Pistaklero, ir al inicio",
+    "myProfile": "Mi perfil"
   },
   "Home": {
     "tagline": "Trabajos con sueldo visible y empresas que responden."
@@ -67,5 +68,181 @@
       "company_exists": "Esa empresa ya está en Pistaklero. Pedile a alguien de tu equipo que te invite.",
       "unknown": "No pudimos guardar los datos. Probá de nuevo."
     }
+  },
+  "Form": {
+    "required": "(obligatorio)",
+    "optional": "(opcional)",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "saved": "Guardado.",
+    "add": "Agregar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "remove": "Quitar",
+    "errors": {
+      "required": "Este campo es obligatorio.",
+      "too_short": "Tiene que tener al menos {limit} caracteres.",
+      "too_long": "Puede tener hasta {limit} elementos o caracteres.",
+      "invalid": "Revisá el valor de este campo.",
+      "fix_fields": "Revisá los campos marcados.",
+      "unknown": "No pudimos guardar los cambios. Probá de nuevo.",
+      "limit_reached": "Llegaste al máximo permitido para esta sección.",
+      "not_found": "No encontramos lo que buscabas.",
+      "duplicate": "Ya está cargado."
+    }
+  },
+  "Profile": {
+    "metaTitle": "Mi perfil",
+    "title": "Mi perfil",
+    "subtitle": "Lo que completes acá es lo que ven las empresas cuando te postulás.",
+    "viewPublic": "Ver cómo se ve mi perfil",
+    "basics": {
+      "title": "Datos básicos",
+      "fullName": "Nombre y apellido",
+      "headline": "Titular",
+      "headlineHint": "Por ejemplo: Frontend Junior · React",
+      "bio": "Sobre mí",
+      "bioHint": "Hasta 500 caracteres.",
+      "country": "País",
+      "noCountry": "Sin especificar",
+      "city": "Ciudad",
+      "languages": "Idiomas que hablás",
+      "githubUrl": "GitHub",
+      "linkedinUrl": "LinkedIn",
+      "websiteUrl": "Sitio web o portfolio"
+    },
+    "preferences": {
+      "title": "Disponibilidad y privacidad",
+      "availability": "Disponibilidad",
+      "visibility": "¿Quién puede ver tu perfil?",
+      "availabilityOptions": {
+        "immediate": "Inmediata",
+        "two_weeks": "En 15 días",
+        "freelance_only": "Solo freelance",
+        "not_looking": "No estoy buscando"
+      },
+      "visibilityOptions": {
+        "companies_only": "Solo empresas registradas",
+        "public": "Cualquiera con el enlace (y los buscadores)",
+        "hidden": "Solo las empresas donde me postulo"
+      }
+    },
+    "salary": {
+      "title": "Expectativa salarial",
+      "hint": "Se usa para ayudarte; nunca se muestra en tu perfil público.",
+      "amount": "Monto",
+      "currency": "Moneda",
+      "period": "Período",
+      "basis": "Bruto o neto",
+      "visibility": "¿Quién la ve?",
+      "periodOptions": {
+        "hour": "Por hora",
+        "month": "Por mes",
+        "year": "Por año"
+      },
+      "basisOptions": {
+        "gross": "Bruto",
+        "net": "Neto"
+      },
+      "visibilityOptions": {
+        "private": "Nadie (solo yo)",
+        "applied_companies": "Las empresas donde me postulo"
+      },
+      "remove": "Borrar expectativa salarial"
+    },
+    "skills": {
+      "title": "Habilidades",
+      "empty": "Todavía no agregaste habilidades.",
+      "skill": "Habilidad",
+      "level": "Nivel",
+      "choose": "Elegí una habilidad",
+      "add": "Agregar habilidad",
+      "levelOptions": {
+        "basic": "Básico",
+        "intermediate": "Intermedio",
+        "advanced": "Avanzado",
+        "expert": "Experto"
+      },
+      "categories": {
+        "language": "Lenguajes",
+        "framework": "Frameworks",
+        "tool": "Herramientas",
+        "data": "Datos",
+        "design": "Diseño",
+        "marketing": "Marketing y ventas",
+        "soft": "Habilidades blandas e idiomas"
+      },
+      "levelOf": "Nivel de {skill}",
+      "removeSkill": "Quitar {skill}"
+    },
+    "entries": {
+      "present": "Actualidad",
+      "addTitle": "Agregar",
+      "editItem": "Editar {item}",
+      "deleteItem": "Eliminar {item}",
+      "monthHint": "Formato AAAA-MM, por ejemplo 2024-03.",
+      "endHint": "Dejalo vacío si sigue en curso. Formato AAAA-MM.",
+      "experience": {
+        "title": "Experiencia",
+        "empty": "Sin experiencia cargada. Si recién empezás, sumá proyectos.",
+        "add": "Agregar experiencia",
+        "companyName": "Empresa",
+        "title_field": "Puesto",
+        "startDate": "Inicio",
+        "endDate": "Fin",
+        "description": "Qué hiciste"
+      },
+      "education": {
+        "title": "Formación",
+        "empty": "Sin formación cargada.",
+        "add": "Agregar formación",
+        "institution": "Institución",
+        "degree": "Título o curso",
+        "startDate": "Inicio",
+        "endDate": "Fin"
+      },
+      "certification": {
+        "title": "Certificaciones",
+        "empty": "Sin certificaciones cargadas.",
+        "add": "Agregar certificación",
+        "name": "Nombre",
+        "issuer": "Emitida por",
+        "issuedOn": "Fecha",
+        "credentialUrl": "Enlace de verificación"
+      },
+      "project": {
+        "title": "Proyectos",
+        "empty": "Mostrá lo que hiciste: un repo, un diseño en Figma, una web, una campaña.",
+        "add": "Agregar proyecto",
+        "title_field": "Título",
+        "description": "Descripción",
+        "url": "Enlace (web, Figma, campaña…)",
+        "repoUrl": "Repositorio"
+      }
+    },
+    "blocked": {
+      "title": "Empresas bloqueadas",
+      "hint": "Estas empresas nunca ven tu perfil, aunque sea público. Útil para tu empleador actual.",
+      "empty": "No bloqueaste ninguna empresa.",
+      "search": "Buscar empresa por nombre o sitio",
+      "searchButton": "Buscar",
+      "noResults": "No encontramos empresas con ese nombre.",
+      "block": "Bloquear {company}",
+      "unblock": "Desbloquear {company}"
+    }
+  },
+  "PublicProfile": {
+    "availability": "Disponibilidad: {value}",
+    "about": "Sobre mí",
+    "skills": "Habilidades",
+    "experience": "Experiencia",
+    "projects": "Proyectos",
+    "education": "Formación",
+    "certifications": "Certificaciones",
+    "links": "Enlaces",
+    "viewProject": "Ver {project}",
+    "viewRepo": "Repositorio de {project}",
+    "viewCredential": "Verificar {name}",
+    "languages": "Idiomas"
   }
 }

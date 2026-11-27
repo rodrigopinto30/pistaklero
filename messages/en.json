@@ -5,7 +5,8 @@
   },
   "Layout": {
     "skipToContent": "Skip to content",
-    "homeLink": "Pistaklero, go to home"
+    "homeLink": "Pistaklero, go to home",
+    "myProfile": "My profile"
   },
   "Home": {
     "tagline": "Jobs with visible salaries and companies that reply."
@@ -67,5 +68,181 @@
       "company_exists": "That company is already on Pistaklero. Ask someone on your team to invite you.",
       "unknown": "We couldn't save your details. Please try again."
     }
+  },
+  "Form": {
+    "required": "(required)",
+    "optional": "(optional)",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "remove": "Remove",
+    "errors": {
+      "required": "This field is required.",
+      "too_short": "It must have at least {limit} characters.",
+      "too_long": "It can have up to {limit} items or characters.",
+      "invalid": "Check the value of this field.",
+      "fix_fields": "Check the highlighted fields.",
+      "unknown": "We couldn't save the changes. Please try again.",
+      "limit_reached": "You reached the maximum allowed for this section.",
+      "not_found": "We couldn't find what you were looking for.",
+      "duplicate": "It's already there."
+    }
+  },
+  "Profile": {
+    "metaTitle": "My profile",
+    "title": "My profile",
+    "subtitle": "What you fill in here is what companies see when you apply.",
+    "viewPublic": "See how my profile looks",
+    "basics": {
+      "title": "Basic details",
+      "fullName": "Full name",
+      "headline": "Headline",
+      "headlineHint": "For example: Junior Frontend · React",
+      "bio": "About me",
+      "bioHint": "Up to 500 characters.",
+      "country": "Country",
+      "noCountry": "Not specified",
+      "city": "City",
+      "languages": "Languages you speak",
+      "githubUrl": "GitHub",
+      "linkedinUrl": "LinkedIn",
+      "websiteUrl": "Website or portfolio"
+    },
+    "preferences": {
+      "title": "Availability and privacy",
+      "availability": "Availability",
+      "visibility": "Who can see your profile?",
+      "availabilityOptions": {
+        "immediate": "Immediately",
+        "two_weeks": "In 2 weeks",
+        "freelance_only": "Freelance only",
+        "not_looking": "Not looking"
+      },
+      "visibilityOptions": {
+        "companies_only": "Registered companies only",
+        "public": "Anyone with the link (and search engines)",
+        "hidden": "Only companies I apply to"
+      }
+    },
+    "salary": {
+      "title": "Salary expectation",
+      "hint": "Used to help you; it's never shown on your public profile.",
+      "amount": "Amount",
+      "currency": "Currency",
+      "period": "Period",
+      "basis": "Gross or net",
+      "visibility": "Who can see it?",
+      "periodOptions": {
+        "hour": "Per hour",
+        "month": "Per month",
+        "year": "Per year"
+      },
+      "basisOptions": {
+        "gross": "Gross",
+        "net": "Net"
+      },
+      "visibilityOptions": {
+        "private": "No one (only me)",
+        "applied_companies": "Companies I apply to"
+      },
+      "remove": "Delete salary expectation"
+    },
+    "skills": {
+      "title": "Skills",
+      "empty": "You haven't added skills yet.",
+      "skill": "Skill",
+      "level": "Level",
+      "choose": "Choose a skill",
+      "add": "Add skill",
+      "levelOptions": {
+        "basic": "Basic",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced",
+        "expert": "Expert"
+      },
+      "categories": {
+        "language": "Languages",
+        "framework": "Frameworks",
+        "tool": "Tools",
+        "data": "Data",
+        "design": "Design",
+        "marketing": "Marketing and sales",
+        "soft": "Soft skills and languages"
+      },
+      "levelOf": "{skill} level",
+      "removeSkill": "Remove {skill}"
+    },
+    "entries": {
+      "present": "Present",
+      "addTitle": "Add",
+      "editItem": "Edit {item}",
+      "deleteItem": "Delete {item}",
+      "monthHint": "Format YYYY-MM, for example 2024-03.",
+      "endHint": "Leave it empty if it's ongoing. Format YYYY-MM.",
+      "experience": {
+        "title": "Experience",
+        "empty": "No experience yet. If you're just starting, add projects.",
+        "add": "Add experience",
+        "companyName": "Company",
+        "title_field": "Role",
+        "startDate": "Start",
+        "endDate": "End",
+        "description": "What you did"
+      },
+      "education": {
+        "title": "Education",
+        "empty": "No education yet.",
+        "add": "Add education",
+        "institution": "Institution",
+        "degree": "Degree or course",
+        "startDate": "Start",
+        "endDate": "End"
+      },
+      "certification": {
+        "title": "Certifications",
+        "empty": "No certifications yet.",
+        "add": "Add certification",
+        "name": "Name",
+        "issuer": "Issued by",
+        "issuedOn": "Date",
+        "credentialUrl": "Verification link"
+      },
+      "project": {
+        "title": "Projects",
+        "empty": "Show what you've built: a repo, a Figma design, a website, a campaign.",
+        "add": "Add project",
+        "title_field": "Title",
+        "description": "Description",
+        "url": "Link (website, Figma, campaign…)",
+        "repoUrl": "Repository"
+      }
+    },
+    "blocked": {
+      "title": "Blocked companies",
+      "hint": "These companies never see your profile, even if it's public. Useful for your current employer.",
+      "empty": "You haven't blocked any company.",
+      "search": "Search a company by name or website",
+      "searchButton": "Search",
+      "noResults": "No companies found with that name.",
+      "block": "Block {company}",
+      "unblock": "Unblock {company}"
+    }
+  },
+  "PublicProfile": {
+    "availability": "Availability: {value}",
+    "about": "About me",
+    "skills": "Skills",
+    "experience": "Experience",
+    "projects": "Projects",
+    "education": "Education",
+    "certifications": "Certifications",
+    "links": "Links",
+    "viewProject": "Open {project}",
+    "viewRepo": "{project} repository",
+    "viewCredential": "Verify {name}",
+    "languages": "Languages"
   }
 }
