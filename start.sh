@@ -2,6 +2,7 @@
 # Levanta todo el entorno de desarrollo: Supabase + app Next.js.
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/docker/env.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/docker/write-env.sh"
 
 echo "▸ Preparando la imagen de desarrollo…"
 docker compose build --quiet web
@@ -11,6 +12,9 @@ tools pnpm install --frozen-lockfile
 
 echo "▸ Levantando Supabase (la primera vez descarga imágenes y tarda unos minutos)…"
 tools pnpm exec supabase start
+
+echo "▸ Escribiendo las variables de Supabase en .env.local…"
+write_supabase_env
 
 echo "▸ Levantando la app…"
 docker compose up -d web
