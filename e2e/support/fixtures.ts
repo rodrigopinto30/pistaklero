@@ -311,7 +311,8 @@ export async function onboardAsCandidate(page: Page, fullName = "Ana Pérez", { 
   // queda en modo edición, por secciones.
   if (finishSetup) {
     await admin.from("candidates").update({ setup_completed_at: new Date().toISOString() }).eq("user_id", await userIdOf(page));
-    await page.reload();
+    // goto (no reload): espera a que la página hidrate antes de que el test haga clic.
+    await page.goto("/es/perfil");
   }
 }
 
