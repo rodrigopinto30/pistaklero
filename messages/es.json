@@ -285,7 +285,23 @@
     },
     "previewCv": "Ver CV",
     "cvHint": "Formato Harvard, en PDF. Se arma con lo que cargaste acá.",
-    "newTab": "(se abre en una pestaña nueva)"
+    "newTab": "(se abre en una pestaña nueva)",
+    "setup": {
+      "title": "Armá tu perfil",
+      "subtitle": "Completá lo que tengas a mano: todo se puede cambiar después. Las empresas ven tu perfil según la privacidad que elijas.",
+      "photo": "Tu foto",
+      "photoHint": "Opcional. Una foto clara de tu cara genera más confianza.",
+      "imageError": "No pudimos usar esta imagen. Probá con otra.",
+      "skillsHint": "Las tecnologías y herramientas que usás. El nivel lo podés ajustar después.",
+      "experienceHint": "Opcional: trabajos, pasantías o voluntariados.",
+      "educationHint": "Opcional: carreras, cursos o bootcamps.",
+      "projectHint": "Opcional, pero ayuda mucho cuando recién empezás.",
+      "itemN": "Ítem {n}",
+      "removeItem": "Quitar",
+      "salary": "Expectativa salarial (opcional)",
+      "submit": "Finalizar registro",
+      "submitting": "Guardando…"
+    }
   },
   "PublicProfile": {
     "availability": "Disponibilidad: {value}",
@@ -1207,7 +1223,8 @@
     "passwordChanged": "Cambiaste tu contraseña. Cerramos tus otras sesiones.",
     "pendingLiked": "Listo: le diste me gusta. ❤️",
     "pendingSaved": "Listo: quedó en Guardados. 🔖",
-    "companyReady": "¡Listo! La página de tu empresa ya está en Pistaklero. 🎉"
+    "companyReady": "¡Listo! La página de tu empresa ya está en Pistaklero. 🎉",
+    "profileReady": "¡Listo! Tu perfil ya está en Pistaklero. 🎉"
   },
   "Saved": {
     "metaTitle": "Guardados",

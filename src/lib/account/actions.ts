@@ -6,7 +6,8 @@ import { getCurrentProfile } from "@/lib/auth/session";
 import { dbErrorCode, errorState, type FormState, formValues, successState, zodFieldErrors } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
 import { personNameSchema } from "@/lib/validation/person";
-import { AVATAR_BUCKET, newAvatarPath } from "./avatar";
+import { AVATAR_BUCKET } from "./avatar";
+import { storeAvatar } from "./avatar-store";
 import { processAvatar } from "@/lib/images";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -41,25 +42,9 @@ export async function uploadAvatar(_prev: FormState, formData: FormData): Promis
     return errorState({}, { avatar: { code: "invalid" } }, avatar.code === "file_too_large" ? "avatar_too_large" : avatar.code);
   }
 
-  const supabase = await createClient();
-  const { data: person } = await supabase.from("people").select("avatar_path").eq("user_id", profile.id).maybeSingle();
-  const path = newAvatarPath(profile.id);
-  const admin = createAdminClient();
-  const upload = await admin.storage
-    .from(AVATAR_BUCKET)
-    .upload(path, avatar.webp, { contentType: "image/webp", cacheControl: "31536000", upsert: false });
-  if (upload.error) {
-    console.error("No se pudo subir la foto de perfil", { message: upload.error.message });
-    return errorState({}, {}, "unknown");
-  }
+  const saved = await storeAvatar(await createClient(), profile.id, avatar.webp);
+  if (saved !== "ok") return errorState({}, {}, saved);
 
-  const { error } = await supabase.rpc("set_my_avatar", { p_path: path });
-  if (error) {
-    await admin.storage.from(AVATAR_BUCKET).remove([path]);
-    return errorState({}, {}, dbErrorCode(error));
-  }
-
-  if (person?.avatar_path) await admin.storage.from(AVATAR_BUCKET).remove([person.avatar_path]);
   refresh();
   return successState();
 }

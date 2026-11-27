@@ -31,6 +31,18 @@ export async function signIn(page: Page, email: string, next = "/es") {
   return data.user.id;
 }
 
+/** El id de la cuenta con la que está ingresada la página (a partir de su email en Supabase Auth). */
+async function userIdOf(page: Page) {
+  // La sesión de Supabase va en una cookie (a veces partida en "…auth-token.0", "…auth-token.1").
+  const parts = (await page.context().cookies())
+    .filter((c) => /auth-token(\.\d+)?$/.test(c.name))
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+  if (parts.length === 0) throw new Error("La página no tiene sesión");
+  const raw = decodeURIComponent(parts.map((c) => c.value).join("")).replace(/^base64-/, "");
+  const session = JSON.parse(raw.startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8"));
+  return session.user.id as string;
+}
+
 /** Candidata con el perfil mínimo para postularse (titular, una habilidad y un proyecto). */
 export async function signInAsReadyCandidate(page: Page, name = "Ana Pérez", { skills = true } = {}) {
   const userId = await signIn(page, uniqueEmail("lista"));
@@ -103,7 +115,7 @@ export async function seedCandidate(email: string, fullName = "Candidata de prue
   await admin.from("profiles").insert({ id: user.user.id, role: "candidate" });
   const [firstName, ...rest] = fullName.split(" ");
   await admin.from("people").insert({ user_id: user.user.id, first_name: firstName, last_name: rest.join(" ") || "Prueba" });
-  await admin.from("candidates").insert({ user_id: user.user.id, slug: `seed-${user.user.id.slice(0, 8)}` });
+  await admin.from("candidates").insert({ user_id: user.user.id, slug: `seed-${user.user.id.slice(0, 8)}`, setup_completed_at: new Date().toISOString() });
   return user.user.id;
 }
 
@@ -290,11 +302,18 @@ export async function fillPersonName(page: Page, fullName: string) {
 }
 
 /** Completa la bienvenida como candidata desde la página actual. */
-export async function onboardAsCandidate(page: Page, fullName = "Ana Pérez") {
+export async function onboardAsCandidate(page: Page, fullName = "Ana Pérez", { finishSetup = true } = {}) {
   await page.getByLabel(/Busco trabajo/).check();
   await fillPersonName(page, fullName);
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.waitForURL("/es/perfil");
+  // Por defecto da por terminada el alta del perfil (para los tests que no la prueban): el perfil
+  // queda en modo edición, por secciones.
+  if (finishSetup) {
+    await admin.from("candidates").update({ setup_completed_at: new Date().toISOString() }).eq("user_id", await userIdOf(page));
+    // goto (no reload): espera a que la página hidrate antes de que el test haga clic.
+    await page.goto("/es/perfil");
+  }
 }
 
 /**

@@ -285,7 +285,23 @@
     },
     "previewCv": "View CV",
     "cvHint": "Harvard format, as a PDF. Built from what you entered here.",
-    "newTab": "(opens in a new tab)"
+    "newTab": "(opens in a new tab)",
+    "setup": {
+      "title": "Build your profile",
+      "subtitle": "Fill in what you have at hand: everything can be changed later. Companies see your profile according to the privacy you choose.",
+      "photo": "Your photo",
+      "photoHint": "Optional. A clear photo of your face builds trust.",
+      "imageError": "We couldn't use this image. Try another one.",
+      "skillsHint": "The technologies and tools you use. You can adjust the level later.",
+      "experienceHint": "Optional: jobs, internships or volunteering.",
+      "educationHint": "Optional: degrees, courses or bootcamps.",
+      "projectHint": "Optional, but it helps a lot when you're starting out.",
+      "itemN": "Item {n}",
+      "removeItem": "Remove",
+      "salary": "Salary expectation (optional)",
+      "submit": "Finish sign-up",
+      "submitting": "Saving…"
+    }
   },
   "PublicProfile": {
     "availability": "Availability: {value}",
@@ -1207,7 +1223,8 @@
     "passwordChanged": "Password changed. We signed you out everywhere else.",
     "pendingLiked": "Done: you liked it. ❤️",
     "pendingSaved": "Done: it's in Saved. 🔖",
-    "companyReady": "Done! Your company page is live on Pistaklero. 🎉"
+    "companyReady": "Done! Your company page is live on Pistaklero. 🎉",
+    "profileReady": "Done! Your profile is live on Pistaklero. 🎉"
   },
   "Saved": {
     "metaTitle": "Saved",

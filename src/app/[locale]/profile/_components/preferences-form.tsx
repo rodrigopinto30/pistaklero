@@ -7,10 +7,10 @@ import { idleState } from "@/lib/forms";
 import { updatePreferences } from "../actions";
 import { SubmitButton } from "@/components/forms/submit-button";
 
-const AVAILABILITY = ["immediate", "two_weeks", "freelance_only", "not_looking"] as const;
-const VISIBILITY = ["companies_only", "public", "hidden"] as const;
+export const AVAILABILITY = ["immediate", "two_weeks", "freelance_only", "not_looking"] as const;
+export const VISIBILITY = ["companies_only", "public", "hidden"] as const;
 
-function RadioGroup<T extends string>({
+export function RadioGroup<T extends string>({
   name,
   legend,
   options,

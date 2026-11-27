@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
-import { idleState } from "@/lib/forms";
+import { type FieldError, idleState } from "@/lib/forms";
 import { CURRENCIES, SALARY_BASES, SALARY_PERIODS } from "@/lib/validation/profile";
 import { deleteSalary, saveSalary } from "../actions";
 import { SubmitButton } from "@/components/forms/submit-button";
@@ -30,52 +30,7 @@ export function SalaryForm({ saved }: { saved: SalaryValues }) {
   return (
     <div className="flex flex-col gap-3">
       <form ref={formRef} action={action} noValidate className="flex flex-col gap-4">
-        <FieldGrid className="grid-cols-2">
-          <Field id="salary-amount" name="amount" label={t("amount")} required error={errors.amount}>
-            {(p) => <Input {...p} type="number" inputMode="decimal" min="1" step="any" defaultValue={v("amount", "")} />}
-          </Field>
-          <Field id="salary-currency" name="currency" label={t("currency")} required error={errors.currency}>
-            {(p) => (
-              <NativeSelect {...p} defaultValue={v("currency", "USD")}>
-                {CURRENCIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </NativeSelect>
-            )}
-          </Field>
-          <Field id="salary-period" name="period" label={t("period")} required error={errors.period}>
-            {(p) => (
-              <NativeSelect {...p} defaultValue={v("period", "month")}>
-                {SALARY_PERIODS.map((o) => (
-                  <option key={o} value={o}>
-                    {t(`periodOptions.${o}`)}
-                  </option>
-                ))}
-              </NativeSelect>
-            )}
-          </Field>
-          <Field id="salary-basis" name="basis" label={t("basis")} required error={errors.basis}>
-            {(p) => (
-              <NativeSelect {...p} defaultValue={v("basis", "gross")}>
-                {SALARY_BASES.map((o) => (
-                  <option key={o} value={o}>
-                    {t(`basisOptions.${o}`)}
-                  </option>
-                ))}
-              </NativeSelect>
-            )}
-          </Field>
-        </FieldGrid>
-        <Field id="salary-visibility" name="salaryVisibility" label={t("visibility")} required error={errors.salaryVisibility}>
-          {(p) => (
-            <NativeSelect {...p} defaultValue={v("salaryVisibility", "private")}>
-              <option value="private">{t("visibilityOptions.private")}</option>
-              <option value="applied_companies">{t("visibilityOptions.applied_companies")}</option>
-            </NativeSelect>
-          )}
-        </Field>
+        <SalaryFields idPrefix="salary" errors={errors} value={v} />
         <SubmitButton />
         <FormMessage state={state} />
       </form>
@@ -87,5 +42,73 @@ export function SalaryForm({ saved }: { saved: SalaryValues }) {
         </form>
       )}
     </div>
+  );
+}
+
+type SalaryKey = "amount" | "currency" | "period" | "basis" | "salaryVisibility";
+
+/** Los campos de la expectativa salarial (también los usa el alta en un paso, donde es opcional). */
+export function SalaryFields({
+  idPrefix,
+  errors,
+  value,
+  optional = false,
+}: {
+  idPrefix: string;
+  errors: Record<string, FieldError>;
+  value: (name: SalaryKey, fallback: string) => string;
+  optional?: boolean;
+}) {
+  const t = useTranslations("Profile.salary");
+  const v = value;
+  return (
+    <>
+        <FieldGrid className="grid-cols-2">
+          <Field id={`${idPrefix}-amount`} name="amount" label={t("amount")} required={!optional} error={errors.amount}>
+            {(p) => <Input {...p} type="number" inputMode="decimal" min="1" step="any" defaultValue={v("amount", "")} />}
+          </Field>
+          <Field id={`${idPrefix}-currency`} name="currency" label={t("currency")} required error={errors.currency}>
+            {(p) => (
+              <NativeSelect {...p} defaultValue={v("currency", "USD")}>
+                {CURRENCIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </NativeSelect>
+            )}
+          </Field>
+          <Field id={`${idPrefix}-period`} name="period" label={t("period")} required error={errors.period}>
+            {(p) => (
+              <NativeSelect {...p} defaultValue={v("period", "month")}>
+                {SALARY_PERIODS.map((o) => (
+                  <option key={o} value={o}>
+                    {t(`periodOptions.${o}`)}
+                  </option>
+                ))}
+              </NativeSelect>
+            )}
+          </Field>
+          <Field id={`${idPrefix}-basis`} name="basis" label={t("basis")} required error={errors.basis}>
+            {(p) => (
+              <NativeSelect {...p} defaultValue={v("basis", "gross")}>
+                {SALARY_BASES.map((o) => (
+                  <option key={o} value={o}>
+                    {t(`basisOptions.${o}`)}
+                  </option>
+                ))}
+              </NativeSelect>
+            )}
+          </Field>
+        </FieldGrid>
+        <Field id={`${idPrefix}-visibility`} name="salaryVisibility" label={t("visibility")} required error={errors.salaryVisibility}>
+          {(p) => (
+            <NativeSelect {...p} defaultValue={v("salaryVisibility", "private")}>
+              <option value="private">{t("visibilityOptions.private")}</option>
+              <option value="applied_companies">{t("visibilityOptions.applied_companies")}</option>
+            </NativeSelect>
+          )}
+        </Field>
+    </>
   );
 }

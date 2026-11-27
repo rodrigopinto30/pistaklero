@@ -21,6 +21,7 @@ export const FLASH_KEYS = [
   "pendingLiked",
   "pendingSaved",
   "companyReady",
+  "profileReady",
 ] as const;
 export type FlashKey = (typeof FLASH_KEYS)[number];
 
