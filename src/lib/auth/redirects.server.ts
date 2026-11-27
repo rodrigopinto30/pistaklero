@@ -19,7 +19,8 @@ export async function afterSignIn(supabase: Awaited<ReturnType<typeof createClie
   if (!userId) return redirectTo(next);
 
   const { data: profile } = await supabase.from("profiles").select("id").eq("id", userId).maybeSingle();
-  if (profile) return redirectTo(next);
+  // Aceptar una invitación también crea el perfil: no hace falta pasar por la bienvenida.
+  if (profile || next.startsWith("/api/team/accept?")) return redirectTo(next);
 
   const welcome = getPathname({ locale: localeFromPath(next), href: "/welcome" });
   return redirectTo(welcome);
