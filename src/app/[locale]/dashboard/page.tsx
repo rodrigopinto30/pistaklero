@@ -1,4 +1,4 @@
-import { CircleAlert } from "lucide-react";
+import { CircleAlert, Plus } from "lucide-react";
 import { VerifiedBadge } from "@/components/verified-badge";
 import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
@@ -60,8 +60,10 @@ export default async function DashboardPage() {
         </div>
       )}
       <div className="flex flex-wrap gap-2">
-        <Link href="/dashboard/jobs/new" className={buttonVariants()}>
+        <Link href="/dashboard/jobs/new" className={buttonVariants({ size: "lg" })}>
+          <Plus aria-hidden="true" />
           {tJobs("list.new")}
+          <Emoji symbol="📣" />
         </Link>
         <Link href="/dashboard/company" className={buttonVariants({ variant: "outline" })}>
           {t("editCompany")}

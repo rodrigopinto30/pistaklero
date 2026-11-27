@@ -18,7 +18,9 @@ async function fillJob(page: Page, title: string, { min = "1000", max = "1500" }
 
 test("una empresa publica una oferta y se ve en público, con Markdown seguro", async ({ page, browser }) => {
   await newCompany(page);
-  await page.getByRole("link", { name: "Publicar oferta" }).click();
+  // El atajo está siempre a la vista en el encabezado (y también en el panel).
+  await expect(page.getByRole("main").getByRole("link", { name: "Publicar empleo" })).toBeVisible();
+  await page.getByRole("banner").getByRole("link", { name: "Publicar empleo" }).click();
   await page.waitForURL("/es/panel/ofertas/nueva");
   await expectNoA11yViolations(page);
 
