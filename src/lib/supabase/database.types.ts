@@ -19,6 +19,66 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"candidates": {
+                  Row: {
+                    "availability": Database["public"]['Enums']["availability"],"avatar_url": string | null,"bio": string,"city": string | null,"country": string | null,"created_at": string,"full_name": string,"github_url": string | null,"headline": string,"languages": (string)[],"linkedin_url": string | null,"slug": string,"updated_at": string,"user_id": string,"visibility": Database["public"]['Enums']["profile_visibility"],"website_url": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "availability"?: Database["public"]['Enums']["availability"],"avatar_url"?: string | null,"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"full_name": string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug": string,"updated_at"?: string,"user_id": string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
+                  }
+                  Update: {
+                    "availability"?: Database["public"]['Enums']["availability"],"avatar_url"?: string | null,"bio"?: string,"city"?: string | null,"country"?: string | null,"created_at"?: string,"full_name"?: string,"github_url"?: string | null,"headline"?: string,"languages"?: (string)[],"linkedin_url"?: string | null,"slug"?: string,"updated_at"?: string,"user_id"?: string,"visibility"?: Database["public"]['Enums']["profile_visibility"],"website_url"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "candidates_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: true
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"companies": {
+                  Row: {
+                    "city": string | null,"country": string | null,"created_at": string,"created_by": string | null,"description": string,"domain": string | null,"id": string,"industry": string | null,"instagram_url": string | null,"linkedin_url": string | null,"logo_path": string | null,"name": string,"size": Database["public"]['Enums']["company_size"] | null,"slug": string,"stage": Database["public"]['Enums']["company_stage"] | null,"status": Database["public"]['Enums']["company_status"],"updated_at": string,"verified_at": string | null,"website_url": string | null,"x_url": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "city"?: string | null,"country"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string,"domain"?: string | null,"id"?: string,"industry"?: string | null,"instagram_url"?: string | null,"linkedin_url"?: string | null,"logo_path"?: string | null,"name": string,"size"?: Database["public"]['Enums']["company_size"] | null,"slug": string,"stage"?: Database["public"]['Enums']["company_stage"] | null,"status"?: Database["public"]['Enums']["company_status"],"updated_at"?: string,"verified_at"?: string | null,"website_url"?: string | null,"x_url"?: string | null
+                  }
+                  Update: {
+                    "city"?: string | null,"country"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string,"domain"?: string | null,"id"?: string,"industry"?: string | null,"instagram_url"?: string | null,"linkedin_url"?: string | null,"logo_path"?: string | null,"name"?: string,"size"?: Database["public"]['Enums']["company_size"] | null,"slug"?: string,"stage"?: Database["public"]['Enums']["company_stage"] | null,"status"?: Database["public"]['Enums']["company_status"],"updated_at"?: string,"verified_at"?: string | null,"website_url"?: string | null,"x_url"?: string | null
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"company_members": {
+                  Row: {
+                    "company_id": string,"created_at": string,"member_role": Database["public"]['Enums']["member_role"],"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "company_id": string,"created_at"?: string,"member_role"?: Database["public"]['Enums']["member_role"],"user_id": string
+                  }
+                  Update: {
+                    "company_id"?: string,"created_at"?: string,"member_role"?: Database["public"]['Enums']["member_role"],"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "company_members_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "company_members_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: true
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"email_notifications": boolean,"id": string,"locale": Database["public"]['Enums']["app_locale"],"role": Database["public"]['Enums']["user_role"],"suspended_at": string | null
@@ -42,15 +102,42 @@ export type Database = {
             "auth_role":
 { Args: Record<PropertyKey, never>; Returns: Database["public"]['Enums']["user_role"]
                            },
+"can_view_candidate":
+{ Args: { "p_candidate_id": string }; Returns: boolean
+                           },
+"create_company":
+{ Args: { "p_company_name": string,"p_locale": Database["public"]['Enums']["app_locale"],"p_website_url": string }; Returns: string
+                           },
+"domain_from_url":
+{ Args: { "p_url": string }; Returns: string
+                           },
+"email_matches_domain":
+{ Args: { "p_domain": string,"p_email": string }; Returns: boolean
+                           },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"is_free_email_domain":
+{ Args: { "p_domain": string }; Returns: boolean
+                           },
+"my_company_id":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
+"onboard_candidate":
+{ Args: { "p_full_name": string,"p_headline": string,"p_locale": Database["public"]['Enums']["app_locale"] }; Returns: undefined
+                           },
+"random_slug":
+{ Args: { "p_value": string }; Returns: string
+                           },
+"slugify":
+{ Args: { "p_value": string }; Returns: string
                            },
 "write_audit_log":
 { Args: { "p_action": string,"p_metadata"?: Json,"p_target_id"?: string,"p_target_type"?: string }; Returns: undefined
                            }
           }
           Enums: {
-            "app_locale": "es"|"en","user_role": "candidate"|"recruiter"|"admin"
+            "app_locale": "es"|"en","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","member_role": "owner"|"member","profile_visibility": "companies_only"|"public"|"hidden","user_role": "candidate"|"recruiter"|"admin"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -166,7 +253,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "app_locale": ["es", "en"],"user_role": ["candidate", "recruiter", "admin"]
+            "app_locale": ["es", "en"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"member_role": ["owner", "member"],"profile_visibility": ["companies_only", "public", "hidden"],"user_role": ["candidate", "recruiter", "admin"]
           }
         }
 } as const

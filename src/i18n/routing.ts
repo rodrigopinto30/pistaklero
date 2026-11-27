@@ -13,6 +13,7 @@ export const routing = defineRouting({
   pathnames: {
     "/": "/",
     "/sign-in": { es: "/ingresar", en: "/sign-in" },
+    "/welcome": { es: "/bienvenida", en: "/welcome" },
   },
 });
 
