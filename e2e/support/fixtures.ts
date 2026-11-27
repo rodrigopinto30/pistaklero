@@ -106,6 +106,32 @@ export async function seedOldApplication(jobId: string, candidateId: string, day
   if (error) throw error;
 }
 
+/** Empresa sin reclamar con una oferta importada (como si la hubiera cargado el admin). */
+export async function seedUnclaimedCompany(name: string, domain: string, jobTitle: string) {
+  const { data: company, error } = await admin
+    .from("companies")
+    .insert({ name, slug: domain.replace(/\W/g, "-"), domain, website_url: `https://${domain}`, status: "unclaimed" })
+    .select("id, slug")
+    .single();
+  if (error) throw error;
+  const { error: jobError } = await admin.from("jobs").insert({
+    company_id: company.id,
+    source: "imported",
+    status: "published",
+    title: jobTitle,
+    summary: "Oferta importada para los tests.",
+    language: "es",
+    seniority: "junior",
+    employment_type: "full_time",
+    work_mode: "remote",
+    valid_through: new Date(Date.now() + 30 * 86_400_000).toISOString(),
+    external_url: `https://${domain}/jobs/1`,
+    external_provider: "manual",
+  });
+  if (jobError) throw jobError;
+  return company;
+}
+
 export async function emailOf(userId: string) {
   const { data } = await admin.auth.admin.getUserById(userId);
   return data.user!.email!;
