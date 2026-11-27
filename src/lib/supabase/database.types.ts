@@ -323,6 +323,26 @@ isOneToOne: true
       referencedColumns: ["id"]
     }
                   ]
+                },"company_response_stats": {
+                  Row: {
+                    "badge": Database["public"]['Enums']["response_badge"],"company_id": string,"computed_at": string,"median_first_response_hours": number | null,"responded_within_14d_pct": number | null,"window_applications": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "badge"?: Database["public"]['Enums']["response_badge"],"company_id": string,"computed_at"?: string,"median_first_response_hours"?: number | null,"responded_within_14d_pct"?: number | null,"window_applications"?: number
+                  }
+                  Update: {
+                    "badge"?: Database["public"]['Enums']["response_badge"],"company_id"?: string,"computed_at"?: string,"median_first_response_hours"?: number | null,"responded_within_14d_pct"?: number | null,"window_applications"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "company_response_stats_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: true
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"company_skills": {
                   Row: {
                     "company_id": string,"skill_id": string
@@ -585,6 +605,9 @@ isOneToOne: false
 "create_invitation":
 { Args: { "p_email": string,"p_token_hash": string }; Returns: string
                            },
+"daily_maintenance":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
 "domain_from_url":
 { Args: { "p_url": string }; Returns: string
                            },
@@ -631,12 +654,15 @@ isOneToOne: false
 "record_external_click":
 { Args: { "p_job_id": string }; Returns: string
                            },
+"refresh_company_response_stats":
+{ Args: { "p_company_id": string }; Returns: undefined
+                           },
 "refresh_job_search_vector":
 { Args: { "p_job_id": string }; Returns: undefined
                            },
 "search_jobs":
 { Args: { "p_country"?: string,"p_currency"?: Database["public"]['Enums']["currency"],"p_employment_types"?: (Database["public"]['Enums']["employment_type"])[],"p_language"?: Database["public"]['Enums']["app_locale"],"p_limit"?: number,"p_offset"?: number,"p_query"?: string,"p_salary_visible"?: boolean,"p_seniorities"?: (Database["public"]['Enums']["seniority"])[],"p_work_modes"?: (Database["public"]['Enums']["work_mode"])[] }; Returns: {
-              "city": string,"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
+              "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
             }[]
                            },
 "set_company_logo":
@@ -659,7 +685,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "actor_type": "candidate"|"recruiter"|"system","app_locale": "es"|"en","application_status": "received"|"in_review"|"interview"|"hired"|"rejected"|"no_response"|"withdrawn","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","email_status": "pending"|"sent"|"failed","employment_type": "full_time"|"part_time"|"contract"|"internship"|"freelance","import_provider": "manual"|"greenhouse"|"lever"|"ashby"|"workable","job_source": "native"|"imported","job_status": "draft"|"published"|"closed"|"hidden","member_role": "owner"|"member","profile_visibility": "companies_only"|"public"|"hidden","question_type": "short_text"|"single_choice","report_reason": "scam"|"fake"|"discrimination"|"other","report_status": "open"|"dismissed"|"actioned","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","seniority": "trainee"|"junior"|"semi_senior"|"senior"|"lead","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin","work_mode": "remote"|"hybrid"|"onsite"
+            "actor_type": "candidate"|"recruiter"|"system","app_locale": "es"|"en","application_status": "received"|"in_review"|"interview"|"hired"|"rejected"|"no_response"|"withdrawn","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","email_status": "pending"|"sent"|"failed","employment_type": "full_time"|"part_time"|"contract"|"internship"|"freelance","import_provider": "manual"|"greenhouse"|"lever"|"ashby"|"workable","job_source": "native"|"imported","job_status": "draft"|"published"|"closed"|"hidden","member_role": "owner"|"member","profile_visibility": "companies_only"|"public"|"hidden","question_type": "short_text"|"single_choice","report_reason": "scam"|"fake"|"discrimination"|"other","report_status": "open"|"dismissed"|"actioned","response_badge": "new"|"fast"|"medium"|"slow","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","seniority": "trainee"|"junior"|"semi_senior"|"senior"|"lead","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin","work_mode": "remote"|"hybrid"|"onsite"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -775,7 +801,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "actor_type": ["candidate", "recruiter", "system"],"app_locale": ["es", "en"],"application_status": ["received", "in_review", "interview", "hired", "rejected", "no_response", "withdrawn"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"email_status": ["pending", "sent", "failed"],"employment_type": ["full_time", "part_time", "contract", "internship", "freelance"],"import_provider": ["manual", "greenhouse", "lever", "ashby", "workable"],"job_source": ["native", "imported"],"job_status": ["draft", "published", "closed", "hidden"],"member_role": ["owner", "member"],"profile_visibility": ["companies_only", "public", "hidden"],"question_type": ["short_text", "single_choice"],"report_reason": ["scam", "fake", "discrimination", "other"],"report_status": ["open", "dismissed", "actioned"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"seniority": ["trainee", "junior", "semi_senior", "senior", "lead"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"],"work_mode": ["remote", "hybrid", "onsite"]
+            "actor_type": ["candidate", "recruiter", "system"],"app_locale": ["es", "en"],"application_status": ["received", "in_review", "interview", "hired", "rejected", "no_response", "withdrawn"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"email_status": ["pending", "sent", "failed"],"employment_type": ["full_time", "part_time", "contract", "internship", "freelance"],"import_provider": ["manual", "greenhouse", "lever", "ashby", "workable"],"job_source": ["native", "imported"],"job_status": ["draft", "published", "closed", "hidden"],"member_role": ["owner", "member"],"profile_visibility": ["companies_only", "public", "hidden"],"question_type": ["short_text", "single_choice"],"report_reason": ["scam", "fake", "discrimination", "other"],"report_status": ["open", "dismissed", "actioned"],"response_badge": ["new", "fast", "medium", "slow"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"seniority": ["trainee", "junior", "semi_senior", "senior", "lead"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"],"work_mode": ["remote", "hybrid", "onsite"]
           }
         }
 } as const
