@@ -3,10 +3,11 @@ import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { locale as rootLocale } from "next/root-params";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
+import { getPublicEnv } from "@/lib/env";
 import { fontVariables } from "../fonts";
 import "../globals.css";
 
@@ -23,9 +24,13 @@ export function generateStaticParams() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata");
+  const locale = await getLocale();
   return {
+    // Base para las URLs absolutas (canonical, hreflang, Open Graph).
+    metadataBase: new URL(getPublicEnv().NEXT_PUBLIC_SITE_URL),
     title: { default: t("title"), template: `%s · ${t("title")}` },
     description: t("description"),
+    openGraph: { siteName: t("title"), type: "website", locale: locale === "en" ? "en_US" : "es_AR" },
   };
 }
 
