@@ -3,9 +3,9 @@ begin;
 
 select plan(10);
 
-select tests.create_profile('ana@example.com', 'candidate') as ana \gset
-select tests.create_profile('beto@example.com', 'recruiter') as beto \gset
-select tests.create_profile('admin@example.com', 'admin') as admin \gset
+select tests.create_profile('ana@pgtap.test', 'candidate') as ana \gset
+select tests.create_profile('beto@pgtap.test', 'recruiter') as beto \gset
+select tests.create_profile('admin@pgtap.test', 'admin') as admin \gset
 
 -- Visitante anónimo
 select tests.authenticate_as_anon();
@@ -54,9 +54,10 @@ select is(
   'nadie puede modificar el perfil de otro'
 );
 
--- Admin
+-- Admin: ve todos los perfiles que existen (sin depender de los datos que ya haya en la base).
+select count(*)::int as total_profiles from public.profiles \gset
 select tests.authenticate_as(:'admin');
-select is((select count(*)::int from public.profiles), 3, 'el admin ve todos los perfiles');
+select is((select count(*)::int from public.profiles), :total_profiles, 'el admin ve todos los perfiles');
 reset role;
 
 -- Cuenta suspendida

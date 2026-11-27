@@ -12,7 +12,7 @@ select ok(public.email_matches_domain('ana@ar.acme.com', 'acme.com'), 'un subdom
 select ok(not public.email_matches_domain('ana@gmail.com', 'gmail.com'), 'un dominio gratuito nunca verifica');
 
 -- Bienvenida de candidata -------------------------------------------------------
-select tests.create_user('ana@example.com') as ana \gset
+select tests.create_user('ana@pgtap.test') as ana \gset
 
 select tests.authenticate_as_anon();
 select throws_ok(
@@ -36,9 +36,9 @@ select throws_ok(
 reset role;
 
 -- Bienvenida de empresas ------------------------------------------------------------
-select tests.create_user('rrhh@acme.com') as acme \gset
+select tests.create_user('rrhh@acme.pgtap.test') as acme \gset
 select tests.authenticate_as(:'acme');
-select public.create_company('Acme', 'https://www.acme.com', 'es') as acme_company \gset
+select public.create_company('Acme', 'https://www.acme.pgtap.test', 'es') as acme_company \gset
 reset role;
 select isnt((select verified_at from public.companies where id = :'acme_company'), null, 'un email del dominio verifica la empresa');
 select is(
@@ -53,16 +53,16 @@ select public.create_company('Startup Uno', 'https://startup-uno.io', 'es') as g
 reset role;
 select is((select verified_at from public.companies where id = :'gmail_company'), null, 'con un email gratuito la empresa queda sin verificar');
 
-select tests.create_user('otro@acme.com') as acme2 \gset
+select tests.create_user('otro@acme.pgtap.test') as acme2 \gset
 select tests.authenticate_as(:'acme2');
 select throws_ok(
-  $$select public.create_company('Acme Copia', 'https://acme.com', 'es')$$,
+  $$select public.create_company('Acme Copia', 'https://acme.pgtap.test', 'es')$$,
   'P0001', 'company_exists', 'no se crean dos empresas con el mismo dominio'
 );
 reset role;
 
 -- Visibilidad de perfiles -----------------------------------------------------------
-select tests.create_profile('beto@example.com', 'candidate') as beto \gset
+select tests.create_profile('beto@pgtap.test', 'candidate') as beto \gset
 
 select tests.authenticate_as(:'beto');
 select is((select count(*)::int from public.candidates where user_id = :'ana'), 0, 'otra candidata no ve un perfil "solo empresas"');
