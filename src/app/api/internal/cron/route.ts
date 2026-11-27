@@ -6,7 +6,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 /*
  * Tarea diaria (Vercel Cron la llama con GET y "Authorization: Bearer $CRON_SECRET"):
  * 1. Anti-ghosting: recordatorios de 7 días, avisos de 14, cierres de 30 y badges de respuesta.
- * 2. Envía todo lo encolado (también reintenta lo que haya fallado antes).
+ * 2. Avisa a cada candidata cuántos empleos nuevos coinciden con sus habilidades (la campana).
+ * 3. Envía todo lo encolado (también reintenta lo que haya fallado antes).
  */
 export async function GET(request: Request) {
   if (!isInternalRequest(request.headers.get("authorization"))) {
@@ -19,6 +20,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "maintenance_failed" }, { status: 500 });
   }
 
+  const { data: matches, error: matchesError } = await createAdminClient().rpc("notify_job_matches");
+  if (matchesError) console.error("Los avisos de empleos para vos fallaron", { message: matchesError.message });
+
   let sent = 0;
   let failed = 0;
   for (let batch = 0; batch < 20; batch++) {
@@ -28,5 +32,5 @@ export async function GET(request: Request) {
     if (result.sent + result.failed === 0) break;
   }
 
-  return NextResponse.json({ maintenance, emails: { sent, failed } });
+  return NextResponse.json({ maintenance, jobMatches: matches ?? 0, emails: { sent, failed } });
 }

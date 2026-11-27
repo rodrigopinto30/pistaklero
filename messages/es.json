@@ -1456,5 +1456,27 @@
     "no": "No, todavía no",
     "recorded": "Listo, la sumamos a Mis postulaciones. ✅",
     "error": "No pudimos guardarla. Probá de nuevo desde la oferta."
+  },
+  "Notifications": {
+    "title": "Notificaciones",
+    "bell": "Notificaciones",
+    "bellUnread": "Notificaciones: {count, plural, one {# sin leer} other {# sin leer}}",
+    "unreadCount": "{count, plural, one {Tenés # aviso nuevo.} other {Tenés # avisos nuevos.}}",
+    "allRead": "Estás al día.",
+    "empty": "Todavía no tenés notificaciones. Acá te vamos a avisar de tus postulaciones, de los me gusta y de los empleos que coinciden con vos.",
+    "new": "Nueva",
+    "roles": {
+      "owner": "owner",
+      "member": "miembro"
+    },
+    "kinds": {
+      "application_status": "{company} actualizó tu postulación a «{job}»: {status}.",
+      "new_applicant": "{count, plural, one {Llegó una postulación} other {Llegaron # postulaciones}} para «{job}».",
+      "post_liked": "{count, plural, one {A alguien le gustó} other {A # personas les gustó}} tu publicación «{title}».",
+      "company_liked": "{count, plural, one {A alguien le gustó} other {A # personas les gustó}} la página de {company}.",
+      "job_matches": "{count, plural, one {Hay # empleo nuevo} other {Hay # empleos nuevos}} que coinciden con tus habilidades.",
+      "member_joined": "{email} se sumó al equipo.",
+      "role_changed": "Ahora sos {role} del equipo de {company}."
+    }
   }
 }

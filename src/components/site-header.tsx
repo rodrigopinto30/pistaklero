@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { CommandPalette, type PaletteLink } from "@/components/command-palette";
 import { SearchBar } from "@/components/header/search-bar";
 import { SectionTabs } from "@/components/header/section-tabs";
+import { NotificationBell } from "@/components/header/notification-bell";
 import { type MenuEntry, UserMenu } from "@/components/header/user-menu";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -10,6 +11,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getCurrentPerson, getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { countryOptions } from "@/lib/geo";
 import { avatarUrl } from "@/lib/storage";
+import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { DARK_MODE_ENABLED } from "@/lib/theme/theme";
 import { Link } from "@/i18n/navigation";
@@ -26,6 +28,8 @@ export async function SiteHeader() {
   const user = await getCurrentUser();
   const profile = user ? await getCurrentProfile() : null;
   const person = user ? await getCurrentPerson() : null;
+  // La campana arranca con el número del servidor y después se actualiza sola.
+  const unreadNotifications = profile ? ((await (await createClient()).rpc("unread_notifications_count")).data ?? 0) : 0;
 
   // Accesos de la cuenta (menú) según el rol. La búsqueda rápida (Ctrl+K) suma las secciones.
   const entries: MenuEntry[] = [];
@@ -88,6 +92,7 @@ export async function SiteHeader() {
                 <span className="sr-only sm:not-sr-only">{t("newJob")}</span>
               </Link>
             )}
+            {profile && <NotificationBell initialCount={unreadNotifications} />}
             {user ? (
               <UserMenu
                 name={person?.full_name ?? ""}

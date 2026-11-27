@@ -1456,5 +1456,27 @@
     "no": "Not yet",
     "recorded": "Done, it's in My applications. ✅",
     "error": "We couldn't save it. Try again from the job page."
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "bell": "Notifications",
+    "bellUnread": "Notifications: {count} unread",
+    "unreadCount": "{count, plural, one {You have # new notification.} other {You have # new notifications.}}",
+    "allRead": "You're all caught up.",
+    "empty": "You don't have notifications yet. We'll let you know about your applications, likes and jobs that match you.",
+    "new": "New",
+    "roles": {
+      "owner": "an owner",
+      "member": "a member"
+    },
+    "kinds": {
+      "application_status": "{company} updated your application to “{job}”: {status}.",
+      "new_applicant": "{count, plural, one {A new application} other {# new applications}} for “{job}”.",
+      "post_liked": "{count, plural, one {Someone liked} other {# people liked}} your post “{title}”.",
+      "company_liked": "{count, plural, one {Someone liked} other {# people liked}} the {company} page.",
+      "job_matches": "{count, plural, one {There's # new job} other {There are # new jobs}} matching your skills.",
+      "member_joined": "{email} joined the team.",
+      "role_changed": "You're now {role} of the {company} team."
+    }
   }
 }
