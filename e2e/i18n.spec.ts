@@ -23,5 +23,5 @@ test("el botón ENG cambia a inglés en la misma página", async ({ page }) => {
 test("las URLs que no existen muestran el 404 traducido", async ({ page }) => {
   const response = await page.goto("/en/does-not-exist");
   expect(response?.status()).toBe(404);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("We couldn't find this page");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName("We couldn't find this page");
 });

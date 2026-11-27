@@ -44,10 +44,10 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
           {t("results")}
         </h2>
         {/* Se anuncia el resultado de cada búsqueda (WCAG 4.1.3). */}
-        <p role="status" className="text-sm text-muted-foreground">
-          <Emoji symbol="💼" className="mr-1.5" />
-          {t("count", { count: total })}
-        </p>
+        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Emoji symbol="💼" />
+          <p role="status">{t("count", { count: total })}</p>
+        </div>
         {results.length > 0 ? (
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {results.map((job, index) => (
