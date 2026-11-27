@@ -14,21 +14,26 @@ const ICONS = {
   withdrawn: Undo2,
 } as const;
 
-/** Estado de la postulación con ícono y texto (nunca solo color). */
+/*
+ * Cada estado con su color (fondo suave y texto del mismo tono, contraste AA verificado),
+ * siempre acompañado de ícono y texto: el color nunca es la única pista (WCAG 1.4.1).
+ */
+const TONES: Record<ApplicationStatus, string> = {
+  received: "bg-info/10 text-info",
+  in_review: "bg-violet/10 text-violet",
+  interview: "bg-warn/12 text-warn",
+  hired: "bg-primary/12 text-primary",
+  rejected: "bg-destructive/10 text-destructive",
+  no_response: "bg-muted text-muted-foreground",
+  withdrawn: "bg-muted text-muted-foreground",
+};
+
 export async function ApplicationStatusBadge({ status }: { status: ApplicationStatus }) {
   const t = await getTranslations("Applications.status");
   const Icon = ICONS[status];
-  const tone =
-    status === "hired" || status === "interview"
-      ? "bg-primary text-primary-foreground"
-      : status === "in_review"
-        ? "border border-violet text-violet"
-        : status === "no_response"
-          ? "border border-warn text-warn"
-          : "border border-input text-muted-foreground";
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-sm font-medium ${tone}`}>
-      <Icon aria-hidden="true" className="size-3.5" />
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium whitespace-nowrap ${TONES[status]}`}>
+      <Icon aria-hidden="true" className="size-4" />
       {t(status)}
     </span>
   );

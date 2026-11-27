@@ -33,6 +33,7 @@
 
   /* Colores propios de Pistaklero */
   --color-violet: var(--violet);
+  --color-info: var(--info);
   --color-warn: var(--warn);
 
   /* Sombras suaves en lugar de bordes: separan sin recargar. */
@@ -81,6 +82,7 @@
   --ring: #c5f25e; /* foco: 15.2:1 sobre background */
 
   --violet: #a99bff; /* secundario: estado "Entrevista", enlaces */
+  --info: #8fb4ff; /* estado "Recibida" */
   --warn: #f5c451; /* avisos y badge "Tarda ~1 semana" */
 
   --radius: 0.75rem;
@@ -116,6 +118,7 @@
   --ring: #3d6b0a; /* 5.9:1 */
 
   --violet: #5847cc; /* 6.1:1 */
+  --info: #1d4ed8; /* 6.7:1; 5.8:1 sobre su fondo suave */
   --warn: #875200; /* 6.0:1 */
 }
 
