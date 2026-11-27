@@ -1016,6 +1016,9 @@ isOneToOne: false
 "update_post":
 { Args: { "p_body": string,"p_language": Database["public"]['Enums']["app_locale"],"p_post_id": string,"p_title": string }; Returns: undefined
                            },
+"visible_candidate_id":
+{ Args: { "p_slug": string }; Returns: string
+                           },
 "withdraw_application":
 { Args: { "p_application_id": string }; Returns: undefined
                            },
