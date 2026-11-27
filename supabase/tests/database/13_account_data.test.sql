@@ -5,9 +5,9 @@ select plan(6);
 
 select tests.create_user('ana@datos.pgtap.test') as ana \gset
 select tests.authenticate_as(:'ana');
-select public.onboard_candidate('Ana Pérez', 'Frontend', 'es');
+select public.onboard_candidate('Ana', '', 'Pérez', 'Frontend', 'es');
 insert into public.candidate_projects (candidate_id, title) values (auth.uid(), 'Mi portfolio');
-select is((public.export_my_data() -> 'candidate' ->> 'full_name'), 'Ana Pérez', 'la exportación incluye el perfil');
+select is((public.export_my_data() -> 'person' ->> 'last_name'), 'Pérez', 'la exportación incluye los datos personales');
 select is(jsonb_array_length(public.export_my_data() -> 'projects'), 1, 'y los bloques del perfil');
 select is((public.export_my_data() -> 'account' ->> 'email'), 'ana@datos.pgtap.test', 'y el email de la cuenta');
 reset role;

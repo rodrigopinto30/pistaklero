@@ -16,17 +16,17 @@ select tests.create_user('ana@pgtap.test') as ana \gset
 
 select tests.authenticate_as_anon();
 select throws_ok(
-  $$select public.onboard_candidate('Intrusa', '', 'es')$$,
+  $$select public.onboard_candidate('Intrusa', '', 'Prueba', '', 'es')$$,
   '42501', null, 'un visitante anónimo no puede hacer la bienvenida'
 );
 reset role;
 
 select tests.authenticate_as(:'ana');
-select lives_ok($$select public.onboard_candidate('Ana Pérez', 'Frontend Junior', 'es')$$, 'una cuenta nueva elige ser candidata');
+select lives_ok($$select public.onboard_candidate('Ana', '', 'Pérez', 'Frontend Junior', 'es')$$, 'una cuenta nueva elige ser candidata');
 select is(public.auth_role(), 'candidate'::public.user_role, 'queda con rol candidate');
 select matches((select slug::text from public.candidates where user_id = auth.uid()), '^ana-perez-', 'su perfil tiene un slug legible');
 select throws_ok(
-  $$select public.onboard_candidate('Ana', '', 'es')$$,
+  $$select public.onboard_candidate('Ana', '', 'Prueba', '', 'es')$$,
   'P0001', 'already_onboarded', 'la bienvenida se hace una sola vez'
 );
 select throws_ok(

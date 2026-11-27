@@ -17,7 +17,8 @@ create function pg_temp.candidate(p_email text) returns uuid language plpgsql as
 declare v uuid := tests.create_user(p_email);
 begin
   insert into public.profiles (id, role) values (v, 'candidate');
-  insert into public.candidates (user_id, slug, full_name) values (v, public.random_slug(p_email), 'Candidata');
+  insert into public.people (user_id, first_name, last_name) values (v, 'Candidata', 'Prueba');
+  insert into public.candidates (user_id, slug) values (v, public.random_slug(p_email));
   return v;
 end $$;
 

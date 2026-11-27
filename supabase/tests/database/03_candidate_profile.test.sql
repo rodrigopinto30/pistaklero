@@ -6,7 +6,7 @@ select plan(14);
 -- Candidata con perfil "solo empresas"
 select tests.create_user('ana@pgtap.test') as ana \gset
 select tests.authenticate_as(:'ana');
-select public.onboard_candidate('Ana Pérez', 'Frontend', 'es');
+select public.onboard_candidate('Ana', '', 'Pérez', 'Frontend', 'es');
 reset role;
 
 -- Dos empresas (una será bloqueada)
