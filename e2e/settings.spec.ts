@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { emailOf, expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail } from "./support/fixtures";
+import { emailOf, expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, expectToast } from "./support/fixtures";
 
 test("las páginas legales están enlazadas desde el pie y existen en los dos idiomas", async ({ page }) => {
   await page.goto("/es");
@@ -21,7 +21,7 @@ test("ajustes: idioma de los emails y descarga de los datos", async ({ page }) =
 
   await page.getByLabel("Idioma de los emails").selectOption("en");
   await page.getByRole("region", { name: "Preferencias" }).getByRole("button", { name: "Guardar" }).click();
-  await expect(page.getByText("Guardado.")).toBeVisible();
+  await expectToast(page, "Cambios guardados.");
   await page.reload();
   await expect(page.getByLabel("Idioma de los emails")).toHaveValue("en");
 
@@ -71,7 +71,7 @@ test("nombre, segundo nombre y apellido se guardan por separado", async ({ page 
   await person.getByLabel(/^Segundo nombre/).fill("María");
   await person.getByLabel(/^Apellido/).fill("Gómez");
   await person.getByRole("button", { name: "Guardar" }).click();
-  await expect(person.getByRole("status")).toHaveText("Guardado.");
+  await expectToast(page, "Cambios guardados.");
   await page.reload();
   await expect(page.getByRole("region", { name: "Datos personales" }).getByLabel(/^Segundo nombre/)).toHaveValue("María");
 });

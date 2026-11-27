@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, linkFromEmail, onboardAsCompany, signIn, test, uniqueEmail } from "./support/fixtures";
+import { expect, expectNoA11yViolations, linkFromEmail, onboardAsCompany, signIn, test, uniqueEmail, expectToast } from "./support/fixtures";
 
 test("el owner invita, la persona invitada se suma y el equipo se gestiona", async ({ browser }) => {
   const domain = `equipo-${Date.now()}.com`;
@@ -16,7 +16,7 @@ test("el owner invita, la persona invitada se suma y el equipo se gestiona", asy
   const invite = owner.getByRole("region", { name: "Invitar a alguien" });
   await invite.getByLabel(/^Email/).fill(invited);
   await invite.getByRole("button", { name: "Enviar invitación" }).click();
-  await expect(invite.getByText("Guardado.")).toBeVisible();
+  await expectToast(owner, "Invitación enviada.");
   await expect(owner.getByRole("region", { name: "Invitaciones pendientes" })).toContainText(invited.toLowerCase());
 
   // La invitada abre el link del email: primero le pide ingresar, después entra al panel
@@ -59,7 +59,7 @@ test("una invitación no se puede usar con otro email", async ({ browser }) => {
   const invited = uniqueEmail("invitada", domain);
   await owner.getByRole("region", { name: "Invitar a alguien" }).getByLabel(/^Email/).fill(invited);
   await owner.getByRole("button", { name: "Enviar invitación" }).click();
-  await expect(owner.getByText("Guardado.")).toBeVisible();
+  await expectToast(owner, "Invitación enviada.");
 
   const acceptLink = await linkFromEmail(invited, "/api/team/accept");
   const intruder = await (await browser.newContext()).newPage();

@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG } from "./support/fixtures";
+import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG, expectToast } from "./support/fixtures";
 
 test.describe("perfil del candidato", () => {
   test("se edita por secciones y se ve en el perfil público", async ({ page }) => {
@@ -12,7 +12,7 @@ test.describe("perfil del candidato", () => {
     await basics.getByLabel(/Sobre mí/).fill("Me encanta hacer interfaces accesibles.");
     await basics.getByLabel("Español").check();
     await basics.getByRole("button", { name: "Guardar" }).click();
-    await expect(basics.getByText("Guardado.")).toBeVisible();
+    await expectToast(page, "Cambios guardados.");
     await page.reload();
     await expect(page.getByRole("region", { name: "Datos básicos" }).getByLabel(/Titular/)).toHaveValue("Frontend Junior · React");
 
@@ -49,7 +49,7 @@ test.describe("perfil del candidato", () => {
     const salary = page.getByRole("region", { name: "Expectativa salarial" });
     await salary.getByLabel(/Monto/).fill("1200");
     await salary.getByRole("button", { name: "Guardar" }).click();
-    await expect(salary.getByText("Guardado.")).toBeVisible();
+    await expectToast(page, "Cambios guardados.");
 
     // Perfil público
     await page.getByRole("link", { name: "Ver cómo se ve mi perfil" }).click();
@@ -83,7 +83,7 @@ test.describe("perfil del candidato", () => {
     const preferences = page.getByRole("region", { name: "Disponibilidad y privacidad" });
     await preferences.getByLabel(/Cualquiera con el enlace/).check();
     await preferences.getByRole("button", { name: "Guardar" }).click();
-    await expect(preferences.getByText("Guardado.")).toBeVisible();
+    await expectToast(page, "Cambios guardados.");
     expect((await anonymous.goto(publicUrl!))?.status()).toBe(200);
 
     // Bloquea a su empleador: la empresa deja de verlo aunque sea público.
@@ -120,7 +120,7 @@ test.describe("perfil del candidato", () => {
     const preferences = page.getByRole("region", { name: "Disponibilidad y privacidad" });
     await preferences.getByLabel(/Cualquiera con el enlace/).check();
     await preferences.getByRole("button", { name: "Guardar" }).click();
-    await expect(preferences.getByText("Guardado.")).toBeVisible();
+    await expectToast(page, "Cambios guardados.");
     await page.getByRole("link", { name: "Ver cómo se ve mi perfil" }).click();
     await expect(page.locator("img[src*='/avatars/']")).toBeVisible();
 

@@ -8,6 +8,7 @@ import {
   signIn,
   test,
   uniqueEmail,
+  expectToast,
 } from "./support/fixtures";
 
 async function subjectsTo(email: string) {
@@ -71,6 +72,6 @@ test("el resumen diario llega a quien lo tiene prendido", async ({ page, request
   await page.goto("/es/ajustes");
   await page.getByLabel(/Emails opcionales/).uncheck();
   await page.getByRole("region", { name: "Preferencias" }).getByRole("button", { name: "Guardar" }).click();
-  await expect(page.getByText("Guardado.")).toBeVisible();
+  await expectToast(page, "Cambios guardados.");
   await expect(page.getByLabel(/Emails opcionales/)).not.toBeChecked();
 });

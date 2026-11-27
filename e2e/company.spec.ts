@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG } from "./support/fixtures";
+import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG, expectToast } from "./support/fixtures";
 
 // PNG de 1×1 px: alcanza para probar la subida y la recodificación.
 
@@ -22,7 +22,7 @@ test("una empresa arma su página y se ve en público", async ({ page }) => {
   await details.getByLabel(/^Etapa/).selectOption("seed");
   await details.getByLabel(/^Tamaño/).selectOption("11-50");
   await details.getByRole("button", { name: "Guardar" }).click();
-  await expect(details.getByText("Guardado.")).toBeVisible();
+  await expectToast(page, "Cambios guardados.");
 
   // Cambiar el dominio desverifica; volver lo verifica de nuevo
   const website = page.getByRole("region", { name: "Sitio web y verificación" });
