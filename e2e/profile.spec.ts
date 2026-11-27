@@ -66,7 +66,7 @@ test.describe("perfil del candidato", () => {
     await expectToast(page, "Cambios guardados.");
 
     // Perfil público
-    await page.getByRole("link", { name: "Ver cómo se ve mi perfil" }).click();
+    await page.getByRole("link", { name: "Vista previa" }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Ana Pérez" })).toBeVisible();
     await expect(page.getByText("Frontend Junior · React", { exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Clon accesible de un todo-list" })).toBeVisible();
@@ -86,7 +86,7 @@ test.describe("perfil del candidato", () => {
     const page = await (await browser.newContext()).newPage();
     await signIn(page, uniqueEmail("privada"));
     await onboardAsCandidate(page, "Beto Gómez");
-    const publicUrl = await page.getByRole("link", { name: "Ver cómo se ve mi perfil" }).getAttribute("href");
+    const publicUrl = await page.getByRole("link", { name: "Vista previa" }).getAttribute("href");
 
     // Por defecto: solo empresas. Un visitante anónimo no lo ve; la empresa sí.
     const anonymous = await (await browser.newContext()).newPage();
@@ -136,7 +136,7 @@ test.describe("perfil del candidato", () => {
     await preferences.getByLabel(/Cualquiera con el enlace/).check();
     await preferences.getByRole("button", { name: "Guardar" }).click();
     await expectToast(page, "Cambios guardados.");
-    await page.getByRole("link", { name: "Ver cómo se ve mi perfil" }).click();
+    await page.getByRole("link", { name: "Vista previa" }).click();
     await expect(page.getByRole("main").locator("img[src*='/avatars/']")).toBeVisible();
 
     await page.goBack();

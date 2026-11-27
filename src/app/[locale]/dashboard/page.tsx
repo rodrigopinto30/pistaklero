@@ -1,4 +1,5 @@
-import { BadgeCheck, CircleAlert } from "lucide-react";
+import { CircleAlert } from "lucide-react";
+import { VerifiedBadge } from "@/components/verified-badge";
 import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
@@ -8,6 +9,7 @@ import { requireRecruiterPage } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
+import { Emoji } from "@/components/emoji";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard");
@@ -32,10 +34,10 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title", { company: company.name })}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">{t("title", { company: company.name })} <Emoji symbol="📊" /></h1>
         {company.verified_at ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
-            <BadgeCheck aria-hidden="true" className="size-4" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-verified/10 px-3 py-1 text-sm font-medium text-verified">
+            <VerifiedBadge />
             {t("verifiedBadge")}
           </span>
         ) : (

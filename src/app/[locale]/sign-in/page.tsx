@@ -6,6 +6,7 @@ import { safeNextPath } from "@/lib/auth/redirect";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { Link, redirect } from "@/i18n/navigation";
 import { SignInForm } from "@/components/auth/auth-forms";
+import { Emoji } from "@/components/emoji";
 
 const CALLBACK_ERRORS = ["callback", "link_expired"] as const;
 
@@ -32,7 +33,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/[locale]/
   return (
     <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-4 py-12">
       <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">{reauth ? t("reauthTitle") : t("title")}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{reauth ? t("reauthTitle") : t("title")} <Emoji symbol={reauth ? "🔐" : "👋"} /></h1>
         <p className="text-muted-foreground">{reauth ? t("reauthSubtitle") : t("subtitle")}</p>
       </div>
 

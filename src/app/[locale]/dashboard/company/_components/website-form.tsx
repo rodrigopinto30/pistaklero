@@ -1,6 +1,7 @@
 "use client";
 
-import { BadgeCheck, CircleAlert } from "lucide-react";
+import { CircleAlert } from "lucide-react";
+import { VerifiedBadge } from "@/components/verified-badge";
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Field, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
@@ -20,7 +21,7 @@ export function WebsiteForm({ websiteUrl, domain, verified }: { websiteUrl: stri
       {/* Estado con ícono y texto, nunca solo color (WCAG 1.4.1). */}
       {verified && domain ? (
         <p className="flex items-start gap-2 text-sm text-primary">
-          <BadgeCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+          <VerifiedBadge className="mt-0.5" />
           {t("verified", { domain })}
         </p>
       ) : (

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { locale as rootLocale } from "next/root-params";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
+import { BackToTop } from "@/components/back-to-top";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/toaster";
 import { SiteHeader } from "@/components/site-header";
@@ -72,6 +73,7 @@ export default async function LocaleLayout({
             {children}
           </main>
           <SiteFooter />
+          <BackToTop />
           <Toaster />
         </NextIntlClientProvider>
       </body>

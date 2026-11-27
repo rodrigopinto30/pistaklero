@@ -7,6 +7,7 @@ import { timeAgo } from "@/lib/jobs/time";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { withdrawApplication } from "./actions";
+import { Emoji } from "@/components/emoji";
 
 const OPEN = ["received", "in_review", "interview"];
 
@@ -37,7 +38,7 @@ export default async function MyApplicationsPage() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="📬" /></h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 

@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
+import { Emoji } from "@/components/emoji";
 
 const PAGE_SIZE = 24;
 
@@ -35,8 +36,8 @@ export default async function PostsPage({ searchParams }: PageProps<"/[locale]/p
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
-          <p className="text-muted-foreground">{t("subtitle")}</p>
+          <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="💡" /></h1>
+          <p className="text-muted-foreground">{t("subtitle")} <Emoji symbol="✍️" /></p>
         </div>
         <Link href={signedIn ? "/posts/new" : { pathname: "/sign-in", query: { next: getPathname({ locale: locale as AppLocale, href: "/posts/new" }) } }} className={buttonVariants({ className: "rounded-full" })}>
           <PenLine aria-hidden="true" />

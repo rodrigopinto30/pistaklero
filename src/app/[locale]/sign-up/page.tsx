@@ -9,6 +9,7 @@ import { safeNextPath } from "@/lib/auth/redirect";
 import { parseSignUpRole } from "@/lib/auth/sign-up";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { SignUpForm } from "@/components/auth/auth-forms";
+import { Emoji } from "@/components/emoji";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("SignUp");
@@ -43,7 +44,7 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8 px-4 py-12">
         <SignUpSteps current={1} />
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">{t("chooseTitle")}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("chooseTitle")} <Emoji symbol="🧭" /></h1>
           <p className="text-muted-foreground">{t("chooseSubtitle")}</p>
         </div>
         <ul className="grid gap-3 sm:grid-cols-2">
@@ -81,7 +82,7 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-8 px-4 py-12">
       <SignUpSteps current={2} />
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("emailTitle")}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("emailTitle")} <Emoji symbol="🔐" /></h1>
         <p className="text-muted-foreground">
           {t("chosen", { role: t(role) })}{" "}
           <Link href="/sign-up" className="font-medium text-primary underline underline-offset-4">

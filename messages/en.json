@@ -17,7 +17,8 @@
     "posts": "Posts",
     "myPosts": "My posts",
     "companies": "Companies",
-    "myCompany": "My company"
+    "myCompany": "My company",
+    "backToTop": "Back to top"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -137,7 +138,7 @@
     "metaTitle": "My profile",
     "title": "My profile",
     "subtitle": "What you fill in here is what companies see when you apply.",
-    "viewPublic": "See how my profile looks",
+    "viewPublic": "Preview",
     "basics": {
       "title": "Basic details",
       "headline": "Headline",
@@ -542,7 +543,8 @@
       "salaryNotInformed": "Salary not disclosed",
       "applyExternal": "Apply on the original site",
       "external": "External job",
-      "closed": "This job no longer accepts applications."
+      "closed": "This job no longer accepts applications.",
+      "verified": "Verified company"
     },
     "viewApplicants": "View applicants",
     "templates": {
@@ -568,7 +570,8 @@
         "limit_reached": "You reached 500 saved jobs. Remove one to add another.",
         "unknown": "We couldn't save the job. Try again."
       }
-    }
+    },
+    "verified": "Verified company"
   },
   "Search": {
     "submit": "Search",
@@ -640,7 +643,7 @@
       "invalid_answer": "Check your answers.",
       "unknown": "We couldn't send the application. Please try again."
     },
-    "successToast": "Done! Your application was sent.",
+    "successToast": "Done! Your application was sent. 🚀",
     "suggestSkillsTitle": "Tip:",
     "suggestSkills": "add your skills. It's optional, but companies look at them first.",
     "suggestSkillsLink": "Add skills"
@@ -901,7 +904,7 @@
     }
   },
   "Footer": {
-    "tagline": "Where talent and companies meet, with clear rules for both.",
+    "tagline": "Where talent and companies meet",
     "label": "Information",
     "terms": "Terms",
     "privacy": "Privacy",
@@ -1118,8 +1121,8 @@
     "blocked": "Company blocked: it won't see your profile.",
     "unblocked": "Company unblocked.",
     "withdrawn": "You withdrew your application.",
-    "signedOut": "You signed out. See you soon!",
-    "welcome": "All set! Your account is ready.",
+    "signedOut": "You signed out. See you soon! 👋",
+    "welcome": "All set! Your account is ready. 🎉",
     "accountDeleted": "Your account and your data were deleted.",
     "teamUpdated": "Team updated.",
     "done": "Done.",
@@ -1133,11 +1136,11 @@
     "jobSaved": "Job saved.",
     "published": "Job published.",
     "coverUpdated": "Cover updated.",
-    "postPublished": "Published! The whole community can read it now.",
-    "passwordUpdated": "Done, your new password is set.",
+    "postPublished": "Published! The whole community can read it now. 🎉",
+    "passwordUpdated": "Done, your new password is set. 🔑",
     "passwordChanged": "Password changed. We signed you out everywhere else.",
-    "pendingLiked": "Done: you liked it.",
-    "pendingSaved": "Done: it's in Saved."
+    "pendingLiked": "Done: you liked it. ❤️",
+    "pendingSaved": "Done: it's in Saved. 🔖"
   },
   "Saved": {
     "metaTitle": "Saved",

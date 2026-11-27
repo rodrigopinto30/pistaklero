@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Download } from "lucide-react";
+import { Download, Eye } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { countryOptions, formatMonth, languageOptions } from "@/lib/geo";
@@ -15,6 +15,7 @@ import { PreferencesForm } from "./_components/preferences-form";
 import { SalaryForm } from "./_components/salary-form";
 import { SectionCard as Section } from "@/components/section-card";
 import { SkillsSection } from "./_components/skills-section";
+import { Emoji } from "@/components/emoji";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Profile");
@@ -89,7 +90,7 @@ export default async function ProfilePage() {
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="🙋" /></h1>
           <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -99,6 +100,7 @@ export default async function ProfilePage() {
             {t("downloadCv")}
           </a>
           <Link href={{ pathname: "/p/[slug]", params: { slug: c.slug } }} className={buttonVariants({ variant: "outline" })}>
+            <Eye aria-hidden="true" />
             {t("viewPublic")}
           </Link>
         </div>

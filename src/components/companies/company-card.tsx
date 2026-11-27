@@ -1,4 +1,4 @@
-import { BadgeCheck } from "lucide-react";
+import { VerifiedBadge } from "@/components/verified-badge";
 import { getTranslations } from "next-intl/server";
 import { brandHue } from "@/lib/companies/brand";
 import { countryName } from "@/lib/geo";
@@ -41,7 +41,7 @@ export async function CompanyCard({ company, locale, signedIn }: { company: Comp
           </Link>
           {company.verified && (
             <>
-              <BadgeCheck aria-hidden="true" className="ml-1.5 inline size-5 align-[-3px]" />
+              <VerifiedBadge className="ml-1.5 inline size-5 align-[-3px]" />
               <span className="sr-only">{t("verified")}</span>
             </>
           )}

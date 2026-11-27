@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { StatusForm } from "./_components/status-form";
+import { Emoji } from "@/components/emoji";
 
 const TABS = {
   received: ["received"],
@@ -66,7 +67,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
         <Link href={{ pathname: "/dashboard/jobs/[id]", params: { id } }} className="text-sm text-violet underline-offset-4 hover:underline">
           {t("backToJob")}
         </Link>
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title", { job: job.title })}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">{t("title", { job: job.title })} <Emoji symbol="📥" /></h1>
       </div>
 
       <nav aria-label={t("tabsLabel")}>

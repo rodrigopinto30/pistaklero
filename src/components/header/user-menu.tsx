@@ -9,6 +9,7 @@ import { signOut } from "@/lib/auth/actions";
 import { initialsOf } from "@/components/avatar";
 import { Link, usePathname } from "@/i18n/navigation";
 import { type AppLocale, routing } from "@/i18n/routing";
+import { Emoji } from "@/components/emoji";
 
 const ICONS = { profile: UserRound, applications: Briefcase, saved: Bookmark, posts: PenLine, dashboard: LayoutDashboard, company: Building2, team: Users, admin: Shield, import: FileText, settings: Settings } as const;
 
@@ -90,6 +91,7 @@ export function UserMenu({ name, email, photo, entries }: { name: string; email:
               <Menu.Item onClick={() => signOutForm.current?.requestSubmit()} className={itemClass}>
                 <LogOut aria-hidden="true" />
                 {t("signOut")}
+                <Emoji symbol="👋" />
               </Menu.Item>
             </Menu.Popup>
           </Menu.Positioner>

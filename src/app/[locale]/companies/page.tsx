@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
+import { Emoji } from "@/components/emoji";
 
 const PAGE_SIZE = 24;
 
@@ -32,7 +33,7 @@ export default async function CompaniesPage({ searchParams }: PageProps<"/[local
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="🏢" /></h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
       <p role="status" className="text-sm text-muted-foreground">

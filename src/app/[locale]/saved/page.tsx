@@ -11,6 +11,7 @@ import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { getJobViewer } from "@/lib/jobs/viewer";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
+import { Emoji } from "@/components/emoji";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Saved");
@@ -44,7 +45,7 @@ export default async function SavedPage() {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="🔖" /></h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 
