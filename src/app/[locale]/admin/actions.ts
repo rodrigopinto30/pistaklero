@@ -20,6 +20,23 @@ export async function reviewReport(formData: FormData) {
   refresh();
 }
 
+export type TransferState = { status: "idle" } | { status: "done" } | { status: "error"; code: string };
+
+/** Entrega una empresa sin reclamar a una cuenta nueva con ese email. */
+export async function transferCompany(_prev: TransferState, formData: FormData): Promise<TransferState> {
+  const supabase = await requireAdmin();
+  const companyId = z.uuid().safeParse(formData.get("companyId"));
+  const email = z.email().safeParse(String(formData.get("email") ?? "").trim());
+  if (!supabase || !companyId.success || !email.success) return { status: "error", code: "invalid" };
+  const { error } = await supabase.rpc("admin_transfer_company", { p_company_id: companyId.data, p_email: email.data });
+  if (error) {
+    const code = ["user_not_found", "already_onboarded", "not_unclaimed"].includes(error.message) ? error.message : "unknown";
+    return { status: "error", code };
+  }
+  refresh();
+  return { status: "done" };
+}
+
 export async function setCompanyStatus(formData: FormData) {
   const supabase = await requireAdmin();
   const companyId = z.uuid().safeParse(formData.get("companyId"));

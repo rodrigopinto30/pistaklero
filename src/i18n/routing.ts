@@ -25,6 +25,7 @@ export const routing = defineRouting({
     "/jobs/[slug]": { es: "/empleos/[slug]", en: "/jobs/[slug]" },
     "/my-applications": { es: "/mis-postulaciones", en: "/my-applications" },
     "/admin": "/admin",
+    "/admin/import": { es: "/admin/importar", en: "/admin/import" },
     "/invitation": { es: "/invitacion", en: "/invitation" },
     "/companies/[slug]": { es: "/empresas/[slug]", en: "/companies/[slug]" },
   },

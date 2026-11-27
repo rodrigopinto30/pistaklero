@@ -660,6 +660,54 @@
       "recruiter": "Reclutador/a",
       "admin": "Admin",
       "none": "Sin rol (no completó la bienvenida)"
-    }
+    },
+    "unclaimed": {
+      "title": "Empresas sin reclamar",
+      "hint": "Se crean al importar ofertas. Los clics muestran cuánto interés generaron: un buen motivo para escribirles.",
+      "empty": "No hay empresas sin reclamar.",
+      "stats": "{jobs, plural, one {# oferta} other {# ofertas}} · {clicks, plural, one {# clic} other {# clics}}",
+      "transferTo": "Email de quien se hace cargo de {company}",
+      "transfer": "Transferir",
+      "transferred": "Listo: la empresa ya es suya.",
+      "errors": {
+        "invalid": "Escribí un email válido.",
+        "user_not_found": "No hay una cuenta con ese email: tiene que ingresar una vez primero.",
+        "already_onboarded": "Esa cuenta ya tiene un rol. Tiene que ser una cuenta nueva.",
+        "not_unclaimed": "La empresa ya no está sin reclamar.",
+        "unknown": "No pudimos transferir la empresa."
+      }
+    },
+    "importJob": "Importar oferta"
+  },
+  "Import": {
+    "metaTitle": "Importar oferta",
+    "title": "Importar una oferta",
+    "subtitle": "Para ofertas de otros sitios: se publican con un resumen propio y un enlace al original.",
+    "back": "Volver al panel de admin",
+    "aiTitle": "Completar con IA",
+    "posting": "Texto de la oferta",
+    "postingHint": "Pegá el texto completo de la oferta. Claude propone los campos; vos revisás todo antes de publicar.",
+    "extract": "Completar los campos",
+    "extracted": "Listo: revisá los campos de abajo.",
+    "aiDisabled": "La carga con IA está apagada: falta ANTHROPIC_API_KEY. Completá los campos a mano.",
+    "errors": {
+      "disabled": "La carga con IA está apagada.",
+      "refused": "El modelo no quiso procesar este texto. Completá los campos a mano.",
+      "failed": "No pudimos leer la oferta. Probá de nuevo o completá los campos a mano.",
+      "empty": "Pegá el texto de la oferta (al menos 50 caracteres).",
+      "too_long": "El texto es demasiado largo (máximo 20.000 caracteres)."
+    },
+    "reviewTitle": "Revisar y publicar",
+    "reviewHint": "Nada se publica sin tu revisión. Si la empresa no existe, se crea sin reclamar.",
+    "companyName": "Empresa",
+    "companyWebsite": "Sitio de la empresa",
+    "externalUrl": "Enlace a la oferta original",
+    "externalUrlHint": "Ahí se postulan las personas. Tiene que ser https.",
+    "summary": "Resumen",
+    "summaryHint": "Con tus palabras, entre 20 y 600 caracteres: no se copia la descripción original.",
+    "salary": "Salario (si la oferta lo informa)",
+    "salaryHint": "Todo o nada: si cargás el mínimo, completá también máximo, moneda, período y bruto/neto.",
+    "publish": "Publicar oferta importada",
+    "published": "Listo: la oferta importada ya está publicada."
   }
 }

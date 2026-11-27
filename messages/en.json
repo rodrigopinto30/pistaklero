@@ -660,6 +660,54 @@
       "recruiter": "Recruiter",
       "admin": "Admin",
       "none": "No role (didn't finish signing up)"
-    }
+    },
+    "unclaimed": {
+      "title": "Unclaimed companies",
+      "hint": "Created when importing jobs. Clicks show how much interest they got: a good reason to reach out.",
+      "empty": "There are no unclaimed companies.",
+      "stats": "{jobs, plural, one {# job} other {# jobs}} · {clicks, plural, one {# click} other {# clicks}}",
+      "transferTo": "Email of whoever takes over {company}",
+      "transfer": "Transfer",
+      "transferred": "Done: the company is theirs now.",
+      "errors": {
+        "invalid": "Enter a valid email.",
+        "user_not_found": "There's no account with that email: they need to sign in once first.",
+        "already_onboarded": "That account already has a role. It must be a new account.",
+        "not_unclaimed": "The company is no longer unclaimed.",
+        "unknown": "We couldn't transfer the company."
+      }
+    },
+    "importJob": "Import job"
+  },
+  "Import": {
+    "metaTitle": "Import job",
+    "title": "Import a job",
+    "subtitle": "For jobs from other sites: published with our own summary and a link to the original.",
+    "back": "Back to the admin panel",
+    "aiTitle": "Fill in with AI",
+    "posting": "Job posting text",
+    "postingHint": "Paste the full posting text. Claude suggests the fields; you review everything before publishing.",
+    "extract": "Fill in the fields",
+    "extracted": "Done: review the fields below.",
+    "aiDisabled": "AI import is off: ANTHROPIC_API_KEY is missing. Fill in the fields by hand.",
+    "errors": {
+      "disabled": "AI import is off.",
+      "refused": "The model declined to process this text. Fill in the fields by hand.",
+      "failed": "We couldn't read the posting. Try again or fill in the fields by hand.",
+      "empty": "Paste the posting text (at least 50 characters).",
+      "too_long": "The text is too long (20,000 characters maximum)."
+    },
+    "reviewTitle": "Review and publish",
+    "reviewHint": "Nothing is published without your review. If the company doesn't exist, it's created as unclaimed.",
+    "companyName": "Company",
+    "companyWebsite": "Company website",
+    "externalUrl": "Link to the original job",
+    "externalUrlHint": "That's where people apply. It must be https.",
+    "summary": "Summary",
+    "summaryHint": "In your own words, 20 to 600 characters: the original description isn't copied.",
+    "salary": "Salary (if the posting states it)",
+    "salaryHint": "All or nothing: if you fill in the minimum, also fill in maximum, currency, period and gross/net.",
+    "publish": "Publish imported job",
+    "published": "Done: the imported job is published."
   }
 }
