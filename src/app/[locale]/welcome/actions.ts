@@ -68,6 +68,6 @@ export async function completeOnboarding(
 
   // El encabezado (en el layout) tiene que dejar de mostrar "Completá tu registro".
   refresh();
-  // La candidata sigue armando su perfil; la empresa vuelve al inicio (el panel llega con las ofertas).
-  return redirect({ href: data.role === "candidate" ? "/profile" : "/", locale });
+  // Cada rol sigue en su espacio: la candidata arma su perfil y la empresa va a su panel.
+  return redirect({ href: data.role === "candidate" ? "/profile" : "/dashboard", locale });
 }

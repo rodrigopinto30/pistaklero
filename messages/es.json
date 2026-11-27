@@ -6,7 +6,8 @@
   "Layout": {
     "skipToContent": "Saltar al contenido",
     "homeLink": "Pistaklero, ir al inicio",
-    "myProfile": "Mi perfil"
+    "myProfile": "Mi perfil",
+    "dashboard": "Panel"
   },
   "Home": {
     "tagline": "Trabajos con sueldo visible y empresas que responden."
@@ -88,7 +89,11 @@
       "unknown": "No pudimos guardar los cambios. Probá de nuevo.",
       "limit_reached": "Llegaste al máximo permitido para esta sección.",
       "not_found": "No encontramos lo que buscabas.",
-      "duplicate": "Ya está cargado."
+      "duplicate": "Ya está cargado.",
+      "company_exists": "Ese dominio ya es de otra empresa en Pistaklero.",
+      "file_too_large": "La imagen pesa más de 900 KB.",
+      "file_type": "Usá una imagen PNG, JPEG o WebP.",
+      "required_file": "Elegí una imagen."
     }
   },
   "Profile": {
@@ -244,5 +249,88 @@
     "viewRepo": "Repositorio de {project}",
     "viewCredential": "Verificar {name}",
     "languages": "Idiomas"
+  },
+  "Company": {
+    "metaTitle": "Página de la empresa",
+    "title": "Página de la empresa",
+    "subtitle": "Esto es lo que ven las personas antes de postularse.",
+    "viewPublic": "Ver página pública",
+    "details": {
+      "title": "Datos de la empresa",
+      "name": "Nombre",
+      "description": "Sobre la empresa",
+      "descriptionHint": "Cultura, qué hacen, cómo trabajan. Hasta 2000 caracteres.",
+      "industry": "Industria",
+      "industryHint": "Por ejemplo: Fintech, Educación, E-commerce.",
+      "size": "Tamaño",
+      "stage": "Etapa",
+      "country": "País",
+      "city": "Ciudad",
+      "noValue": "Sin especificar",
+      "linkedinUrl": "LinkedIn",
+      "xUrl": "X (Twitter)",
+      "instagramUrl": "Instagram",
+      "sizeOptions": {
+        "1-10": "1 a 10 personas",
+        "11-50": "11 a 50 personas",
+        "51-200": "51 a 200 personas",
+        "201-1000": "201 a 1000 personas",
+        "1000+": "Más de 1000 personas"
+      },
+      "stageOptions": {
+        "pre_seed": "Pre-seed",
+        "seed": "Seed",
+        "series_a_plus": "Serie A o posterior",
+        "bootstrapped": "Bootstrapped",
+        "established": "Consolidada"
+      }
+    },
+    "website": {
+      "title": "Sitio web y verificación",
+      "websiteUrl": "Sitio web",
+      "verified": "Verificada: tu email pertenece al dominio {domain}.",
+      "unverified": "Sin verificar. Para verificarla, ingresá con un email del dominio de la empresa.",
+      "unverifiedLimit": "Mientras no esté verificada, puede tener hasta 2 ofertas activas.",
+      "changeWarning": "Si cambiás el dominio, la verificación se recalcula."
+    },
+    "logo": {
+      "title": "Logo",
+      "current": "Logo actual",
+      "none": "Todavía no hay logo.",
+      "file": "Imagen",
+      "hint": "PNG, JPEG o WebP, hasta 900 KB. Se ajusta a un cuadrado de 256 px.",
+      "upload": "Subir logo",
+      "remove": "Quitar logo"
+    },
+    "stack": {
+      "title": "Stack tecnológico",
+      "hint": "Las herramientas que usa el equipo. Hasta 20.",
+      "empty": "Todavía no cargaste el stack.",
+      "add": "Agregar",
+      "skill": "Tecnología",
+      "choose": "Elegí una tecnología",
+      "removeSkill": "Quitar {skill}"
+    }
+  },
+  "Dashboard": {
+    "metaTitle": "Panel",
+    "title": "Panel de {company}",
+    "verifiedBadge": "Verificada",
+    "unverifiedBadge": "Sin verificar",
+    "editCompany": "Editar la página de la empresa",
+    "viewCompany": "Ver página pública",
+    "jobsTitle": "Ofertas",
+    "jobsEmpty": "Todavía no publicaste ofertas."
+  },
+  "CompanyPage": {
+    "verified": "Empresa verificada",
+    "unverified": "Empresa sin verificar",
+    "unclaimed": "Página sin reclamar. ¿Trabajás acá? Escribinos para hacerte cargo.",
+    "about": "Sobre la empresa",
+    "stack": "Stack tecnológico",
+    "links": "Enlaces",
+    "jobs": "Ofertas abiertas",
+    "noJobs": "No hay ofertas abiertas en este momento.",
+    "website": "Sitio web"
   }
 }

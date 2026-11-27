@@ -32,6 +32,11 @@ export async function SiteHeader() {
               {t("myProfile")}
             </Link>
           )}
+          {profile?.role === "recruiter" && (
+            <Link href="/dashboard" className={buttonVariants({ variant: "ghost" })}>
+              {t("dashboard")}
+            </Link>
+          )}
           {user ? (
             <SignOutButton />
           ) : (
