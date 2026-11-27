@@ -144,6 +144,11 @@ export async function seedProfileViews(viewerId: string, count: number) {
   }
 }
 
+export async function projectPreviewPath(candidateId: string, title: string) {
+  const { data } = await admin.from("candidate_projects").select("preview_path").eq("candidate_id", candidateId).eq("title", title).single();
+  return data?.preview_path ?? null;
+}
+
 export async function emailOf(userId: string) {
   const { data } = await admin.auth.admin.getUserById(userId);
   return data.user!.email!;
