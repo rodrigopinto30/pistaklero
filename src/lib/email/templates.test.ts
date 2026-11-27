@@ -28,6 +28,13 @@ describe("emails", () => {
     expect(email.subject).not.toMatch(/[\r\n]/);
   });
 
+  it("el aviso de descarte incluye el mensaje escapado", () => {
+    const email = renderEmail("application_status", "es", { jobTitle: "Frontend", companyName: "Acme", status: "rejected", message: "Gracias <3" });
+    expect(email.subject).toBe("Novedades de tu postulación: Frontend");
+    expect(email.html).toContain("Gracias &lt;3");
+    expect(email.text).toContain("Mensaje de Acme:\nGracias <3");
+  });
+
   it("respeta el idioma de quien lo recibe", () => {
     const email = renderEmail("team_invitation", "en", { companyName: "Acme", inviterName: "Ana", acceptUrl: "https://x.com" });
     expect(email.subject).toBe("Join Acme on Pistaklero");

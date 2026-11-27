@@ -28,6 +28,11 @@ export async function enqueueEmail<K extends EmailTemplate>(email: {
   after(() => flushOutbox().catch((e) => console.error("Falló el envío de emails", e)));
 }
 
+/** Para emails encolados desde la base (funciones SQL): los envía apenas termina la respuesta. */
+export function scheduleOutboxFlush() {
+  after(() => flushOutbox().catch((e) => console.error("Falló el envío de emails", e)));
+}
+
 /**
  * Envía los emails pendientes. Si un envío falla, se reintenta con espera creciente
  * (2, 4, 8, 16 minutos) y después de 5 intentos queda como fallido para revisarlo.

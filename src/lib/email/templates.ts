@@ -7,8 +7,28 @@ import { button, layout, paragraph } from "./html";
 type Locale = "es" | "en";
 export type RenderedEmail = { subject: string; html: string; text: string };
 
+type ApplicationStatus = "in_review" | "interview" | "hired" | "rejected" | "no_response";
+
 export type EmailTemplates = {
   team_invitation: { companyName: string; inviterName: string; acceptUrl: string };
+  application_status: { jobTitle: string; companyName: string; status: ApplicationStatus; message?: string | null };
+};
+
+const STATUS_COPY: Record<Locale, Record<ApplicationStatus, string>> = {
+  es: {
+    in_review: "{company} está revisando tu postulación a {job}.",
+    interview: "¡Buenas noticias! {company} quiere entrevistarte para {job}. Te van a contactar con los detalles.",
+    hired: "¡Felicitaciones! {company} te eligió para {job}.",
+    rejected: "{company} cerró tu postulación a {job}: esta vez avanzan con otros perfiles.",
+    no_response: "{company} no respondió tu postulación a {job} en 30 días, así que la cerramos para que no quedes esperando.",
+  },
+  en: {
+    in_review: "{company} is reviewing your application to {job}.",
+    interview: "Good news! {company} wants to interview you for {job}. They'll contact you with the details.",
+    hired: "Congratulations! {company} chose you for {job}.",
+    rejected: "{company} closed your application to {job}: this time they're moving forward with other profiles.",
+    no_response: "{company} didn't reply to your application to {job} in 30 days, so we closed it so you're not left waiting.",
+  },
 };
 export type EmailTemplate = keyof EmailTemplates;
 
@@ -34,7 +54,25 @@ const renderers: { [K in EmailTemplate]: (locale: Locale, data: EmailTemplates[K
       text: `${copy.intro}\n\n${copy.cta}: ${acceptUrl}\n\n${copy.note}`,
     };
   },
+  application_status(locale, { jobTitle, companyName, status, message }) {
+    const intro = STATUS_COPY[locale][status].replace("{company}", companyName).replace("{job}", jobTitle);
+    const subject = locale === "en" ? `Update on your application: ${jobTitle}` : `Novedades de tu postulación: ${jobTitle}`;
+    const cta = locale === "en" ? "View my applications" : "Ver mis postulaciones";
+    const messageLabel = locale === "en" ? `Message from ${companyName}:` : `Mensaje de ${companyName}:`;
+    const url = applicationsUrl(locale);
+    const body = [paragraph(intro), message ? paragraph(messageLabel, true) + paragraph(message) : "", button(url, cta)].join("");
+    return {
+      subject,
+      html: layout({ lang: locale, title: subject, body }),
+      text: [intro, message ? `${messageLabel}\n${message}` : "", `${cta}: ${url}`].filter(Boolean).join("\n\n"),
+    };
+  },
 };
+
+export function applicationsUrl(locale: Locale) {
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://127.0.0.1:3000";
+  return `${base}/${locale}/${locale === "en" ? "my-applications" : "mis-postulaciones"}`;
+}
 
 export function isEmailTemplate(value: string): value is EmailTemplate {
   return value in renderers;
