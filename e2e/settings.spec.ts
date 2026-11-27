@@ -53,8 +53,8 @@ test("eliminar la cuenta borra todo", async ({ page }) => {
   await page.goto("/es/ajustes");
 
   const danger = page.getByRole("region", { name: "Eliminar mi cuenta" });
-  await danger.getByRole("button", { name: "Eliminar mi cuenta para siempre" }).click();
-  await expect(danger.getByText("Marcá la casilla para confirmar.")).toBeVisible();
+  // Sin tildar la confirmación, el botón no hace nada.
+  await expect(danger.getByRole("button", { name: "Eliminar mi cuenta para siempre" })).toHaveAttribute("aria-disabled", "true");
   await danger.getByLabel(/Entiendo que se borra todo/).check();
   await danger.getByRole("button", { name: "Eliminar mi cuenta para siempre" }).click();
   await page.waitForURL("/es");
