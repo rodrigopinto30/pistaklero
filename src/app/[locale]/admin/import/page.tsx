@@ -5,6 +5,7 @@ import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { countryOptions } from "@/lib/geo";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { ImportForm } from "./import-form";
+import { SourcesSection } from "./sources-section";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Import");
@@ -30,6 +31,7 @@ export default async function ImportPage() {
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
       <ImportForm aiEnabled={isAiImportEnabled()} countries={countryOptions(locale)} locale={locale} />
+      <SourcesSection />
     </div>
   );
 }

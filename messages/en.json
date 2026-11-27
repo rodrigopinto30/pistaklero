@@ -720,7 +720,51 @@
     "salary": "Salary (if the posting states it)",
     "salaryHint": "All or nothing: if you fill in the minimum, also fill in maximum, currency, period and gross/net.",
     "publish": "Publish imported job",
-    "published": "Done: the imported job is published."
+    "published": "Done: the imported job is published.",
+    "sources": {
+      "title": "Synced job boards",
+      "hint": "Jobs from Greenhouse, Lever, Ashby or Workable. They update every day: new ones are created and the ones that disappear are closed.",
+      "companyName": "Company",
+      "websiteUrl": "Website",
+      "websiteHint": "Optional. With the domain, anyone with an email from it can claim the company.",
+      "provider": "System",
+      "boardToken": "Board identifier",
+      "boardTokenHint": "The part of the public URL: boards.greenhouse.io/acme → acme, jobs.lever.co/acme → acme, jobs.ashbyhq.com/acme → acme, apply.workable.com/acme → acme.",
+      "add": "Add and sync",
+      "added": "Board added.",
+      "empty": "No boards yet.",
+      "listLabel": "Boards",
+      "paused": "paused",
+      "openJobs": "{count, plural, =0 {no open jobs} one {1 open job} other {# open jobs}}",
+      "lastSync": "last synced: {date}",
+      "neverSynced": "never synced",
+      "result": "{created} new, {updated} updated, {closed} closed, {skipped} skipped",
+      "syncNow": "Sync now",
+      "pause": "Pause",
+      "resume": "Resume",
+      "providers": {
+        "greenhouse": "Greenhouse",
+        "lever": "Lever",
+        "ashby": "Ashby",
+        "workable": "Workable"
+      },
+      "errors": {
+        "unknown": "We couldn't add the board.",
+        "source_exists": "That board is already added.",
+        "invalid_companyName": "Enter the company name.",
+        "invalid_websiteUrl": "The website must start with https://.",
+        "invalid_provider": "Choose a system.",
+        "invalid_boardToken": "The identifier can only contain letters, numbers, dots, hyphens and underscores."
+      },
+      "syncErrors": {
+        "not_found": "We couldn't find that board: check the identifier.",
+        "unavailable": "The system didn't respond. We'll retry tomorrow.",
+        "invalid_response": "The system replied with something we don't understand.",
+        "invalid_token": "The identifier isn't valid.",
+        "failed": "We couldn't save the jobs.",
+        "not_found_source": "The board no longer exists."
+      }
+    }
   },
   "Settings": {
     "metaTitle": "Settings",
