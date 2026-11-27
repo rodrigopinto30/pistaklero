@@ -324,16 +324,16 @@ export async function unblockCompany(formData: FormData) {
 // Alta en un paso: todo el perfil en un solo envío ("Finalizar registro")
 // ---------------------------------------------------------------------------
 
-const SETUP_BLOCKS = ["experience", "education", "project"] as const;
+type SetupBlock = "experience" | "education" | "project";
 const hasFile = (value: FormDataEntryValue | null): value is File => value instanceof File && value.size > 0;
 
 /** Los grupos repetibles llegan como "experience.3.title": se juntan por bloque y por número. */
 function setupGroups(formData: FormData) {
-  const groups = new Map<string, { block: (typeof SETUP_BLOCKS)[number]; key: string; values: Record<string, string> }>();
+  const groups = new Map<string, { block: SetupBlock; key: string; values: Record<string, string> }>();
   for (const [name, value] of formData.entries()) {
     const match = /^(experience|education|project)\.(\d{1,4})\.(\w+)$/.exec(name);
     if (!match || typeof value !== "string") continue;
-    const [, block, key, field] = match as unknown as [string, (typeof SETUP_BLOCKS)[number], string, string];
+    const [, block, key, field] = match as unknown as [string, SetupBlock, string, string];
     const id = `${block}.${key}`;
     if (!groups.has(id)) groups.set(id, { block, key, values: {} });
     groups.get(id)!.values[field] = value;
