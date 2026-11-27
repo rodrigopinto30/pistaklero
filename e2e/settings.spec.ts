@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { emailOf, expect, expectNoA11yViolations, onboardAsCandidate, signIn, test, uniqueEmail } from "./support/fixtures";
+import { emailOf, expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail } from "./support/fixtures";
 
 test("las páginas legales están enlazadas desde el pie y existen en los dos idiomas", async ({ page }) => {
   await page.goto("/es");
@@ -30,7 +30,7 @@ test("ajustes: idioma de los emails y descarga de los datos", async ({ page }) =
   const download = await downloadPromise;
   const data = JSON.parse(await readFile((await download.path())!, "utf8"));
   expect(data.account.email).toBe(await emailOf(userId));
-  expect(data.candidate.full_name).toBe("Dana Ruiz");
+  expect(data.person).toEqual({ first_name: "Dana", middle_name: "", last_name: "Ruiz" });
   expect(data.profile.locale).toBe("en");
 });
 
@@ -51,4 +51,27 @@ test("eliminar la cuenta borra todo", async ({ page }) => {
   // Con el mismo email, la cuenta es nueva: vuelve a la bienvenida
   await signIn(page, email);
   await page.waitForURL("/es/bienvenida");
+});
+
+test("nombre, segundo nombre y apellido se guardan por separado", async ({ page }) => {
+  // Una empresa los edita en los ajustes.
+  await signIn(page, uniqueEmail("nombres"));
+  await page.waitForURL("/es/bienvenida");
+  await onboardAsCompany(page, "Nombres SA", "", "Rita Reclutadora");
+  await page.goto("/es/ajustes");
+  const person = page.getByRole("region", { name: "Datos personales" });
+  await expect(person.getByLabel(/^Nombre/)).toHaveValue("Rita");
+  await expect(person.getByLabel(/^Apellido/)).toHaveValue("Reclutadora");
+
+  await person.getByLabel(/^Apellido/).fill("");
+  await person.getByRole("button", { name: "Guardar" }).click();
+  await expect(person.getByText("Este campo es obligatorio.")).toBeVisible();
+  await expect(person.getByLabel(/^Apellido/)).toBeFocused();
+
+  await person.getByLabel(/^Segundo nombre/).fill("María");
+  await person.getByLabel(/^Apellido/).fill("Gómez");
+  await person.getByRole("button", { name: "Guardar" }).click();
+  await expect(person.getByRole("status")).toHaveText("Guardado.");
+  await page.reload();
+  await expect(page.getByRole("region", { name: "Datos personales" }).getByLabel(/^Segundo nombre/)).toHaveValue("María");
 });

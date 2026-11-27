@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   const t = await getTranslations({ locale, namespace: "Cv" });
   const supabase = await createClient();
   const [candidate, experiences, education, projects, certifications, skills] = await Promise.all([
-    supabase.from("candidates").select("*").eq("user_id", user.id).single(),
+    supabase.from("candidates").select("*, people(full_name)").eq("user_id", user.id).single(),
     supabase.from("candidate_experiences").select("*").eq("candidate_id", user.id).order("start_date", { ascending: false }),
     supabase.from("candidate_education").select("*").eq("candidate_id", user.id).order("start_date", { ascending: false }),
     supabase.from("candidate_projects").select("*").eq("candidate_id", user.id).order("created_at", { ascending: false }),
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   const period = (start: string, end: string | null) => `${formatMonth(start, locale)} – ${end ? formatMonth(end, locale) : t("present")}`;
   const languageNames = new Intl.DisplayNames([locale], { type: "language" });
   const data: CvData = {
-    fullName: c.full_name,
+    fullName: c.people?.full_name ?? "",
     headline: c.headline,
     bio: c.bio,
     location: [c.city, countryName(c.country, locale)].filter(Boolean).join(", ") || null,

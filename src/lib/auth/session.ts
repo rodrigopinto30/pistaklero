@@ -49,3 +49,17 @@ export const getCurrentProfile = cache(async () => {
     .maybeSingle();
   return data;
 });
+
+/** Datos personales de la cuenta actual (nombre separado y completo), o null si todavía no los cargó. */
+export const getCurrentPerson = cache(async () => {
+  const user = await getCurrentUser();
+  if (!user) return null;
+
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("people")
+    .select("first_name, middle_name, last_name, full_name")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  return data;
+});

@@ -40,7 +40,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
   const [{ data: applications }, { data: questions }, t, tTabs, tProfile, format] = await Promise.all([
     supabase
       .from("applications")
-      .select("id, status, created_at, candidate_id, candidates(full_name, headline, slug, availability), application_answers(question_id, answer_text, answer_option)")
+      .select("id, status, created_at, candidate_id, candidates(headline, slug, availability, people(full_name)), application_answers(question_id, answer_text, answer_option)")
       .eq("job_id", id)
       .order("created_at", { ascending: true }),
     supabase.from("job_questions").select("id, prompt, options").eq("job_id", id).order("position"),
@@ -96,7 +96,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
           {visible.map((application) => {
             const candidate = application.candidates;
             const salary = salaries?.find((s) => s.candidate_id === application.candidate_id);
-            const name = candidate?.full_name ?? t("unavailable");
+            const name = candidate?.people?.full_name ?? t("unavailable");
             return (
               <li key={application.id} className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
                 <div className="flex flex-wrap items-start justify-between gap-2">

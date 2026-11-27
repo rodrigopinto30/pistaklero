@@ -17,7 +17,7 @@ const loadCandidate = cache(async (slug: string) => {
   const supabase = await createClient();
   const { data: access } = await supabase.rpc("register_profile_view", { p_slug: slug });
   if (access === "limit") return { limited: true as const, candidate: null };
-  const { data } = await supabase.from("candidates").select("*").eq("slug", slug).maybeSingle();
+  const { data } = await supabase.from("candidates").select("*, people(full_name)").eq("slug", slug).maybeSingle();
   return { limited: false as const, candidate: data };
 });
 
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/p/[slug]
   const { candidate } = await loadCandidate((await params).slug);
   if (!candidate) return {};
   return {
-    title: candidate.full_name,
+    title: candidate.people?.full_name,
     description: candidate.headline || undefined,
     // Solo los perfiles públicos se indexan.
     robots: { index: candidate.visibility === "public", follow: candidate.visibility === "public" },
@@ -89,7 +89,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
     candidate.linkedin_url && { label: "LinkedIn", url: candidate.linkedin_url },
     candidate.website_url && { label: safeHost(candidate.website_url), url: candidate.website_url },
   ].filter(Boolean) as { label: string; url: string }[];
-  const initials = candidate.full_name
+  const initials = (candidate.people?.full_name ?? "")
     .split(/\s+/)
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
@@ -107,7 +107,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
           </div>
         )}
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold tracking-tight">{candidate.full_name}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">{(candidate.people?.full_name ?? "")}</h1>
           {candidate.headline && <p className="text-lg text-muted-foreground">{candidate.headline}</p>}
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="rounded-full bg-primary px-3 py-1 font-medium text-primary-foreground">

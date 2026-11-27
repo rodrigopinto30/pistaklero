@@ -13,7 +13,6 @@ import { SubmitButton } from "@/components/forms/submit-button";
 type Option = { code: string; name: string };
 
 export type BasicsValues = {
-  fullName: string;
   headline: string;
   bio: string;
   country: string;
@@ -33,9 +32,6 @@ export function BasicsForm({ saved, countries, languages }: { saved: BasicsValue
 
   return (
     <form ref={formRef} action={action} noValidate className="flex flex-col gap-4">
-      <Field id="basics-fullName" name="fullName" label={t("fullName")} required error={errors.fullName}>
-        {(p) => <Input {...p} autoComplete="name" maxLength={80} defaultValue={v("fullName")} />}
-      </Field>
       <Field id="basics-headline" name="headline" label={t("headline")} hint={t("headlineHint")} error={errors.headline}>
         {(p) => <Input {...p} maxLength={100} defaultValue={v("headline")} />}
       </Field>
