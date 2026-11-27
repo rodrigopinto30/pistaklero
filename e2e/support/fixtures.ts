@@ -271,8 +271,8 @@ export async function seedCandidateWithPassword(email: string, password: string,
 
 /** Ingresa con email y contraseña desde la página de ingreso en la que ya está. */
 export async function signInWithPassword(page: Page, email: string, password: string) {
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Contraseña", { exact: true }).fill(password);
+  await page.getByRole("textbox", { name: "Email" }).fill(email);
+  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill(password);
   await page.getByRole("button", { name: "Ingresar", exact: true }).click();
 }
 

@@ -49,8 +49,8 @@ test("sin cuenta: guardar un empleo, crear la cuenta y volver con el empleo guar
   await page.getByRole("link", { name: /Busco trabajo/ }).click();
 
   const created = new Date(Date.now() - 1000);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Contraseña", { exact: true }).fill("mi frase para guardar");
+  await page.getByRole("textbox", { name: "Email" }).fill(email);
+  await page.getByRole("textbox", { name: "Contraseña", exact: true }).fill("mi frase para guardar");
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await page.getByLabel("Código de 6 dígitos").fill(await codeFromEmail(email, /confirmar el email/, created));
   await page.getByRole("button", { name: "Confirmar" }).click();
