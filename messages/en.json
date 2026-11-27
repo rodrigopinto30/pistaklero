@@ -1294,6 +1294,16 @@
       "empty": "You haven't posted anything yet.",
       "likes": "{count, plural, =0 {no likes} one {# like} other {# likes}}",
       "hidden": "Hidden by reports"
+    },
+    "tags": {
+      "label": "Tags",
+      "optional": "(optional)",
+      "chosen": "Chosen tags",
+      "remove": "Remove #{tag}",
+      "hint": "Type and press Enter, comma or space. For example: ai, python, interviews. Up to {max}.",
+      "invalid": "Use letters, numbers and + # . _ - (no spaces).",
+      "filter": "Posts tagged #{tag}",
+      "clear": "See all"
     }
   },
   "Companies": {

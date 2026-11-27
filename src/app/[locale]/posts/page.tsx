@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { Emoji } from "@/components/emoji";
+import { normalizeTag } from "@/lib/posts/tags";
 
 const PAGE_SIZE = 24;
 
@@ -21,14 +22,17 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PostsPage({ searchParams }: PageProps<"/[locale]/posts">) {
   await connection();
   const params = await searchParams;
-  const q = typeof params.q === "string" ? params.q.trim().slice(0, 200) : "";
+  const rawQuery = typeof params.q === "string" ? params.q.trim().slice(0, 200) : "";
+  // "#ia" en el buscador o ?tag=ia: el listado de esa etiqueta.
+  const tag = normalizeTag(typeof params.tag === "string" ? params.tag : rawQuery.startsWith("#") ? rawQuery : "");
+  const q = tag ? "" : rawQuery;
   const page = Math.min(Math.max(Number(params.page) || 1, 1), 20);
   const locale = await getLocale();
   const t = await getTranslations("Posts");
   const signedIn = Boolean(await getCurrentUser());
 
   const supabase = await createClient();
-  const { data } = await supabase.rpc("post_cards", { p_query: q || undefined, p_limit: PAGE_SIZE * page });
+  const { data } = await supabase.rpc("post_cards", { p_query: q || undefined, p_tag: tag ?? undefined, p_limit: PAGE_SIZE * page });
   const posts = data ?? [];
   const total = Number(posts[0]?.total_count ?? 0);
 
@@ -45,6 +49,14 @@ export default async function PostsPage({ searchParams }: PageProps<"/[locale]/p
         </Link>
       </div>
 
+      {tag && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex min-h-8 items-center rounded-full bg-primary/10 px-3 font-medium text-primary">{t("tags.filter", { tag })}</span>
+          <Link href="/posts" className="text-sm font-medium text-primary underline underline-offset-4">
+            {t("tags.clear")}
+          </Link>
+        </div>
+      )}
       <p role="status" className="text-sm text-muted-foreground">
         {q ? t("countFor", { count: total, query: q }) : t("count", { count: total })}
       </p>
@@ -70,7 +82,7 @@ export default async function PostsPage({ searchParams }: PageProps<"/[locale]/p
 
       {total > posts.length && page < 20 && (
         <Link
-          href={{ pathname: "/posts", query: { ...(q ? { q } : {}), page: String(page + 1) } }}
+          href={{ pathname: "/posts", query: { ...(q ? { q } : {}), ...(tag ? { tag } : {}), page: String(page + 1) } }}
           scroll={false}
           className={buttonVariants({ variant: "outline", className: "self-center rounded-full" })}
         >

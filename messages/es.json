@@ -1294,6 +1294,16 @@
       "empty": "Todavía no publicaste nada.",
       "likes": "{count, plural, =0 {sin me gusta} one {# me gusta} other {# me gusta}}",
       "hidden": "Oculta por denuncias"
+    },
+    "tags": {
+      "label": "Etiquetas",
+      "optional": "(opcional)",
+      "chosen": "Etiquetas elegidas",
+      "remove": "Quitar #{tag}",
+      "hint": "Escribí y apretá Enter, coma o espacio. Por ejemplo: ia, python, entrevistas. Hasta {max}.",
+      "invalid": "Usá letras, números y + # . _ - (sin espacios).",
+      "filter": "Publicaciones con #{tag}",
+      "clear": "Ver todas"
     }
   },
   "Companies": {
