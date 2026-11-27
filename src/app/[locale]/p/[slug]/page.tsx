@@ -20,7 +20,11 @@ const loadCandidate = cache(async (slug: string) => {
   const supabase = await createClient();
   const { data: access } = await supabase.rpc("register_profile_view", { p_slug: slug });
   if (access === "limit") return { limited: true as const, candidate: null };
-  const { data } = await supabase.from("candidates").select("*, people(full_name, avatar_path)").eq("slug", slug).maybeSingle();
+  // Primero el id (por el índice del slug y solo si se puede ver); después la fila por id, que usa su índice
+  // aunque haya miles de candidatos (buscar por slug obligaba a revisar la visibilidad de todos).
+  const { data: id } = await supabase.rpc("visible_candidate_id", { p_slug: slug });
+  if (!id) return { limited: false as const, candidate: null };
+  const { data } = await supabase.from("candidates").select("*, people(full_name, avatar_path)").eq("user_id", id).maybeSingle();
   return { limited: false as const, candidate: data };
 });
 
