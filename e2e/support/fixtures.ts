@@ -32,12 +32,14 @@ export async function signIn(page: Page, email: string, next = "/es") {
 }
 
 /** Candidata con el perfil mínimo para postularse (titular, una habilidad y un proyecto). */
-export async function signInAsReadyCandidate(page: Page, name = "Ana Pérez") {
+export async function signInAsReadyCandidate(page: Page, name = "Ana Pérez", { skills = true } = {}) {
   const userId = await signIn(page, uniqueEmail("lista"));
   await onboardAsCandidate(page, name);
   await admin.from("candidates").update({ headline: "Frontend Junior" }).eq("user_id", userId);
-  const { data: skill } = await admin.from("skills").select("id").eq("slug", "react").single();
-  await admin.from("candidate_skills").insert({ candidate_id: userId, skill_id: skill!.id });
+  if (skills) {
+    const { data: skill } = await admin.from("skills").select("id").eq("slug", "react").single();
+    await admin.from("candidate_skills").insert({ candidate_id: userId, skill_id: skill!.id });
+  }
   await admin.from("candidate_projects").insert({ candidate_id: userId, title: "Portfolio" });
   return userId;
 }

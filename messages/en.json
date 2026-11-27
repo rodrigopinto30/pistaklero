@@ -12,7 +12,8 @@
     "admin": "Admin",
     "suspended": "Your account is suspended. If you think this is a mistake, contact us.",
     "settings": "Settings",
-    "lightMode": "Light mode"
+    "lightMode": "Light mode",
+    "saved": "Saved"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -520,6 +521,25 @@
       "title": "Start from a template",
       "hint": "Fills in the title, a base description, the seniority and the technologies. You can then adjust anything you want.",
       "blank": "Start from scratch"
+    },
+    "actions": {
+      "save": "Save {title}",
+      "unsave": "Remove {title} from saved",
+      "saveLabel": "Save",
+      "savedLabel": "Saved to your list",
+      "savedToast": "Job saved. Find it in Saved.",
+      "unsavedToast": "Removed from your saved jobs.",
+      "applyTo": "Apply to {title}",
+      "applied": "Applied",
+      "appliedToast": "Done! You applied to {title}.",
+      "needsAnswers": "This job has questions: answer them to apply.",
+      "signInToSave": "Sign in to save {title}",
+      "errors": {
+        "not_candidate": "Only candidate accounts can save jobs.",
+        "job_not_available": "This job is no longer available.",
+        "limit_reached": "You reached 500 saved jobs. Remove one to add another.",
+        "unknown": "We couldn't save the job. Try again."
+      }
     }
   },
   "Search": {
@@ -566,7 +586,6 @@
     "completeProfile": "Complete my profile",
     "missing": {
       "headline": "A headline (for example: Junior Frontend · React)",
-      "skills": "At least one skill",
       "experience": "An experience, a project or education"
     },
     "errors": {
@@ -579,7 +598,11 @@
       "answer_required": "Answer the required questions.",
       "invalid_answer": "Check your answers.",
       "unknown": "We couldn't send the application. Please try again."
-    }
+    },
+    "successToast": "Done! Your application was sent.",
+    "suggestSkillsTitle": "Tip:",
+    "suggestSkills": "add your skills. It's optional, but companies look at them first.",
+    "suggestSkillsLink": "Add skills"
   },
   "Applications": {
     "metaTitle": "My applications",
@@ -1014,5 +1037,15 @@
     "jobStatusUpdated": "Job status updated.",
     "jobSaved": "Job saved.",
     "published": "Job published."
+  },
+  "Saved": {
+    "metaTitle": "Saved",
+    "title": "Saved",
+    "subtitle": "What you set aside to check later.",
+    "jobs": "{count, plural, =0 {Jobs} one {# job} other {# jobs}}",
+    "empty": "You haven't saved any jobs yet. Tap a job's bookmark to keep it handy.",
+    "browse": "Browse jobs",
+    "closed": "Jobs that already closed",
+    "unavailable": "Job not available"
   }
 }

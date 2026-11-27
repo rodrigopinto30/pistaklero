@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { JobCard } from "@/components/jobs/job-card";
 import { SearchForm } from "@/components/jobs/search-form";
 import { buttonVariants } from "@/components/ui/button";
+import { getJobViewer } from "@/lib/jobs/viewer";
 import { createClient } from "@/lib/supabase/server";
 import { nextPageQuery, PAGE_SIZE, parseSearchParams, toSearchArgs } from "@/lib/validation/search";
 import { Link } from "@/i18n/navigation";
@@ -28,6 +29,7 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
     const { data } = await supabase.rpc("search_jobs", { p_limit: 6 });
     suggestions = data ?? [];
   }
+  const viewer = await getJobViewer([...results, ...suggestions].map((job) => job.id));
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8">
@@ -52,7 +54,7 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {results.map((job, index) => (
               <li key={job.id}>
-                <JobCard job={job} locale={locale} index={index + 1} />
+                <JobCard job={job} locale={locale} index={index + 1} viewer={viewer} />
               </li>
             ))}
           </ul>
@@ -72,7 +74,7 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {suggestions.map((job) => (
                 <li key={job.id}>
-                  <JobCard job={job} locale={locale} />
+                  <JobCard job={job} locale={locale} viewer={viewer} />
                 </li>
               ))}
             </ul>

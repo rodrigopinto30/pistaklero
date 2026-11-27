@@ -17,6 +17,8 @@ import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/session";
 import { ApplyPanel } from "./apply-panel";
+import { SaveJobButton } from "@/components/jobs/save-job-button";
+import { getJobViewer } from "@/lib/jobs/viewer";
 import { ReportForm } from "./report-form";
 
 async function loadJob(slug: string) {
@@ -51,7 +53,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/jobs/[sl
   };
 }
 
-export default async function JobPage({ params }: PageProps<"/[locale]/jobs/[slug]">) {
+export default async function JobPage({ params, searchParams }: PageProps<"/[locale]/jobs/[slug]">) {
   // Si la oferta sigue abierta depende del momento del pedido.
   await connection();
   const job = await loadJob((await params).slug);
@@ -68,6 +70,7 @@ export default async function JobPage({ params }: PageProps<"/[locale]/jobs/[slu
   const salary = formatSalaryRange(job, locale);
   const location = job.work_mode === "remote" ? null : [job.city, countryName(job.country, locale)].filter(Boolean).join(", ");
   const isOpen = job.status === "published" && !isExpired(job.valid_through);
+  const viewer = await getJobViewer([job.id]);
   const url = `${getPublicEnv().NEXT_PUBLIC_SITE_URL}${getPathname({ locale: locale as AppLocale, href: { pathname: "/jobs/[slug]", params: { slug: job.slug } } })}`;
   // Datos estructurados solo para ofertas nativas abiertas (Google Jobs).
   const jsonLd =
@@ -150,8 +153,9 @@ export default async function JobPage({ params }: PageProps<"/[locale]/jobs/[slu
               <ExternalLink aria-hidden="true" />
             </a>
           ) : (
-            <ApplyPanel jobId={job.id} slug={job.slug} />
+            <ApplyPanel jobId={job.id} slug={job.slug} autoOpen={(await searchParams).postular === "1"} />
           )}
+          {viewer.mode === "candidate" && isOpen && <SaveJobButton jobId={job.id} title={job.title} saved={viewer.saved.has(job.id)} variant="full" />}
           <p className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarClock aria-hidden="true" className="size-4" />
             {job.published_at && t("detail.postedOn", { date: format.dateTime(new Date(job.published_at), { dateStyle: "medium" }) })}
