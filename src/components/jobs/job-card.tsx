@@ -5,13 +5,54 @@ import { formatSalaryRange } from "@/lib/jobs/format";
 import { timeAgo } from "@/lib/jobs/time";
 import { companyLogoUrl } from "@/lib/storage";
 import type { Database } from "@/lib/supabase/database.types";
-import { Link } from "@/i18n/navigation";
+import { Bookmark } from "lucide-react";
+import { getPathname, Link } from "@/i18n/navigation";
+import type { AppLocale } from "@/i18n/routing";
+import type { JobViewer } from "@/lib/jobs/viewer";
+import { buttonVariants } from "@/components/ui/button";
+import { QuickApplyButton } from "./quick-apply-button";
+import { SaveJobButton } from "./save-job-button";
 import { ResponseBadge } from "./response-badge";
 
 export type JobCardData = Database["public"]["Functions"]["search_jobs"]["Returns"][number];
 
 /** Tarjeta uniforme, escaneable en 3 segundos: puesto, empresa, sueldo, modalidad y antigüedad. */
-export async function JobCard({ job, locale, index }: { job: JobCardData; locale: string; index?: number }) {
+/**
+ * Guardar (arriba, a la derecha) y postularse (abajo), según quién mira.
+ * Van por encima del enlace que cubre la tarjeta (z-10): un clic en ellos no abre la oferta.
+ */
+async function JobCardAction({ part, job, locale, viewer }: { part: "save" | "apply"; job: JobCardData; locale: string; viewer: JobViewer }) {
+  const t = await getTranslations("Jobs.actions");
+  const tApply = await getTranslations("Apply");
+  const jobHref = { pathname: "/jobs/[slug]" as const, params: { slug: job.slug } };
+  const applyLink = (href: Parameters<typeof Link>[0]["href"]) => (
+    <Link href={href} aria-label={t("applyTo", { title: job.title })} className={buttonVariants({ size: "sm", className: "relative z-10 rounded-full px-4" })}>
+      {tApply("apply")}
+    </Link>
+  );
+
+  if (viewer.mode === "none") return null;
+  if (viewer.mode === "guest") {
+    const next = getPathname({ locale: locale as AppLocale, href: jobHref });
+    const signIn = { pathname: "/sign-in" as const, query: { next } };
+    return part === "save" ? (
+      <Link href={signIn} aria-label={t("signInToSave", { title: job.title })} title={t("signInToSave", { title: job.title })} className="relative z-10 -m-2 inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
+        <Bookmark aria-hidden="true" className="size-5" />
+      </Link>
+    ) : (
+      applyLink(signIn)
+    );
+  }
+  if (part === "save") return <SaveJobButton jobId={job.id} title={job.title} saved={viewer.saved.has(job.id)} className="-m-2" />;
+  // Las importadas se postulan en el sitio de la empresa: la oferta tiene el enlace.
+  return job.source === "native" ? (
+    <QuickApplyButton jobId={job.id} slug={job.slug} title={job.title} applied={viewer.applied.has(job.id)} />
+  ) : (
+    applyLink(jobHref)
+  );
+}
+
+export async function JobCard({ job, locale, index, viewer }: { job: JobCardData; locale: string; index?: number; viewer?: JobViewer }) {
   const t = await getTranslations("Jobs");
   const salary = formatSalaryRange(job, locale);
   const logo = companyLogoUrl(job.company_logo_path);
@@ -33,12 +74,15 @@ export async function JobCard({ job, locale, index }: { job: JobCardData; locale
           {job.company_name}
           {job.company_verified && <BadgeCheck aria-hidden="true" className="size-4 text-primary" />}
         </span>
-        {job.source === "imported" && (
-          <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-input px-2 py-0.5 text-xs text-muted-foreground">
-            <ExternalLink aria-hidden="true" className="size-3" />
-            {t("detail.external")}
-          </span>
-        )}
+        <span className="ml-auto flex items-center gap-2">
+          {job.source === "imported" && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-input px-2 py-0.5 text-xs text-muted-foreground">
+              <ExternalLink aria-hidden="true" className="size-3" />
+              {t("detail.external")}
+            </span>
+          )}
+          {viewer && <JobCardAction part="save" job={job} locale={locale} viewer={viewer} />}
+        </span>
       </div>
       <h3 id={`job-${job.id}`} lang={job.language} className="text-lg leading-snug font-semibold">
         {/* El enlace cubre toda la tarjeta con ::after, pero su nombre accesible es solo el puesto. */}
@@ -74,13 +118,20 @@ export async function JobCard({ job, locale, index }: { job: JobCardData; locale
           ))}
         </ul>
       )}
-      <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
-        {job.published_at && (
-          <p className="text-xs text-muted-foreground">
-            <time dateTime={job.published_at}>{timeAgo(job.published_at, locale)}</time>
-          </p>
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1">
+        <div className="flex flex-wrap items-center gap-2">
+          {job.published_at && (
+            <p className="text-xs text-muted-foreground">
+              <time dateTime={job.published_at}>{timeAgo(job.published_at, locale)}</time>
+            </p>
+          )}
+          {job.source === "native" && <ResponseBadge badge={job.company_badge} />}
+        </div>
+        {viewer && (
+          <span className="ml-auto">
+            <JobCardAction part="apply" job={job} locale={locale} viewer={viewer} />
+          </span>
         )}
-        {job.source === "native" && <ResponseBadge badge={job.company_badge} />}
       </div>
     </article>
   );
