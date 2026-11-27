@@ -363,6 +363,26 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"external_apply_clicks": {
+                  Row: {
+                    "created_at": string,"id": number,"job_id": string,"user_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: never,"job_id": string,"user_id"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: never,"job_id"?: string,"user_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "external_apply_clicks_job_id_fkey"
+      columns: ["job_id"]
+isOneToOne: false
+      referencedRelation: "jobs"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"job_questions": {
                   Row: {
                     "id": string,"job_id": string,"options": (string)[] | null,"position": number,"prompt": string,"required": boolean,"type": Database["public"]['Enums']["question_type"]
@@ -505,6 +525,17 @@ isOneToOne: false
 "admin_set_user_suspended":
 { Args: { "p_suspended": boolean,"p_user_id": string }; Returns: undefined
                            },
+"admin_transfer_company":
+{ Args: { "p_company_id": string,"p_email": string }; Returns: undefined
+                           },
+"admin_unclaimed_companies":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "clicks": number,"domain": string,"id": string,"jobs": number,"name": string,"slug": string
+            }[]
+                           },
+"admin_upsert_unclaimed_company":
+{ Args: { "p_name": string,"p_website_url": string }; Returns: string
+                           },
 "apply_to_job":
 { Args: { "p_answers"?: Json,"p_job_id": string }; Returns: string
                            },
@@ -593,6 +624,9 @@ isOneToOne: false
                            },
 "random_slug":
 { Args: { "p_value": string }; Returns: string
+                           },
+"record_external_click":
+{ Args: { "p_job_id": string }; Returns: string
                            },
 "refresh_job_search_vector":
 { Args: { "p_job_id": string }; Returns: undefined
