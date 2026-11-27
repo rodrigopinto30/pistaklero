@@ -14,5 +14,27 @@
     "title": "We couldn't find this page",
     "description": "The link may be mistyped or the page may no longer exist.",
     "backHome": "Back to home"
+  },
+  "Auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "metaTitle": "Sign in",
+    "title": "Sign in to Pistaklero",
+    "subtitle": "No passwords: use your account or get a link by email.",
+    "continueWith": "Continue with {provider}",
+    "or": "or with your email",
+    "emailLabel": "Email",
+    "emailHint": "We'll send you a sign-in link. It expires in 15 minutes.",
+    "sendLink": "Send me the link",
+    "sending": "Sending…",
+    "sentTitle": "Check your email",
+    "sentBody": "If {email} is correct, the sign-in link will arrive in a few seconds.",
+    "errors": {
+      "invalid_email": "Enter a valid email, for example ana@company.com.",
+      "rate_limited": "You requested too many links in a row. Wait a few minutes and try again.",
+      "callback": "We couldn't complete the sign-in. Please try again.",
+      "link_expired": "The link expired or was already used. Request a new one.",
+      "unknown": "Something went wrong. Please try again in a few minutes."
+    }
   }
 }

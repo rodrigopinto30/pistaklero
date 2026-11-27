@@ -1,8 +1,13 @@
 # Qué paquetes pueden ejecutar scripts de instalación (true) y cuáles no (false).
 # supabase necesita descargar su binario; el resto trae binarios precompilados o no se usa.
 allowBuilds:
-  supabase: true
   "@parcel/watcher": false
   "@swc/core": false
   sharp: false
+  supabase: true
   unrs-resolver: false
+
+# Parches a dependencias (se aplican al instalar). Quitar cuando el paquete lo corrija.
+# next: en desarrollo, leer cookies() durante una Server Action lanzaba un InvariantError.
+patchedDependencies:
+  next@16.4.6: patches/next@16.4.6.patch

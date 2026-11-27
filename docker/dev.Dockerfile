@@ -1,4 +1,5 @@
-# Imagen de desarrollo: Node + pnpm. Nada de esto se instala en el sistema del host.
+# Imagen de desarrollo: Node + pnpm (+ git, que pnpm patch usa para generar parches).
+# Nada de esto se instala en el sistema del host.
 # Cliente de Docker (sin motor): la CLI de Supabase lo usa para manejar sus contenedores.
 FROM docker:27.2.1-cli AS docker-cli
 
@@ -13,7 +14,7 @@ ENV COREPACK_HOME=/opt/corepack \
     XDG_CONFIG_HOME=/opt/xdg-config
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates \
+ && apt-get install -y --no-install-recommends ca-certificates git \
  && rm -rf /var/lib/apt/lists/* \
  && corepack enable pnpm \
  && corepack prepare pnpm@10.34.9 --activate \

@@ -48,6 +48,21 @@ La lista completa está en `.env.example`.
 
 Después de cambiar el esquema de la base: `./run.sh pnpm db:types` regenera los tipos de TypeScript.
 
+## Login con Google o GitHub (opcional)
+
+En local alcanza con el link mágico: los emails llegan a Mailpit (http://127.0.0.1:54324).
+Para probar OAuth:
+
+1. Creá la app OAuth en Google Cloud o en GitHub con la URL de callback `http://127.0.0.1:54321/auth/v1/callback`.
+2. Poné las credenciales en `supabase/.env` (no se versiona):
+   ```
+   SUPABASE_AUTH_EXTERNAL_GITHUB_CLIENT_ID=...
+   SUPABASE_AUTH_EXTERNAL_GITHUB_SECRET=...
+   ```
+3. En `supabase/config.jsonc`, cambiá `"enabled": false` a `true` en ese proveedor.
+4. En `.env.local`, fuera del bloque generado: `AUTH_OAUTH_PROVIDERS=github` (o `google,github`).
+5. `./stop.sh && ./start.sh`.
+
 ## Cómo funciona
 
 - `docker/dev.Dockerfile`: imagen con Node 24 LTS y pnpm.

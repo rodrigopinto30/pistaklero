@@ -22,8 +22,10 @@ services:
   # App Next.js en modo desarrollo (http://127.0.0.1:3000).
   web:
     <<: *dev
-    # Solo escucha en 127.0.0.1: no queda expuesta a la red local.
-    command: ["pnpm", "dev", "--hostname", "127.0.0.1"]
+    # Solo escucha en localhost (127.0.0.1): no queda expuesta a la red local.
+    # Con "--hostname 127.0.0.1" Next arma las reescrituras con "localhost", las toma como externas
+    # y las rutas traducidas (/es/ingresar → /es/sign-in) entran en bucle.
+    command: ["pnpm", "dev", "--hostname", "localhost"]
 
   # Contenedor de herramientas: pnpm, CLI de Supabase, tests. Se usa con ./run.sh.
   # Es el único con acceso al socket de Docker, porque la CLI de Supabase levanta sus propios contenedores.

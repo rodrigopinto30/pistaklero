@@ -12,6 +12,7 @@ export const routing = defineRouting({
   localePrefix: "always",
   pathnames: {
     "/": "/",
+    "/sign-in": { es: "/ingresar", en: "/sign-in" },
   },
 });
 
