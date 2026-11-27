@@ -730,7 +730,7 @@
       "emailLocale": "Email language",
       "emailLocaleHint": "Notifications about your applications or your team arrive in this language.",
       "notifications": "Optional emails",
-      "notificationsHint": "Digests and reminders. Important notices (for example, a change in your application) always arrive."
+      "notificationsHint": "The daily summary of new applications and reminders to companies. Notices about your applications or your team always arrive."
     },
     "data": {
       "title": "Your data",
