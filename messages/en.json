@@ -11,7 +11,8 @@
     "myApplications": "My applications",
     "admin": "Admin",
     "suspended": "Your account is suspended. If you think this is a mistake, contact us.",
-    "settings": "Settings"
+    "settings": "Settings",
+    "lightMode": "Light mode"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -855,7 +856,7 @@
         },
         "cookies": {
           "title": "Cookies",
-          "body": "We only use essential cookies: your session cookie (protected, site code can't read it) and your language. No tracking or third-party cookies."
+          "body": "We only use essential cookies: your session cookie (protected, site code can't read it), your language and your theme (light or dark). No tracking or third-party cookies."
         },
         "providers": {
           "title": "Providers",

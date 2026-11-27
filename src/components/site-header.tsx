@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { Link } from "@/i18n/navigation";
@@ -64,6 +65,7 @@ export async function SiteHeader() {
               {tAuth("signIn")}
             </Link>
           )}
+          <ThemeToggle />
           <LocaleSwitcher />
         </div>
       </div>

@@ -11,7 +11,8 @@
     "myApplications": "Mis postulaciones",
     "admin": "Admin",
     "suspended": "Tu cuenta está suspendida. Si creés que es un error, escribinos.",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "lightMode": "Modo claro"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -855,7 +856,7 @@
         },
         "cookies": {
           "title": "Cookies",
-          "body": "Solo usamos cookies esenciales: la de tu sesión (protegida, no la puede leer código del sitio) y la de tu idioma. No usamos cookies de rastreo ni de terceros."
+          "body": "Solo usamos cookies esenciales: la de tu sesión (protegida, no la puede leer código del sitio), la de tu idioma y la de tu tema (claro u oscuro). No usamos cookies de rastreo ni de terceros."
         },
         "providers": {
           "title": "Proveedores",

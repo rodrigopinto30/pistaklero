@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
 import { getPublicEnv } from "@/lib/env";
+import { getTheme } from "@/lib/theme/server";
 import { fontVariables } from "../fonts";
 import "../globals.css";
 
@@ -34,9 +35,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// El tema real lo define la clase de <html> (y su color-scheme en CSS); leer la cookie acá bloquearía la página.
 export const viewport: Viewport = {
   themeColor: "#0a0c0b",
-  colorScheme: "dark",
+  colorScheme: "dark light",
 };
 
 export default async function LocaleLayout({
@@ -47,11 +49,12 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
 
   const t = await getTranslations("Layout");
+  const theme = await getTheme();
 
   return (
     <html
       lang={locale}
-      className={`dark ${fontVariables} h-full`}
+      className={`${theme} ${fontVariables} h-full`}
     >
       <body className="flex min-h-full flex-col">
         {/* Primer elemento enfocable: salta el encabezado (WCAG 2.4.1). */}

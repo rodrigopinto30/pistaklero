@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Por ahora solo hay modo oscuro (el claro llega en la fase 3). <html> lleva la clase .dark. */
+/* <html> lleva la clase .dark (por defecto) o .light, según la cookie "theme". */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -28,6 +28,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-field: var(--field);
 
   /* Colores propios de Pistaklero */
   --color-violet: var(--violet);
@@ -70,12 +71,45 @@
   --destructive: #ff7a7a; /* 7.2:1 sobre card */
   --border: #262c29; /* decorativo (tarjetas) */
   --input: #66706b; /* bordes de controles: 3.8:1 sobre background */
+  --field: color-mix(in oklab, #66706b 30%, transparent); /* fondo de los campos de texto */
   --ring: #c5f25e; /* foco: 15.2:1 sobre background */
 
   --violet: #a99bff; /* secundario: estado "Entrevista", enlaces */
   --warn: #f5c451; /* avisos y badge "Tarda ~1 semana" */
 
   --radius: 0.75rem;
+}
+
+/* Modo claro. Mismos roles, contrastes verificados (AA) sobre background #f6f7f4 y card #ffffff. */
+:root.light {
+  color-scheme: light;
+
+  --background: #f6f7f4;
+  --foreground: #111513; /* 17.1:1 */
+
+  --card: #ffffff;
+  --card-foreground: #111513; /* 18.4:1 */
+  --popover: #ffffff;
+  --popover-foreground: #111513;
+
+  --primary: #3d6b0a; /* el lima, oscurecido para leerse sobre claro: 5.9:1 */
+  --primary-foreground: #ffffff; /* 6.4:1 sobre primary */
+
+  --secondary: #eceee9;
+  --secondary-foreground: #111513;
+  --muted: #eceee9;
+  --muted-foreground: #535b56; /* 6.5:1 sobre background, 6.0:1 sobre muted */
+  --accent: #eceee9;
+  --accent-foreground: #111513;
+
+  --destructive: #b42318; /* 6.1:1 */
+  --border: #dde1dc;
+  --input: #7a837e; /* 3.6:1 sobre background, 3.9:1 sobre field */
+  --field: #ffffff;
+  --ring: #3d6b0a; /* 5.9:1 */
+
+  --violet: #5847cc; /* 6.1:1 */
+  --warn: #875200; /* 6.0:1 */
 }
 
 @layer base {
