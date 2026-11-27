@@ -1,0 +1,30 @@
+diff --git a/dist/esm/server/request/cookies.js b/dist/esm/server/request/cookies.js
+index 977c5bde15a3657a3f4db7695885c2a211019394..2b666a4f3d4386d149c7dd17057b2e6884a805c2 100644
+--- a/dist/esm/server/request/cookies.js
++++ b/dist/esm/server/request/cookies.js
+@@ -124,7 +124,9 @@ function makeUntrackedCookiesWithDevWarnings(requestStore, underlyingCookies, ro
+         } else if (underlyingCookies === requestStore.cookies) {
+             promise = requestStore.asyncApiPromises.cookies;
+         } else {
+-            throw new InvariantError('Received an underlying cookies object that does not match either `cookies` or `mutableCookies`');
++            // Parche de Pistaklero: igual que en producción, devolver las cookies de solo lectura.
++            // Next 16.4.6 lanzaba este error en desarrollo al leer cookies() durante una Server Action.
++            promise = requestStore.asyncApiPromises.cookies;
+         }
+         return instrumentCookiesPromiseWithDevWarnings(promise, route);
+     }
+diff --git a/dist/server/request/cookies.js b/dist/server/request/cookies.js
+index 89e1a2f63b4ee20adb0057fe997e2563ff95325a..2b69f34c3b21bc5eb11a895d9867519a69789fe6 100644
+--- a/dist/server/request/cookies.js
++++ b/dist/server/request/cookies.js
+@@ -133,7 +133,9 @@ function makeUntrackedCookiesWithDevWarnings(requestStore, underlyingCookies, ro
+         } else if (underlyingCookies === requestStore.cookies) {
+             promise = requestStore.asyncApiPromises.cookies;
+         } else {
+-            throw new _invarianterror.InvariantError('Received an underlying cookies object that does not match either `cookies` or `mutableCookies`');
++            // Parche de Pistaklero: igual que en producción, devolver las cookies de solo lectura.
++            // Next 16.4.6 lanzaba este error en desarrollo al leer cookies() durante una Server Action.
++            promise = requestStore.asyncApiPromises.cookies;
+         }
+         return instrumentCookiesPromiseWithDevWarnings(promise, route);
+     }
