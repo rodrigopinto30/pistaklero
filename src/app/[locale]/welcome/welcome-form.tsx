@@ -120,9 +120,9 @@ export function WelcomeForm({ locale, defaultName, presetRole }: { locale: strin
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="welcome-firstName">
-              {t("firstName")} <span className="font-normal text-muted-foreground">{t("required")}</span>
+              {t("firstName")}
             </Label>
-            <Input {...field("firstName")} autoComplete="given-name" maxLength={50} defaultValue={values.firstName ?? suggested.firstName} />
+            <Input {...field("firstName")} aria-required autoComplete="given-name" maxLength={50} defaultValue={values.firstName ?? suggested.firstName} />
             <span id="welcome-firstName-hint" hidden />
             {error("firstName")}
           </div>
@@ -137,9 +137,9 @@ export function WelcomeForm({ locale, defaultName, presetRole }: { locale: strin
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="welcome-lastName">
-            {t("lastName")} <span className="font-normal text-muted-foreground">{t("required")}</span>
+            {t("lastName")}
           </Label>
-          <Input {...field("lastName")} autoComplete="family-name" maxLength={50} defaultValue={values.lastName ?? suggested.lastName} />
+          <Input {...field("lastName")} aria-required autoComplete="family-name" maxLength={50} defaultValue={values.lastName ?? suggested.lastName} />
           <span id="welcome-lastName-hint" hidden />
           {error("lastName")}
         </div>
@@ -161,9 +161,9 @@ export function WelcomeForm({ locale, defaultName, presetRole }: { locale: strin
       <div className="hidden flex-col gap-4 group-has-[#role-recruiter:checked]:flex">
         <div className="flex flex-col gap-2">
           <Label htmlFor="welcome-companyName">
-            {t("companyName")} <span className="font-normal text-muted-foreground">{t("required")}</span>
+            {t("companyName")}
           </Label>
-          <Input {...field("companyName")} autoComplete="organization" maxLength={80} defaultValue={values.companyName} />
+          <Input {...field("companyName")} aria-required autoComplete="organization" maxLength={80} defaultValue={values.companyName} />
           <span id="welcome-companyName-hint" hidden />
           {error("companyName")}
         </div>

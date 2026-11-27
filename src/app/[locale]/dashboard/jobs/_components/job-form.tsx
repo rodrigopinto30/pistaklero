@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { Field, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
+import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -85,7 +85,7 @@ export function JobForm({
       </Fieldset>
 
       <Fieldset legend={t("sections.conditions")}>
-        <div className="grid gap-4 sm:grid-cols-3">
+        <FieldGrid className="sm:grid-cols-3">
           <Field id="job-seniority" name="seniority" label={t("seniority")} required error={errors.seniority}>
             {select("seniority", SENIORITIES, (o) => t(`seniorityOptions.${o as (typeof SENIORITIES)[number]}`))}
           </Field>
@@ -95,8 +95,8 @@ export function JobForm({
           <Field id="job-workMode" name="workMode" label={t("workMode")} required error={errors.workMode}>
             {select("workMode", WORK_MODES, (o) => t(`workModeOptions.${o as (typeof WORK_MODES)[number]}`))}
           </Field>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3">
+        </FieldGrid>
+        <FieldGrid className="sm:grid-cols-3">
           <Field id="job-country" name="country" label={t("country")} error={errors.country}>
             {(p) => (
               <NativeSelect {...p} defaultValue={v("country")}>
@@ -115,11 +115,11 @@ export function JobForm({
           <Field id="job-validDays" name="validDays" label={t("validDays")} required error={errors.validDays}>
             {select("validDays", VALID_DAYS, (o) => t("validDaysOption", { days: o }))}
           </Field>
-        </div>
+        </FieldGrid>
       </Fieldset>
 
       <Fieldset legend={t("sections.salary")} hint={t("salaryHint")}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <FieldGrid className="sm:grid-cols-2 lg:grid-cols-5">
           <Field id="job-salaryMin" name="salaryMin" label={t("salaryMin")} required error={errors.salaryMin}>
             {(p) => <Input {...p} type="number" inputMode="decimal" min="1" step="any" defaultValue={v("salaryMin")} />}
           </Field>
@@ -135,7 +135,7 @@ export function JobForm({
           <Field id="job-salaryBasis" name="salaryBasis" label={t("salaryBasis")} required error={errors.salaryBasis}>
             {select("salaryBasis", SALARY_BASES, (o) => t(`basisShort.${o as (typeof SALARY_BASES)[number]}`))}
           </Field>
-        </div>
+        </FieldGrid>
       </Fieldset>
 
       <Fieldset legend={t("sections.skills")} hint={t("skillsHint")}>
@@ -168,14 +168,14 @@ export function JobForm({
             <p id={`question${n}-title`} className="font-medium">
               {t("questionN", { n })}
             </p>
-            <div className="grid gap-4 sm:grid-cols-[12rem_1fr]">
+            <FieldGrid className="sm:grid-cols-[12rem_1fr]">
               <Field id={`job-question${n}Type`} name={`question${n}Type`} label={t("questionType")}>
                 {select(`question${n}Type`, QUESTION_TYPES, (o) => t(`questionTypes.${o as (typeof QUESTION_TYPES)[number]}`))}
               </Field>
               <Field id={`job-question${n}Prompt`} name={`question${n}Prompt`} label={t("questionPrompt")} error={errors[`question${n}Prompt`]}>
                 {(p) => <Input {...p} maxLength={200} defaultValue={v(`question${n}Prompt`)} />}
               </Field>
-            </div>
+            </FieldGrid>
             <Field id={`job-question${n}Options`} name={`question${n}Options`} label={t("questionOptions")} error={errors[`question${n}Options`]}>
               {(p) => <Textarea {...p} className="min-h-20" maxLength={500} defaultValue={v(`question${n}Options`)} />}
             </Field>

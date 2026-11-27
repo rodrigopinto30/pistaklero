@@ -3,7 +3,7 @@
 import { Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { Field, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
+import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,14 +48,14 @@ function ReviewForm({ proposed, countries }: { proposed: Record<string, string>;
 
   return (
     <form ref={formRef} action={action} noValidate className="flex flex-col gap-4">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <FieldGrid className="sm:grid-cols-2">
         <Field id="imp-companyName" name="companyName" label={t("companyName")} required error={errors.companyName}>
           {(p) => <Input {...p} maxLength={80} defaultValue={v("companyName")} />}
         </Field>
         <Field id="imp-companyWebsite" name="companyWebsite" label={t("companyWebsite")} error={errors.companyWebsite}>
           {(p) => <Input {...p} type="url" inputMode="url" defaultValue={v("companyWebsite")} />}
         </Field>
-      </div>
+      </FieldGrid>
       <Field id="imp-externalUrl" name="externalUrl" label={t("externalUrl")} required hint={t("externalUrlHint")} error={errors.externalUrl}>
         {(p) => <Input {...p} type="url" inputMode="url" defaultValue={v("externalUrl")} />}
       </Field>
@@ -65,7 +65,7 @@ function ReviewForm({ proposed, countries }: { proposed: Record<string, string>;
       <Field id="imp-summary" name="summary" label={t("summary")} required hint={t("summaryHint")} error={errors.summary}>
         {(p) => <Textarea {...p} maxLength={600} defaultValue={v("summary")} />}
       </Field>
-      <div className="grid gap-4 sm:grid-cols-4">
+      <FieldGrid className="sm:grid-cols-4">
         <Field id="imp-language" name="language" label={tj("language")} required>
           {select("language", ["es", "en"], (o) => (o === "es" ? "Español" : "English"))}
         </Field>
@@ -78,8 +78,8 @@ function ReviewForm({ proposed, countries }: { proposed: Record<string, string>;
         <Field id="imp-workMode" name="workMode" label={tj("workMode")} required>
           {select("workMode", WORK_MODES, (o) => tj(`workModeOptions.${o as (typeof WORK_MODES)[number]}`))}
         </Field>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-3">
+      </FieldGrid>
+      <FieldGrid className="sm:grid-cols-3">
         <Field id="imp-country" name="country" label={tj("country")} error={errors.country}>
           {(p) => (
             <NativeSelect {...p} defaultValue={v("country")}>
@@ -98,11 +98,11 @@ function ReviewForm({ proposed, countries }: { proposed: Record<string, string>;
         <Field id="imp-validDays" name="validDays" label={tj("validDays")} required>
           {select("validDays", VALID_DAYS, (o) => tj("validDaysOption", { days: o }))}
         </Field>
-      </div>
+      </FieldGrid>
       <fieldset className="flex flex-col gap-3 rounded-xl border border-border p-4">
         <legend className="px-1 font-medium">{t("salary")}</legend>
         <p className="text-sm text-muted-foreground">{t("salaryHint")}</p>
-        <div className="grid gap-4 sm:grid-cols-5">
+        <FieldGrid className="sm:grid-cols-5">
           <Field id="imp-salaryMin" name="salaryMin" label={tj("salaryMin")} error={errors.salaryMin}>
             {(p) => <Input {...p} type="number" inputMode="decimal" min="1" step="any" defaultValue={v("salaryMin")} />}
           </Field>
@@ -118,7 +118,7 @@ function ReviewForm({ proposed, countries }: { proposed: Record<string, string>;
           <Field id="imp-salaryBasis" name="salaryBasis" label={tj("salaryBasis")}>
             {select("salaryBasis", SALARY_BASES, (o) => tj(`basisShort.${o as (typeof SALARY_BASES)[number]}`), "—")}
           </Field>
-        </div>
+        </FieldGrid>
       </fieldset>
       <SubmitButton label={t("publish")} />
       <FormMessage state={state} success="published" />
