@@ -329,7 +329,8 @@ export function ChangePasswordForm({ email }: { email: string }) {
   }, [savedAt, tToasts, formRef]);
 
   const error = state.status === "error" ? state : null;
-  const currentError = error?.code === "wrong_current" || error?.code === "missing_current" ? t(`change.errors.${error.code}`) : null;
+  const currentError =
+    error?.code === "wrong_current" ? t("change.errors.wrong_current") : error?.code === "missing_current" ? t("change.errors.missing_current") : null;
   const passwordError = error && isPasswordProblem(error.code) ? t(`problems.${error.code}`) : null;
   const formError =
     error?.code === "rate_limited" ? tAuth("errors.rate_limited", { minutes: error.minutes }) : error?.code === "unknown" ? tAuth("errors.unknown") : null;
