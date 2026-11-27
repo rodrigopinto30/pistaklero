@@ -17,3 +17,9 @@ export function avatarUrl(path: string | null | undefined) {
   if (!path) return null;
   return `${getPublicEnv().NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${path}`;
 }
+
+/** URL pública de la portada de una empresa (bucket company-covers). */
+export function companyCoverUrl(path: string | null | undefined) {
+  if (!path) return null;
+  return `${getPublicEnv().NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/company-covers/${path}`;
+}

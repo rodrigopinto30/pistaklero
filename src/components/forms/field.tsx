@@ -96,7 +96,7 @@ export function Field({
  * los lectores de pantalla); los errores quedan junto al formulario, que es donde hay que corregirlos.
  */
 /** Textos de aviso para lo guardado (namespace "Toasts"). */
-export type SuccessKey = "saved" | "invited" | "skillAdded" | "techAdded" | "logoUpdated" | "photoUpdated" | "statusUpdated" | "jobStatusUpdated" | "jobSaved" | "published";
+export type SuccessKey = "saved" | "invited" | "skillAdded" | "techAdded" | "logoUpdated" | "photoUpdated" | "statusUpdated" | "jobStatusUpdated" | "jobSaved" | "published" | "coverUpdated";
 
 export function FormMessage({ state, success = "saved" }: { state: FormState; success?: SuccessKey }) {
   const t = useTranslations("Form");
