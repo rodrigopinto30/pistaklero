@@ -1,4 +1,4 @@
-import { expect, MAILPIT_URL, test, uniqueEmail } from "./support/fixtures";
+import { expect, MAILPIT_URL, signOutFromMenu, test, uniqueEmail } from "./support/fixtures";
 
 test("ingreso con link mágico real (Mailpit) y salida", async ({ page }) => {
   const email = uniqueEmail("link");
@@ -31,7 +31,7 @@ test("ingreso con link mágico real (Mailpit) y salida", async ({ page }) => {
   expect(cookies.length).toBeGreaterThan(0);
   expect(cookies.every((c) => c.httpOnly), "cookies de sesión HttpOnly").toBe(true);
 
-  await page.getByRole("button", { name: "Salir" }).click();
+  await signOutFromMenu(page);
   await expect(page.getByRole("link", { name: "Ingresar" })).toBeVisible();
 });
 

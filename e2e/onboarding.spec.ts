@@ -1,4 +1,4 @@
-import { expect, signIn, test, uniqueEmail, fillPersonName } from "./support/fixtures";
+import { expect, fillPersonName, openAccountMenu, signIn, test, uniqueEmail } from "./support/fixtures";
 
 test("una candidata elige su rol y queda registrada", async ({ page }) => {
   await signIn(page, uniqueEmail("candidata"));
@@ -15,7 +15,8 @@ test("una candidata elige su rol y queda registrada", async ({ page }) => {
 
   await page.waitForURL("/es/perfil");
   await expect(page.getByRole("link", { name: "Completá tu registro" })).toBeHidden();
-  await expect(page.getByRole("link", { name: "Mi perfil", exact: true })).toBeVisible();
+  const menu = await openAccountMenu(page);
+  await expect(menu.getByRole("menuitem", { name: "Mi perfil" })).toBeVisible();
 });
 
 test("una empresa con email de su dominio, y el mismo dominio no se repite", async ({ browser }) => {

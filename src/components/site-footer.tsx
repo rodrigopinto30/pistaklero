@@ -4,9 +4,14 @@ import { Link } from "@/i18n/navigation";
 export async function SiteFooter() {
   const t = await getTranslations("Footer");
   return (
-    <footer className="border-t border-border">
+    <footer className="mt-8 bg-card shadow-footer">
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 text-sm text-muted-foreground">
-        <p>{t("tagline")}</p>
+        <p>
+          <span className="font-semibold text-foreground">
+            Pista<span className="text-primary">klero</span>
+          </span>{" "}
+          · {t("tagline")}
+        </p>
         <nav aria-label={t("label")}>
           <ul className="flex flex-wrap gap-x-4 gap-y-2">
             <li>

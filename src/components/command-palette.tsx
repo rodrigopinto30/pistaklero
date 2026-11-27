@@ -4,15 +4,21 @@ import { ArrowRight, Search } from "lucide-react";
 import Form from "next/form";
 import { useLocale, useTranslations } from "next-intl";
 import { type ComponentProps, useEffect, useRef } from "react";
-import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "@/i18n/navigation";
 
 export type PaletteLink = { href: ComponentProps<typeof Link>["href"]; label: string };
 
+const OPEN_EVENT = "pistaklero:palette";
+
+/** Abre la búsqueda rápida desde cualquier botón (por ejemplo, la leyenda "Ctrl K" del encabezado). */
+export function openCommandPalette() {
+  window.dispatchEvent(new Event(OPEN_EVENT));
+}
+
 /*
- * Búsqueda rápida (Ctrl+K / ⌘K). Es un extra: el buscador del inicio siempre está visible.
+ * Búsqueda rápida (Ctrl+K / ⌘K). Es un extra: el buscador del encabezado siempre está visible.
  * <dialog> nativo: atrapa el foco, Esc cierra y el foco vuelve adonde estaba.
  */
 export function CommandPalette({ links }: { links: PaletteLink[] }) {
@@ -37,21 +43,15 @@ export function CommandPalette({ links }: { links: PaletteLink[] }) {
       }
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener(OPEN_EVENT, open);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener(OPEN_EVENT, open);
+    };
   }, []);
 
   return (
     <>
-      <button
-        type="button"
-        onClick={open}
-        aria-label={t("open")}
-        aria-keyshortcuts="Control+K Meta+K"
-        title={`${t("open")} (Ctrl+K)`}
-        className={buttonVariants({ variant: "ghost", size: "icon" })}
-      >
-        <Search aria-hidden="true" />
-      </button>
       <dialog
         ref={dialogRef}
         aria-labelledby="palette-title"
@@ -59,7 +59,7 @@ export function CommandPalette({ links }: { links: PaletteLink[] }) {
         onClick={(event) => {
           if (event.target === dialogRef.current) close();
         }}
-        className="mx-auto mt-[12vh] w-[min(36rem,calc(100%-2rem))] rounded-2xl border border-border bg-card p-0 text-foreground backdrop:bg-black/70"
+        className="mx-auto mt-[12vh] w-[min(36rem,calc(100%-2rem))] rounded-2xl bg-card p-0 text-foreground shadow-soft-lg backdrop:bg-black/50"
       >
         <div className="flex flex-col gap-4 p-5">
           <h2 id="palette-title" className="text-lg font-semibold">

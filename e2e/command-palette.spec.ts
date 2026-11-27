@@ -22,8 +22,8 @@ test("Ctrl+K abre la búsqueda rápida y busca empleos", async ({ page }) => {
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
 
-  // También se abre con el botón (y con ⌘K en Mac)
-  const opener = page.getByRole("button", { name: "Búsqueda rápida" });
+  // También se abre con la leyenda del encabezado (y con ⌘K en Mac)
+  const opener = page.getByRole("button", { name: /Ctrl K \(abrir la búsqueda rápida\)/ });
   await opener.click();
   await expect(dialog).toBeVisible();
   await page.keyboard.press("Escape");
@@ -49,7 +49,7 @@ test("los accesos de la búsqueda rápida dependen del rol", async ({ page }) =>
   await page.goto("/es");
   await openWithShortcut(page, page.getByRole("dialog", { name: "Búsqueda rápida" }));
   const nav = page.getByRole("dialog", { name: "Búsqueda rápida" }).getByRole("navigation", { name: "Ir a" });
-  await expect(nav.getByRole("link")).toHaveText(["Inicio", "Empresas", "Publicaciones", "Mis postulaciones", "Guardados", "Mi perfil", "Mis publicaciones", "Ajustes"]);
+  await expect(nav.getByRole("link")).toHaveText(["Inicio", "Empresas", "Publicaciones", "Mi perfil", "Mis postulaciones", "Guardados", "Mis publicaciones", "Ajustes"]);
   await nav.getByRole("link", { name: "Mis postulaciones" }).click();
   await page.waitForURL("/es/mis-postulaciones");
   await expect(page.getByRole("dialog", { name: "Búsqueda rápida" })).toBeHidden();

@@ -1,7 +1,7 @@
 import { connection } from "next/server";
 import { getLocale, getTranslations } from "next-intl/server";
 import { JobCard } from "@/components/jobs/job-card";
-import { SearchForm } from "@/components/jobs/search-form";
+import { ActiveFilters } from "@/components/jobs/active-filters";
 import { buttonVariants } from "@/components/ui/button";
 import { getJobViewer } from "@/lib/jobs/viewer";
 import { createClient } from "@/lib/supabase/server";
@@ -15,6 +15,7 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
   const filters = parseSearchParams(params);
   const locale = await getLocale();
   const t = await getTranslations("Search");
+  const tHeader = await getTranslations("Header");
 
   const supabase = await createClient();
   const { data: jobs, error } = await supabase.rpc("search_jobs", toSearchArgs(filters));
@@ -32,15 +33,10 @@ export default async function Home({ searchParams }: PageProps<"/[locale]">) {
   const viewer = await getJobViewer([...results, ...suggestions].map((job) => job.id));
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          {t("title")} <span className="text-primary">{t("titleAccent")}</span>
-        </h1>
-        <p className="text-muted-foreground">{t("subtitle")}</p>
-      </div>
-
-      <SearchForm filters={filters} locale={locale} />
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6">
+      {/* El buscador y los filtros están en el encabezado: acá, directo a los empleos. */}
+      <h1 className="sr-only">{tHeader("tabs.jobs")}</h1>
+      <ActiveFilters params={params} filters={filters} />
 
       <section aria-labelledby="results-title" className="flex flex-col gap-4">
         <h2 id="results-title" className="sr-only">

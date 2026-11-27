@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, expectToast, signInAsReadyCandidate, test } from "./support/fixtures";
+import { expect, expectNoA11yViolations, expectToast, signInAsReadyCandidate, signOutFromMenu, test } from "./support/fixtures";
 
 test("cada acción se confirma con un aviso chico que se cierra solo", async ({ page }) => {
   await signInAsReadyCandidate(page);
@@ -30,6 +30,6 @@ test("cada acción se confirma con un aviso chico que se cierra solo", async ({ 
 test("salir de la cuenta avisa en la página siguiente", async ({ page }) => {
   await signInAsReadyCandidate(page);
   await page.goto("/es");
-  await page.getByRole("button", { name: "Salir" }).click();
+  await signOutFromMenu(page);
   await expectToast(page, "Cerraste sesión. ¡Hasta pronto!");
 });

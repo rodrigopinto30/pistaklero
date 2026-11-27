@@ -136,7 +136,7 @@ test.describe("perfil del candidato", () => {
     await preferences.getByRole("button", { name: "Guardar" }).click();
     await expectToast(page, "Cambios guardados.");
     await page.getByRole("link", { name: "Ver cómo se ve mi perfil" }).click();
-    await expect(page.locator("img[src*='/avatars/']")).toBeVisible();
+    await expect(page.getByRole("main").locator("img[src*='/avatars/']")).toBeVisible();
 
     await page.goBack();
     await page.getByRole("region", { name: "Datos personales" }).getByRole("button", { name: "Quitar foto" }).click();
