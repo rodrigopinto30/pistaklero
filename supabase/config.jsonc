@@ -209,7 +209,8 @@
     // Allow/disallow testing manual linking of accounts
     "enable_manual_linking": false,
     // Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.
-    "minimum_password_length": 6,
+    // 8 como pide OWASP ASVS; sin reglas de composición (NIST 800-63B). La app además rechaza las más comunes.
+    "minimum_password_length": 8,
     // Passwords that do not meet the following requirements will be rejected as weak. Supported values
     // are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`
     "password_requirements": "",
@@ -258,18 +259,21 @@
       // addresses. If disabled, only the new email is required to confirm.
       "double_confirm_changes": true,
       // If enabled, users need to confirm their email address before signing in.
-      "enable_confirmations": false,
+      // Con contraseña, el email se confirma una vez con un código de 6 dígitos: la verificación de
+      // empresas por dominio depende de que el email sea de verdad de quien se registra.
+      "enable_confirmations": true,
       // If enabled, users will need to reauthenticate or have logged in recently to change their password.
       "secure_password_change": false,
       // If enabled, users will need to provide their current password to change their password, unless
       // they signed in with a one-time password, magic link, or recovery link.
-      // "require_current_password": true,
+      "require_current_password": true,
       // Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
       "max_frequency": "1s",
       // Number of characters used in the email OTP.
       "otp_length": 6,
       // Number of seconds before the email OTP expires (defaults to 1 hour).
-      "otp_expiry": 900,
+      // Los códigos se escriben a mano: una hora alcanza. La app limita los intentos fallidos por email.
+      "otp_expiry": 3600,
 
       // Use a production-ready SMTP server
       // "smtp": {
@@ -282,26 +286,31 @@
       //   "sender_name": "Admin"
       // },
 
-      // Plantillas propias: el link usa token_hash, así funciona aunque se abra en otro dispositivo.
+      // Plantillas propias. Confirmar el email y recuperar la contraseña usan un código de 6 dígitos
+      // que se escribe en la misma pantalla (sin links). El link mágico queda solo para los tests.
       "template": {
-        "magic_link": {
-          "subject": "Tu link para entrar a Pistaklero · Your Pistaklero sign-in link",
-          "content_path": "./supabase/templates/magic_link.html"
-        },
         "confirmation": {
+          "subject": "Tu código para confirmar el email · Your confirmation code",
+          "content_path": "./supabase/templates/confirmation.html"
+        },
+        "recovery": {
+          "subject": "Tu código para elegir una contraseña nueva · Your password reset code",
+          "content_path": "./supabase/templates/recovery.html"
+        },
+        "magic_link": {
           "subject": "Tu link para entrar a Pistaklero · Your Pistaklero sign-in link",
           "content_path": "./supabase/templates/magic_link.html"
         }
       },
 
-      // Uncomment to customize notification email template
-      // "notification": {
-      //   "password_changed": {
-      //     "enabled": true,
-      //     "subject": "Your password has been changed",
-      //     "content_path": "./supabase/templates/password_changed_notification.html"
-      //   }
-      // },
+      // Aviso cuando cambia la contraseña (OWASP ASVS: avisar de cambios en las credenciales).
+      "notification": {
+        "password_changed": {
+          "enabled": true,
+          "subject": "Cambiaste tu contraseña · Your password was changed",
+          "content_path": "./supabase/templates/password_changed.html"
+        }
+      }
     },
 
     "sms": {

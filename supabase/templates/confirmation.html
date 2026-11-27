@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pistaklero</title>
+  </head>
+  <body style="margin:0;padding:24px;background:#f6f7f4;color:#111513;font-family:Arial,Helvetica,sans-serif;line-height:1.5">
+    <main style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:16px;padding:24px">
+      <h1 style="font-size:22px;margin:0 0 16px">Pista<span style="color:#3d6b0a">klero</span></h1>
+
+      <section lang="es">
+        <p>Este es tu código para confirmar tu email en Pistaklero. Escribilo en la pantalla donde creaste la cuenta:</p>
+        <p style="font-size:32px;font-weight:bold;letter-spacing:8px;margin:16px 0;font-family:'Courier New',monospace">{{ .Token }}</p>
+        <p style="color:#535b56;font-size:14px">Vence en una hora. Si no creaste una cuenta, ignorá este email.</p>
+      </section>
+
+      <hr style="border:none;border-top:1px solid #dde1dc;margin:24px 0" />
+
+      <section lang="en">
+        <p>This is your code to confirm your email on Pistaklero. Type it on the screen where you created your account:</p>
+        <p style="font-size:32px;font-weight:bold;letter-spacing:8px;margin:16px 0;font-family:'Courier New',monospace">{{ .Token }}</p>
+        <p style="color:#535b56;font-size:14px">It expires in one hour. If you didn't create an account, ignore this email.</p>
+      </section>
+    </main>
+  </body>
+</html>
