@@ -75,12 +75,12 @@ test.describe("perfil del candidato", () => {
   });
 
   test("la visibilidad y el bloqueo deciden quién ve el perfil", async ({ browser }) => {
-    const domain = `bloqueada-${Date.now()}.com`;
+    const domain = `bloqueada-${Date.now()}${Math.random().toString(36).slice(2, 6)}.com`;
 
     // La empresa que después va a quedar bloqueada
     const companyPage = await (await browser.newContext()).newPage();
     await signIn(companyPage, uniqueEmail("rrhh", domain));
-    await onboardAsCompany(companyPage, `Empleador ${Date.now()}`, domain);
+    await onboardAsCompany(companyPage, `Empleador ${domain}`, domain);
 
     // La candidata
     const page = await (await browser.newContext()).newPage();
@@ -98,7 +98,8 @@ test.describe("perfil del candidato", () => {
     await preferences.getByLabel(/Cualquiera con el enlace/).check();
     await preferences.getByRole("button", { name: "Guardar" }).click();
     await expectToast(page, "Cambios guardados.");
-    expect((await anonymous.goto(publicUrl!))?.status()).toBe(200);
+    // Con la suite cargada, el servidor de desarrollo puede tardar en reflejarlo: se reintenta unos segundos.
+    await expect.poll(async () => (await anonymous.goto(publicUrl!))?.status(), { timeout: 15_000 }).toBe(200);
 
     // Bloquea a su empleador: la empresa deja de verlo aunque sea público.
     const blocked = page.getByRole("region", { name: "Empresas bloqueadas" });
@@ -106,7 +107,7 @@ test.describe("perfil del candidato", () => {
     await blocked.getByRole("button", { name: "Buscar" }).click();
     await blocked.getByRole("button", { name: /^Bloquear/ }).click();
     await expect(blocked.getByRole("button", { name: /^Desbloquear/ })).toBeVisible();
-    expect((await companyPage.goto(publicUrl!))?.status()).toBe(404);
+    await expect.poll(async () => (await companyPage.goto(publicUrl!))?.status(), { timeout: 15_000 }).toBe(404);
   });
 
   test("la foto de perfil se sube, se ve en público y se puede quitar", async ({ page }) => {

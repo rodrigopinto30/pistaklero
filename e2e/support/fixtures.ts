@@ -291,7 +291,27 @@ export async function expectNoA11yViolations(page: Page) {
  * Test con chequeo automático: falla si la página tiene errores de consola o bloqueos de la CSP.
  * Los 404 esperados (por ejemplo, la página de "no encontrado") no cuentan.
  */
+/**
+ * Espera a que React haya hidratado la página (el layout marca <html data-hydrated>).
+ * Antes de eso, los botones que solo funcionan con JavaScript todavía no responden.
+ */
+export async function waitForHydration(page: Page) {
+  await page.locator("html[data-hydrated]").waitFor({ state: "attached", timeout: 20_000 });
+}
+
 export const test = base.extend<{ consoleErrors: string[] }>({
+  // Cada page.goto espera la hidratación (salvo en las pruebas sin JavaScript).
+  page: async ({ page, javaScriptEnabled }, provide) => {
+    if (javaScriptEnabled !== false) {
+      const goto = page.goto.bind(page);
+      page.goto = async (...args: Parameters<Page["goto"]>) => {
+        const response = await goto(...args);
+        if (response?.ok() && response.headers()["content-type"]?.includes("text/html")) await waitForHydration(page);
+        return response;
+      };
+    }
+    await provide(page);
+  },
   consoleErrors: [
     async ({ page }, use) => {
       const errors: string[] = [];
