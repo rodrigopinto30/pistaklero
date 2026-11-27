@@ -4,6 +4,7 @@ import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { NotFoundContent } from "@/components/not-found-content";
 import { type AppLocale, routing } from "@/i18n/routing";
+import { getTheme } from "@/lib/theme/server";
 import { fontVariables } from "./fonts";
 import "./globals.css";
 
@@ -30,7 +31,7 @@ export default async function GlobalNotFound() {
   const locale = await resolveLocale();
 
   return (
-    <html lang={locale} className={`dark ${fontVariables} h-full`}>
+    <html lang={locale} className={`${await getTheme()} ${fontVariables} h-full`}>
       <body className="flex min-h-full flex-col">
         <main id="main-content" className="flex flex-1 flex-col">
           <NotFoundContent locale={locale} />
