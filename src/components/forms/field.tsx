@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { type ReactNode, useEffect, useRef } from "react";
 import { notify } from "@/components/toaster";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import type { FieldError, FormState } from "@/lib/forms";
 
 type ControlProps = {
@@ -11,11 +12,25 @@ type ControlProps = {
   name: string;
   "aria-invalid": true | undefined;
   "aria-describedby": string | undefined;
+  "aria-required": true | undefined;
 };
+
+/**
+ * Grilla de campos en columnas. Cada Field ocupa tres filas (rótulo, control y mensajes) con subgrid:
+ * así los controles quedan alineados aunque un rótulo sea más largo o un campo tenga ayuda y otro no.
+ */
+export function FieldGrid({ className, children }: { className?: string; children: ReactNode }) {
+  return (
+    <div data-slot="field-grid" className={cn("grid gap-x-4 gap-y-4 sm:grid-cols-2", className)}>
+      {children}
+    </div>
+  );
+}
 
 /**
  * Etiqueta + control + ayuda + error, asociados con aria-describedby (WCAG 1.3.1 y 3.3.1).
  * El control se pasa como función para recibir los atributos de accesibilidad.
+ * Como recomienda GOV.UK, solo se marcan los campos opcionales; los obligatorios llevan aria-required.
  */
 export function Field({
   id,
@@ -24,6 +39,7 @@ export function Field({
   required,
   hint,
   error,
+  className,
   children,
 }: {
   id: string;
@@ -32,6 +48,7 @@ export function Field({
   required?: boolean;
   hint?: string;
   error?: FieldError;
+  className?: string;
   children: (props: ControlProps) => ReactNode;
 }) {
   const t = useTranslations("Form");
@@ -39,26 +56,36 @@ export function Field({
   const errorId = error ? `${id}-error` : undefined;
 
   return (
-    <div className="flex flex-col gap-2">
-      <Label htmlFor={id}>
-        {label}{" "}
-        <span className="font-normal text-muted-foreground">{required ? t("required") : t("optional")}</span>
+    <div
+      className={cn(
+        "flex flex-col gap-2 in-data-[slot=field-grid]:row-span-3 in-data-[slot=field-grid]:grid in-data-[slot=field-grid]:grid-rows-subgrid in-data-[slot=field-grid]:gap-y-2",
+        className
+      )}
+    >
+      <Label htmlFor={id} className="in-data-[slot=field-grid]:self-end">
+        {label}
+        {!required && <span className="font-normal text-muted-foreground"> {t("optional")}</span>}
       </Label>
       {children({
         id,
         name,
         "aria-invalid": error ? true : undefined,
         "aria-describedby": [errorId, hintId].filter(Boolean).join(" ") || undefined,
+        "aria-required": required ? true : undefined,
       })}
-      {hint && (
-        <p id={hintId} className="text-sm text-muted-foreground">
-          {hint}
-        </p>
-      )}
-      {error && (
-        <p id={errorId} className="text-sm text-destructive">
-          {t(`errors.${error.code}`, { limit: error.limit ?? 0 })}
-        </p>
+      {(hint || error) && (
+        <div className="flex flex-col gap-1">
+          {hint && (
+            <p id={hintId} className="text-sm text-muted-foreground">
+              {hint}
+            </p>
+          )}
+          {error && (
+            <p id={errorId} className="text-sm text-destructive">
+              {t(`errors.${error.code}`, { limit: error.limit ?? 0 })}
+            </p>
+          )}
+        </div>
       )}
     </div>
   );

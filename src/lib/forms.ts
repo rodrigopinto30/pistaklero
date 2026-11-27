@@ -5,7 +5,18 @@ import type { z } from "zod";
  * Los errores viajan como códigos y el cliente los traduce (namespace "Form.errors").
  */
 // Además de los genéricos, códigos de reglas propias (superRefine con message = código).
-const CUSTOM_CODES = ["required", "max_below_min", "range_too_wide", "options", "required_unless_remote"] as const;
+const CUSTOM_CODES = [
+  "required",
+  "max_below_min",
+  "range_too_wide",
+  "options",
+  "required_unless_remote",
+  "end_before_start",
+  "end_required",
+  "invalid_url",
+  "invalid_month",
+  "amount_positive",
+] as const;
 export type FieldErrorCode = "required" | "too_short" | "too_long" | "invalid" | (typeof CUSTOM_CODES)[number];
 export type FieldError = { code: FieldErrorCode; limit?: number };
 export type FormErrorCode =
@@ -52,7 +63,8 @@ export function zodFieldErrors(error: z.ZodError): Record<string, FieldError> {
     const field = issue.path[0];
     if (typeof field !== "string" || result[field]) continue;
 
-    if (issue.code === "custom" && (CUSTOM_CODES as readonly string[]).includes(issue.message)) {
+    // Un esquema puede pedir un mensaje propio con { error: "código" } (fechas, URLs, montos…).
+    if ((CUSTOM_CODES as readonly string[]).includes(issue.message)) {
       result[field] = { code: issue.message as FieldErrorCode };
     } else if (issue.code === "too_small" && issue.origin === "string") {
       result[field] =
