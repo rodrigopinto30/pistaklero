@@ -90,6 +90,22 @@ export async function reportJobAs(jobId: string, reason: "scam" | "fake" | "disc
   await admin.from("job_reports").insert({ job_id: jobId, reporter_id: user.user!.id, reason });
 }
 
+/** Candidata creada directo en la base (sin pasar por la interfaz). */
+export async function seedCandidate(email: string, fullName = "Candidata de prueba") {
+  const { data: user, error } = await admin.auth.admin.createUser({ email, email_confirm: true });
+  if (error) throw error;
+  await admin.from("profiles").insert({ id: user.user.id, role: "candidate" });
+  await admin.from("candidates").insert({ user_id: user.user.id, slug: `seed-${user.user.id.slice(0, 8)}`, full_name: fullName });
+  return user.user.id;
+}
+
+/** Postulación con fecha en el pasado, para simular el paso del tiempo. */
+export async function seedOldApplication(jobId: string, candidateId: string, daysAgo: number) {
+  const when = new Date(Date.now() - daysAgo * 86_400_000).toISOString();
+  const { error } = await admin.from("applications").insert({ job_id: jobId, candidate_id: candidateId, created_at: when, status_changed_at: when });
+  if (error) throw error;
+}
+
 export async function emailOf(userId: string) {
   const { data } = await admin.auth.admin.getUserById(userId);
   return data.user!.email!;
