@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
 import { Button } from "@/components/ui/button";
 import { useFormChanged } from "@/components/forms/use-form-changed";
@@ -10,7 +10,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import { CURRENCIES, SALARY_BASES, SALARY_PERIODS } from "@/lib/validation/profile";
-import { EMPLOYMENT_TYPES, QUESTION_TYPES, SENIORITIES, VALID_DAYS, WORK_MODES } from "@/lib/validation/job";
+import { EMPLOYMENT_TYPES, QUESTION_TYPES, APPLY_MODES, SENIORITIES, VALID_DAYS, WORK_MODES } from "@/lib/validation/job";
 import { saveJob } from "../actions";
 
 export type JobFormValues = Record<string, string> & { skills: string };
@@ -51,6 +51,7 @@ export function JobForm({
   const formRef = useFocusFirstError(state);
   const errors = state.status === "error" ? state.fieldErrors : {};
   const v = (name: string) => valueOf(state, name, saved[name]);
+  const [applyMode, setApplyMode] = useState<(typeof APPLY_MODES)[number]>(v("applyMode") === "external" ? "external" : "pistaklero");
   const selectedSkills = new Set(v("skills").split(",").filter(Boolean));
 
   const select = (name: string, options: readonly string[], label: (o: string) => string) =>
@@ -166,6 +167,36 @@ export function JobForm({
         </div>
       </Fieldset>
 
+      <Fieldset legend={t("sections.apply")} hint={t("applyHint")}>
+        <div role="radiogroup" aria-label={t("sections.apply")} className="grid gap-2 sm:grid-cols-2">
+          {APPLY_MODES.map((mode) => (
+            <label
+              key={mode}
+              className="flex cursor-pointer flex-col gap-1 rounded-xl bg-muted/60 p-4 has-checked:bg-primary/10 has-checked:ring-2 has-checked:ring-primary has-focus-visible:outline-2 has-focus-visible:outline-ring"
+            >
+              <span className="flex items-center gap-2 font-medium">
+                <input
+                  type="radio"
+                  name="applyMode"
+                  value={mode}
+                  checked={applyMode === mode}
+                  onChange={() => setApplyMode(mode)}
+                  className="size-4 accent-primary"
+                />
+                {t(`applyModes.${mode}`)}
+              </span>
+              <span className="text-sm text-muted-foreground">{t(`applyModeHints.${mode}`)}</span>
+            </label>
+          ))}
+        </div>
+        {applyMode === "external" && (
+          <Field id="job-externalUrl" name="externalUrl" label={t("externalUrl")} required hint={t("externalUrlHint")} error={errors.externalUrl}>
+            {(p) => <Input {...p} type="url" inputMode="url" placeholder="https://" defaultValue={v("externalUrl")} />}
+          </Field>
+        )}
+      </Fieldset>
+
+      {applyMode === "pistaklero" && (
       <Fieldset legend={t("sections.questions")} hint={t("questionsHint")}>
         {([1, 2] as const).map((n) => (
           <div key={n} role="group" aria-labelledby={`question${n}-title`} className="flex flex-col gap-3 rounded-xl bg-muted/60 p-4">
@@ -186,6 +217,7 @@ export function JobForm({
           </div>
         ))}
       </Fieldset>
+      )}
 
       <FormMessage state={state} success="jobSaved" />
       <div className="flex flex-wrap gap-2">

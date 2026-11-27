@@ -28,7 +28,7 @@ test("la empresa gestiona a quien se postuló y la candidata se entera de todo",
   const candidateId = await signInAsReadyCandidate(candidate, "Carla Díaz");
   const candidateEmail = await emailOf(candidateId);
   await candidate.goto(`/es/empleos/${job.slug}`);
-  await candidate.getByRole("button", { name: "Postularme" }).click();
+  await candidate.getByRole("button", { name: "Postularme rápidamente" }).click();
   await expect(candidate.getByRole("status").filter({ hasText: "Tu postulación fue enviada" })).toBeVisible();
 
   // La empresa la ve en "Nuevas"

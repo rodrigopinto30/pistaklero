@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { applyToJob } from "@/app/[locale]/jobs/[slug]/apply-actions";
@@ -53,6 +53,7 @@ export function QuickApplyButton({ jobId, slug, title, applied }: { jobId: strin
 
   return (
     <Button type="button" size="sm" onClick={apply} disabled={pending} aria-label={t("applyTo", { title })} className="relative z-10 rounded-full px-4">
+      {!pending && <Zap aria-hidden="true" />}
       {pending ? tApply("sending") : tApply("apply")}
     </Button>
   );

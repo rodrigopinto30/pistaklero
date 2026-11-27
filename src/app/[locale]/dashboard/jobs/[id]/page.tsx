@@ -86,6 +86,8 @@ export default async function EditJobPage({ params }: PageProps<"/[locale]/dashb
           question2Type: question(2)?.type ?? "none",
           question2Prompt: question(2)?.prompt ?? "",
           question2Options: (question(2)?.options ?? []).join("\n"),
+          applyMode: job.external_url ? "external" : "pistaklero",
+          externalUrl: job.external_url ?? "",
         }}
       />
     </div>

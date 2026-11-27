@@ -471,7 +471,8 @@
       "conditions": "Condiciones",
       "salary": "Salario",
       "skills": "Tecnologías",
-      "questions": "Preguntas filtro"
+      "questions": "Preguntas filtro",
+      "apply": "¿Dónde se postulan?"
     },
     "title": "Puesto",
     "titleHint": "Por ejemplo: Frontend Junior (React)",
@@ -560,10 +561,12 @@
       "skills": "Tecnologías",
       "company": "La empresa",
       "salaryNotInformed": "Sueldo no informado",
-      "applyExternal": "Postularme en el sitio original",
+      "applyExternal": "Postularme",
       "external": "Oferta externa",
       "closed": "Esta oferta ya no recibe postulaciones.",
-      "verified": "Empresa verificada"
+      "verified": "Empresa verificada",
+      "newTab": "(en el sitio de la empresa, se abre en una pestaña nueva)",
+      "applyExternalHint": "Te lleva al sitio de la empresa. Al volver te preguntamos si te postulaste, para sumarla a Mis postulaciones."
     },
     "viewApplicants": "Ver postulantes",
     "templates": {
@@ -578,7 +581,7 @@
       "savedLabel": "Guardado en tu lista",
       "savedToast": "Empleo guardado. Lo encontrás en Guardados.",
       "unsavedToast": "Lo sacaste de tus guardados.",
-      "applyTo": "Postularme a {title}",
+      "applyTo": "Postularme rápidamente a {title}",
       "applied": "Te postulaste",
       "appliedToast": "¡Listo! Te postulaste a {title}.",
       "needsAnswers": "Esta oferta tiene preguntas: respondelas para postularte.",
@@ -588,9 +591,21 @@
         "job_not_available": "Esta oferta ya no está disponible.",
         "limit_reached": "Llegaste a 500 empleos guardados. Sacá alguno para sumar otro.",
         "unknown": "No pudimos guardar el empleo. Probá de nuevo."
-      }
+      },
+      "applyExternalTo": "Postularme a {title} en el sitio de la empresa (se abre en una pestaña nueva)"
     },
-    "verified": "Empresa verificada"
+    "verified": "Empresa verificada",
+    "applyHint": "En Pistaklero las postulaciones llegan ordenadas a tu panel. Si preferís tu portal, cargá el link.",
+    "applyModes": {
+      "pistaklero": "En Pistaklero",
+      "external": "En otro sitio"
+    },
+    "applyModeHints": {
+      "pistaklero": "Postulación rápida: con el perfil, en un clic. Podés sumar preguntas filtro.",
+      "external": "El botón lleva al link de tu portal o formulario (por ejemplo, el de tu ATS)."
+    },
+    "externalUrl": "Link para postularse",
+    "externalUrlHint": "Tiene que empezar con https://."
   },
   "Search": {
     "submit": "Buscar",
@@ -631,7 +646,7 @@
     "removeFilter": "Quitar el filtro {filter}"
   },
   "Apply": {
-    "apply": "Postularme",
+    "apply": "Postularme rápidamente",
     "send": "Enviar postulación",
     "sending": "Enviando…",
     "cancel": "Cancelar",
@@ -665,7 +680,8 @@
     "successToast": "¡Listo! Tu postulación fue enviada. 🚀",
     "suggestSkillsTitle": "Tip:",
     "suggestSkills": "sumá tus habilidades. No es obligatorio, pero las empresas las miran primero.",
-    "suggestSkillsLink": "Completar habilidades"
+    "suggestSkillsLink": "Completar habilidades",
+    "applyExternal": "Postularme"
   },
   "Applications": {
     "metaTitle": "Mis postulaciones",
@@ -687,6 +703,15 @@
       "rejected": "No seleccionada",
       "no_response": "Sin respuesta",
       "withdrawn": "Retirada"
+    },
+    "external": {
+      "title": "En otros sitios",
+      "hint": "Las que nos contaste que hiciste en el sitio de cada empresa. Su estado lo ves allá.",
+      "appliedOn": "te postulaste el {date}",
+      "remove": "Quitar de la lista",
+      "removeFrom": "Quitar de la lista: {job}",
+      "removeTitle": "¿Quitar «{job}» de tu lista?",
+      "removeHint": "Solo se quita de acá: la postulación en el sitio de la empresa sigue igual."
     }
   },
   "Applicants": {
@@ -1413,5 +1438,13 @@
     "add": "Agregar",
     "selected": "Elegidas",
     "remove": "Quitar {name}"
+  },
+  "ExternalApply": {
+    "title": "¿Te postulaste? 📝",
+    "body": "Volviste de «{title}» en {company}. Si te postulaste, la sumamos a Mis postulaciones para que lleves el registro.",
+    "yes": "Sí, me postulé",
+    "no": "No, todavía no",
+    "recorded": "Listo, la sumamos a Mis postulaciones. ✅",
+    "error": "No pudimos guardarla. Probá de nuevo desde la oferta."
   }
 }
