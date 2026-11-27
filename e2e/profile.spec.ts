@@ -139,8 +139,8 @@ test.describe("perfil del candidato", () => {
     await page.getByRole("link", { name: "Vista previa" }).click();
     await expect(page.getByRole("main").locator("img[src*='/avatars/']")).toBeVisible();
 
-    await page.goBack();
-    await page.getByRole("region", { name: "Datos personales" }).getByRole("button", { name: "Quitar foto" }).click();
+    await page.goto("/es/perfil");
+    await page.getByRole("region", { name: "Datos personales" }).getByRole("button", { name: "Quitar", exact: true }).click();
     await confirmDialog(page, "Sí, quitar");
     await expect(page.getByRole("region", { name: "Datos personales" }).locator("img[src*='/avatars/']")).toHaveCount(0);
   });
