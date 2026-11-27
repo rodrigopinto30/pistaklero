@@ -37,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...entry(base, "/legal/terms"),
     ...entry(base, "/legal/privacy"),
     ...entry(base, "/accessibility"),
+    ...entry(base, "/companies"),
     ...entry(base, "/posts"),
     ...(jobs ?? []).flatMap((j) => entry(base, { pathname: "/jobs/[slug]", params: { slug: j.slug } }, j.updated_at)),
     ...(companies ?? []).flatMap((c) => entry(base, { pathname: "/companies/[slug]", params: { slug: c.slug } }, c.updated_at)),

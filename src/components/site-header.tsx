@@ -18,6 +18,7 @@ export async function SiteHeader() {
   // Accesos de la búsqueda rápida, según el rol.
   const paletteLinks: PaletteLink[] = [
     { href: "/", label: tPalette("home") },
+    { href: "/companies", label: t("companies") },
     { href: "/posts", label: t("posts") },
   ];
   if (profile?.role === "candidate") {
@@ -54,6 +55,9 @@ export async function SiteHeader() {
           Pista<span className="text-primary">klero</span>
         </Link>
         <div className="flex flex-wrap items-center justify-end gap-x-1 gap-y-2">
+          <Link href="/companies" className={buttonVariants({ variant: "ghost" })}>
+            {t("companies")}
+          </Link>
           <Link href="/posts" className={buttonVariants({ variant: "ghost" })}>
             {t("posts")}
           </Link>

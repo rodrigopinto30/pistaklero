@@ -1,6 +1,7 @@
 import { Bookmark } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
+import { CompanyCard } from "@/components/companies/company-card";
 import { JobCard } from "@/components/jobs/job-card";
 import { Masonry } from "@/components/masonry";
 import { PostCard } from "@/components/posts/post-card";
@@ -28,11 +29,12 @@ export default async function SavedPage() {
 
   const t = await getTranslations("Saved");
   const supabase = await createClient();
-  const [{ data: cards }, { data: all }, { data: savedPosts }] = await Promise.all([
+  const [{ data: cards }, { data: all }, { data: savedPosts }, { data: savedCompanies }] = await Promise.all([
     supabase.rpc("saved_job_cards"),
     // También las que ya cerraron: se listan aparte para poder sacarlas.
     supabase.from("saved_jobs").select("job_id, jobs(title)").order("created_at", { ascending: false }),
     supabase.rpc("post_cards", { p_saved_only: true, p_limit: 60 }),
+    supabase.rpc("company_cards", { p_saved_only: true, p_limit: 60 }),
   ]);
   const open = cards ?? [];
   const openIds = new Set(open.map((job) => job.id));
@@ -72,6 +74,23 @@ export default async function SavedPage() {
           )}
         </section>
       )}
+
+      <section aria-labelledby="saved-companies" className="flex flex-col gap-4">
+        <h2 id="saved-companies" className="text-xl font-semibold">
+          {t("companies", { count: (savedCompanies ?? []).length })}
+        </h2>
+        {(savedCompanies ?? []).length === 0 ? (
+          <p className="rounded-2xl bg-card p-6 text-muted-foreground shadow-soft">{t("emptyCompanies")}</p>
+        ) : (
+          <Masonry>
+            {savedCompanies!.map((company) => (
+              <li key={company.id}>
+                <CompanyCard company={company} locale={locale} signedIn />
+              </li>
+            ))}
+          </Masonry>
+        )}
+      </section>
 
       <section aria-labelledby="saved-posts" className="flex flex-col gap-4">
         <h2 id="saved-posts" className="text-xl font-semibold">

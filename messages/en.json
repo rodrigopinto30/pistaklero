@@ -15,7 +15,8 @@
     "lightMode": "Light mode",
     "saved": "Saved",
     "posts": "Posts",
-    "myPosts": "My posts"
+    "myPosts": "My posts",
+    "companies": "Companies"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -1078,7 +1079,9 @@
     "closed": "Jobs that already closed",
     "unavailable": "Job not available",
     "posts": "{count, plural, =0 {Posts} one {# post} other {# posts}}",
-    "emptyPosts": "You haven't saved any posts yet."
+    "emptyPosts": "You haven't saved any posts yet.",
+    "companies": "{count, plural, =0 {Companies} one {# company} other {# companies}}",
+    "emptyCompanies": "You haven't saved any companies yet."
   },
   "Posts": {
     "metaTitle": "Posts",
@@ -1156,6 +1159,35 @@
       "empty": "You haven't posted anything yet.",
       "likes": "{count, plural, =0 {no likes} one {# like} other {# likes}}",
       "hidden": "Hidden by reports"
+    }
+  },
+  "Companies": {
+    "metaTitle": "Companies",
+    "title": "Companies",
+    "subtitle": "Get to know where you could work: what they do, what they're like and what's open.",
+    "verified": "Verified company",
+    "count": "{count, plural, =0 {No companies yet} one {# company} other {# companies}}",
+    "countFor": "{count, plural, =0 {No companies for “{query}”} one {# company for “{query}”} other {# companies for “{query}”}}",
+    "empty": "No companies yet.",
+    "emptySearch": "We couldn't find companies for that search.",
+    "seeAll": "See all companies",
+    "loadMore": "Load more",
+    "openJobs": "{count, plural, =0 {No open jobs} one {# open job} other {# open jobs}}",
+    "likes": "{count, plural, =0 {no likes} one {# like} other {# likes}}",
+    "actions": {
+      "like": "Like: {name}",
+      "save": "Save company: {name}",
+      "likesCount": "{count, plural, one {like} other {likes}}",
+      "savedToast": "Company saved. Find it in Saved.",
+      "unsavedToast": "Removed from your saved companies.",
+      "signInToLike": "Sign in to like {name}",
+      "signInToSave": "Sign in to save {name}",
+      "errors": {
+        "not_authorized": "Finish signing up to like or save.",
+        "not_found": "This company is no longer available.",
+        "limit_reached": "You reached 500 saved companies.",
+        "unknown": "We couldn't do it. Try again."
+      }
     }
   }
 }
