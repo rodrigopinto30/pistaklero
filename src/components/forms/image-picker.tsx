@@ -52,13 +52,17 @@ export function ImagePicker({ name, label, hint, currentUrl, shape, maxBytes, er
     return () => form.removeEventListener("reset", onReset);
   }, []);
 
-  const clear = () => {
+  // Vacía el archivo elegido (sin tocar el mensaje de error, que puede explicar por qué).
+  const resetInput = () => {
     if (input.current) {
       input.current.value = "";
       // Para que el formulario note el cambio (por ejemplo, el botón "Guardar").
       input.current.dispatchEvent(new Event("input", { bubbles: true }));
     }
     setPreview(null);
+  };
+  const clear = () => {
+    resetInput();
     setLocalError(null);
   };
 
@@ -67,12 +71,12 @@ export function ImagePicker({ name, label, hint, currentUrl, shape, maxBytes, er
     if (!file) return setPreview(null);
     if (!ACCEPTED.includes(file.type)) {
       setLocalError(t("wrongType"));
-      clear();
+      resetInput();
       return;
     }
     if (file.size > maxBytes) {
       setLocalError(t("tooLarge", { size: maxBytes >= 1_000_000 ? `${Math.round(maxBytes / 1_000_000)} MB` : `${Math.round(maxBytes / 1000)} KB` }));
-      clear();
+      resetInput();
       return;
     }
     setPreview(URL.createObjectURL(file));
