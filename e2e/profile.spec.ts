@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG, expectToast } from "./support/fixtures";
+import { expect, expectNoA11yViolations, onboardAsCandidate, onboardAsCompany, signIn, test, uniqueEmail, PNG, SVG, expectToast, confirmDialog } from "./support/fixtures";
 
 test.describe("perfil del candidato", () => {
   test("se edita por secciones y se ve en el perfil público", async ({ page }) => {
@@ -141,6 +141,7 @@ test.describe("perfil del candidato", () => {
 
     await page.goBack();
     await page.getByRole("region", { name: "Datos personales" }).getByRole("button", { name: "Quitar foto" }).click();
+    await confirmDialog(page, "Sí, quitar");
     await expect(page.getByRole("region", { name: "Datos personales" }).locator("img[src*='/avatars/']")).toHaveCount(0);
   });
 });

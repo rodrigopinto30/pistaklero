@@ -3,13 +3,13 @@
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Field, FieldGrid, FormMessage, useFocusFirstError, valueOf } from "@/components/forms/field";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { idleState } from "@/lib/forms";
 import { CURRENCIES, SALARY_BASES, SALARY_PERIODS } from "@/lib/validation/profile";
 import { deleteSalary, saveSalary } from "../actions";
 import { SubmitButton } from "@/components/forms/submit-button";
+import { ConfirmButton } from "@/components/confirm-button";
 
 export type SalaryValues = {
   amount: string;
@@ -21,6 +21,7 @@ export type SalaryValues = {
 
 export function SalaryForm({ saved }: { saved: SalaryValues }) {
   const t = useTranslations("Profile.salary");
+  const tConfirm = useTranslations("Confirm");
   const [state, action] = useActionState(saveSalary, idleState);
   const formRef = useFocusFirstError(state);
   const errors = state.status === "error" ? state.fieldErrors : {};
@@ -80,9 +81,9 @@ export function SalaryForm({ saved }: { saved: SalaryValues }) {
       </form>
       {saved && (
         <form action={deleteSalary}>
-          <Button type="submit" variant="destructive">
+          <ConfirmButton title={tConfirm("removeSalary.title")} description={tConfirm("removeSalary.description")} confirmLabel={tConfirm("remove")}>
             {t("remove")}
-          </Button>
+          </ConfirmButton>
         </form>
       )}
     </div>

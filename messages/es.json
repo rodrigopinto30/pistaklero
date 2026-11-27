@@ -1291,5 +1291,66 @@
     "shortcutBefore": "Tip: con",
     "shortcutAction": "abrir la búsqueda rápida",
     "shortcutAfter": "vas a cualquier sección al instante."
+  },
+  "Confirm": {
+    "cancel": "Cancelar",
+    "delete": "Sí, borrar",
+    "remove": "Sí, quitar",
+    "withdraw": {
+      "title": "¿Retirar tu postulación a {job}?",
+      "description": "La empresa deja de verla. No se puede deshacer."
+    },
+    "noUndo": "No se puede deshacer.",
+    "deletePost": {
+      "title": "¿Borrar la publicación? 🗑️",
+      "description": "Se borra para siempre, con sus me gusta y guardados."
+    },
+    "deleteEntry": {
+      "title": "¿Borrar «{item}»?"
+    },
+    "removeSkill": {
+      "title": "¿Quitar {skill}?",
+      "description": "Podés volver a agregarla cuando quieras."
+    },
+    "removeTech": {
+      "title": "¿Quitar {tech} del stack?",
+      "description": "Podés volver a agregarla cuando quieras."
+    },
+    "removeSalary": {
+      "title": "¿Quitar tu expectativa salarial?",
+      "description": "Las ofertas dejan de compararse con tu expectativa."
+    },
+    "removeLogo": {
+      "title": "¿Quitar el logo?",
+      "description": "La empresa se muestra con sus iniciales hasta que subas otro."
+    },
+    "removeCover": {
+      "title": "¿Quitar la portada?",
+      "description": "Las tarjetas muestran el degradé de la empresa."
+    },
+    "removePhoto": {
+      "title": "¿Quitar tu foto?",
+      "description": "Se muestran tus iniciales hasta que subas otra."
+    },
+    "removeMember": {
+      "title": "¿Quitar a {email} del equipo?",
+      "description": "Pierde el acceso al panel de la empresa."
+    },
+    "revokeInvitation": {
+      "title": "¿Cancelar la invitación a {email}?",
+      "description": "El link del email deja de funcionar."
+    },
+    "deleteDraft": {
+      "title": "¿Borrar el borrador?"
+    },
+    "hideJob": {
+      "title": "¿Ocultar «{job}»?",
+      "description": "Deja de verse en el sitio."
+    },
+    "adminDeletePost": {
+      "title": "¿Borrar «{title}»?",
+      "description": "Se borra para siempre."
+    },
+    "withdrawConfirm": "Sí, retirarla"
   }
 }

@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, linkFromEmail, onboardAsCompany, signIn, test, uniqueEmail, expectToast } from "./support/fixtures";
+import { expect, expectNoA11yViolations, linkFromEmail, onboardAsCompany, signIn, test, uniqueEmail, expectToast, confirmDialog } from "./support/fixtures";
 
 test("el owner invita, la persona invitada se suma y el equipo se gestiona", async ({ browser }) => {
   const domain = `equipo-${Date.now()}.com`;
@@ -47,6 +47,7 @@ test("el owner invita, la persona invitada se suma y el equipo se gestiona", asy
   await invite.getByLabel(/^Email/).fill(other);
   await invite.getByRole("button", { name: "Enviar invitación" }).click();
   await owner.getByRole("button", { name: `Revocar la invitación de ${other.toLowerCase()}` }).click();
+  await confirmDialog(owner, "Sí, quitar");
   await expect(owner.getByRole("region", { name: "Invitaciones pendientes" })).not.toContainText(other.toLowerCase());
 });
 

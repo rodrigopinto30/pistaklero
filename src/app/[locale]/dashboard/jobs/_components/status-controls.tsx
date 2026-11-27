@@ -6,9 +6,11 @@ import { FormMessage } from "@/components/forms/field";
 import { Button } from "@/components/ui/button";
 import { idleState } from "@/lib/forms";
 import { deleteDraft, setJobStatus } from "../actions";
+import { ConfirmButton } from "@/components/confirm-button";
 
 export function StatusControls({ jobId, status, locale }: { jobId: string; status: string; locale: string }) {
   const t = useTranslations("Jobs");
+  const tConfirm = useTranslations("Confirm");
   const [state, action, pending] = useActionState(setJobStatus, idleState);
 
   return (
@@ -36,9 +38,9 @@ export function StatusControls({ jobId, status, locale }: { jobId: string; statu
           <form action={deleteDraft}>
             <input type="hidden" name="jobId" value={jobId} />
             <input type="hidden" name="locale" value={locale} />
-            <Button type="submit" variant="destructive">
+            <ConfirmButton title={tConfirm("deleteDraft.title")} description={tConfirm("noUndo")} confirmLabel={tConfirm("delete")}>
               {t("deleteDraft")}
-            </Button>
+            </ConfirmButton>
           </form>
         )}
       </div>

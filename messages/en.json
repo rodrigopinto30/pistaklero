@@ -1291,5 +1291,66 @@
     "shortcutBefore": "Tip: press",
     "shortcutAction": "open quick search",
     "shortcutAfter": "to jump to any section."
+  },
+  "Confirm": {
+    "cancel": "Cancel",
+    "delete": "Yes, delete",
+    "remove": "Yes, remove",
+    "withdraw": {
+      "title": "Withdraw your application to {job}?",
+      "description": "The company stops seeing it. This can't be undone."
+    },
+    "noUndo": "This can't be undone.",
+    "deletePost": {
+      "title": "Delete this post? 🗑️",
+      "description": "It's deleted forever, along with its likes and saves."
+    },
+    "deleteEntry": {
+      "title": "Delete “{item}”?"
+    },
+    "removeSkill": {
+      "title": "Remove {skill}?",
+      "description": "You can add it back anytime."
+    },
+    "removeTech": {
+      "title": "Remove {tech} from the stack?",
+      "description": "You can add it back anytime."
+    },
+    "removeSalary": {
+      "title": "Remove your salary expectation?",
+      "description": "Jobs stop being compared with your expectation."
+    },
+    "removeLogo": {
+      "title": "Remove the logo?",
+      "description": "The company shows its initials until you upload another one."
+    },
+    "removeCover": {
+      "title": "Remove the cover?",
+      "description": "Cards show the company gradient."
+    },
+    "removePhoto": {
+      "title": "Remove your photo?",
+      "description": "Your initials are shown until you upload another one."
+    },
+    "removeMember": {
+      "title": "Remove {email} from the team?",
+      "description": "They lose access to the company dashboard."
+    },
+    "revokeInvitation": {
+      "title": "Cancel the invitation to {email}?",
+      "description": "The link in the email stops working."
+    },
+    "deleteDraft": {
+      "title": "Delete the draft?"
+    },
+    "hideJob": {
+      "title": "Hide “{job}”?",
+      "description": "It stops showing on the site."
+    },
+    "adminDeletePost": {
+      "title": "Delete “{title}”?",
+      "description": "It's deleted forever."
+    },
+    "withdrawConfirm": "Yes, withdraw"
   }
 }
