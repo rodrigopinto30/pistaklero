@@ -9,8 +9,9 @@ test("explorar empresas, darles me gusta y guardarlas", async ({ page }) => {
   const card = page.getByRole("article").filter({ hasText: name });
   await expect(card.getByText("1 empleo abierto", { exact: false })).toBeVisible();
   await expectNoA11yViolations(page);
-  await card.getByRole("link", { name: `Ingresá para darle me gusta a ${name}` }).click();
-  await expect(page).toHaveURL(/\/es\/ingresar\?next=%2Fes%2Fempresas%2F/);
+  await card.getByRole("button", { name: `Ingresá para darle me gusta a ${name}` }).click();
+  // Vuelve al mismo listado, con la misma búsqueda.
+  await expect(page).toHaveURL(/\/es\/ingresar\?next=%2Fes%2Fempresas%3Fq%3D/);
 
   // Con sesión: me gusta y guardar desde la tarjeta.
   await signIn(page, uniqueEmail("exploradora"));

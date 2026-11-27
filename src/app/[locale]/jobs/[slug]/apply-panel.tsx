@@ -15,7 +15,8 @@ export async function ApplyPanel({ jobId, slug, autoOpen = false }: { jobId: str
   const t = await getTranslations("Apply");
 
   if (!(await getCurrentUser())) {
-    const next = getPathname({ locale, href: { pathname: "/jobs/[slug]", params: { slug } } });
+    // Al volver, el formulario de postulación ya está abierto.
+    const next = `${getPathname({ locale, href: { pathname: "/jobs/[slug]", params: { slug } } })}?postular=1`;
     return (
       <Link href={{ pathname: "/sign-in", query: { next } }} className={buttonVariants({ size: "lg", className: "w-full" })}>
         {t("signInToApply")}

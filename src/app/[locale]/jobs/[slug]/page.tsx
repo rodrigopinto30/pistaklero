@@ -1,4 +1,4 @@
-import { BadgeCheck, Briefcase, CalendarClock, ExternalLink, Laptop, MapPin, Signal } from "lucide-react";
+import { BadgeCheck, Bookmark, Briefcase, CalendarClock, ExternalLink, Laptop, MapPin, Signal } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
@@ -18,6 +18,7 @@ import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/session";
 import { ApplyPanel } from "./apply-panel";
 import { SaveJobButton } from "@/components/jobs/save-job-button";
+import { GuestAction } from "@/components/pending/guest-action";
 import { getJobViewer } from "@/lib/jobs/viewer";
 import { ReportForm } from "./report-form";
 
@@ -61,6 +62,7 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
 
   const locale = await getLocale();
   const t = await getTranslations("Jobs");
+  const tActions = await getTranslations("Jobs.actions");
   const format = await getFormatter();
   const supabase = await createClient();
   const { data: skills } = await supabase.from("job_skills").select("skills(name_es, name_en)").eq("job_id", job.id);
@@ -156,6 +158,19 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
             <ApplyPanel jobId={job.id} slug={job.slug} autoOpen={(await searchParams).postular === "1"} />
           )}
           {viewer.mode === "candidate" && isOpen && <SaveJobButton jobId={job.id} title={job.title} saved={viewer.saved.has(job.id)} variant="full" />}
+          {viewer.mode === "guest" && isOpen && (
+            <GuestAction
+              kind="save-job"
+              id={job.id}
+              returnTo={getPathname({ locale: locale as AppLocale, href: { pathname: "/jobs/[slug]", params: { slug: job.slug } } })}
+              label={tActions("signInToSave", { title: job.title })}
+              labelIsVisible
+              className="inline-flex h-10 items-center justify-center gap-2 self-start rounded-full bg-secondary px-4 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <Bookmark aria-hidden="true" className="size-5" />
+              {tActions("saveLabel")}
+            </GuestAction>
+          )}
           <p className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarClock aria-hidden="true" className="size-4" />
             {job.published_at && t("detail.postedOn", { date: format.dateTime(new Date(job.published_at), { dateStyle: "medium" }) })}

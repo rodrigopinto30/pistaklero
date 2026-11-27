@@ -22,9 +22,8 @@ export async function CompanyCard({ company, locale, signedIn }: { company: Comp
   const t = await getTranslations("Companies");
   const href = { pathname: "/companies/[slug]" as const, params: { slug: company.slug } };
   const location = [company.city, countryName(company.country, locale)].filter(Boolean).join(", ");
-  const signInHref = signedIn
-    ? undefined
-    : `${getPathname({ locale: locale as AppLocale, href: "/sign-in" })}?${new URLSearchParams({ next: getPathname({ locale: locale as AppLocale, href }) })}`;
+  // Sin sesión, "me gusta" y "guardar" quedan pendientes y se vuelve al listado (con JavaScript, a la página exacta).
+  const guestReturnTo = signedIn ? undefined : getPathname({ locale: locale as AppLocale, href: "/companies" });
 
   return (
     <article aria-labelledby={`company-${company.id}`} className={cn("group relative overflow-hidden rounded-3xl bg-muted shadow-soft transition-shadow hover:shadow-soft-lg", SHAPES[brandHue(company.name) % SHAPES.length])}>
@@ -32,7 +31,7 @@ export async function CompanyCard({ company, locale, signedIn }: { company: Comp
       {/* Degradé para que el texto blanco se lea sobre cualquier portada. */}
       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
       <div className="absolute top-3 right-3">
-        <CompanyActions companyId={company.id} name={company.name} liked={company.liked} saved={company.saved} likes={company.likes_count} signInHref={signInHref} />
+        <CompanyActions companyId={company.id} name={company.name} liked={company.liked} saved={company.saved} likes={company.likes_count} guestReturnTo={guestReturnTo} />
       </div>
       <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5 text-white">
         <h3 id={`company-${company.id}`} className="text-xl leading-tight font-semibold">

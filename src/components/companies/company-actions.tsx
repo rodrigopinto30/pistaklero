@@ -3,6 +3,7 @@
 import { Bookmark, Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useOptimistic, useTransition } from "react";
+import { GuestAction } from "@/components/pending/guest-action";
 import { notify } from "@/components/toaster";
 import { toggleCompanyLike, toggleSavedCompany } from "@/lib/companies/actions";
 import type { ToggleResult } from "@/lib/posts/actions";
@@ -14,13 +15,14 @@ type Props = {
   liked: boolean;
   saved: boolean;
   likes: number;
-  signInHref?: string;
+  /** Sin sesión: adónde volver después de ingresar (los botones dejan la acción pendiente). */
+  guestReturnTo?: string;
   /** "overlay": botones blancos sobre la portada (tarjeta). "inline": en la página de la empresa. */
   variant?: "overlay" | "inline";
 };
 
 /** Me gusta y guardar una empresa: conmutables (aria-pressed), al instante y con aviso. */
-export function CompanyActions({ companyId, name, liked, saved, likes, signInHref, variant = "overlay" }: Props) {
+export function CompanyActions({ companyId, name, liked, saved, likes, guestReturnTo, variant = "overlay" }: Props) {
   const t = useTranslations("Companies.actions");
   const [state, setState] = useOptimistic({ liked, saved, likes });
   const [pending, startTransition] = useTransition();
@@ -46,15 +48,16 @@ export function CompanyActions({ companyId, name, liked, saved, likes, signInHre
     </span>
   );
 
-  if (signInHref) {
+  if (guestReturnTo !== undefined) {
     return (
       <div className="flex items-center gap-1.5">
-        <a href={signInHref} aria-label={t("signInToLike", { name })} className={base}>
+        <GuestAction kind="like-company" id={companyId} returnTo={guestReturnTo} label={t("signInToLike", { name })} className={base}>
           {heart(false)}
-        </a>
-        <a href={signInHref} aria-label={t("signInToSave", { name })} className={base}>
+        </GuestAction>
+        {variant === "inline" && count}
+        <GuestAction kind="save-company" id={companyId} returnTo={guestReturnTo} label={t("signInToSave", { name })} className={base}>
           {bookmark(false)}
-        </a>
+        </GuestAction>
       </div>
     );
   }

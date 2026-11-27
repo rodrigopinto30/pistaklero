@@ -81,7 +81,7 @@ test("sin sesión se leen las publicaciones y el like lleva a ingresar", async (
   await expect(page.getByRole("heading", { level: 1, name: "Publicaciones" })).toBeVisible();
   const first = page.getByRole("article").first();
   if ((await first.count()) > 0) {
-    await first.getByRole("link", { name: /^Ingresá para darle me gusta/ }).click();
-    await expect(page).toHaveURL(/\/es\/ingresar\?next=%2Fes%2Fpublicaciones%2F/);
+    await first.getByRole("button", { name: /^Ingresá para darle me gusta/ }).click();
+    await expect(page).toHaveURL(/\/es\/ingresar\?next=%2Fes%2Fpublicaciones/);
   }
 });

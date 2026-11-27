@@ -261,6 +261,21 @@ export async function createUserWithPassword(email: string, password: string) {
   return data.user.id;
 }
 
+/** Candidata con perfil y contraseña, para entrar por el formulario de ingreso. */
+export async function seedCandidateWithPassword(email: string, password: string, fullName = "Candidata de prueba") {
+  const userId = await seedCandidate(email, fullName);
+  const { error } = await admin.auth.admin.updateUserById(userId, { password });
+  if (error) throw error;
+  return userId;
+}
+
+/** Ingresa con email y contraseña desde la página de ingreso en la que ya está. */
+export async function signInWithPassword(page: Page, email: string, password: string) {
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Contraseña", { exact: true }).fill(password);
+  await page.getByRole("button", { name: "Ingresar", exact: true }).click();
+}
+
 /** Nombre y apellido en la bienvenida ("Nombre" a secas: no "Nombre de la empresa" ni "Segundo nombre"). */
 export async function fillPersonName(page: Page, fullName: string) {
   const [firstName, ...rest] = fullName.split(" ");

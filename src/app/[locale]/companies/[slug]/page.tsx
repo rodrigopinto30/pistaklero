@@ -143,7 +143,7 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
                 saved={card.saved}
                 likes={card.likes_count}
                 variant="inline"
-                signInHref={user ? undefined : `${getPathname({ locale: locale as AppLocale, href: "/sign-in" })}?${new URLSearchParams({ next: getPathname({ locale: locale as AppLocale, href: { pathname: "/companies/[slug]", params: { slug } } }) })}`}
+                guestReturnTo={user ? undefined : getPathname({ locale: locale as AppLocale, href: { pathname: "/companies/[slug]", params: { slug } } })}
               />
             )}
             {company.website_url && (

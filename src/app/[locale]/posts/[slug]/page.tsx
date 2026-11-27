@@ -94,7 +94,7 @@ export default async function PostPage({ params }: PageProps<"/[locale]/posts/[s
               saved={card.saved}
               likes={card.likes_count}
               size="md"
-              signInHref={user ? undefined : `${getPathname({ locale, href: "/sign-in" })}?${new URLSearchParams({ next: here })}`}
+              guestReturnTo={user ? undefined : here}
             />
           </div>
         )}
