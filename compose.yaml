@@ -26,11 +26,13 @@ services:
     # Con "--hostname 127.0.0.1" Next arma las reescrituras con "localhost", las toma como externas
     # y las rutas traducidas (/es/ingresar → /es/sign-in) entran en bucle.
     command: ["pnpm", "dev", "--hostname", "localhost"]
-    # Techo de memoria: el servidor de desarrollo acumula memoria con cada compilación. Mejor que se
-    # reinicie solo (lo reinicia ./check.sh) a que se trabe toda la máquina.
-    mem_limit: 3g
+    # Techo de memoria: el servidor de desarrollo acumula memoria con cada compilación (Turbopack usa
+    # mucha fuera del heap de Node). Si lo pasa, Docker lo corta y se levanta solo: mejor eso que
+    # trabar toda la máquina. Con 3 GB no alcanzaba para la suite de tests.
+    mem_limit: 5g
+    restart: unless-stopped
     environment:
-      NODE_OPTIONS: --max-old-space-size=2560
+      NODE_OPTIONS: --max-old-space-size=3072
 
   # Contenedor de herramientas: pnpm, CLI de Supabase, tests. Se usa con ./run.sh.
   # Es el único con acceso al socket de Docker, porque la CLI de Supabase levanta sus propios contenedores.
