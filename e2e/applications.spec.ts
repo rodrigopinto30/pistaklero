@@ -79,7 +79,9 @@ test("con el perfil incompleto se explica qué falta", async ({ page }) => {
   await onboardAsCandidate(page);
   await page.goto(`/es/empleos/${slug}`);
   await expect(page.getByText("Para postularte, completá tu perfil:")).toBeVisible();
-  await expect(page.getByText("Al menos una habilidad")).toBeVisible();
+  await expect(page.getByText("Un titular", { exact: false })).toBeVisible();
+  // Las habilidades se recomiendan, pero no frenan la postulación.
+  await expect(page.getByText("Al menos una habilidad")).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Completar mi perfil" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Postularme" })).toHaveCount(0);
 });

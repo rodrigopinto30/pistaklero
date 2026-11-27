@@ -18,7 +18,11 @@ export async function SiteHeader() {
   // Accesos de la búsqueda rápida, según el rol.
   const paletteLinks: PaletteLink[] = [{ href: "/", label: tPalette("home") }];
   if (profile?.role === "candidate") {
-    paletteLinks.push({ href: "/my-applications", label: t("myApplications") }, { href: "/profile", label: t("myProfile") });
+    paletteLinks.push(
+      { href: "/my-applications", label: t("myApplications") },
+      { href: "/saved", label: t("saved") },
+      { href: "/profile", label: t("myProfile") }
+    );
   } else if (profile?.role === "recruiter") {
     paletteLinks.push(
       { href: "/dashboard", label: t("dashboard") },
@@ -56,6 +60,9 @@ export async function SiteHeader() {
             <>
               <Link href="/my-applications" className={buttonVariants({ variant: "ghost" })}>
                 {t("myApplications")}
+              </Link>
+              <Link href="/saved" className={buttonVariants({ variant: "ghost" })}>
+                {t("saved")}
               </Link>
               <Link href="/profile" className={buttonVariants({ variant: "ghost" })}>
                 {t("myProfile")}

@@ -12,7 +12,8 @@
     "admin": "Admin",
     "suspended": "Tu cuenta está suspendida. Si creés que es un error, escribinos.",
     "settings": "Ajustes",
-    "lightMode": "Modo claro"
+    "lightMode": "Modo claro",
+    "saved": "Guardados"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -520,6 +521,25 @@
       "title": "Empezar con una plantilla",
       "hint": "Completa el puesto, una descripción base, el seniority y las tecnologías. Después ajustás todo lo que quieras.",
       "blank": "Empezar de cero"
+    },
+    "actions": {
+      "save": "Guardar {title}",
+      "unsave": "Quitar {title} de guardados",
+      "saveLabel": "Guardar",
+      "savedLabel": "Guardado en tu lista",
+      "savedToast": "Empleo guardado. Lo encontrás en Guardados.",
+      "unsavedToast": "Lo sacaste de tus guardados.",
+      "applyTo": "Postularme a {title}",
+      "applied": "Te postulaste",
+      "appliedToast": "¡Listo! Te postulaste a {title}.",
+      "needsAnswers": "Esta oferta tiene preguntas: respondelas para postularte.",
+      "signInToSave": "Ingresá para guardar {title}",
+      "errors": {
+        "not_candidate": "Solo las cuentas de candidato guardan empleos.",
+        "job_not_available": "Esta oferta ya no está disponible.",
+        "limit_reached": "Llegaste a 500 empleos guardados. Sacá alguno para sumar otro.",
+        "unknown": "No pudimos guardar el empleo. Probá de nuevo."
+      }
     }
   },
   "Search": {
@@ -566,7 +586,6 @@
     "completeProfile": "Completar mi perfil",
     "missing": {
       "headline": "Un titular (por ejemplo: Frontend Junior · React)",
-      "skills": "Al menos una habilidad",
       "experience": "Una experiencia, un proyecto o una formación"
     },
     "errors": {
@@ -579,7 +598,11 @@
       "answer_required": "Respondé las preguntas obligatorias.",
       "invalid_answer": "Revisá tus respuestas.",
       "unknown": "No pudimos enviar la postulación. Probá de nuevo."
-    }
+    },
+    "successToast": "¡Listo! Tu postulación fue enviada.",
+    "suggestSkillsTitle": "Tip:",
+    "suggestSkills": "sumá tus habilidades. No es obligatorio, pero las empresas las miran primero.",
+    "suggestSkillsLink": "Completar habilidades"
   },
   "Applications": {
     "metaTitle": "Mis postulaciones",
@@ -1014,5 +1037,15 @@
     "jobStatusUpdated": "Estado de la oferta actualizado.",
     "jobSaved": "Oferta guardada.",
     "published": "Oferta publicada."
+  },
+  "Saved": {
+    "metaTitle": "Guardados",
+    "title": "Guardados",
+    "subtitle": "Lo que marcaste para ver después.",
+    "jobs": "{count, plural, =0 {Empleos} one {# empleo} other {# empleos}}",
+    "empty": "Todavía no guardaste empleos. Tocá el marcador de una oferta para tenerla a mano.",
+    "browse": "Ver empleos",
+    "closed": "Ofertas que ya cerraron",
+    "unavailable": "Oferta no disponible"
   }
 }

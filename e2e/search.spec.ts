@@ -33,7 +33,7 @@ test("buscar y filtrar ofertas desde el inicio", async ({ page }) => {
   await expect(page.locator("details[open]")).toHaveCount(1);
 
   // La tarjeta lleva al detalle
-  await page.getByRole("link", { name: `${word} Backend Go` }).click();
+  await page.getByRole("link", { name: `${word} Backend Go`, exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: `${word} Backend Go` })).toBeVisible();
 });
 
