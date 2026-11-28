@@ -435,6 +435,52 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"conversation_members": {
+                  Row: {
+                    "conversation_id": string,"last_read_at": string | null,"state": Database["public"]['Enums']["conversation_state"],"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "conversation_id": string,"last_read_at"?: string | null,"state"?: Database["public"]['Enums']["conversation_state"],"user_id": string
+                  }
+                  Update: {
+                    "conversation_id"?: string,"last_read_at"?: string | null,"state"?: Database["public"]['Enums']["conversation_state"],"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "conversation_members_conversation_id_fkey"
+      columns: ["conversation_id"]
+isOneToOne: false
+      referencedRelation: "conversations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "conversation_members_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"conversations": {
+                  Row: {
+                    "created_at": string,"id": string,"last_message_at": string,"pair_key": string,"started_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"last_message_at"?: string,"pair_key": string,"started_by"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"last_message_at"?: string,"pair_key"?: string,"started_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "conversations_started_by_fkey"
+      columns: ["started_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"email_outbox": {
                   Row: {
                     "attempts": number,"created_at": string,"dedupe_key": string | null,"id": number,"last_error": string | null,"locale": Database["public"]['Enums']["app_locale"],"next_attempt_at": string,"payload": NonNullable<Json>,"sent_at": string | null,"status": Database["public"]['Enums']["email_status"],"template": string,"to_email": string,"to_user_id": string | null
@@ -644,6 +690,58 @@ isOneToOne: false
       columns: ["import_source_id"]
 isOneToOne: false
       referencedRelation: "import_sources"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"message_reports": {
+                  Row: {
+                    "created_at": string,"id": string,"message_id": string,"reason": Database["public"]['Enums']["message_report_reason"],"reporter_id": string,"resolved_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"message_id": string,"reason": Database["public"]['Enums']["message_report_reason"],"reporter_id": string,"resolved_at"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"message_id"?: string,"reason"?: Database["public"]['Enums']["message_report_reason"],"reporter_id"?: string,"resolved_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "message_reports_message_id_fkey"
+      columns: ["message_id"]
+isOneToOne: false
+      referencedRelation: "messages"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "message_reports_reporter_id_fkey"
+      columns: ["reporter_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"messages": {
+                  Row: {
+                    "body": string,"conversation_id": string,"created_at": string,"id": string,"sender_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "body": string,"conversation_id": string,"created_at"?: string,"id"?: string,"sender_id"?: string | null
+                  }
+                  Update: {
+                    "body"?: string,"conversation_id"?: string,"created_at"?: string,"id"?: string,"sender_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "messages_conversation_id_fkey"
+      columns: ["conversation_id"]
+isOneToOne: false
+      referencedRelation: "conversations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "messages_sender_id_fkey"
+      columns: ["sender_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
       referencedColumns: ["id"]
     }
                   ]
@@ -891,6 +989,32 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"user_blocks": {
+                  Row: {
+                    "blocked_id": string,"blocker_id": string,"created_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "blocked_id": string,"blocker_id": string,"created_at"?: string
+                  }
+                  Update: {
+                    "blocked_id"?: string,"blocker_id"?: string,"created_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "user_blocks_blocked_id_fkey"
+      columns: ["blocked_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "user_blocks_blocker_id_fkey"
+      columns: ["blocker_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Views: {
@@ -944,6 +1068,9 @@ isOneToOne: false
 "admin_upsert_unclaimed_company":
 { Args: { "p_name": string,"p_website_url": string }; Returns: string
                            },
+"answer_conversation_request":
+{ Args: { "p_accept": boolean,"p_conversation_id": string }; Returns: undefined
+                           },
 "apply_to_job":
 { Args: { "p_answers"?: Json,"p_job_id": string }; Returns: string
                            },
@@ -959,8 +1086,17 @@ isOneToOne: false
 "auth_throttle_wait":
 { Args: { "p_keys": (string)[] }; Returns: number
                            },
+"block_user":
+{ Args: { "p_user_id": string }; Returns: undefined
+                           },
 "can_edit_job":
 { Args: { "p_job_id": string }; Returns: boolean
+                           },
+"can_i_message":
+{ Args: { "p_recipient": string }; Returns: boolean
+                           },
+"can_message":
+{ Args: { "p_recipient": string,"p_sender": string }; Returns: boolean
                            },
 "can_view_application":
 { Args: { "p_application_id": string }; Returns: boolean
@@ -1031,6 +1167,22 @@ isOneToOne: false
 "complete_company_setup":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
+"conversation_detail":
+{ Args: { "p_conversation_id": string }; Returns: {
+              "blocked": boolean,"blocked_by_me": boolean,"id": string,"my_state": Database["public"]['Enums']["conversation_state"],"other_avatar": string,"other_company_slug": string,"other_id": string,"other_name": string,"other_profile_slug": string,"other_subtitle": string,"their_state": Database["public"]['Enums']["conversation_state"]
+            }[]
+                           },
+"conversation_messages":
+{ Args: { "p_after"?: string,"p_conversation_id": string,"p_limit"?: number }; Returns: {
+              "body": string,"created_at": string,"id": string,"mine": boolean,"sender_id": string
+            }[]
+                           },
+"conversation_other":
+{ Args: { "p_conversation_id": string,"p_me": string }; Returns: string
+                           },
+"conversation_with":
+{ Args: { "p_user_id": string }; Returns: string
+                           },
 "create_company":
 { Args: { "p_company_name": string,"p_locale": Database["public"]['Enums']["app_locale"],"p_website_url": string }; Returns: string
                            },
@@ -1095,8 +1247,21 @@ isOneToOne: false
 "mark_applications_viewed":
 { Args: { "p_application_ids": (string)[] }; Returns: number
                            },
+"mark_conversation_read":
+{ Args: { "p_conversation_id": string }; Returns: undefined
+                           },
+"message_contact":
+{ Args: { "p_user_id": string }; Returns: {
+              "avatar_path": string,"company_slug": string,"full_name": string,"profile_slug": string,"role": Database["public"]['Enums']["user_role"],"subtitle": string,"user_id": string
+            }[]
+                           },
 "my_company_id":
 { Args: Record<PropertyKey, never>; Returns: string
+                           },
+"my_conversations":
+{ Args: { "p_box"?: string }; Returns: {
+              "id": string,"last_body": string,"last_message_at": string,"last_sender": string,"other_avatar": string,"other_id": string,"other_name": string,"other_subtitle": string,"unread": number,"waiting": boolean
+            }[]
                            },
 "my_job_application_counts":
 { Args: Record<PropertyKey, never>; Returns: {
@@ -1122,6 +1287,9 @@ isOneToOne: false
 { Args: { "p_author_id"?: string,"p_company_id"?: string,"p_limit"?: number,"p_offset"?: number,"p_post_id"?: string,"p_query"?: string,"p_saved_only"?: boolean,"p_tag"?: string }; Returns: {
               "author_avatar": string,"author_company_name": string,"author_company_slug": string,"author_name": string,"author_profile_slug": string,"author_role": Database["public"]['Enums']["user_role"],"created_at": string,"excerpt": string,"id": string,"language": Database["public"]['Enums']["app_locale"],"liked": boolean,"likes_count": number,"saved": boolean,"slug": string,"tags": (string)[],"title": string,"total_count": number
             }[]
+                           },
+"post_message":
+{ Args: { "p_body": string,"p_conversation_id": string }; Returns: string
                            },
 "prefix_tsquery":
 { Args: { "p_query": string }; Returns: unknown
@@ -1152,6 +1320,9 @@ isOneToOne: false
                            },
 "register_profile_view":
 { Args: { "p_slug": string }; Returns: string
+                           },
+"report_message":
+{ Args: { "p_message_id": string,"p_reason": Database["public"]['Enums']["message_report_reason"] }; Returns: undefined
                            },
 "report_post":
 { Args: { "p_post_id": string,"p_reason": Database["public"]['Enums']["post_report_reason"] }; Returns: undefined
@@ -1189,6 +1360,9 @@ isOneToOne: false
 "slugify":
 { Args: { "p_value": string }; Returns: string
                            },
+"start_conversation":
+{ Args: { "p_body": string,"p_recipient": string }; Returns: string
+                           },
 "sync_import_source":
 { Args: { "p_jobs": Json,"p_skipped"?: number,"p_source_id": string }; Returns: Json
                            },
@@ -1215,6 +1389,12 @@ isOneToOne: false
 "toggle_saved_post":
 { Args: { "p_post_id": string }; Returns: boolean
                            },
+"unblock_user":
+{ Args: { "p_user_id": string }; Returns: undefined
+                           },
+"unread_messages_count":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
 "unread_notifications_count":
 { Args: Record<PropertyKey, never>; Returns: number
                            },
@@ -1226,6 +1406,12 @@ isOneToOne: false
                            },
 "update_post":
 { Args: { "p_body": string,"p_language": Database["public"]['Enums']["app_locale"],"p_post_id": string,"p_tags"?: (string)[],"p_title": string }; Returns: undefined
+                           },
+"users_blocked":
+{ Args: { "p_a": string,"p_b": string }; Returns: boolean
+                           },
+"users_share_application":
+{ Args: { "p_a": string,"p_b": string }; Returns: boolean
                            },
 "valid_post_tags":
 { Args: { "p_tags": (string)[] }; Returns: boolean
@@ -1241,7 +1427,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "actor_type": "candidate"|"recruiter"|"system","app_locale": "es"|"en","application_status": "received"|"viewed"|"in_review"|"shortlisted"|"interview"|"hired"|"rejected"|"no_response"|"withdrawn","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","email_status": "pending"|"sent"|"failed","employment_type": "full_time"|"part_time"|"contract"|"internship"|"freelance","import_provider": "manual"|"greenhouse"|"lever"|"ashby"|"workable","job_source": "native"|"imported","job_status": "draft"|"published"|"closed"|"hidden","member_role": "owner"|"member","notification_kind": "application_status"|"new_applicant"|"post_liked"|"company_liked"|"job_matches"|"member_joined"|"role_changed","post_report_reason": "spam"|"offensive"|"scam"|"other","post_status": "published"|"hidden","profile_visibility": "companies_only"|"public"|"hidden","question_type": "short_text"|"single_choice","report_reason": "scam"|"fake"|"discrimination"|"other","report_status": "open"|"dismissed"|"actioned","response_badge": "new"|"fast"|"medium"|"slow","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","seniority": "trainee"|"junior"|"semi_senior"|"senior"|"lead","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin","work_mode": "remote"|"hybrid"|"onsite"
+            "actor_type": "candidate"|"recruiter"|"system","app_locale": "es"|"en","application_status": "received"|"viewed"|"in_review"|"shortlisted"|"interview"|"hired"|"rejected"|"no_response"|"withdrawn","availability": "immediate"|"two_weeks"|"freelance_only"|"not_looking","company_size": "1-10"|"11-50"|"51-200"|"201-1000"|"1000+","company_stage": "pre_seed"|"seed"|"series_a_plus"|"bootstrapped"|"established","company_status": "unclaimed"|"active"|"suspended","conversation_state": "accepted"|"request"|"ignored","currency": "USD"|"ARS"|"EUR"|"BRL"|"MXN"|"CLP"|"COP"|"UYU","email_status": "pending"|"sent"|"failed","employment_type": "full_time"|"part_time"|"contract"|"internship"|"freelance","import_provider": "manual"|"greenhouse"|"lever"|"ashby"|"workable","job_source": "native"|"imported","job_status": "draft"|"published"|"closed"|"hidden","member_role": "owner"|"member","message_report_reason": "spam"|"scam"|"offensive"|"other","notification_kind": "application_status"|"new_applicant"|"post_liked"|"company_liked"|"job_matches"|"member_joined"|"role_changed","post_report_reason": "spam"|"offensive"|"scam"|"other","post_status": "published"|"hidden","profile_visibility": "companies_only"|"public"|"hidden","question_type": "short_text"|"single_choice","report_reason": "scam"|"fake"|"discrimination"|"other","report_status": "open"|"dismissed"|"actioned","response_badge": "new"|"fast"|"medium"|"slow","salary_basis": "gross"|"net","salary_period": "hour"|"month"|"year","salary_visibility": "private"|"applied_companies","seniority": "trainee"|"junior"|"semi_senior"|"senior"|"lead","skill_category": "language"|"framework"|"tool"|"data"|"design"|"marketing"|"soft","skill_level": "basic"|"intermediate"|"advanced"|"expert","user_role": "candidate"|"recruiter"|"admin","work_mode": "remote"|"hybrid"|"onsite"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1357,7 +1543,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "actor_type": ["candidate", "recruiter", "system"],"app_locale": ["es", "en"],"application_status": ["received", "viewed", "in_review", "shortlisted", "interview", "hired", "rejected", "no_response", "withdrawn"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"email_status": ["pending", "sent", "failed"],"employment_type": ["full_time", "part_time", "contract", "internship", "freelance"],"import_provider": ["manual", "greenhouse", "lever", "ashby", "workable"],"job_source": ["native", "imported"],"job_status": ["draft", "published", "closed", "hidden"],"member_role": ["owner", "member"],"notification_kind": ["application_status", "new_applicant", "post_liked", "company_liked", "job_matches", "member_joined", "role_changed"],"post_report_reason": ["spam", "offensive", "scam", "other"],"post_status": ["published", "hidden"],"profile_visibility": ["companies_only", "public", "hidden"],"question_type": ["short_text", "single_choice"],"report_reason": ["scam", "fake", "discrimination", "other"],"report_status": ["open", "dismissed", "actioned"],"response_badge": ["new", "fast", "medium", "slow"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"seniority": ["trainee", "junior", "semi_senior", "senior", "lead"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"],"work_mode": ["remote", "hybrid", "onsite"]
+            "actor_type": ["candidate", "recruiter", "system"],"app_locale": ["es", "en"],"application_status": ["received", "viewed", "in_review", "shortlisted", "interview", "hired", "rejected", "no_response", "withdrawn"],"availability": ["immediate", "two_weeks", "freelance_only", "not_looking"],"company_size": ["1-10", "11-50", "51-200", "201-1000", "1000+"],"company_stage": ["pre_seed", "seed", "series_a_plus", "bootstrapped", "established"],"company_status": ["unclaimed", "active", "suspended"],"conversation_state": ["accepted", "request", "ignored"],"currency": ["USD", "ARS", "EUR", "BRL", "MXN", "CLP", "COP", "UYU"],"email_status": ["pending", "sent", "failed"],"employment_type": ["full_time", "part_time", "contract", "internship", "freelance"],"import_provider": ["manual", "greenhouse", "lever", "ashby", "workable"],"job_source": ["native", "imported"],"job_status": ["draft", "published", "closed", "hidden"],"member_role": ["owner", "member"],"message_report_reason": ["spam", "scam", "offensive", "other"],"notification_kind": ["application_status", "new_applicant", "post_liked", "company_liked", "job_matches", "member_joined", "role_changed"],"post_report_reason": ["spam", "offensive", "scam", "other"],"post_status": ["published", "hidden"],"profile_visibility": ["companies_only", "public", "hidden"],"question_type": ["short_text", "single_choice"],"report_reason": ["scam", "fake", "discrimination", "other"],"report_status": ["open", "dismissed", "actioned"],"response_badge": ["new", "fast", "medium", "slow"],"salary_basis": ["gross", "net"],"salary_period": ["hour", "month", "year"],"salary_visibility": ["private", "applied_companies"],"seniority": ["trainee", "junior", "semi_senior", "senior", "lead"],"skill_category": ["language", "framework", "tool", "data", "design", "marketing", "soft"],"skill_level": ["basic", "intermediate", "advanced", "expert"],"user_role": ["candidate", "recruiter", "admin"],"work_mode": ["remote", "hybrid", "onsite"]
           }
         }
 } as const
