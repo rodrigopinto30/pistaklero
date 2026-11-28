@@ -1639,5 +1639,18 @@
       "external": "Applications for this job happen on your site: here you can see how many people went there.",
       "createdBy": "Posted by {name}"
     }
+  },
+  "SavedCandidates": {
+    "save": "Save {name}'s profile",
+    "unsave": "Remove {name} from saved",
+    "saveLabel": "Save",
+    "savedLabel": "Saved",
+    "savedToast": "Profile saved 🔖",
+    "unsavedToast": "Removed from saved",
+    "error": "We couldn't save it. Please try again.",
+    "sectionTitle": "Saved profiles",
+    "sectionHint": "Your whole team at {company} sees them.",
+    "savedBy": "Saved by {name}",
+    "empty": "No saved profiles yet. In Talent, tap the bookmark on a card."
   }
 }

@@ -1,9 +1,8 @@
-import { MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import { connection } from "next/server";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Avatar } from "@/components/avatar";
 import { Emoji } from "@/components/emoji";
+import { TalentCard } from "@/components/talent/talent-card";
 import { buttonVariants } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -130,46 +129,11 @@ export default async function TalentPage({ searchParams }: PageProps<"/[locale]/
 
       {people.length > 0 ? (
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {people.map((person) => {
-            const location = [person.city, countryName(person.country, locale)].filter(Boolean).join(", ");
-            const chips = (person.skills ?? []) as { slug: string; es: string; en: string }[];
-            return (
-              <li key={person.user_id}>
-                <article aria-labelledby={`talent-${person.user_id}`} className="relative flex h-full flex-col gap-3 rounded-2xl bg-card p-5 shadow-soft transition-shadow hover:shadow-soft-lg">
-                  <div className="flex items-center gap-3">
-                    <Avatar path={person.avatar_path} name={person.full_name} size="lg" />
-                    <div className="flex min-w-0 flex-col">
-                      <h2 id={`talent-${person.user_id}`} className="truncate font-semibold">
-                        {/* El enlace cubre toda la tarjeta; su nombre accesible es el de la persona. */}
-                        <Link href={{ pathname: "/p/[slug]", params: { slug: person.slug } }} className="after:absolute after:inset-0 after:rounded-2xl">
-                          {person.full_name}
-                        </Link>
-                      </h2>
-                      {person.headline && <p className="truncate text-sm text-muted-foreground">{person.headline}</p>}
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                    {location && (
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin aria-hidden="true" className="size-4" />
-                        {location}
-                      </span>
-                    )}
-                    <span className={person.availability === "not_looking" ? "" : "font-medium text-verified"}>{tAvailability(person.availability)}</span>
-                  </div>
-                  {chips.length > 0 && (
-                    <ul aria-label={t("skills")} className="flex flex-wrap gap-1.5">
-                      {chips.map((chip) => (
-                        <li key={chip.slug} className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium">
-                          {locale === "en" ? chip.en : chip.es}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </article>
-              </li>
-            );
-          })}
+          {people.map((person) => (
+            <li key={person.user_id}>
+              <TalentCard person={person} locale={locale} saved={person.saved} />
+            </li>
+          ))}
         </ul>
       ) : (
         <div className="flex flex-col items-start gap-3 rounded-2xl bg-card p-6 shadow-soft">
