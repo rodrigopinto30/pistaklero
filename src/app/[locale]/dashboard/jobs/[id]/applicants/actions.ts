@@ -3,7 +3,7 @@
 import { refresh } from "next/cache";
 import { z } from "zod";
 import { scheduleOutboxFlush } from "@/lib/email/outbox";
-import { errorState, type FormState, successState } from "@/lib/forms";
+import { errorState, type FormState, normalizeNewlines, successState } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
 
 const schema = z.object({
@@ -14,10 +14,11 @@ const schema = z.object({
 
 /** Cambia el estado de una postulación. La base valida la transición y avisa a la candidata. */
 export async function changeApplicationStatus(_prev: FormState, formData: FormData): Promise<FormState> {
+  const message = formData.get("message");
   const parsed = schema.safeParse({
     applicationId: formData.get("applicationId"),
     to: formData.get("to"),
-    message: formData.get("message") ?? undefined,
+    message: typeof message === "string" ? normalizeNewlines(message) : undefined,
   });
   if (!parsed.success) return errorState({}, { message: { code: "too_long", limit: 1000 } });
 

@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { type ReactNode, useActionState, useEffect, useId, useRef } from "react";
+import { SubmitButton } from "@/components/forms/submit-button";
 import { notify } from "@/components/toaster";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -312,7 +313,7 @@ export function ChangePasswordForm({ email }: { email: string }) {
   const t = useTranslations("Password");
   const tAuth = useTranslations("Auth");
   const tToasts = useTranslations("Toasts");
-  const [state, action, pending] = useActionState<ChangePasswordState, FormData>(changePassword, { status: "idle" });
+  const [state, action] = useActionState<ChangePasswordState, FormData>(changePassword, { status: "idle" });
   const formRef = useFocusInvalid(state);
   const savedAt = state.status === "success" ? state.savedAt : null;
 
@@ -335,9 +336,8 @@ export function ChangePasswordForm({ email }: { email: string }) {
       <PasswordField label={t("change.current")} name="current_password" autoComplete="current-password" error={currentError} />
       <NewPasswordFields label={t("newPassword")} errorCode={passwordProblem} errorFrom={state} />
       <FormAlert>{formError}</FormAlert>
-      <Button type="submit" disabled={pending} className="self-start">
-        {pending ? t("saving") : t("change.submit")}
-      </Button>
+      {/* Inactivo hasta escribir algo (como los demás "Guardar"). */}
+      <SubmitButton label={t("change.submit")} />
       <p className="text-sm text-muted-foreground">
         {t("change.noPassword")}{" "}
         <Link href="/forgot-password" className="font-medium text-primary underline underline-offset-4">

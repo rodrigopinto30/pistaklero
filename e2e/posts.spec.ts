@@ -64,7 +64,13 @@ test("publicar un consejo, darle like, guardarlo, denunciarlo, editarlo y borrar
   // La autora la edita y después la borra.
   await page.reload();
   await page.getByRole("link", { name: "Editar" }).click();
+  // Sin tocar nada (aunque el texto tenga varias líneas) no hay nada que guardar.
+  await page.waitForURL(/\/editar$/);
+  await page.goto(page.url());
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await expect(page.getByRole("button", { name: "Guardar cambios" })).toHaveAttribute("aria-disabled", "true");
   await page.getByLabel(/^Título/).fill(`${title} (editada)`);
+  await expect(page.getByRole("button", { name: "Guardar cambios" })).not.toHaveAttribute("aria-disabled");
   await page.getByRole("button", { name: "Guardar cambios" }).click();
   await expect(page.getByRole("heading", { level: 1, name: `${title} (editada)` })).toBeVisible();
   await page.getByRole("button", { name: "Borrar publicación" }).click();

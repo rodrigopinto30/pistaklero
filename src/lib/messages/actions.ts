@@ -4,6 +4,7 @@ import { refresh } from "next/cache";
 import { z } from "zod";
 import { scheduleOutboxFlush } from "@/lib/email/outbox";
 import { flash } from "@/lib/flash.server";
+import { normalizeNewlines } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
 import { parseLocale } from "@/i18n/locale";
@@ -17,7 +18,7 @@ const body = z.string().trim().min(1).max(2000);
 
 /** Un mensaje en una conversación existente. */
 export async function sendMessage(_prev: MessageFormState, formData: FormData): Promise<MessageFormState> {
-  const raw = String(formData.get("body") ?? "");
+  const raw = normalizeNewlines(String(formData.get("body") ?? ""));
   const id = z.uuid().safeParse(formData.get("conversationId"));
   const text = body.safeParse(raw);
   if (!id.success) return { status: "error", code: "unknown", body: raw };
@@ -33,7 +34,7 @@ export async function sendMessage(_prev: MessageFormState, formData: FormData): 
 
 /** El primer mensaje a alguien: arranca la conversación (o usa la que ya tengan) y va a ella. */
 export async function startConversation(_prev: MessageFormState, formData: FormData): Promise<MessageFormState> {
-  const raw = String(formData.get("body") ?? "");
+  const raw = normalizeNewlines(String(formData.get("body") ?? ""));
   const to = z.uuid().safeParse(formData.get("to"));
   const locale = parseLocale(formData.get("locale"));
   const text = body.safeParse(raw);

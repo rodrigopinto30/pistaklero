@@ -79,11 +79,17 @@ export function zodFieldErrors(error: z.ZodError): Record<string, FieldError> {
   return result;
 }
 
-/** Valores de texto del formulario, para devolverlos si hay errores (React reinicia el form). */
+/** Saltos de línea siempre como \n (el navegador envía los de un <textarea> como \r\n). */
+export const normalizeNewlines = (value: string) => value.replace(/\r\n?/g, "\n");
+
+/**
+ * Valores de texto del formulario, para validarlos y para devolverlos si hay errores (React reinicia
+ * el form). Los saltos de línea llegan normalizados: lo guardado es igual a lo que se ve.
+ */
 export function formValues(formData: FormData): Record<string, string> {
   const values: Record<string, string> = {};
   for (const [key, value] of formData.entries()) {
-    if (typeof value === "string" && !key.startsWith("$")) values[key] = value;
+    if (typeof value === "string" && !key.startsWith("$")) values[key] = normalizeNewlines(value);
   }
   return values;
 }
