@@ -986,7 +986,7 @@ isOneToOne: false
             }[]
                            },
 "company_job_stats":
-{ Args: { "p_creator"?: string,"p_limit"?: number,"p_mode"?: Database["public"]['Enums']["work_mode"],"p_offset"?: number,"p_query"?: string,"p_sort"?: string,"p_status"?: string }; Returns: {
+{ Args: { "p_creator"?: string,"p_job_id"?: string,"p_limit"?: number,"p_mode"?: Database["public"]['Enums']["work_mode"],"p_offset"?: number,"p_query"?: string,"p_sort"?: string,"p_status"?: string }; Returns: {
               "applications": number,"by_status": Json,"created_at": string,"created_by": string,"creator_name": string,"external": boolean,"external_clicks": number,"id": string,"published_at": string,"seniority": Database["public"]['Enums']["seniority"],"slug": string,"status": Database["public"]['Enums']["job_status"],"title": string,"total_count": number,"valid_through": string,"views": number,"views_7d": number,"work_mode": Database["public"]['Enums']["work_mode"]
             }[]
                            },
@@ -1051,7 +1051,7 @@ isOneToOne: false
                            },
 "list_company_members":
 { Args: Record<PropertyKey, never>; Returns: {
-              "email": string,"joined_at": string,"member_role": Database["public"]['Enums']["member_role"],"user_id": string
+              "email": string,"full_name": string,"job_title": string,"joined_at": string,"member_role": Database["public"]['Enums']["member_role"],"user_id": string
             }[]
                            },
 "my_company_id":

@@ -32,8 +32,11 @@ test("la empresa gestiona a quien se postuló y la candidata se entera de todo",
   await expect(candidate.getByRole("status").filter({ hasText: "Tu postulación fue enviada" })).toBeVisible();
 
   // La empresa la ve en "Nuevas"
-  await recruiter.goto("/es/panel");
-  await recruiter.getByRole("link", { name: /1 postulación · 1 sin revisar/ }).click();
+  await recruiter.goto("/es/panel/ofertas");
+  const row = recruiter.getByRole("article").filter({ has: recruiter.getByRole("heading", { name: title }) });
+  await expect(row.getByText("1 postulación", { exact: true })).toBeVisible();
+  await expect(row.getByText("1 sin revisar", { exact: true })).toBeVisible();
+  await row.getByRole("link", { name: "Postulantes" }).click();
   await recruiter.waitForURL(`/es/panel/ofertas/${job.id}/postulantes`);
   await expect(recruiter.getByRole("link", { name: "Nuevas 1" })).toHaveAttribute("aria-current", "page");
   await expect(recruiter.getByRole("heading", { name: "Carla Díaz" })).toBeVisible();

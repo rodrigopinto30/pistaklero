@@ -20,6 +20,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "maintenance_failed" }, { status: 500 });
   }
 
+  // Las claves de "una vista por persona por día" no se guardan más de dos días.
+  const { error: purgeError } = await createAdminClient().rpc("purge_job_view_keys");
+  if (purgeError) console.error("No se pudieron borrar las claves de vistas", { message: purgeError.message });
+
   const { data: matches, error: matchesError } = await createAdminClient().rpc("notify_job_matches");
   if (matchesError) console.error("Los avisos de empleos para vos fallaron", { message: matchesError.message });
 

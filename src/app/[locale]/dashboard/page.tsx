@@ -1,7 +1,7 @@
-import { CircleAlert, Plus } from "lucide-react";
+import { ArrowRight, CircleAlert, Plus } from "lucide-react";
 import { VerifiedBadge } from "@/components/verified-badge";
 import type { Metadata } from "next";
-import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { SectionCard } from "@/components/section-card";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { Emoji } from "@/components/emoji";
+import { JobStatTiles } from "./jobs/_components/job-stats";
 import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -23,15 +24,10 @@ export default async function DashboardPage() {
   const t = await getTranslations("Dashboard");
   const tJobs = await getTranslations("Jobs");
   const tCompany = await getTranslations("Company");
-  const format = await getFormatter();
   const supabase = await createClient();
-  const [{ data: jobs }, { data: counts }] = await Promise.all([
-    supabase.from("jobs").select("id, title, status, published_at, valid_through").eq("company_id", company.id).order("created_at", { ascending: false }),
-    supabase.rpc("my_job_application_counts"),
-  ]);
-  const countFor = (jobId: string, statuses: string[]) =>
-    (counts ?? []).filter((c) => c.job_id === jobId && statuses.includes(c.status)).reduce((sum, c) => sum + Number(c.total), 0);
-  const date = (value: string) => format.dateTime(new Date(value), { dateStyle: "medium" });
+  // Las últimas tres ofertas con sus números; el resto, en "Mis ofertas".
+  const { data: recent } = await supabase.rpc("company_job_stats", { p_limit: 3 });
+  const jobs = recent ?? [];
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
@@ -78,35 +74,29 @@ export default async function DashboardPage() {
         </Link>
       </div>
       <SectionCard id="jobs" title={t("jobsTitle")}>
-        {(jobs ?? []).length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t("jobsEmpty")}</p>
-        ) : (
-          <ul className="flex flex-col gap-2">
-            {jobs!.map((job) => (
-              <li key={job.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-3">
-                <span className="flex flex-col gap-1">
-                  <Link href={{ pathname: "/dashboard/jobs/[id]", params: { id: job.id } }} className="font-medium underline-offset-4 hover:underline">
-                    {job.title}
-                  </Link>
-                  <span className="text-sm text-muted-foreground">
-                    {job.published_at ? tJobs("list.published", { date: date(job.published_at) }) : tJobs("list.draft")} ·{" "}
-                    {tJobs("list.validThrough", { date: date(job.valid_through) })}
-                  </span>
-                  <Link
-                    href={{ pathname: "/dashboard/jobs/[id]/applicants", params: { id: job.id } }}
-                    className="inline-flex min-h-6 items-center text-sm text-violet underline-offset-4 hover:underline"
-                  >
-                    {tJobs("list.applicants", {
-                      pending: countFor(job.id, ["received"]),
-                      total: countFor(job.id, ["received", "in_review", "interview", "hired", "rejected", "no_response", "withdrawn"]),
-                    })}
-                  </Link>
-                </span>
-                <JobStatusBadge status={job.status} validThrough={job.valid_through} />
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="flex flex-col gap-4">
+          {jobs.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t("jobsEmpty")}</p>
+          ) : (
+            <ul className="flex flex-col gap-2">
+              {jobs.map((job) => (
+                <li key={job.id} className="flex flex-col gap-2 rounded-xl bg-muted/60 px-4 py-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <Link href={{ pathname: "/dashboard/jobs/[id]", params: { id: job.id } }} className="font-medium underline-offset-4 hover:underline">
+                      {job.title}
+                    </Link>
+                    <JobStatusBadge status={job.status} validThrough={job.valid_through} />
+                  </div>
+                  <JobStatTiles stats={job} compact />
+                </li>
+              ))}
+            </ul>
+          )}
+          <Link href="/dashboard/jobs" className="inline-flex min-h-10 items-center gap-1.5 self-start text-sm font-medium text-violet underline-offset-4 hover:underline">
+            {t("seeAllJobs")}
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </Link>
+        </div>
       </SectionCard>
     </div>
   );

@@ -120,7 +120,8 @@ create function public.company_job_stats(
   p_mode public.work_mode default null,
   p_sort text default 'recent',
   p_limit int default 20,
-  p_offset int default 0
+  p_offset int default 0,
+  p_job_id uuid default null
 )
 returns table (
   id uuid, slug text, title text, status public.job_status, work_mode public.work_mode,
@@ -154,6 +155,7 @@ begin
         or (p_status in ('draft', 'closed', 'hidden') and j.status::text = p_status))
       and (p_creator is null or j.created_by = p_creator)
       and (p_mode is null or j.work_mode = p_mode)
+      and (p_job_id is null or j.id = p_job_id)
   )
   select b.id, b.slug::text, b.title, b.status, b.work_mode, b.seniority, b.created_at, b.published_at,
     b.valid_through, b.created_by, pe.full_name, (b.external_url is not null),
@@ -177,8 +179,8 @@ begin
 end;
 $$;
 
-revoke execute on function public.company_job_stats(text, text, uuid, public.work_mode, text, int, int) from public, anon;
-grant execute on function public.company_job_stats(text, text, uuid, public.work_mode, text, int, int) to authenticated;
+revoke execute on function public.company_job_stats(text, text, uuid, public.work_mode, text, int, int, uuid) from public, anon;
+grant execute on function public.company_job_stats(text, text, uuid, public.work_mode, text, int, int, uuid) to authenticated;
 
 -- Vistas y postulaciones por día de una oferta propia (para el resumen).
 create function public.company_job_daily(p_job_id uuid, p_days int default 30)
@@ -235,3 +237,26 @@ as $$
 $$;
 
 grant execute on function public.job_poster(uuid) to anon, authenticated;
+
+-- ---------------------------------------------------------------------------
+-- 5. El equipo, ahora con nombre y cargo (para el filtro "Publicada por" y la página de Equipo).
+-- ---------------------------------------------------------------------------
+drop function public.list_company_members();
+
+create function public.list_company_members()
+returns table (user_id uuid, email text, member_role public.member_role, joined_at timestamptz, full_name text, job_title text)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select m.user_id, u.email::text, m.member_role, m.created_at, pe.full_name, m.job_title
+  from public.company_members m
+  join auth.users u on u.id = m.user_id
+  left join public.people pe on pe.user_id = m.user_id
+  where m.company_id = public.my_company_id()
+  order by m.created_at;
+$$;
+
+revoke execute on function public.list_company_members() from public, anon;
+grant execute on function public.list_company_members() to authenticated;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu } from "@base-ui/react/menu";
-import { Bookmark, Briefcase, Building2, ChevronDown, FileText, Languages, LayoutDashboard, LogOut, PenLine, Settings, Shield, UserRound, Users } from "lucide-react";
+import { Bookmark, Briefcase, Building2, ChevronDown, ClipboardList, FileText, Languages, LayoutDashboard, LogOut, PenLine, Settings, Shield, UserRound, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { type ComponentProps, useRef } from "react";
@@ -11,7 +11,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { type AppLocale, routing } from "@/i18n/routing";
 import { Emoji } from "@/components/emoji";
 
-const ICONS = { profile: UserRound, applications: Briefcase, saved: Bookmark, posts: PenLine, dashboard: LayoutDashboard, company: Building2, team: Users, admin: Shield, import: FileText, settings: Settings } as const;
+const ICONS = { profile: UserRound, applications: Briefcase, jobs: ClipboardList, saved: Bookmark, posts: PenLine, dashboard: LayoutDashboard, company: Building2, team: Users, admin: Shield, import: FileText, settings: Settings } as const;
 
 export type MenuEntry = { href: ComponentProps<typeof Link>["href"]; label: string; icon: keyof typeof ICONS };
 

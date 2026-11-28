@@ -21,7 +21,8 @@
     "backToTop": "Back to top",
     "newJob": "Post a job",
     "talent": "Talent",
-    "back": "Back"
+    "back": "Back",
+    "myJobs": "My jobs"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -413,9 +414,10 @@
     "unverifiedBadge": "Not verified",
     "editCompany": "Edit the company page",
     "viewCompany": "View public page",
-    "jobsTitle": "Jobs",
+    "jobsTitle": "Latest jobs",
     "jobsEmpty": "You haven't posted any jobs yet.",
-    "team": "Team"
+    "team": "Team",
+    "seeAllJobs": "See all my jobs"
   },
   "CompanyPage": {
     "verified": "Verified company",
@@ -466,7 +468,11 @@
     "expires": "Expires on {date}",
     "revoke": "Revoke",
     "revokeOf": "Revoke the invitation for {email}",
-    "onlyOwners": "Only owners can invite or remove members."
+    "onlyOwners": "Only owners can invite or remove members.",
+    "jobTitle": "Your role at the company",
+    "jobTitleHint": "Shown on the jobs you post. For example: Talent Acquisition, CTO.",
+    "jobTitleSection": "Your role",
+    "noJobTitle": "No role yet"
   },
   "Invitation": {
     "metaTitle": "Invitation",
@@ -585,7 +591,12 @@
       "closed": "This job no longer accepts applications.",
       "verified": "Verified company",
       "newTab": "(on the company site, opens in a new tab)",
-      "applyExternalHint": "Takes you to the company's site. When you're back we'll ask if you applied, to add it to My applications."
+      "applyExternalHint": "Takes you to the company's site. When you're back we'll ask if you applied, to add it to My applications.",
+      "poster": {
+        "title": "Posted by",
+        "fallbackRole": "{company} team",
+        "role": "{title} at {company}"
+      }
     },
     "viewApplicants": "View applicants",
     "templates": {
@@ -1226,7 +1237,11 @@
     "pendingLiked": "Done: you liked it. ❤️",
     "pendingSaved": "Done: it's in Saved. 🔖",
     "companyReady": "Done! Your company page is live on Pistaklero. 🎉",
-    "profileReady": "Done! Your profile is live on Pistaklero. 🎉"
+    "profileReady": "Done! Your profile is live on Pistaklero. 🎉",
+    "jobPublished": "Your job is live! 📣",
+    "jobDrafted": "Draft saved 📝",
+    "jobDuplicated": "Job copied as a draft ✨",
+    "jobTitleSaved": "Job title saved ✅"
   },
   "Saved": {
     "metaTitle": "Saved",
@@ -1537,5 +1552,82 @@
     "empty": "We couldn't find profiles with those filters.",
     "clear": "See all",
     "more": "See more"
+  },
+  "MyJobs": {
+    "metaTitle": "My jobs",
+    "title": "My jobs",
+    "subtitle": "Every job at {company}: how it is doing and what still needs a review.",
+    "filtersLabel": "Filter my jobs",
+    "search": "Search by title",
+    "status": "Status",
+    "statusAll": "All",
+    "statusOptions": {
+      "active": "Active",
+      "expired": "Expired",
+      "draft": "Drafts",
+      "closed": "Closed",
+      "hidden": "Hidden by moderation"
+    },
+    "creator": "Posted by",
+    "creatorAll": "Whole team",
+    "creatorMe": "{name} (you)",
+    "mode": "Work mode",
+    "modeAll": "All",
+    "sort": "Sort",
+    "sortOptions": {
+      "recent": "Newest",
+      "applications": "Most applications"
+    },
+    "apply": "Filter",
+    "count": "{count, plural, =0 {No jobs} one {# job} other {# jobs}}",
+    "empty": "You haven't posted any jobs yet. Start with the first one!",
+    "emptyFiltered": "No jobs match those filters.",
+    "more": "Show more",
+    "newBadge": "New",
+    "createdBy": "by {name}",
+    "dates": {
+      "published": "Posted on {date}",
+      "created": "Created on {date}",
+      "validThrough": "Expires on {date}",
+      "expired": "Expired on {date}"
+    },
+    "stats": {
+      "label": "Numbers for {title}",
+      "views": "{count, plural, one {# view} other {# views}}",
+      "views7d": "{count} this week",
+      "applications": "{count, plural, =0 {No applications} one {# application} other {# applications}}",
+      "unreviewed": "{count} to review",
+      "inProcess": "{count} in progress",
+      "hired": "{count, plural, one {# hire} other {# hires}}",
+      "clicks": "{count, plural, one {# click to your site} other {# clicks to your site}}"
+    },
+    "actions": {
+      "applicants": "Applicants",
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "viewPublic": "View posting",
+      "summary": "Summary of {title}"
+    },
+    "tabsLabel": "Job sections",
+    "tabs": {
+      "summary": "Summary",
+      "applicants": "Applicants",
+      "edit": "Edit"
+    },
+    "summary": {
+      "metaTitle": "Job summary",
+      "numbers": "Numbers",
+      "funnel": "Applicants by stage",
+      "funnelEmpty": "Nobody has applied yet.",
+      "daily": "Last 30 days",
+      "dailyHint": "Posting views (one per person per day) and applications.",
+      "dailyViews": "Views",
+      "dailyApplications": "Applications",
+      "dailyTable": "See the numbers per day",
+      "day": "Day",
+      "conversion": "{rate}% of the people who saw the posting applied",
+      "external": "Applications for this job happen on your site: here you can see how many people went there.",
+      "createdBy": "Posted by {name}"
+    }
   }
 }

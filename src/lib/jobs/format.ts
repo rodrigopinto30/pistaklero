@@ -28,3 +28,8 @@ export function isExpired(validThrough: string) {
 export function daysUntil(date: string) {
   return Math.max(1, Math.round((new Date(date).getTime() - Date.now()) / 86_400_000));
 }
+
+/** ¿Se creó hace menos de un día? (la etiqueta "Nueva" de "Mis ofertas"). */
+export function isRecent(createdAt: string, ms = 24 * 60 * 60 * 1000) {
+  return Date.now() - new Date(createdAt).getTime() < ms;
+}
