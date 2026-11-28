@@ -365,14 +365,14 @@ isOneToOne: false
                   ]
                 },"company_members": {
                   Row: {
-                    "company_id": string,"created_at": string,"member_role": Database["public"]['Enums']["member_role"],"user_id": string
+                    "company_id": string,"created_at": string,"job_title": string | null,"member_role": Database["public"]['Enums']["member_role"],"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "company_id": string,"created_at"?: string,"member_role"?: Database["public"]['Enums']["member_role"],"user_id": string
+                    "company_id": string,"created_at"?: string,"job_title"?: string | null,"member_role"?: Database["public"]['Enums']["member_role"],"user_id": string
                   }
                   Update: {
-                    "company_id"?: string,"created_at"?: string,"member_role"?: Database["public"]['Enums']["member_role"],"user_id"?: string
+                    "company_id"?: string,"created_at"?: string,"job_title"?: string | null,"member_role"?: Database["public"]['Enums']["member_role"],"user_id"?: string
                   }
                   Relationships: [
                     {
@@ -578,6 +578,46 @@ isOneToOne: false
       columns: ["skill_id"]
 isOneToOne: false
       referencedRelation: "skills"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"job_view_days": {
+                  Row: {
+                    "day": string,"job_id": string,"views": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "day": string,"job_id": string,"views"?: number
+                  }
+                  Update: {
+                    "day"?: string,"job_id"?: string,"views"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "job_view_days_job_id_fkey"
+      columns: ["job_id"]
+isOneToOne: false
+      referencedRelation: "jobs"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"job_view_keys": {
+                  Row: {
+                    "day": string,"job_id": string,"key_hash": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "day": string,"job_id": string,"key_hash": string
+                  }
+                  Update: {
+                    "day"?: string,"job_id"?: string,"key_hash"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "job_view_keys_job_id_fkey"
+      columns: ["job_id"]
+isOneToOne: false
+      referencedRelation: "jobs"
       referencedColumns: ["id"]
     }
                   ]
@@ -940,6 +980,16 @@ isOneToOne: false
               "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"external_apply": boolean,"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
             }[]
                            },
+"company_job_daily":
+{ Args: { "p_days"?: number,"p_job_id": string }; Returns: {
+              "applications": number,"day": string,"views": number
+            }[]
+                           },
+"company_job_stats":
+{ Args: { "p_creator"?: string,"p_limit"?: number,"p_mode"?: Database["public"]['Enums']["work_mode"],"p_offset"?: number,"p_query"?: string,"p_sort"?: string,"p_status"?: string }; Returns: {
+              "applications": number,"by_status": Json,"created_at": string,"created_by": string,"creator_name": string,"external": boolean,"external_clicks": number,"id": string,"published_at": string,"seniority": Database["public"]['Enums']["seniority"],"slug": string,"status": Database["public"]['Enums']["job_status"],"title": string,"total_count": number,"valid_through": string,"views": number,"views_7d": number,"work_mode": Database["public"]['Enums']["work_mode"]
+            }[]
+                           },
 "complete_candidate_setup":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
@@ -991,6 +1041,11 @@ isOneToOne: false
 "is_suspended":
 { Args: { "p_user_id": string }; Returns: boolean
                            },
+"job_poster":
+{ Args: { "p_job_id": string }; Returns: {
+              "avatar_path": string,"full_name": string,"job_title": string,"user_id": string
+            }[]
+                           },
 "like_needle":
 { Args: { "p_query": string }; Returns: string
                            },
@@ -1030,6 +1085,9 @@ isOneToOne: false
 "prefix_tsquery":
 { Args: { "p_query": string }; Returns: unknown
                            },
+"purge_job_view_keys":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
 "random_slug":
 { Args: { "p_value": string }; Returns: string
                            },
@@ -1041,6 +1099,9 @@ isOneToOne: false
                            },
 "record_import_error":
 { Args: { "p_error": string,"p_source_id": string }; Returns: undefined
+                           },
+"record_job_view":
+{ Args: { "p_job_id": string,"p_key_hash": string,"p_viewer"?: string }; Returns: boolean
                            },
 "refresh_company_response_stats":
 { Args: { "p_company_id": string }; Returns: undefined
@@ -1075,6 +1136,9 @@ isOneToOne: false
                            },
 "set_my_avatar":
 { Args: { "p_path": string }; Returns: undefined
+                           },
+"set_my_job_title":
+{ Args: { "p_title": string }; Returns: undefined
                            },
 "slugify":
 { Args: { "p_value": string }; Returns: string
