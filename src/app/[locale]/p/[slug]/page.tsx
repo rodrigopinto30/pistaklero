@@ -6,7 +6,8 @@ import { cache, type ReactNode } from "react";
 import { Avatar } from "@/components/avatar";
 import { Masonry } from "@/components/masonry";
 import { PostCard } from "@/components/posts/post-card";
-import { getCurrentUser } from "@/lib/auth/session";
+import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
+import { SaveCandidateButton } from "@/components/talent/save-candidate-button";
 import { countryName, formatMonth, languageOptions } from "@/lib/geo";
 import { projectPreviewUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
@@ -91,6 +92,9 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
     supabase.rpc("post_cards", { p_author_id: id, p_limit: 12 }),
   ]);
   const signedIn = Boolean(await getCurrentUser());
+  // Las empresas pueden guardar el perfil (para todo su equipo).
+  const viewerIsRecruiter = signedIn && (await getCurrentProfile())?.role === "recruiter";
+  const saved = viewerIsRecruiter ? Boolean((await supabase.rpc("is_candidate_saved", { p_candidate_id: id })).data) : false;
 
   const period = (start: string, end: string | null) =>
     `${formatMonth(start, locale)} – ${end ? formatMonth(end, locale) : tp("entries.present")}`;
@@ -108,7 +112,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
       {/* Encabezado */}
       <section className="flex flex-col gap-4 rounded-2xl bg-card shadow-soft p-6 md:col-span-2 md:flex-row md:items-center">
         <Avatar path={candidate.people?.avatar_path} name={candidate.people?.full_name ?? ""} size="xl" />
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight">{candidate.people?.full_name}</h1>
           {candidate.headline && <p className="text-lg text-muted-foreground">{candidate.headline}</p>}
           <div className="flex flex-wrap items-center gap-2 text-sm">
@@ -123,6 +127,11 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
             )}
           </div>
         </div>
+        {viewerIsRecruiter && (
+          <div className="flex flex-wrap gap-2 md:self-start">
+            <SaveCandidateButton candidateId={id} name={candidate.people?.full_name ?? ""} saved={saved} variant="full" />
+          </div>
+        )}
       </section>
 
       <Card title={t("links")}>

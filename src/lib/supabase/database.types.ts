@@ -767,6 +767,38 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"saved_candidates": {
+                  Row: {
+                    "candidate_id": string,"company_id": string,"created_at": string,"saved_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "candidate_id": string,"company_id": string,"created_at"?: string,"saved_by"?: string | null
+                  }
+                  Update: {
+                    "candidate_id"?: string,"company_id"?: string,"created_at"?: string,"saved_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "saved_candidates_candidate_id_fkey"
+      columns: ["candidate_id"]
+isOneToOne: false
+      referencedRelation: "candidates"
+      referencedColumns: ["user_id"]
+    },{
+      foreignKeyName: "saved_candidates_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "saved_candidates_saved_by_fkey"
+      columns: ["saved_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"saved_companies": {
                   Row: {
                     "company_id": string,"created_at": string,"user_id": string
@@ -936,6 +968,9 @@ isOneToOne: false
 "can_view_candidate":
 { Args: { "p_candidate_id": string }; Returns: boolean
                            },
+"candidate_card_visible":
+{ Args: { "p_candidate_id": string }; Returns: boolean
+                           },
 "candidate_missing_requirements":
 { Args: { "p_candidate_id": string }; Returns: (string)[]
                            },
@@ -1029,6 +1064,9 @@ isOneToOne: false
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
+"is_candidate_saved":
+{ Args: { "p_candidate_id": string }; Returns: boolean
+                           },
 "is_company_owner":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
@@ -1121,6 +1159,11 @@ isOneToOne: false
 "save_my_name":
 { Args: { "p_first_name": string,"p_last_name": string,"p_middle_name": string }; Returns: undefined
                            },
+"saved_candidate_cards":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "availability": Database["public"]['Enums']["availability"],"avatar_path": string,"city": string,"country": string,"full_name": string,"headline": string,"saved_at": string,"saved_by_name": string,"skills": Json,"slug": string,"user_id": string
+            }[]
+                           },
 "saved_job_cards":
 { Args: Record<PropertyKey, never>; Returns: {
               "city": string,"company_badge": Database["public"]['Enums']["response_badge"],"company_logo_path": string,"company_name": string,"company_slug": string,"company_verified": boolean,"country": string,"employment_type": Database["public"]['Enums']["employment_type"],"external_apply": boolean,"id": string,"language": Database["public"]['Enums']["app_locale"],"published_at": string,"salary_basis": Database["public"]['Enums']["salary_basis"],"salary_currency": Database["public"]['Enums']["currency"],"salary_max": number,"salary_min": number,"salary_period": Database["public"]['Enums']["salary_period"],"seniority": Database["public"]['Enums']["seniority"],"skills": Json,"slug": string,"source": Database["public"]['Enums']["job_source"],"title": string,"total_count": number,"work_mode": Database["public"]['Enums']["work_mode"]
@@ -1151,7 +1194,7 @@ isOneToOne: false
                            },
 "talent_cards":
 { Args: { "p_availability"?: Database["public"]['Enums']["availability"],"p_country"?: string,"p_limit"?: number,"p_offset"?: number,"p_query"?: string,"p_skill"?: string }; Returns: {
-              "availability": Database["public"]['Enums']["availability"],"avatar_path": string,"city": string,"country": string,"full_name": string,"headline": string,"skills": Json,"slug": string,"total_count": number,"user_id": string
+              "availability": Database["public"]['Enums']["availability"],"avatar_path": string,"city": string,"country": string,"full_name": string,"headline": string,"saved": boolean,"skills": Json,"slug": string,"total_count": number,"user_id": string
             }[]
                            },
 "toggle_company_like":
@@ -1159,6 +1202,9 @@ isOneToOne: false
                            },
 "toggle_post_like":
 { Args: { "p_post_id": string }; Returns: boolean
+                           },
+"toggle_saved_candidate":
+{ Args: { "p_candidate_id": string }; Returns: boolean
                            },
 "toggle_saved_company":
 { Args: { "p_company_id": string }; Returns: boolean

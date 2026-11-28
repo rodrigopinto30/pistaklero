@@ -1,4 +1,4 @@
-import { expect, expectNoA11yViolations, onboardAsCompany, seedCandidate, signIn, signInAsReadyCandidate, test, uniqueEmail } from "./support/fixtures";
+import { expect, expectNoA11yViolations, expectToast, onboardAsCompany, seedCandidate, signIn, signInAsReadyCandidate, test, uniqueEmail } from "./support/fixtures";
 
 test("las empresas exploran talento; las candidatas no ven la pestaña", async ({ page, browser }) => {
   const run = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
@@ -23,6 +23,24 @@ test("las empresas exploran talento; las candidatas no ven la pestaña", async (
   await page.getByRole("searchbox", { name: "Nombre, puesto o habilidad" }).fill(`Visible${run}`);
   await page.getByRole("searchbox", { name: "Nombre, puesto o habilidad" }).press("Enter");
   await expect(page.getByRole("status")).toHaveText(`1 perfil para «Visible${run}»`);
-  await page.getByRole("link", { name: visible }).click();
+
+  // La guarda desde la tarjeta: queda en "Perfiles guardados" del equipo, con quién la guardó.
+  await page.getByRole("button", { name: `Guardar el perfil de ${visible}` }).click();
+  await expectToast(page, "Guardamos el perfil");
+  await expect(page.getByRole("button", { name: `Quitar a ${visible} de guardados` })).toHaveAttribute("aria-pressed", "true");
+  await page.goto("/es/guardados");
+  const savedPeople = page.getByRole("region", { name: "Perfiles guardados" });
+  await expect(savedPeople.getByRole("heading", { name: visible })).toBeVisible();
+  await expect(savedPeople.getByText("Guardado por Rita Reclutadora")).toBeVisible();
+  await expectNoA11yViolations(page);
+
+  // En su perfil, el botón muestra que ya está guardada (y se puede quitar).
+  await savedPeople.getByRole("link", { name: visible }).click();
   await expect(page.getByRole("heading", { level: 1, name: visible })).toBeVisible();
+  const saveButton = page.getByRole("button", { name: "Guardado" });
+  await expect(saveButton).toHaveAttribute("aria-pressed", "true");
+  await saveButton.click();
+  await expectToast(page, "Lo quitamos de guardados");
+  await page.goto("/es/guardados");
+  await expect(page.getByText("Todavía no guardaron perfiles.")).toBeVisible();
 });

@@ -13,6 +13,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { Emoji } from "@/components/emoji";
 import { BackLink } from "@/components/back-link";
+import { TalentCard } from "@/components/talent/talent-card";
+import { getCurrentRecruiter } from "@/lib/auth/recruiter";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Saved");
@@ -28,6 +30,7 @@ export default async function SavedPage() {
   if (!profile) redirect({ href: "/welcome", locale });
   // Empleos guardan solo los candidatos; publicaciones, cualquiera.
   const isCandidate = profile?.role === "candidate";
+  const recruiter = profile?.role === "recruiter" ? await getCurrentRecruiter() : null;
 
   const t = await getTranslations("Saved");
   const supabase = await createClient();
@@ -38,6 +41,9 @@ export default async function SavedPage() {
     supabase.rpc("post_cards", { p_saved_only: true, p_limit: 60 }),
     supabase.rpc("company_cards", { p_saved_only: true, p_limit: 60 }),
   ]);
+  // Las empresas guardan perfiles (la lista es de todo el equipo).
+  const savedPeople = recruiter ? ((await supabase.rpc("saved_candidate_cards")).data ?? []) : [];
+  const tPeople = await getTranslations("SavedCandidates");
   const open = cards ?? [];
   const openIds = new Set(open.map((job) => job.id));
   const closed = (all ?? []).filter((row) => !openIds.has(row.job_id));
@@ -50,6 +56,28 @@ export default async function SavedPage() {
         <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="🔖" /></h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
+
+      {recruiter && (
+        <section aria-labelledby="saved-people" className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <h2 id="saved-people" className="text-xl font-semibold">
+              {tPeople("sectionTitle")}
+            </h2>
+            <p className="text-sm text-muted-foreground">{tPeople("sectionHint", { company: recruiter.company.name })}</p>
+          </div>
+          {savedPeople.length === 0 ? (
+            <p className="rounded-2xl bg-card p-6 text-muted-foreground shadow-soft">{tPeople("empty")}</p>
+          ) : (
+            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {savedPeople.map((person) => (
+                <li key={person.user_id}>
+                  <TalentCard person={person} locale={locale} saved headingLevel={3} note={person.saved_by_name ? tPeople("savedBy", { name: person.saved_by_name }) : undefined} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
 
       {isCandidate && (
         <section aria-labelledby="saved-jobs" className="flex flex-col gap-4">

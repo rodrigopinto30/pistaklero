@@ -1639,5 +1639,18 @@
       "external": "Las postulaciones de esta oferta son en tu sitio: acá ves cuántas personas fueron.",
       "createdBy": "Publicada por {name}"
     }
+  },
+  "SavedCandidates": {
+    "save": "Guardar el perfil de {name}",
+    "unsave": "Quitar a {name} de guardados",
+    "saveLabel": "Guardar",
+    "savedLabel": "Guardado",
+    "savedToast": "Guardamos el perfil 🔖",
+    "unsavedToast": "Lo quitamos de guardados",
+    "error": "No pudimos guardarlo. Probá de nuevo.",
+    "sectionTitle": "Perfiles guardados",
+    "sectionHint": "Los ve todo el equipo de {company}.",
+    "savedBy": "Guardado por {name}",
+    "empty": "Todavía no guardaron perfiles. En Talento, tocá el marcador de una tarjeta."
   }
 }
