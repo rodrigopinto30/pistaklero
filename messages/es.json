@@ -1770,7 +1770,12 @@
     "headerLabel": "Mensajes",
     "headerUnread": "Mensajes: {count} sin leer",
     "candidateRole": "Candidata/o",
-    "teamRole": "Equipo de Pistaklero"
+    "teamRole": "Equipo de Pistaklero",
+    "status": {
+      "sent": "Enviado",
+      "delivered": "Entregado",
+      "read": "Leído"
+    }
   },
   "Account": {
     "switched": "Entraste con otra cuenta en otra pestaña. Recargá esta para seguir con la cuenta actual.",

@@ -33,7 +33,8 @@ export async function SiteHeader() {
   const person = user ? await getCurrentPerson() : null;
   // La campana arranca con el número del servidor y después se actualiza sola.
   const unreadNotifications = profile ? ((await (await createClient()).rpc("unread_notifications_count")).data ?? 0) : 0;
-  const unreadMessages = profile ? ((await (await createClient()).rpc("unread_messages_count")).data ?? 0) : 0;
+  // Con el encabezado a la vista, lo que le llegó queda "entregado" (dos tildes para quien lo mandó).
+  const unreadMessages = profile ? ((await (await createClient()).rpc("check_messages")).data ?? 0) : 0;
 
   // Accesos de la cuenta (menú) según el rol. La búsqueda rápida (Ctrl+K) suma las secciones.
   const entries: MenuEntry[] = [];

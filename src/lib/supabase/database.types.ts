@@ -853,14 +853,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "created_at": string,"email_notifications": boolean,"id": string,"locale": Database["public"]['Enums']["app_locale"],"message_enter_sends": boolean,"role": Database["public"]['Enums']["user_role"],"suspended_at": string | null
+                    "created_at": string,"email_notifications": boolean,"id": string,"locale": Database["public"]['Enums']["app_locale"],"message_enter_sends": boolean,"messages_checked_at": string | null,"role": Database["public"]['Enums']["user_role"],"suspended_at": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"email_notifications"?: boolean,"id": string,"locale"?: Database["public"]['Enums']["app_locale"],"message_enter_sends"?: boolean,"role": Database["public"]['Enums']["user_role"],"suspended_at"?: string | null
+                    "created_at"?: string,"email_notifications"?: boolean,"id": string,"locale"?: Database["public"]['Enums']["app_locale"],"message_enter_sends"?: boolean,"messages_checked_at"?: string | null,"role": Database["public"]['Enums']["user_role"],"suspended_at"?: string | null
                   }
                   Update: {
-                    "created_at"?: string,"email_notifications"?: boolean,"id"?: string,"locale"?: Database["public"]['Enums']["app_locale"],"message_enter_sends"?: boolean,"role"?: Database["public"]['Enums']["user_role"],"suspended_at"?: string | null
+                    "created_at"?: string,"email_notifications"?: boolean,"id"?: string,"locale"?: Database["public"]['Enums']["app_locale"],"message_enter_sends"?: boolean,"messages_checked_at"?: string | null,"role"?: Database["public"]['Enums']["user_role"],"suspended_at"?: string | null
                   }
                   Relationships: [
                     
@@ -1124,6 +1124,9 @@ isOneToOne: false
 "change_application_status":
 { Args: { "p_application_id": string,"p_message"?: string,"p_to": Database["public"]['Enums']["application_status"] }; Returns: undefined
                            },
+"check_messages":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
 "claim_email_batch":
 { Args: { "p_limit": number }; Returns: {
               "attempts": number,
@@ -1187,6 +1190,11 @@ isOneToOne: false
                            },
 "conversation_other":
 { Args: { "p_conversation_id": string,"p_me": string }; Returns: string
+                           },
+"conversation_receipts":
+{ Args: { "p_conversation_id": string }; Returns: {
+              "delivered_at": string,"read_at": string
+            }[]
                            },
 "conversation_with":
 { Args: { "p_user_id": string }; Returns: string
@@ -1273,7 +1281,7 @@ isOneToOne: false
                            },
 "my_conversations":
 { Args: { "p_box"?: string }; Returns: {
-              "id": string,"last_body": string,"last_message_at": string,"last_sender": string,"other_avatar": string,"other_id": string,"other_name": string,"other_subtitle": string,"unread": number,"waiting": boolean
+              "id": string,"last_body": string,"last_message_at": string,"last_sender": string,"other_avatar": string,"other_delivered_at": string,"other_id": string,"other_name": string,"other_read_at": string,"other_subtitle": string,"unread": number,"waiting": boolean
             }[]
                            },
 "my_job_application_counts":

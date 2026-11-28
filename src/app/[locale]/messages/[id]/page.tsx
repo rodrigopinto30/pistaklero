@@ -31,9 +31,10 @@ export default async function ConversationPage({ params }: PageProps<"/[locale]/
   if (!z.uuid().safeParse(id).success) notFound();
 
   const supabase = await createClient();
-  const [{ data: details }, { data: messages }, profile] = await Promise.all([
+  const [{ data: details }, { data: messages }, { data: receipts }, profile] = await Promise.all([
     supabase.rpc("conversation_detail", { p_conversation_id: id }),
     supabase.rpc("conversation_messages", { p_conversation_id: id, p_limit: 100 }),
+    supabase.rpc("conversation_receipts", { p_conversation_id: id }),
     getCurrentProfile(),
   ]);
   const conversation = details?.[0];
@@ -143,6 +144,7 @@ export default async function ConversationPage({ params }: PageProps<"/[locale]/
             conversationId={id}
             otherName={name}
             initialMessages={messages ?? []}
+            initialReceipts={receipts?.[0] ?? null}
             canWrite={canWrite}
             enterSends={profile?.message_enter_sends ?? true}
             closeHref={boxHref}
