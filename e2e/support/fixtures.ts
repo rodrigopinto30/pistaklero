@@ -10,7 +10,7 @@ export const MAILPIT_URL = "http://127.0.0.1:54324";
 export const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64");
 export const SVG = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
 
-const admin = createClient(SUPABASE_URL, SECRET_KEY, {
+export const admin = createClient(SUPABASE_URL, SECRET_KEY, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
@@ -32,7 +32,7 @@ export async function signIn(page: Page, email: string, next = "/es") {
 }
 
 /** El id de la cuenta con la que está ingresada la página (a partir de su email en Supabase Auth). */
-async function userIdOf(page: Page) {
+export async function userIdOf(page: Page) {
   // La sesión de Supabase va en una cookie (a veces partida en "…auth-token.0", "…auth-token.1").
   const parts = (await page.context().cookies())
     .filter((c) => /auth-token(\.\d+)?$/.test(c.name))
@@ -67,7 +67,7 @@ export async function addQuestions(jobTitle: string) {
 }
 
 /** Publica una oferta directamente para una empresa ya creada (por su nombre). */
-export async function publishJobFor(companyName: string, title: string) {
+export async function publishJobFor(companyName: string, title: string, { createdBy }: { createdBy?: string } = {}) {
   const { data: company } = await admin.from("companies").select("id").eq("name", companyName).single();
   const { data: job, error } = await admin
     .from("jobs")
@@ -86,6 +86,7 @@ export async function publishJobFor(companyName: string, title: string) {
       salary_basis: "gross",
       valid_through: new Date(Date.now() + 30 * 86_400_000).toISOString(),
       status: "published",
+      created_by: createdBy ?? null,
     })
     .select("id, slug")
     .single();

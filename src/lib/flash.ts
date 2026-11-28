@@ -22,6 +22,9 @@ export const FLASH_KEYS = [
   "pendingSaved",
   "companyReady",
   "profileReady",
+  "jobPublished",
+  "jobDrafted",
+  "jobDuplicated",
 ] as const;
 export type FlashKey = (typeof FLASH_KEYS)[number];
 

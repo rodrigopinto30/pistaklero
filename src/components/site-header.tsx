@@ -42,6 +42,7 @@ export async function SiteHeader() {
   } else if (profile?.role === "recruiter") {
     entries.push(
       { href: "/dashboard", label: t("dashboard"), icon: "dashboard" },
+      { href: "/dashboard/jobs", label: t("myJobs"), icon: "jobs" },
       { href: "/dashboard/company", label: t("myCompany"), icon: "company" },
       { href: "/dashboard/team", label: tPalette("team"), icon: "team" }
     );

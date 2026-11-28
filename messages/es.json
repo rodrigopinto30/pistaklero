@@ -21,7 +21,8 @@
     "backToTop": "Volver arriba",
     "newJob": "Publicar empleo",
     "talent": "Talento",
-    "back": "Volver"
+    "back": "Volver",
+    "myJobs": "Mis ofertas"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -413,9 +414,10 @@
     "unverifiedBadge": "Sin verificar",
     "editCompany": "Editar la página de la empresa",
     "viewCompany": "Ver página pública",
-    "jobsTitle": "Ofertas",
+    "jobsTitle": "Últimas ofertas",
     "jobsEmpty": "Todavía no publicaste ofertas.",
-    "team": "Equipo"
+    "team": "Equipo",
+    "seeAllJobs": "Ver todas mis ofertas"
   },
   "CompanyPage": {
     "verified": "Empresa verificada",
@@ -466,7 +468,11 @@
     "expires": "Vence el {date}",
     "revoke": "Revocar",
     "revokeOf": "Revocar la invitación de {email}",
-    "onlyOwners": "Solo los owners pueden invitar o quitar miembros."
+    "onlyOwners": "Solo los owners pueden invitar o quitar miembros.",
+    "jobTitle": "Tu cargo en la empresa",
+    "jobTitleHint": "Aparece en las ofertas que publicás. Por ejemplo: Talent Acquisition, CTO.",
+    "jobTitleSection": "Tu cargo",
+    "noJobTitle": "Sin cargo cargado"
   },
   "Invitation": {
     "metaTitle": "Invitación",
@@ -585,7 +591,12 @@
       "closed": "Esta oferta ya no recibe postulaciones.",
       "verified": "Empresa verificada",
       "newTab": "(en el sitio de la empresa, se abre en una pestaña nueva)",
-      "applyExternalHint": "Te lleva al sitio de la empresa. Al volver te preguntamos si te postulaste, para sumarla a Mis postulaciones."
+      "applyExternalHint": "Te lleva al sitio de la empresa. Al volver te preguntamos si te postulaste, para sumarla a Mis postulaciones.",
+      "poster": {
+        "title": "Publicada por",
+        "fallbackRole": "Equipo de {company}",
+        "role": "{title} en {company}"
+      }
     },
     "viewApplicants": "Ver postulantes",
     "templates": {
@@ -1226,7 +1237,11 @@
     "pendingLiked": "Listo: le diste me gusta. ❤️",
     "pendingSaved": "Listo: quedó en Guardados. 🔖",
     "companyReady": "¡Listo! La página de tu empresa ya está en Pistaklero. 🎉",
-    "profileReady": "¡Listo! Tu perfil ya está en Pistaklero. 🎉"
+    "profileReady": "¡Listo! Tu perfil ya está en Pistaklero. 🎉",
+    "jobPublished": "¡Tu oferta ya está publicada! 📣",
+    "jobDrafted": "Guardamos el borrador 📝",
+    "jobDuplicated": "Copiamos la oferta como borrador ✨",
+    "jobTitleSaved": "Guardamos tu cargo ✅"
   },
   "Saved": {
     "metaTitle": "Guardados",
@@ -1537,5 +1552,82 @@
     "empty": "No encontramos perfiles con esos filtros.",
     "clear": "Ver todos",
     "more": "Ver más"
+  },
+  "MyJobs": {
+    "metaTitle": "Mis ofertas",
+    "title": "Mis ofertas",
+    "subtitle": "Todas las ofertas de {company}: cómo les va y qué falta revisar.",
+    "filtersLabel": "Filtrar mis ofertas",
+    "search": "Buscar por puesto",
+    "status": "Estado",
+    "statusAll": "Todas",
+    "statusOptions": {
+      "active": "Activas",
+      "expired": "Vencidas",
+      "draft": "Borradores",
+      "closed": "Cerradas",
+      "hidden": "Ocultas por moderación"
+    },
+    "creator": "Publicada por",
+    "creatorAll": "Todo el equipo",
+    "creatorMe": "{name} (vos)",
+    "mode": "Modalidad",
+    "modeAll": "Todas",
+    "sort": "Orden",
+    "sortOptions": {
+      "recent": "Más recientes",
+      "applications": "Más postulaciones"
+    },
+    "apply": "Filtrar",
+    "count": "{count, plural, =0 {Ninguna oferta} one {# oferta} other {# ofertas}}",
+    "empty": "Todavía no publicaste ofertas. ¡Empezá por la primera!",
+    "emptyFiltered": "Ninguna oferta coincide con esos filtros.",
+    "more": "Ver más",
+    "newBadge": "Nueva",
+    "createdBy": "por {name}",
+    "dates": {
+      "published": "Publicada el {date}",
+      "created": "Creada el {date}",
+      "validThrough": "Vence el {date}",
+      "expired": "Venció el {date}"
+    },
+    "stats": {
+      "label": "Números de {title}",
+      "views": "{count, plural, one {# vista} other {# vistas}}",
+      "views7d": "{count} esta semana",
+      "applications": "{count, plural, =0 {Sin postulaciones} one {# postulación} other {# postulaciones}}",
+      "unreviewed": "{count} sin revisar",
+      "inProcess": "{count} en proceso",
+      "hired": "{count, plural, one {# contratación} other {# contrataciones}}",
+      "clicks": "{count, plural, one {# clic a tu sitio} other {# clics a tu sitio}}"
+    },
+    "actions": {
+      "applicants": "Postulantes",
+      "edit": "Editar",
+      "duplicate": "Duplicar",
+      "viewPublic": "Ver aviso",
+      "summary": "Resumen de {title}"
+    },
+    "tabsLabel": "Secciones de la oferta",
+    "tabs": {
+      "summary": "Resumen",
+      "applicants": "Postulantes",
+      "edit": "Editar"
+    },
+    "summary": {
+      "metaTitle": "Resumen de la oferta",
+      "numbers": "Números",
+      "funnel": "Postulantes por etapa",
+      "funnelEmpty": "Todavía nadie se postuló.",
+      "daily": "Últimos 30 días",
+      "dailyHint": "Vistas del aviso (una por persona por día) y postulaciones.",
+      "dailyViews": "Vistas",
+      "dailyApplications": "Postulaciones",
+      "dailyTable": "Ver los números por día",
+      "day": "Día",
+      "conversion": "{rate}% de quienes vieron el aviso se postularon",
+      "external": "Las postulaciones de esta oferta son en tu sitio: acá ves cuántas personas fueron.",
+      "createdBy": "Publicada por {name}"
+    }
   }
 }

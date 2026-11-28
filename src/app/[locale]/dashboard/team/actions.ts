@@ -64,3 +64,25 @@ export async function changeMember(formData: FormData) {
   refresh();
 }
 
+
+const jobTitleSchema = z.object({
+  jobTitle: z
+    .string()
+    .trim()
+    .max(80)
+    .refine((value) => value === "" || value.length >= 2),
+});
+
+/** El cargo de cada persona en la empresa (aparece en las ofertas que publica). Vacío lo borra. */
+export async function updateMyJobTitle(_prev: FormState, formData: FormData): Promise<FormState> {
+  const values = formValues(formData);
+  const recruiter = await getCurrentRecruiter();
+  if (!recruiter) return errorState(values, {}, "unknown");
+  const parsed = jobTitleSchema.safeParse(values);
+  if (!parsed.success) return errorState(values, { jobTitle: { code: "invalid" } });
+
+  const { error } = await (await createClient()).rpc("set_my_job_title", { p_title: parsed.data.jobTitle });
+  if (error) return errorState(values, {}, "unknown");
+  refresh();
+  return successState();
+}

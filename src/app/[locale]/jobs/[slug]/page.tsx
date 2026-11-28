@@ -24,6 +24,8 @@ import { ExternalApplyLink } from "@/components/jobs/external-apply-link";
 import { getJobViewer } from "@/lib/jobs/viewer";
 import { ReportForm } from "./report-form";
 import { BackLink } from "@/components/back-link";
+import { Avatar } from "@/components/avatar";
+import { JobViewBeacon } from "@/components/jobs/job-view-beacon";
 
 async function loadJob(slug: string) {
   const supabase = await createClient();
@@ -68,7 +70,11 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
   const tActions = await getTranslations("Jobs.actions");
   const format = await getFormatter();
   const supabase = await createClient();
-  const { data: skills } = await supabase.from("job_skills").select("skills(name_es, name_en)").eq("job_id", job.id);
+  const [{ data: skills }, { data: posters }] = await Promise.all([
+    supabase.from("job_skills").select("skills(name_es, name_en)").eq("job_id", job.id),
+    supabase.rpc("job_poster", { p_job_id: job.id }),
+  ]);
+  const poster = posters?.[0] ?? null;
 
   const company = job.companies;
   const logo = companyLogoUrl(company?.logo_path ?? null);
@@ -146,7 +152,26 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
           </h2>
           <Markdown lang={job.language}>{job.source === "imported" ? job.summary : job.description}</Markdown>
         </section>
+
+        {/* Quién publicó la oferta (como "Conocé al equipo de contratación" en LinkedIn). */}
+        {poster && company && (
+          <section aria-labelledby="job-poster" className="flex flex-col gap-3 rounded-2xl bg-card p-6 shadow-soft">
+            <h2 id="job-poster" className="text-lg font-semibold">
+              {t("detail.poster.title")}
+            </h2>
+            <div className="flex items-center gap-3">
+              <Avatar path={poster.avatar_path} name={poster.full_name} size="md" />
+              <div className="flex min-w-0 flex-col">
+                <span className="font-medium">{poster.full_name}</span>
+                <span className="text-sm text-muted-foreground">
+                  {poster.job_title ? t("detail.poster.role", { title: poster.job_title, company: company.name }) : t("detail.poster.fallbackRole", { company: company.name })}
+                </span>
+              </div>
+            </div>
+          </section>
+        )}
       </article>
+      {isOpen && <JobViewBeacon jobId={job.id} />}
 
       <aside className="flex flex-col gap-4">
         <div className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5 lg:sticky lg:top-44">

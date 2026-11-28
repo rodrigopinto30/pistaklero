@@ -108,8 +108,59 @@ export async function saveJob(_prev: FormState, formData: FormData): Promise<For
   }
 
   refresh();
-  if (!jobId) redirect({ href: { pathname: "/dashboard/jobs/[id]", params: { id } }, locale });
+  // Al crearla (o al publicar un borrador) vuelve a "Mis ofertas", con la oferta resaltada como nueva.
+  if (!jobId || publish) {
+    await flash(publish ? "jobPublished" : "jobDrafted");
+    redirect({ href: { pathname: "/dashboard/jobs", query: { nueva: id! } }, locale });
+  }
   return successState();
+}
+
+/** Duplicar: una copia como borrador (con sus habilidades y preguntas), lista para editar. */
+export async function duplicateJob(formData: FormData) {
+  const member = await requireMember();
+  const jobId = z.uuid().safeParse(formData.get("jobId"));
+  const locale = parseLocale(formData.get("locale"));
+  if (!member || !jobId.success) return;
+
+  const { data: job } = await member.supabase.from("jobs").select("*").eq("id", jobId.data).eq("company_id", member.company.id).maybeSingle();
+  if (!job || job.source !== "native") return;
+  const { data: copy, error } = await member.supabase
+    .from("jobs")
+    .insert({
+      company_id: member.company.id,
+      source: "native",
+      status: "draft",
+      title: job.title,
+      description: job.description,
+      language: job.language,
+      seniority: job.seniority,
+      employment_type: job.employment_type,
+      work_mode: job.work_mode,
+      country: job.country,
+      city: job.city,
+      salary_min: job.salary_min,
+      salary_max: job.salary_max,
+      salary_currency: job.salary_currency,
+      salary_period: job.salary_period,
+      salary_basis: job.salary_basis,
+      valid_through: new Date(Date.now() + 30 * DAY_MS).toISOString(),
+      external_url: job.external_url,
+    })
+    .select("id")
+    .single();
+  if (error || !copy) return;
+
+  const [{ data: skills }, { data: questions }] = await Promise.all([
+    member.supabase.from("job_skills").select("skill_id").eq("job_id", job.id),
+    member.supabase.from("job_questions").select("position, type, prompt, options").eq("job_id", job.id),
+  ]);
+  if (skills?.length) await member.supabase.from("job_skills").insert(skills.map((s) => ({ job_id: copy.id, skill_id: s.skill_id })));
+  if (questions?.length) await member.supabase.from("job_questions").insert(questions.map((q) => ({ ...q, job_id: copy.id })));
+
+  await flash("jobDuplicated");
+  refresh();
+  redirect({ href: { pathname: "/dashboard/jobs/[id]/edit", params: { id: copy.id } }, locale });
 }
 
 export async function setJobStatus(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -133,5 +184,5 @@ export async function deleteDraft(formData: FormData) {
   await member.supabase.from("jobs").delete().eq("id", jobId.data).eq("status", "draft");
   await flash("removed");
   refresh();
-  redirect({ href: "/dashboard", locale });
+  redirect({ href: "/dashboard/jobs", locale });
 }

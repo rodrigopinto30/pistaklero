@@ -10,6 +10,7 @@ import { InviteForm } from "./_components/invite-form";
 import { Emoji } from "@/components/emoji";
 import { ConfirmButton } from "@/components/confirm-button";
 import { BackLink } from "@/components/back-link";
+import { JobTitleForm } from "./_components/job-title-form";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Team");
@@ -40,13 +41,19 @@ export default async function TeamPage() {
         <p className="text-muted-foreground">{t("subtitle", { company: recruiter.company.name })}</p>
       </div>
 
+      <SectionCard id="job-title" title={t("jobTitleSection")}>
+        <JobTitleForm saved={(members ?? []).find((m) => m.user_id === recruiter.userId)?.job_title ?? ""} />
+      </SectionCard>
+
       <SectionCard id="members" title={t("membersTitle")}>
         <ul className="flex flex-col gap-2">
           {(members ?? []).map((member) => (
             <li key={member.user_id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-2">
-              <span className="flex flex-col">
-                <span className="font-medium">{member.email}</span>
-                <span className="text-sm text-muted-foreground">{t(`roles.${member.member_role}`)}</span>
+              <span className="flex min-w-0 flex-col">
+                <span className="font-medium">{member.full_name || member.email}</span>
+                <span className="text-sm text-muted-foreground">
+                  {[member.job_title, t(`roles.${member.member_role}`), member.full_name ? member.email : null].filter(Boolean).join(" · ")}
+                </span>
               </span>
               {isOwner && member.user_id !== recruiter.userId && (
                 <span className="flex gap-1">

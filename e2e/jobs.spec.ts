@@ -41,7 +41,14 @@ test("una empresa publica una oferta y se ve en público, con Markdown seguro", 
   await page.getByLabel("TypeScript", { exact: true }).check();
   await page.getByRole("button", { name: "Publicar" }).click();
 
-  await page.waitForURL(/\/es\/panel\/ofertas\/[0-9a-f-]{36}$/);
+  // Vuelve a "Mis ofertas", con la oferta recién creada resaltada como nueva.
+  await page.waitForURL(/\/es\/panel\/ofertas\?nueva=[0-9a-f-]{36}$/);
+  await expect(page.getByRole("region", { name: /^(Avisos|Notifications)$/ }).getByText("¡Tu oferta ya está publicada!")).toBeVisible();
+  const created = page.locator("article[data-highlighted]");
+  await expect(created.getByRole("heading", { name: "Desarrolladora Frontend Junior" })).toBeVisible();
+  await expect(created.getByText("Nueva", { exact: true })).toBeVisible();
+  await expectNoA11yViolations(page);
+  await created.getByRole("link", { name: "Desarrolladora Frontend Junior" }).click();
   await expect(page.getByText("Publicada", { exact: true }).filter({ visible: true })).toBeVisible();
 
   // Detalle público, visto por un visitante anónimo
@@ -80,12 +87,16 @@ test("un borrador no es público hasta publicarlo", async ({ page, browser }) =>
   await page.goto("/es/panel/ofertas/nueva");
   await fillJob(page, "Community Manager Trainee");
   await page.getByRole("button", { name: "Guardar borrador" }).click();
-  await page.waitForURL(/\/es\/panel\/ofertas\/[0-9a-f-]{36}$/);
-  await expect(page.getByText("Borrador", { exact: true }).filter({ visible: true })).toBeVisible();
+  await page.waitForURL(/\/es\/panel\/ofertas\?nueva=[0-9a-f-]{36}$/);
+  const draft = page.locator("article[data-highlighted]");
+  await expect(draft.getByText("Borrador", { exact: true })).toBeVisible();
+  await draft.getByRole("link", { name: "Editar" }).click();
   await expect(page.getByRole("link", { name: "Ver oferta publicada" })).toHaveCount(0);
 
   await page.getByRole("button", { name: "Publicar" }).click();
-  await expect(page.getByText("Publicada", { exact: true }).filter({ visible: true })).toBeVisible();
+  await page.waitForURL(/\/es\/panel\/ofertas\?nueva=[0-9a-f-]{36}$/);
+  await expect(page.locator("article[data-highlighted]").getByText("Publicada", { exact: true })).toBeVisible();
+  await page.locator("article[data-highlighted]").getByRole("link", { name: "Community Manager Trainee" }).click();
   const href = await page.getByRole("link", { name: "Ver oferta publicada" }).getAttribute("href");
   const visitor = await (await browser.newContext()).newPage();
   expect((await visitor.goto(href!))?.status()).toBe(200);

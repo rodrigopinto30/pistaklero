@@ -28,8 +28,8 @@ test("una plantilla completa el formulario y la oferta se publica", async ({ pag
   await page.getByLabel(/^Mínimo/).fill("900");
   await page.getByLabel(/^Máximo/).fill("1300");
   await page.getByRole("button", { name: "Publicar" }).click();
-  await page.waitForURL(/\/es\/panel\/ofertas\/[0-9a-f-]{36}$/);
-  await expect(page.getByText("Publicada", { exact: true }).filter({ visible: true })).toBeVisible();
+  await page.waitForURL(/\/es\/panel\/ofertas\?nueva=[0-9a-f-]{36}$/);
+  await expect(page.locator("article[data-highlighted]").getByText("Publicada", { exact: true })).toBeVisible();
 
   // "Empezar de cero" vacía el formulario
   await page.goto("/es/panel/ofertas/nueva?plantilla=sdr");

@@ -10,7 +10,7 @@ test("una oferta propia puede recibir las postulaciones en otro sitio y la candi
   await signIn(page, uniqueEmail("rrhh", domain));
   await onboardAsCompany(page, companyName, domain);
   const job = await publishJobFor(companyName, title);
-  await page.goto(`/es/panel/ofertas/${job.id}`);
+  await page.goto(`/es/panel/ofertas/${job.id}/editar`);
   const apply = page.getByRole("group", { name: "¿Dónde se postulan?" });
   await expect(page.getByRole("group", { name: "Preguntas filtro" })).toBeVisible();
   await apply.getByRole("radio", { name: "En otro sitio" }).check();
