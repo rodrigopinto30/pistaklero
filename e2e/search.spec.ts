@@ -111,3 +111,56 @@ test("al ir a otra página, el buscador se limpia", async ({ page }) => {
   await page.getByRole("navigation", { name: "Secciones" }).first().getByRole("link", { name: "Empresas" }).click();
   await expect(page.getByRole("searchbox", { name: "Nombre o rubro de la empresa" })).toHaveValue("");
 });
+
+test("los filtros quedan abiertos mientras se usan y se repliegan al tocar afuera, escribir, buscar, Escape o cambiar de pestaña", async ({ page }) => {
+  await page.goto("/es");
+  const toggle = page.getByRole("button", { name: /^Filtros/ });
+  const box = page.getByRole("searchbox", { name: "Puesto, empresa o tecnología" });
+
+  // Tocar un filtro lo aplica y el panel sigue abierto.
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await page.getByRole("group", { name: "Filtros rápidos" }).getByText("Remoto", { exact: true }).click();
+  await expect(page).toHaveURL(/remote=1/);
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await page.getByRole("search").getByLabel("País").selectOption({ index: 1 });
+  await expect(page).toHaveURL(/country=/);
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+
+  // Un clic afuera lo repliega.
+  await page.getByRole("main").click({ position: { x: 5, y: 5 } });
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+  // Hacer clic en el buscador es tocar afuera; y escribir en él (llegando con el teclado), también.
+  await toggle.click();
+  await box.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await toggle.click();
+  await box.focus();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await box.pressSequentially("rea");
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+  // Buscar con el botón, también.
+  await toggle.click();
+  await page.getByRole("button", { name: "Buscar", exact: true }).click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+  // Con el teclado se llega a los filtros pasando por "Buscar"; Escape los cierra y el foco vuelve al botón.
+  await toggle.click();
+  await toggle.focus();
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await page.keyboard.press("Escape");
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(toggle).toBeFocused();
+
+  // Cambiar de pestaña lo repliega; al volver a Empleos sigue cerrado.
+  await toggle.click();
+  await page.getByRole("navigation", { name: "Secciones" }).first().getByRole("link", { name: "Empresas" }).click();
+  await page.waitForURL(/\/es\/empresas/);
+  await page.getByRole("navigation", { name: "Secciones" }).first().getByRole("link", { name: "Empleos" }).click();
+  await page.waitForURL(/\/es(\?|$)/);
+  await expect(page.getByRole("button", { name: /^Filtros/ })).toHaveAttribute("aria-expanded", "false");
+});

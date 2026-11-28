@@ -36,7 +36,9 @@ function toParams(searchParams: URLSearchParams) {
  * Buscador del encabezado (siempre visible). Busca en la sección actual: empleos, empresas o publicaciones.
  * - Es un formulario GET: cada búsqueda tiene su URL y funciona sin JavaScript.
  * - Los campos reflejan siempre la URL: al ir a otra página, el texto y los filtros se limpian.
- * - En empleos, los filtros se despliegan abajo y se aplican apenas se tocan.
+ * - En empleos, los filtros se despliegan abajo y se aplican apenas se tocan. Quedan abiertos mientras
+ *   se usan y se repliegan al tocar afuera, al escribir o buscar, con Escape o al salir del buscador
+ *   con Tab (como un menú desplegable).
  */
 export function SearchBar({ countries }: { countries: Option[] }) {
   const t = useTranslations("Search");
@@ -46,8 +48,9 @@ export function SearchBar({ countries }: { countries: Option[] }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const formRef = useRef<HTMLFormElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
-  const [open, setOpen] = useState(false);
   // En Mac la leyenda dice ⌘ K; en el servidor (y en el resto), Ctrl K.
   const isMac = useSyncExternalStore(
     () => () => {},
@@ -56,6 +59,10 @@ export function SearchBar({ countries }: { countries: Option[] }) {
   );
 
   const section = sectionOf(pathname) ?? "jobs";
+  // Abierto para una sección: al pasar a Empresas o Publicaciones se repliega solo.
+  const [openSection, setOpenSection] = useState<string | null>(null);
+  const open = openSection === section;
+  const close = () => setOpenSection(null);
   // En la página de la sección (no en una oferta o una empresa puntual), la URL trae lo buscado.
   const onResults = pathname === SECTION_HREF[section];
   const filters = parseSearchParams(onResults ? toParams(searchParams) : {});
@@ -80,6 +87,41 @@ export function SearchBar({ countries }: { countries: Option[] }) {
     }
   }, [searchParams, onResults, filters.q]);
 
+  useEffect(() => {
+    if (!open) return;
+    const inPanel = (target: EventTarget | null) =>
+      target instanceof Node && Boolean(panelRef.current?.contains(target) || toggleRef.current?.contains(target));
+    // Un clic o un toque fuera de los filtros (y del botón que los abre) los repliega.
+    const onPointerDown = (event: PointerEvent) => {
+      if (!inPanel(event.target)) setOpenSection(null);
+    };
+    // Con el teclado: al salir del buscador (Tab). Pasar por "Buscar" para llegar a los filtros no los cierra.
+    const onFocusIn = (event: FocusEvent) => {
+      if (!(event.target instanceof Node && formRef.current?.contains(event.target))) setOpenSection(null);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      const focusInside = document.activeElement instanceof Node && formRef.current?.contains(document.activeElement);
+      setOpenSection(null);
+      // El panel cerrado queda inerte: el foco vuelve al botón (WCAG 2.4.3).
+      if (focusInside) toggleRef.current?.focus();
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("focusin", onFocusIn);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  // Buscar (con el botón o con Enter) repliega los filtros; tocar un filtro los aplica y los deja abiertos.
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const submitter = (event.nativeEvent as SubmitEvent).submitter;
+    if (submitter && !panelRef.current?.contains(submitter)) close();
+  };
+
   const applyNow = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => event.currentTarget.form?.requestSubmit();
 
   const group = <T extends string>(name: string, values: readonly T[], selected: readonly string[], label: (v: T) => string) => (
@@ -100,6 +142,7 @@ export function SearchBar({ countries }: { countries: Option[] }) {
         action={getPathname({ locale, href: SECTION_HREF[section] })}
         role="search"
         aria-label={t(`label.${section}`)}
+        onSubmit={onSubmit}
         className="flex w-full max-w-3xl flex-col"
       >
         <div className="flex items-center gap-1 rounded-full bg-card p-1.5 pl-5 shadow-soft transition-shadow focus-within:shadow-soft-lg">
@@ -115,12 +158,14 @@ export function SearchBar({ countries }: { countries: Option[] }) {
             maxLength={200}
             defaultValue={filters.q}
             placeholder={t(`placeholder.${section}`)}
+            onInput={close}
             className="h-10 min-w-0 flex-1 bg-transparent px-2 text-base outline-none placeholder:text-muted-foreground md:text-sm"
           />
           {section === "jobs" && (
             <button
+              ref={toggleRef}
               type="button"
-              onClick={() => setOpen((value) => !value)}
+              onClick={() => setOpenSection(open ? null : section)}
               aria-expanded={open}
               aria-controls={panelId}
               className={cn(
@@ -151,6 +196,7 @@ export function SearchBar({ countries }: { countries: Option[] }) {
         {section === "jobs" && (
           // Se despliega suave (grid 0fr → 1fr). Cerrado queda inerte: el teclado no entra, pero se envía igual.
           <div
+            ref={panelRef}
             id={panelId}
             inert={!open}
             className={cn(
