@@ -3,9 +3,10 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { isAiImportEnabled } from "@/lib/ai/extract-job";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { countryOptions } from "@/lib/geo";
-import { getPathname, Link, redirect } from "@/i18n/navigation";
+import { getPathname, redirect } from "@/i18n/navigation";
 import { ImportForm } from "./import-form";
 import { SourcesSection } from "./sources-section";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Import");
@@ -24,9 +25,7 @@ export default async function ImportPage() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8">
       <div className="flex flex-col gap-1">
-        <Link href="/admin" className="inline-flex min-h-6 items-center text-sm text-violet underline-offset-4 hover:underline">
-          {t("back")}
-        </Link>
+        <BackLink fallback="/admin" />
         <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>

@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { Emoji } from "@/components/emoji";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard");
@@ -34,6 +35,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/" />
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-3xl font-semibold tracking-tight">{t("title", { company: company.name })} <Emoji symbol="📊" /></h1>
         {company.verified_at ? (

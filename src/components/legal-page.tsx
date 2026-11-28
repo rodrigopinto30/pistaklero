@@ -1,4 +1,5 @@
 import { getFormatter, getTranslations } from "next-intl/server";
+import { BackLink } from "@/components/back-link";
 
 type Namespace = "Legal.terms" | "Legal.privacy" | "Legal.accessibility";
 
@@ -11,6 +12,7 @@ export async function LegalPage({ namespace, sections }: { namespace: Namespace;
 
   return (
     <article className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10">
+      <BackLink fallback="/" />
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="text-sm text-muted-foreground">

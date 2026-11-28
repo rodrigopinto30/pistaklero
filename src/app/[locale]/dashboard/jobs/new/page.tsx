@@ -8,6 +8,7 @@ import type { AppLocale } from "@/i18n/routing";
 import { loadJobFormOptions } from "../_components/form-data";
 import { JobForm } from "../_components/job-form";
 import { Emoji } from "@/components/emoji";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Jobs");
@@ -27,6 +28,7 @@ export default async function NewJobPage({ searchParams }: PageProps<"/[locale]/
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/dashboard" />
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-semibold tracking-tight">{t("newTitle")} <Emoji symbol="📣" /></h1>
         <p className="text-muted-foreground">{t("newSubtitle")}</p>

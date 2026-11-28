@@ -20,7 +20,8 @@
     "myCompany": "Mi empresa",
     "backToTop": "Volver arriba",
     "newJob": "Publicar empleo",
-    "talent": "Talento"
+    "talent": "Talento",
+    "back": "Volver"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -632,7 +633,8 @@
       "remote": "Remoto",
       "junior": "Trainee / Junior",
       "salary": "Con sueldo visible",
-      "usd": "Pago en USD"
+      "usd": "Pago en USD",
+      "query": "«{q}»"
     },
     "apply": "Aplicar filtros",
     "any": "Cualquiera",

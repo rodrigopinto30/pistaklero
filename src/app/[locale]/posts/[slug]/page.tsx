@@ -16,6 +16,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { ConfirmButton } from "@/components/confirm-button";
+import { BackLink } from "@/components/back-link";
 
 /** La publicación (RLS: publicada, propia o admin) y su tarjeta pública (autor, likes, guardada). */
 const loadPost = cache(async (slug: string) => {
@@ -51,9 +52,7 @@ export default async function PostPage({ params }: PageProps<"/[locale]/posts/[s
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
-      <Link href="/posts" className="inline-flex min-h-6 items-center self-start text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
-        ← {t("back")}
-      </Link>
+      <BackLink fallback="/posts" />
 
       <article lang={post.language} className="flex flex-col gap-6 rounded-3xl bg-card p-6 shadow-soft sm:p-10">
         {post.status === "hidden" && (

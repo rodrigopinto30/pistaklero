@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { MarkNotificationsRead } from "./mark-read";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Notifications");
@@ -66,6 +67,7 @@ export default async function NotificationsPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/" />
       <MarkNotificationsRead unread={unread} />
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-semibold tracking-tight">

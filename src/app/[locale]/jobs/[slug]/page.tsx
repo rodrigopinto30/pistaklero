@@ -23,6 +23,7 @@ import { GuestAction } from "@/components/pending/guest-action";
 import { ExternalApplyLink } from "@/components/jobs/external-apply-link";
 import { getJobViewer } from "@/lib/jobs/viewer";
 import { ReportForm } from "./report-form";
+import { BackLink } from "@/components/back-link";
 
 async function loadJob(slug: string) {
   const supabase = await createClient();
@@ -84,6 +85,7 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
 
   return (
     <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 lg:grid-cols-3">
+      <BackLink fallback="/" className="lg:col-span-3" />
       {/* JSON (no se ejecuta) ya escapado por serializeJsonLd: es el único HTML crudo del sitio. */}
       {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />}
       <article className="flex flex-col gap-6 lg:col-span-2" aria-labelledby="job-title">

@@ -9,6 +9,7 @@ import { parseSignUpRole } from "@/lib/auth/sign-up";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { SignUpForm } from "@/components/auth/auth-forms";
 import { Emoji } from "@/components/emoji";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("SignUp");
@@ -41,6 +42,7 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
     ] as const;
     return (
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8 px-4 py-12">
+        <BackLink fallback="/" />
         <SignUpSteps current={1} />
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-semibold tracking-tight">{t("chooseTitle")} <Emoji symbol="🧭" /></h1>
@@ -78,6 +80,7 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-8 px-4 py-12">
+      <BackLink fallback="/" />
       <SignUpSteps current={2} />
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold tracking-tight">{t("emailTitle")} <Emoji symbol="🔐" /></h1>

@@ -15,6 +15,7 @@ import { CoverForm } from "./_components/cover-form";
 import { StackSection } from "./_components/stack-section";
 import { WebsiteForm } from "./_components/website-form";
 import { Emoji } from "@/components/emoji";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Company");
@@ -52,6 +53,7 @@ export default async function CompanyEditPage() {
   if (!c.setup_completed_at) {
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
+        <BackLink fallback="/dashboard" />
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-semibold tracking-tight">
             {t("setup.title")} <Emoji symbol="🏢" />
@@ -66,6 +68,7 @@ export default async function CompanyEditPage() {
   // Ya armada: cada sección se guarda por separado, una debajo de la otra.
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/dashboard" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="🏢" /></h1>

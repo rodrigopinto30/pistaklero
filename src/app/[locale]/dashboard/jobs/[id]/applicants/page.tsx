@@ -10,6 +10,7 @@ import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { StatusForm } from "./_components/status-form";
 import { Emoji } from "@/components/emoji";
+import { BackLink } from "@/components/back-link";
 
 const TABS = {
   received: ["received"],
@@ -64,9 +65,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8">
       <div className="flex flex-col gap-1">
-        <Link href={{ pathname: "/dashboard/jobs/[id]", params: { id } }} className="inline-flex min-h-6 items-center text-sm text-violet underline-offset-4 hover:underline">
-          {t("backToJob")}
-        </Link>
+        <BackLink fallback={{ pathname: "/dashboard/jobs/[id]", params: { id } }} />
         <h1 className="text-3xl font-semibold tracking-tight">{t("title", { job: job.title })} <Emoji symbol="📥" /></h1>
       </div>
 
