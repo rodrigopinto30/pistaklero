@@ -263,3 +263,12 @@ html:has([data-app-screen]) #main-content {
 html:has([data-app-screen]) body > footer {
   display: none;
 }
+
+/*
+ * Ingresar, crear cuenta y recuperar la contraseña: la página mide lo que mide la pantalla (el pie
+ * queda abajo, a la vista) y el formulario se centra en el espacio libre. Sin esto, el main medía
+ * una pantalla entera además del encabezado y quedaba espacio vacío para desplazar.
+ */
+html:has([data-fit-screen]) #main-content {
+  min-height: 0;
+}
