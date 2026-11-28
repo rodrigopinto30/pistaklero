@@ -76,7 +76,9 @@ export default async function LocaleLayout({
           {/* Los GIFs aparecen en el editor solo si hay clave de GIPHY. */}
           <FeaturesProvider value={{ gifs: Boolean(process.env.GIPHY_API_KEY) }}>
           <SiteHeader />
-          <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col outline-none">
+          {/* Al menos el alto de la pantalla: mientras llega el contenido de una página, el pie queda
+              abajo, fuera de la vista, y no salta. */}
+          <main id="main-content" tabIndex={-1} className="flex min-h-dvh flex-1 flex-col outline-none">
             {children}
           </main>
           <SiteFooter />

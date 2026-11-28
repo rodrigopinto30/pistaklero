@@ -138,6 +138,11 @@
 
   html {
     @apply font-sans;
+    /*
+     * El lugar de la barra de scroll queda siempre reservado: al pasar de una página larga a una corta
+     * (o al abrir un menú) el contenido no se corre de costado.
+     */
+    scrollbar-gutter: stable;
   }
 
   body {

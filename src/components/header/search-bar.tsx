@@ -100,7 +100,7 @@ export function SearchBar({ countries }: { countries: Option[] }) {
         action={getPathname({ locale, href: SECTION_HREF[section] })}
         role="search"
         aria-label={t(`label.${section}`)}
-        className="flex w-full max-w-3xl flex-col gap-2"
+        className="flex w-full max-w-3xl flex-col"
       >
         <div className="flex items-center gap-1 rounded-full bg-card p-1.5 pl-5 shadow-soft transition-shadow focus-within:shadow-soft-lg">
           <Search aria-hidden="true" className="size-5 shrink-0 text-muted-foreground" />
@@ -159,7 +159,8 @@ export function SearchBar({ countries }: { countries: Option[] }) {
             )}
           >
             <div className="overflow-hidden">
-              <div className="mt-1 flex flex-col gap-4 rounded-3xl bg-card p-5 shadow-soft">
+              {/* El margen va adentro: cerrado no ocupa nada (si no, el encabezado de Empleos medía 8 px más). */}
+              <div className="mt-3 flex flex-col gap-4 rounded-3xl bg-card p-5 shadow-soft">
                 <fieldset className="flex flex-col gap-2">
                   <legend className="mb-2 text-sm font-medium">{t("quickFilters")}</legend>
                   <div className="flex flex-wrap gap-2">

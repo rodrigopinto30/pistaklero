@@ -41,7 +41,8 @@ export function UserMenu({ name, email, photo, entries }: { name: string; email:
       <form ref={signOutForm} action={signOut} hidden>
         <input type="hidden" name="locale" value={locale} />
       </form>
-      <Menu.Root>
+      {/* Sin bloquear el scroll de la página: la barra no desaparece al abrirlo (Esc y clic afuera lo cierran igual). */}
+      <Menu.Root modal={false}>
         <Menu.Trigger className="flex items-center gap-2.5 rounded-full bg-card p-1 shadow-soft transition-shadow hover:shadow-soft-lg data-popup-open:shadow-soft-lg lg:pr-2">
           {photo ? (
             // eslint-disable-next-line @next/next/no-img-element -- WebP de 256 px ya optimizado, desde nuestro Storage.
