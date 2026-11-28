@@ -10,6 +10,7 @@ import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { SignUpForm } from "@/components/auth/auth-forms";
 import { Emoji } from "@/components/emoji";
 import { BackLink } from "@/components/back-link";
+import { FitScreen } from "@/components/fit-screen";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("SignUp");
@@ -41,37 +42,41 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
       { role: "recruiter", icon: Briefcase, title: t("recruiter"), hint: t("recruiterHint") },
     ] as const;
     return (
-      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8 px-4 py-12">
-        <BackLink fallback="/" />
-        <SignUpSteps current={1} />
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">{t("chooseTitle")} <Emoji symbol="🧭" /></h1>
-          <p className="text-muted-foreground">{t("chooseSubtitle")}</p>
+      <FitScreen className="flex flex-1 flex-col px-4 pt-8 pb-8">
+        <div className="mx-auto w-full max-w-6xl">
+          <BackLink fallback="/" />
         </div>
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {options.map((option) => (
-            <li key={option.role}>
-              <Link
-                href={{ pathname: "/sign-up", query: returnTo ? { role: option.role, next: returnTo } : { role: option.role } }}
-                className="flex h-full flex-col gap-3 rounded-2xl bg-card p-5 shadow-soft transition-shadow hover:shadow-soft-lg"
-              >
-                <span aria-hidden="true" className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <option.icon className="size-5" />
-                </span>
-                <span className="text-lg font-semibold">{option.title}</span>
-                <span className="text-sm text-muted-foreground">{option.hint}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <p className="text-sm text-muted-foreground">{t("roleNote")}</p>
-        <p className="text-sm">
-          {t("haveAccount")}{" "}
-          <Link href="/sign-in" className="font-medium text-primary underline underline-offset-4">
-            {t("signIn")}
-          </Link>
-        </p>
-      </div>
+        <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8 pt-6">
+          <SignUpSteps current={1} />
+          <div className="flex flex-col gap-2">
+            <h1 className="text-2xl font-semibold tracking-tight">{t("chooseTitle")} <Emoji symbol="🧭" /></h1>
+            <p className="text-muted-foreground">{t("chooseSubtitle")}</p>
+          </div>
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {options.map((option) => (
+              <li key={option.role}>
+                <Link
+                  href={{ pathname: "/sign-up", query: returnTo ? { role: option.role, next: returnTo } : { role: option.role } }}
+                  className="flex h-full flex-col gap-3 rounded-2xl bg-card p-5 shadow-soft transition-shadow hover:shadow-soft-lg"
+                >
+                  <span aria-hidden="true" className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <option.icon className="size-5" />
+                  </span>
+                  <span className="text-lg font-semibold">{option.title}</span>
+                  <span className="text-sm text-muted-foreground">{option.hint}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="text-sm text-muted-foreground">{t("roleNote")}</p>
+          <p className="text-sm">
+            {t("haveAccount")}{" "}
+            <Link href="/sign-in" className="font-medium text-primary underline underline-offset-4">
+              {t("signIn")}
+            </Link>
+          </p>
+        </div>
+      </FitScreen>
     );
   }
 
@@ -79,29 +84,33 @@ export default async function SignUpPage({ searchParams }: PageProps<"/[locale]/
   const next = returnTo?.startsWith("/api/team/accept?") ? returnTo : `${getPathname({ locale, href: "/welcome" })}?${new URLSearchParams({ role })}`;
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-8 px-4 py-12">
-      <BackLink fallback="/" />
-      <SignUpSteps current={2} />
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("emailTitle")} <Emoji symbol="🔐" /></h1>
-        <p className="text-muted-foreground">
-          {t("chosen", { role: t(role) })}{" "}
-          <Link href="/sign-up" className="font-medium text-primary underline underline-offset-4">
-            {t("change")}
+    <FitScreen className="flex flex-1 flex-col px-4 pt-8 pb-8">
+      <div className="mx-auto w-full max-w-6xl">
+        <BackLink fallback="/" />
+      </div>
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-8 pt-6">
+        <SignUpSteps current={2} />
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight">{t("emailTitle")} <Emoji symbol="🔐" /></h1>
+          <p className="text-muted-foreground">
+            {t("chosen", { role: t(role) })}{" "}
+            <Link href="/sign-up" className="font-medium text-primary underline underline-offset-4">
+              {t("change")}
+            </Link>
+          </p>
+        </div>
+
+        <OAuthButtons next={next} namespace="SignUp" />
+
+        <SignUpForm locale={locale} role={role} next={returnTo} />
+
+        <p className="text-sm">
+          {t("haveAccount")}{" "}
+          <Link href="/sign-in" className="font-medium text-primary underline underline-offset-4">
+            {t("signIn")}
           </Link>
         </p>
       </div>
-
-      <OAuthButtons next={next} namespace="SignUp" />
-
-      <SignUpForm locale={locale} role={role} next={returnTo} />
-
-      <p className="text-sm">
-        {t("haveAccount")}{" "}
-        <Link href="/sign-in" className="font-medium text-primary underline underline-offset-4">
-          {t("signIn")}
-        </Link>
-      </p>
-    </div>
+    </FitScreen>
   );
 }

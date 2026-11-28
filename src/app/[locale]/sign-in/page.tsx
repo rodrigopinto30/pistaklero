@@ -7,6 +7,7 @@ import { Link, redirect } from "@/i18n/navigation";
 import { SignInForm } from "@/components/auth/auth-forms";
 import { Emoji } from "@/components/emoji";
 import { BackLink } from "@/components/back-link";
+import { FitScreen } from "@/components/fit-screen";
 
 const CALLBACK_ERRORS = ["callback", "link_expired"] as const;
 
@@ -30,32 +31,37 @@ export default async function SignInPage({ searchParams }: PageProps<"/[locale]/
   const error = CALLBACK_ERRORS.find((code) => code === params.error);
 
   return (
-    <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-4 py-12">
-      <BackLink fallback="/" />
-      <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">{reauth ? t("reauthTitle") : t("title")} <Emoji symbol={reauth ? "🔐" : "👋"} /></h1>
-        <p className="text-muted-foreground">{reauth ? t("reauthSubtitle") : t("subtitle")}</p>
+    <FitScreen className="flex flex-1 flex-col px-4 pt-8 pb-8">
+      {/* "Volver" arriba a la izquierda (donde está en todas las vistas), lejos del formulario. */}
+      <div className="mx-auto w-full max-w-6xl">
+        <BackLink fallback="/" />
       </div>
+      <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 pt-6">
+        <div className="flex flex-col gap-2 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">{reauth ? t("reauthTitle") : t("title")} <Emoji symbol={reauth ? "🔐" : "👋"} /></h1>
+          <p className="text-muted-foreground">{reauth ? t("reauthSubtitle") : t("subtitle")}</p>
+        </div>
 
-      {error && (
-        <p role="alert" className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
-          {t(`errors.${error}`)}
+        {error && (
+          <p role="alert" className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
+            {t(`errors.${error}`)}
+          </p>
+        )}
+
+        <OAuthButtons next={next} namespace="Auth" />
+
+        <SignInForm locale={locale} next={next} fixedEmail={reauth ? (user?.email ?? undefined) : undefined} />
+
+        {!reauth && (
+        <p className="text-center text-sm">
+          {t("noAccount")}{" "}
+          {/* Si venía de algún lado (una invitación, una acción pendiente), el registro vuelve ahí. */}
+          <Link href={{ pathname: "/sign-up", query: params.next ? { next } : {} }} className="font-medium text-primary underline underline-offset-4">
+            {t("signUp")}
+          </Link>
         </p>
-      )}
-
-      <OAuthButtons next={next} namespace="Auth" />
-
-      <SignInForm locale={locale} next={next} fixedEmail={reauth ? (user?.email ?? undefined) : undefined} />
-
-      {!reauth && (
-      <p className="text-center text-sm">
-        {t("noAccount")}{" "}
-        {/* Si venía de algún lado (una invitación, una acción pendiente), el registro vuelve ahí. */}
-        <Link href={{ pathname: "/sign-up", query: params.next ? { next } : {} }} className="font-medium text-primary underline underline-offset-4">
-          {t("signUp")}
-        </Link>
-      </p>
-      )}
-    </div>
+        )}
+      </div>
+    </FitScreen>
   );
 }

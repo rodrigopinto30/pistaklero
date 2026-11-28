@@ -27,3 +27,19 @@ test("mientras carga una página, el pie queda fuera de la vista", async ({ page
   const main = (await page.locator("main").boundingBox())!;
   expect(main.height).toBeGreaterThanOrEqual(page.viewportSize()!.height);
 });
+
+test("ingresar entra en la pantalla: sin espacio de sobra, con el pie a la vista y 'Volver' lejos del formulario", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 900 });
+  for (const path of ["/es/ingresar", "/es/registro", "/es/recuperar-contrasena"]) {
+    await page.goto(path);
+    expect(await page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight + 1), `${path} sin scroll`).toBe(true);
+    await expect(page.getByRole("contentinfo")).toBeInViewport();
+    const back = (await page.getByRole("link", { name: "Volver", exact: true }).boundingBox())!;
+    const title = (await page.getByRole("heading", { level: 1 }).boundingBox())!;
+    expect(title.y - (back.y + back.height), `${path}: distancia entre Volver y el título`).toBeGreaterThan(40);
+  }
+  // Al ir a otra página, el main vuelve a medir al menos una pantalla.
+  await page.getByRole("contentinfo").getByRole("link", { name: "Accesibilidad" }).click();
+  await page.waitForURL(/accesibilidad/);
+  expect((await page.locator("main").boundingBox())!.height).toBeGreaterThanOrEqual(900);
+});
