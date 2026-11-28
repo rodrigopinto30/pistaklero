@@ -58,3 +58,12 @@ export async function setUserSuspended(formData: FormData) {
   await flash("done");
   refresh();
 }
+
+export async function resolveMessageReport(formData: FormData) {
+  const supabase = await requireAdmin();
+  const id = z.uuid().safeParse(formData.get("reportId"));
+  if (!supabase || !id.success) return;
+  await supabase.rpc("admin_resolve_message_report", { p_report_id: id.data });
+  await flash("done");
+  refresh();
+}

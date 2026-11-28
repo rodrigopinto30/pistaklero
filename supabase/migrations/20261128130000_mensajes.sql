@@ -507,3 +507,68 @@ grant execute on function public.conversation_messages(uuid, timestamptz, int) t
 grant execute on function public.unread_messages_count() to authenticated;
 grant execute on function public.conversation_with(uuid) to authenticated;
 grant execute on function public.can_i_message(uuid) to authenticated;
+
+/** Con quién vas a hablar (al escribirle por primera vez): solo si le podés escribir. */
+create function public.message_card(p_user_id uuid)
+returns table (user_id uuid, full_name text, avatar_path text, subtitle text)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select c.user_id, c.full_name, c.avatar_path, c.subtitle
+  from public.message_contact(p_user_id) c
+  where public.can_message((select auth.uid()), p_user_id);
+$$;
+
+revoke execute on function public.message_card(uuid) from public, anon;
+grant execute on function public.message_card(uuid) to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Moderación: el admin ve solo los mensajes denunciados (nunca el resto de la conversación).
+-- ---------------------------------------------------------------------------
+create function public.admin_message_reports()
+returns table (
+  id uuid, reason public.message_report_reason, created_at timestamptz, body text,
+  sender_id uuid, sender_name text, sender_suspended boolean, reporter_name text
+)
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception 'not_authorized' using errcode = 'P0001';
+  end if;
+  return query
+  select r.id, r.reason, r.created_at, m.body, m.sender_id, sender.full_name, (sp.suspended_at is not null), reporter.full_name
+  from public.message_reports r
+  join public.messages m on m.id = r.message_id
+  left join public.people sender on sender.user_id = m.sender_id
+  left join public.profiles sp on sp.id = m.sender_id
+  left join public.people reporter on reporter.user_id = r.reporter_id
+  where r.resolved_at is null
+  order by r.created_at desc
+  limit 100;
+end;
+$$;
+
+create function public.admin_resolve_message_report(p_report_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception 'not_authorized' using errcode = 'P0001';
+  end if;
+  update public.message_reports set resolved_at = now() where id = p_report_id;
+end;
+$$;
+
+revoke execute on function public.admin_message_reports() from public, anon;
+revoke execute on function public.admin_resolve_message_report(uuid) from public, anon;
+grant execute on function public.admin_message_reports() to authenticated;
+grant execute on function public.admin_resolve_message_report(uuid) to authenticated;

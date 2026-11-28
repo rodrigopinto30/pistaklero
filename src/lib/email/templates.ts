@@ -15,6 +15,7 @@ export type EmailTemplates = {
   application_slow: { jobTitle: string; companyName: string };
   recruiter_reminder: { companyName: string; pending: number };
   recruiter_digest: { companyName: string; total: number; jobs: { title: string; count: number }[] };
+  new_message: { senderName: string; request: boolean };
 };
 
 /** Cuántas ofertas se listan en el resumen; el resto se resume en "y N más". */
@@ -138,6 +139,30 @@ const renderers: { [K in EmailTemplate]: (locale: Locale, data: EmailTemplates[K
       text: [copy.intro, ...lines.map((line) => `- ${line}`), "", copy.note, "", `${copy.cta}: ${url}`, "", copy.optOut].join("\n"),
     };
   },
+  // Sin el texto del mensaje: se lee en el sitio (así un mail no sirve para estafas ni filtra nada).
+  new_message(locale, { senderName, request }) {
+    const name = senderName || (locale === "en" ? "Someone" : "Alguien");
+    const copy =
+      locale === "en"
+        ? {
+            subject: request ? `${name} wants to message you on Pistaklero` : `New message from ${name}`,
+            intro: request ? `${name} sent you a message request. You can accept it or ignore it (they won't know).` : `${name} sent you a message.`,
+            cta: "Open messages",
+            optOut: "You can turn these emails off in Settings.",
+          }
+        : {
+            subject: request ? `${name} quiere escribirte en Pistaklero` : `Mensaje nuevo de ${name}`,
+            intro: request ? `${name} te mandó una solicitud de mensaje. Podés aceptarla o ignorarla (no se entera).` : `${name} te mandó un mensaje.`,
+            cta: "Ver mensajes",
+            optOut: "Podés apagar estos emails en Ajustes.",
+          };
+    const url = messagesUrl(locale);
+    return {
+      subject: copy.subject,
+      html: layout({ lang: locale, title: copy.subject, body: [paragraph(copy.intro), button(url, copy.cta), paragraph(copy.optOut, true)].join("") }),
+      text: [copy.intro, `${copy.cta}: ${url}`, copy.optOut].join("\n\n"),
+    };
+  },
   application_status(locale, { jobTitle, companyName, status, message }) {
     const intro = STATUS_COPY[locale][status].replace("{company}", companyName).replace("{job}", jobTitle);
     const subject = locale === "en" ? `Update on your application: ${jobTitle}` : `Novedades de tu postulación: ${jobTitle}`;
@@ -152,6 +177,11 @@ const renderers: { [K in EmailTemplate]: (locale: Locale, data: EmailTemplates[K
     };
   },
 };
+
+export function messagesUrl(locale: Locale) {
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://127.0.0.1:3000";
+  return `${base}/${locale}/${locale === "en" ? "messages" : "mensajes"}`;
+}
 
 export function dashboardUrl(locale: Locale) {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://127.0.0.1:3000";

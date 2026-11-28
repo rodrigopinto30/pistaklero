@@ -8,6 +8,7 @@ import { Masonry } from "@/components/masonry";
 import { PostCard } from "@/components/posts/post-card";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { SaveCandidateButton } from "@/components/talent/save-candidate-button";
+import { MessageButton } from "@/components/messages/message-button";
 import { countryName, formatMonth, languageOptions } from "@/lib/geo";
 import { projectPreviewUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
@@ -95,6 +96,9 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
   // Las empresas pueden guardar el perfil (para todo su equipo).
   const viewerIsRecruiter = signedIn && (await getCurrentProfile())?.role === "recruiter";
   const saved = viewerIsRecruiter ? Boolean((await supabase.rpc("is_candidate_saved", { p_candidate_id: id })).data) : false;
+  // "Mensaje": sin sesión lleva al ingreso; con sesión, si le puede escribir (y no es su propio perfil).
+  const viewer = await getCurrentUser();
+  const canMessage = !viewer || (viewer.id !== id && Boolean((await supabase.rpc("can_i_message", { p_recipient: id })).data));
 
   const period = (start: string, end: string | null) =>
     `${formatMonth(start, locale)} – ${end ? formatMonth(end, locale) : tp("entries.present")}`;
@@ -127,9 +131,10 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
             )}
           </div>
         </div>
-        {viewerIsRecruiter && (
+        {(viewerIsRecruiter || canMessage) && (
           <div className="flex flex-wrap gap-2 md:self-start">
-            <SaveCandidateButton candidateId={id} name={candidate.people?.full_name ?? ""} saved={saved} variant="full" />
+            {canMessage && <MessageButton userId={id} name={candidate.people?.full_name ?? ""} />}
+            {viewerIsRecruiter && <SaveCandidateButton candidateId={id} name={candidate.people?.full_name ?? ""} saved={saved} variant="full" />}
           </div>
         )}
       </section>

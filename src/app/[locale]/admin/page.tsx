@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
-import { reviewReport, setCompanyStatus, setUserSuspended } from "./actions";
+import { resolveMessageReport, reviewReport, setCompanyStatus, setUserSuspended } from "./actions";
 import { TransferForm } from "./transfer-form";
 import { ConfirmButton } from "@/components/confirm-button";
 import { BackLink } from "@/components/back-link";
@@ -38,8 +38,10 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
   const userQuery = typeof params.cuenta === "string" ? params.cuenta.trim().slice(0, 80) : "";
   const companyQuery = typeof params.empresa === "string" ? params.empresa.trim().slice(0, 80) : "";
 
+  const tMessages = await getTranslations("Admin.messages");
+  const tMessageReasons = await getTranslations("Messages.reportReasons");
   const supabase = await createClient();
-  const [{ data: reports }, { data: users }, { data: companies }, { data: unclaimed }, { data: hiddenPosts }] = await Promise.all([
+  const [{ data: reports }, { data: users }, { data: companies }, { data: unclaimed }, { data: hiddenPosts }, { data: messageReports }] = await Promise.all([
     supabase.rpc("admin_open_reports"),
     userQuery.length >= 3 ? supabase.rpc("admin_find_users", { p_query: userQuery }) : Promise.resolve({ data: null }),
     companyQuery.length >= 2
@@ -48,6 +50,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
     supabase.rpc("admin_unclaimed_companies"),
     // Publicaciones ocultas por denuncias (el admin las ve por RLS), con sus motivos.
     supabase.from("posts").select("id, slug, title, post_reports(reason)").eq("status", "hidden").order("updated_at", { ascending: false }).limit(50),
+    supabase.rpc("admin_message_reports"),
   ]);
 
   return (
@@ -137,6 +140,40 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
                       {t("posts.delete")}
                     </ConfirmButton>
                   </form>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </SectionCard>
+
+      <SectionCard id="message-reports" title={tMessages("title")} description={tMessages("hint")}>
+        {(messageReports ?? []).length === 0 ? (
+          <p className="text-sm text-muted-foreground">{tMessages("empty")}</p>
+        ) : (
+          <ul className="flex flex-col gap-3">
+            {messageReports!.map((report) => (
+              <li key={report.id} className="flex flex-col gap-3 rounded-xl bg-muted/50 p-4">
+                <p className="text-sm text-muted-foreground">
+                  {tMessages("line", { reason: tMessageReasons(report.reason), sender: report.sender_name ?? "—", reporter: report.reporter_name ?? "—" })}
+                </p>
+                <blockquote className="border-l-2 border-input pl-4 text-sm break-words whitespace-pre-wrap">{report.body}</blockquote>
+                <div className="flex flex-wrap gap-2">
+                  <form action={resolveMessageReport}>
+                    <input type="hidden" name="reportId" value={report.id} />
+                    <Button type="submit" variant="secondary">
+                      {tMessages("dismiss")}
+                    </Button>
+                  </form>
+                  {report.sender_id && !report.sender_suspended && (
+                    <form action={setUserSuspended}>
+                      <input type="hidden" name="userId" value={report.sender_id} />
+                      <input type="hidden" name="suspended" value="true" />
+                      <ConfirmButton title={tMessages("suspendTitle", { name: report.sender_name ?? "" })} description={tMessages("suspendHint")} confirmLabel={tMessages("suspend")}>
+                        {tMessages("suspend")}
+                      </ConfirmButton>
+                    </form>
+                  )}
                 </div>
               </li>
             ))}

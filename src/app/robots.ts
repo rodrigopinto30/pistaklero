@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
       // Las páginas privadas igual llevan noindex; esto ahorra el rastreo.
-      disallow: ["/api/", "/es/panel", "/en/dashboard", "/es/admin", "/en/admin", "/es/ajustes", "/en/settings", "/es/ingresar", "/en/sign-in", "/es/registro", "/en/sign-up", "/es/recuperar-contrasena", "/en/forgot-password", "/es/guardados", "/en/saved", "/es/notificaciones", "/en/notifications", "/es/talento", "/en/talent"],
+      disallow: ["/api/", "/es/panel", "/en/dashboard", "/es/admin", "/en/admin", "/es/ajustes", "/en/settings", "/es/ingresar", "/en/sign-in", "/es/registro", "/en/sign-up", "/es/recuperar-contrasena", "/en/forgot-password", "/es/guardados", "/en/saved", "/es/notificaciones", "/en/notifications", "/es/talento", "/en/talent", "/es/mensajes", "/en/messages"],
     },
     sitemap: `${base}/sitemap.xml`,
   };

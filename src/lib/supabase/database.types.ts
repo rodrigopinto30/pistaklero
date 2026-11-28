@@ -1037,10 +1037,18 @@ isOneToOne: false
               "active": boolean,"board_token": string,"company_name": string,"company_slug": string,"id": string,"last_attempt_at": string,"last_error": string,"last_result": Json,"last_synced_at": string,"open_jobs": number,"provider": Database["public"]['Enums']["import_provider"]
             }[]
                            },
+"admin_message_reports":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "body": string,"created_at": string,"id": string,"reason": Database["public"]['Enums']["message_report_reason"],"reporter_name": string,"sender_id": string,"sender_name": string,"sender_suspended": boolean
+            }[]
+                           },
 "admin_open_reports":
 { Args: Record<PropertyKey, never>; Returns: {
               "company_name": string,"details": (string)[],"first_report_id": string,"job_id": string,"job_slug": string,"job_status": Database["public"]['Enums']["job_status"],"job_title": string,"last_reported_at": string,"reasons": (Database["public"]['Enums']["report_reason"])[],"reports": number
             }[]
+                           },
+"admin_resolve_message_report":
+{ Args: { "p_report_id": string }; Returns: undefined
                            },
 "admin_restore_post":
 { Args: { "p_post_id": string }; Returns: undefined
@@ -1249,6 +1257,11 @@ isOneToOne: false
                            },
 "mark_conversation_read":
 { Args: { "p_conversation_id": string }; Returns: undefined
+                           },
+"message_card":
+{ Args: { "p_user_id": string }; Returns: {
+              "avatar_path": string,"full_name": string,"subtitle": string,"user_id": string
+            }[]
                            },
 "message_contact":
 { Args: { "p_user_id": string }; Returns: {

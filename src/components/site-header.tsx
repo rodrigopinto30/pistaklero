@@ -4,6 +4,7 @@ import { CommandPalette, type PaletteLink } from "@/components/command-palette";
 import { SearchBar } from "@/components/header/search-bar";
 import { SectionTabs } from "@/components/header/section-tabs";
 import { NotificationBell } from "@/components/header/notification-bell";
+import { MessagesLink } from "@/components/header/messages-link";
 import { type MenuEntry, UserMenu } from "@/components/header/user-menu";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -31,6 +32,7 @@ export async function SiteHeader() {
   const person = user ? await getCurrentPerson() : null;
   // La campana arranca con el número del servidor y después se actualiza sola.
   const unreadNotifications = profile ? ((await (await createClient()).rpc("unread_notifications_count")).data ?? 0) : 0;
+  const unreadMessages = profile ? ((await (await createClient()).rpc("unread_messages_count")).data ?? 0) : 0;
 
   // Accesos de la cuenta (menú) según el rol. La búsqueda rápida (Ctrl+K) suma las secciones.
   const entries: MenuEntry[] = [];
@@ -97,6 +99,7 @@ export async function SiteHeader() {
                 </Link>
               </Tip>
             )}
+            {profile && <MessagesLink initialCount={unreadMessages} />}
             {profile && <NotificationBell initialCount={unreadNotifications} />}
             {user ? (
               <UserMenu

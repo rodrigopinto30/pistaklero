@@ -25,6 +25,9 @@ export const FLASH_KEYS = [
   "jobPublished",
   "jobDrafted",
   "jobDuplicated",
+  "requestIgnored",
+  "userBlocked",
+  "userUnblocked",
 ] as const;
 export type FlashKey = (typeof FLASH_KEYS)[number];
 

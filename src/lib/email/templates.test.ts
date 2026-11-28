@@ -58,4 +58,11 @@ describe("emails", () => {
     expect(email.subject).toBe("Join Acme on Pistaklero");
     expect(email.text).toContain("Accept the invitation: https://x.com");
   });
+
+  it("el aviso de mensaje nuevo no incluye el texto y escapa el nombre", () => {
+    const email = renderEmail("new_message", "es", { senderName: "Rita <b>", request: true });
+    expect(email.subject).toBe("Rita <b> quiere escribirte en Pistaklero");
+    expect(email.html).toContain("Rita &lt;b&gt;");
+    expect(email.text).toContain("/es/mensajes");
+  });
 });

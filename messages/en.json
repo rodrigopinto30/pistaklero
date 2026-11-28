@@ -881,6 +881,16 @@
       "restoreItem": "Publish again: {title}",
       "delete": "Delete",
       "deleteItem": "Delete: {title}"
+    },
+    "messages": {
+      "title": "Reported messages",
+      "hint": "Only the reported message is shown, never the rest of the conversation.",
+      "empty": "No reported messages.",
+      "line": "{reason} · from {sender} · reported by {reporter}",
+      "dismiss": "Dismiss the report",
+      "suspend": "Suspend the account",
+      "suspendTitle": "Suspend {name}'s account?",
+      "suspendHint": "They won't be able to sign in or send messages until you reactivate them."
     }
   },
   "Import": {
@@ -1250,7 +1260,10 @@
     "jobPublished": "Your job is live! 📣",
     "jobDrafted": "Draft saved 📝",
     "jobDuplicated": "Job copied as a draft ✨",
-    "jobTitleSaved": "Job title saved ✅"
+    "jobTitleSaved": "Job title saved ✅",
+    "requestIgnored": "Request ignored",
+    "userBlocked": "You blocked that person 🚫",
+    "userUnblocked": "You unblocked that person"
   },
   "Saved": {
     "metaTitle": "Saved",
@@ -1460,7 +1473,11 @@
       "title": "Delete “{title}”?",
       "description": "It's deleted forever."
     },
-    "withdrawConfirm": "Yes, withdraw"
+    "withdrawConfirm": "Yes, withdraw",
+    "blockUser": {
+      "title": "Block {name}?",
+      "description": "They won't be able to message you or see this conversation. You can unblock them anytime."
+    }
   },
   "Industries": {
     "software": "Software & technology",
@@ -1652,5 +1669,67 @@
     "sectionHint": "Your whole team at {company} sees them.",
     "savedBy": "Saved by {name}",
     "empty": "No saved profiles yet. In Talent, tap the bookmark on a card."
+  },
+  "Messages": {
+    "metaTitle": "Messages",
+    "title": "Messages",
+    "boxesLabel": "Boxes",
+    "inbox": "Inbox",
+    "requests": "Requests",
+    "emptyInbox": "No conversations yet. Message someone from their profile or from a job.",
+    "emptyRequests": "No new requests.",
+    "pick": "Pick a conversation to read it.",
+    "you": "You: {body}",
+    "waitingTag": "Waiting for reply",
+    "unread": "{count, plural, one {# unread message} other {# unread messages}}",
+    "listLabel": "Conversations",
+    "logLabel": "Messages with {name}",
+    "composer": "Write a message",
+    "composerHint": "Text only, up to 2000 characters. Enter sends; Shift+Enter adds a new line.",
+    "send": "Send",
+    "sending": "Sending…",
+    "requestBanner": "{name} wants to message you. Replying accepts the conversation.",
+    "accept": "Accept",
+    "ignore": "Ignore",
+    "ignoreHint": "They won't know you ignored it.",
+    "waitingBanner": "You sent {name} a request. You can keep writing once they accept it.",
+    "blockedBanner": "You blocked this person: they can't message you or see this conversation.",
+    "blockedByOther": "This conversation is no longer available.",
+    "block": "Block",
+    "unblock": "Unblock",
+    "viewProfile": "View profile",
+    "viewCompany": "View company",
+    "report": "Report",
+    "reportLabel": "Report this message",
+    "reportReasons": {
+      "spam": "Spam or advertising",
+      "scam": "Scam or asking for money",
+      "offensive": "Offensive or harassment",
+      "other": "Other reason"
+    },
+    "reportSend": "Send report",
+    "reported": "Thanks: we'll review it.",
+    "errors": {
+      "request_pending": "Wait until they accept your request to keep writing.",
+      "rate_limited": "You sent many messages in a row: wait a bit and try again.",
+      "not_available": "You can't message this person.",
+      "invalid_body": "Write a message (up to 2000 characters).",
+      "unknown": "It couldn't be sent. Please try again."
+    },
+    "new": {
+      "metaTitle": "New message",
+      "title": "New message",
+      "to": "To",
+      "intro": "Introduce yourself and say why you're writing: if you don't know each other, it arrives as a request.",
+      "notAvailable": "You can't message this person."
+    },
+    "button": {
+      "label": "Message",
+      "to": "Send a message to {name}"
+    },
+    "headerLabel": "Messages",
+    "headerUnread": "Messages: {count} unread",
+    "candidateRole": "Candidate",
+    "teamRole": "Pistaklero team"
   }
 }

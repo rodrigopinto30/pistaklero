@@ -20,3 +20,14 @@ export async function requireRecruiterPage(locale: AppLocale, href: Href) {
   if (!recruiter) redirect({ href: "/", locale });
   return recruiter!;
 }
+
+/** Páginas de cualquier cuenta con perfil (por ejemplo, Mensajes). Sin sesión, al ingreso y de vuelta. */
+export async function requireProfilePage(locale: AppLocale, href: Href) {
+  const user = await getCurrentUser();
+  if (!user) {
+    redirect({ href: { pathname: "/sign-in", query: { next: getPathname({ locale, href }) } }, locale });
+  }
+  const profile = await getCurrentProfile();
+  if (!profile) redirect({ href: "/welcome", locale });
+  return { user: user!, profile: profile! };
+}

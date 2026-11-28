@@ -11,6 +11,7 @@ import type { AppLocale } from "@/i18n/routing";
 import { StatusForm } from "./_components/status-form";
 import { ViewedMarker } from "./_components/viewed-marker";
 import { ApplicationTimeline } from "@/components/applications/timeline";
+import { MessageButton } from "@/components/messages/message-button";
 import { JobManageHeader } from "../../_components/job-manage-header";
 
 const TABS = {
@@ -127,6 +128,8 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
                   <ApplicationStatusBadge status={application.status} />
                 </div>
                 <ApplicationTimeline status={application.status} createdAt={application.created_at} events={application.application_events ?? []} />
+                {/* Contactarla directo (una postulación de por medio: el mensaje le llega sin solicitud). */}
+                {candidate && <MessageButton userId={application.candidate_id} name={name} className="self-start" />}
 
                 {(questions ?? []).length > 0 && (
                   <dl className="flex flex-col gap-2 rounded-xl bg-muted/60 p-3 text-sm">
