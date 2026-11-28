@@ -13,6 +13,7 @@ import { loadJobFormOptions } from "../_components/form-data";
 import { JobForm } from "../_components/job-form";
 import { StatusControls } from "../_components/status-controls";
 import { Emoji } from "@/components/emoji";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Jobs");
@@ -41,6 +42,7 @@ export default async function EditJobPage({ params }: PageProps<"/[locale]/dashb
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/dashboard" />
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-3xl font-semibold tracking-tight">{t("editTitle")} <Emoji symbol="✏️" /></h1>

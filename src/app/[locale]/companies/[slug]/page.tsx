@@ -20,6 +20,7 @@ import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { CompanyActions } from "@/components/companies/company-actions";
 import { industryLabel } from "@/lib/companies/industry";
+import { BackLink } from "@/components/back-link";
 
 const TABS = ["about", "jobs", "posts"] as const;
 type Tab = (typeof TABS)[number];
@@ -105,6 +106,7 @@ export default async function CompanyPage({ params, searchParams }: PageProps<"/
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/companies" />
       {/* Portada, logo y datos principales */}
       <header className="overflow-hidden rounded-3xl bg-card shadow-soft">
         <CompanyCover name={company.name} coverPath={company.cover_path} logoPath={company.logo_path} className="aspect-[3/1] max-h-72 w-full" />

@@ -5,6 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getCurrentPerson, getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { Emoji } from "@/components/emoji";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Posts.form");
@@ -23,6 +24,7 @@ export default async function NewPostPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/posts" />
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-semibold tracking-tight">{t("newTitle")} <Emoji symbol="✍️" /></h1>
         <p className="text-muted-foreground">{t("newSubtitle")}</p>

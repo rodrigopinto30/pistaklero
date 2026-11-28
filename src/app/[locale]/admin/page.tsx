@@ -12,6 +12,7 @@ import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { reviewReport, setCompanyStatus, setUserSuspended } from "./actions";
 import { TransferForm } from "./transfer-form";
 import { ConfirmButton } from "@/components/confirm-button";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Admin");
@@ -51,6 +52,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/" />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
         <Link href="/admin/import" className={buttonVariants()}>

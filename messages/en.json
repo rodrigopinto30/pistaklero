@@ -20,7 +20,8 @@
     "myCompany": "My company",
     "backToTop": "Back to top",
     "newJob": "Post a job",
-    "talent": "Talent"
+    "talent": "Talent",
+    "back": "Back"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -632,7 +633,8 @@
       "remote": "Remote",
       "junior": "Trainee / Junior",
       "salary": "Salary shown",
-      "usd": "Paid in USD"
+      "usd": "Paid in USD",
+      "query": "“{q}”"
     },
     "apply": "Apply filters",
     "any": "Any",

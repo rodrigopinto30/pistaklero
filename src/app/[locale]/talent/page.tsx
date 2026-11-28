@@ -12,6 +12,7 @@ import { countryName, countryOptions } from "@/lib/geo";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
+import { FilterChips, queryWithout } from "@/components/filter-chips";
 
 const PAGE_SIZE = 24;
 const AVAILABILITY = ["immediate", "two_weeks", "freelance_only", "not_looking"] as const;
@@ -33,6 +34,7 @@ export default async function TalentPage({ searchParams }: PageProps<"/[locale]/
   if (profile?.role !== "recruiter" && profile?.role !== "admin") redirect({ href: "/", locale });
 
   const t = await getTranslations("Talent");
+  const tSearch = await getTranslations("Search");
   const tAvailability = await getTranslations("Profile.preferences.availabilityOptions");
   const params = await searchParams;
   const text = (key: string) => (typeof params[key] === "string" ? (params[key] as string).trim().slice(0, 100) : "");
@@ -107,6 +109,20 @@ export default async function TalentPage({ searchParams }: PageProps<"/[locale]/
           {t("apply")}
         </button>
       </form>
+
+      <FilterChips
+        chips={(
+          [
+            ["q", q ? tSearch("chips.query", { q }) : null],
+            ["skill", skill ? skillName((skills ?? []).find((s) => s.slug === skill) ?? { name_es: skill, name_en: skill }) : null],
+            ["country", country ? (countryName(country, locale) ?? country) : null],
+            ["availability", availability ? tAvailability(availability) : null],
+          ] as const
+        )
+          .filter((entry): entry is [typeof entry[0], string] => entry[1] !== null)
+          .map(([key, label]) => ({ key, label, href: { pathname: "/talent" as const, query: queryWithout(filters, key) } }))}
+        clearHref="/talent"
+      />
 
       <p role="status" className="text-sm text-muted-foreground">
         {q ? t("countFor", { count: total, query: q }) : t("count", { count: total })}

@@ -18,6 +18,7 @@ import { SectionCard as Section } from "@/components/section-card";
 import { SkillsSection } from "./_components/skills-section";
 import { Emoji } from "@/components/emoji";
 import { avatarUrl } from "@/lib/storage";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Profile");
@@ -104,6 +105,7 @@ export default async function ProfilePage() {
   if (!c.setup_completed_at) {
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
+        <BackLink fallback="/" />
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-semibold tracking-tight">
             {t("setup.title")} <Emoji symbol="🙋" />
@@ -124,6 +126,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="🙋" /></h1>

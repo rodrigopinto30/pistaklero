@@ -11,6 +11,7 @@ import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { Emoji } from "@/components/emoji";
 import { normalizeTag } from "@/lib/posts/tags";
+import { FilterChips } from "@/components/filter-chips";
 
 const PAGE_SIZE = 24;
 
@@ -29,6 +30,7 @@ export default async function PostsPage({ searchParams }: PageProps<"/[locale]/p
   const page = Math.min(Math.max(Number(params.page) || 1, 1), 20);
   const locale = await getLocale();
   const t = await getTranslations("Posts");
+  const tSearch = await getTranslations("Search");
   const signedIn = Boolean(await getCurrentUser());
 
   const supabase = await createClient();
@@ -49,14 +51,13 @@ export default async function PostsPage({ searchParams }: PageProps<"/[locale]/p
         </Link>
       </div>
 
-      {tag && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex min-h-8 items-center rounded-full bg-primary/10 px-3 font-medium text-primary">{t("tags.filter", { tag })}</span>
-          <Link href="/posts" className="text-sm font-medium text-primary underline underline-offset-4">
-            {t("tags.clear")}
-          </Link>
-        </div>
-      )}
+      <FilterChips
+        chips={[
+          ...(q ? [{ key: "q", label: tSearch("chips.query", { q }), href: { pathname: "/posts" as const, query: tag ? { tag } : {} } }] : []),
+          ...(tag ? [{ key: "tag", label: t("tags.filter", { tag }), href: { pathname: "/posts" as const, query: q ? { q } : {} } }] : []),
+        ]}
+        clearHref="/posts"
+      />
       <p role="status" className="text-sm text-muted-foreground">
         {q ? t("countFor", { count: total, query: q }) : t("count", { count: total })}
       </p>

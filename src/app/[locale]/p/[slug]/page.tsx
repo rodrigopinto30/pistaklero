@@ -11,6 +11,7 @@ import { countryName, formatMonth, languageOptions } from "@/lib/geo";
 import { projectPreviewUrl } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
 import { Markdown } from "@/components/markdown";
+import { BackLink } from "@/components/back-link";
 
 /*
  * Un reclutador primero registra la vista del día: la base limita a 200 perfiles "solo empresas" por día
@@ -67,6 +68,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
     const tLimit = await getTranslations("PublicProfile.limit");
     return (
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 py-16">
+        <BackLink fallback="/" />
         <h1 className="text-2xl font-semibold tracking-tight">{tLimit("title")}</h1>
         <p className="text-muted-foreground">{tLimit("body")}</p>
       </div>
@@ -102,6 +104,7 @@ export default async function PublicProfilePage({ params }: PageProps<"/[locale]
 
   return (
     <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 md:grid-cols-3">
+      <BackLink fallback="/" className="md:col-span-3" />
       {/* Encabezado */}
       <section className="flex flex-col gap-4 rounded-2xl bg-card shadow-soft p-6 md:col-span-2 md:flex-row md:items-center">
         <Avatar path={candidate.people?.avatar_path} name={candidate.people?.full_name ?? ""} size="xl" />

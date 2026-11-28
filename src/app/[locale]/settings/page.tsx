@@ -12,6 +12,7 @@ import type { AppLocale } from "@/i18n/routing";
 import { DeleteAccountForm, PreferencesForm } from "./settings-forms";
 import { Emoji } from "@/components/emoji";
 import { avatarUrl } from "@/lib/storage";
+import { BackLink } from "@/components/back-link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Settings");
@@ -34,6 +35,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
+      <BackLink fallback="/" />
       <h1 className="text-3xl font-semibold tracking-tight">{t("title")} <Emoji symbol="⚙️" /></h1>
 
       {profile!.role !== "candidate" && (
