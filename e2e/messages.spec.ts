@@ -152,11 +152,16 @@ test("el chat ocupa la pantalla, separa los globos, guarda qué hace Enter, se c
   await expect(page.getByRole("menu")).toHaveCount(0);
   await expect(page).toHaveURL(new RegExp(`/es/mensajes/${conversation!.id}$`));
 
+  // El título "Mensajes" es el mismo en la conversación y en la bandeja: al cerrar no se mueve nada.
+  await expect(page.getByRole("heading", { level: 1, name: /^Mensajes/ })).toBeVisible();
+  const listInChat = (await page.getByRole("list", { name: "Conversaciones" }).boundingBox())!;
+
   // Escape cierra la conversación; lo escrito queda como borrador.
   await box.fill("un borrador");
   await box.press("Escape");
   await page.waitForURL(/\/es\/mensajes$/);
   await expect(page.getByRole("log")).toHaveCount(0);
+  expect((await page.getByRole("list", { name: "Conversaciones" }).boundingBox())!.y).toBe(listInChat.y);
   await page.getByRole("list", { name: "Conversaciones" }).getByRole("link").filter({ hasText: name }).click();
   await expect(page.getByRole("textbox", { name: "Escribí un mensaje" })).toHaveValue("un borrador");
 
