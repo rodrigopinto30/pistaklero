@@ -10,12 +10,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { idleState } from "@/lib/forms";
 import { changeApplicationStatus } from "../actions";
 
-type OpenStatus = "received" | "in_review" | "interview";
-type NextStatus = "in_review" | "interview" | "hired";
+export type OpenStatus = "received" | "viewed" | "in_review" | "shortlisted" | "interview";
+type NextStatus = "shortlisted" | "interview" | "hired";
 
+// Avanza a la etapa siguiente, o saltea: contratar se puede desde cualquier etapa abierta.
 const NEXT: Record<OpenStatus, NextStatus[]> = {
-  received: ["in_review", "interview"],
-  in_review: ["interview"],
+  received: ["shortlisted", "interview", "hired"],
+  viewed: ["shortlisted", "interview", "hired"],
+  in_review: ["shortlisted", "interview", "hired"],
+  shortlisted: ["interview", "hired"],
   interview: ["hired"],
 };
 

@@ -1,4 +1,4 @@
-import { emailOf, expect, expectNoA11yViolations, MAILPIT_URL, onboardAsCompany, publishJobFor, signIn, signInAsReadyCandidate, test, uniqueEmail } from "./support/fixtures";
+import { admin, emailOf, expect, expectNoA11yViolations, MAILPIT_URL, onboardAsCompany, publishJobFor, signIn, signInAsReadyCandidate, test, uniqueEmail } from "./support/fixtures";
 
 async function lastEmailTo(email: string) {
   let message: { Subject: string; Text: string } | undefined;
@@ -42,27 +42,43 @@ test("la empresa gestiona a quien se postuló y la candidata se entera de todo",
   await expect(recruiter.getByRole("heading", { name: "Carla Díaz" })).toBeVisible();
   await expectNoA11yViolations(recruiter);
 
-  // La pasa a revisión: la candidata recibe el aviso
-  await recruiter.getByLabel("Mover a Carla Díaz a").selectOption("in_review");
+  // Con su tarjeta a la vista, la postulación pasa sola a "Vista" y la candidata se entera.
+  await expect
+    .poll(async () => (await admin.from("applications").select("status").eq("job_id", job.id).single()).data?.status, { timeout: 15_000 })
+    .toBe("viewed");
+  await candidate.goto("/es/mis-postulaciones");
+  const journey = candidate.getByRole("listitem").filter({ hasText: title }).getByRole("list", { name: "Recorrido de la postulación" });
+  await expect(journey.locator('[aria-current="step"]')).toContainText("Vista");
+  await expect(journey.getByRole("listitem").filter({ hasText: "Preseleccionada" })).toContainText("Pendiente");
+
+  // La preselecciona: pasa a "Preseleccionadas" y la candidata recibe el email
+  await recruiter.getByLabel("Mover a Carla Díaz a").selectOption("shortlisted");
   await recruiter.getByRole("button", { name: "Mover", exact: true }).click();
   await expect(recruiter.getByRole("heading", { name: "Carla Díaz" })).toBeHidden();
-  await recruiter.getByRole("link", { name: "En revisión 1" }).click();
+  await recruiter.getByRole("link", { name: "Preseleccionadas 1" }).click();
   await expect(recruiter.getByRole("heading", { name: "Carla Díaz" })).toBeVisible();
-  const reviewEmail = await lastEmailTo(candidateEmail);
-  expect(reviewEmail.Subject).toBe(`Novedades de tu postulación: ${title}`);
-  expect(reviewEmail.Text).toContain("está revisando tu postulación");
+  const recruiterJourney = recruiter.getByRole("list", { name: "Recorrido de la postulación" });
+  await expect(recruiterJourney.locator('[aria-current="step"]')).toContainText("Preseleccionada");
+  await expectNoA11yViolations(recruiter);
+  const shortlistEmail = await lastEmailTo(candidateEmail);
+  expect(shortlistEmail.Subject).toBe(`Novedades de tu postulación: ${title}`);
+  expect(shortlistEmail.Text).toContain("te preseleccionó");
 
   // La descarta con la plantilla amable
   await recruiter.getByText("Descartar a Carla Díaz con un mensaje").click();
   await expect(recruiter.getByLabel("Mensaje para la persona")).toHaveValue(/Gracias por postularte a/);
   await recruiter.getByRole("button", { name: "Descartar y enviar mensaje" }).click();
   await recruiter.getByRole("link", { name: "Cerradas 1" }).click();
-  await expect(recruiter.getByText("No seleccionada", { exact: true }).filter({ visible: true })).toBeVisible();
+  await expect(recruiter.getByText("No seleccionada", { exact: true }).filter({ visible: true }).first()).toBeVisible();
 
   // La candidata ve el mensaje en su lista y en el email
   await candidate.goto("/es/mis-postulaciones");
   const item = candidate.getByRole("listitem").filter({ hasText: title });
-  await expect(item.getByText("No seleccionada", { exact: true })).toBeVisible();
+  await expect(item.getByText("No seleccionada", { exact: true }).first()).toBeVisible();
   await expect(item.getByText(/Gracias por postularte a/)).toBeVisible();
+  // La línea de tiempo se corta en "No seleccionada", con cada etapa por la que pasó.
+  const steps = item.getByRole("list", { name: "Recorrido de la postulación" }).getByRole("listitem");
+  await expect(steps).toHaveText([/^Recibida/, /^Vista/, /^Preseleccionada/, /^No seleccionada/]);
+  await expectNoA11yViolations(candidate);
   await expect.poll(async () => (await lastEmailTo(candidateEmail)).Text).toContain("Mensaje de");
 });

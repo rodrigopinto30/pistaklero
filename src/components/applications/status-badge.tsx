@@ -1,4 +1,4 @@
-import { CalendarCheck, Circle, CircleCheck, CircleSlash, Clock, Eye, Undo2 } from "lucide-react";
+import { CalendarCheck, Circle, CircleCheck, CircleSlash, Clock, Eye, Star, Undo2 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { Database } from "@/lib/supabase/database.types";
 
@@ -6,7 +6,9 @@ export type ApplicationStatus = Database["public"]["Enums"]["application_status"
 
 const ICONS = {
   received: Circle,
+  viewed: Eye,
   in_review: Eye,
+  shortlisted: Star,
   interview: CalendarCheck,
   hired: CircleCheck,
   rejected: CircleSlash,
@@ -20,7 +22,9 @@ const ICONS = {
  */
 const TONES: Record<ApplicationStatus, string> = {
   received: "bg-info/10 text-info",
+  viewed: "bg-violet/10 text-violet",
   in_review: "bg-violet/10 text-violet",
+  shortlisted: "bg-violet/15 text-violet",
   interview: "bg-warn/12 text-warn",
   hired: "bg-primary/12 text-primary",
   rejected: "bg-destructive/10 text-destructive",

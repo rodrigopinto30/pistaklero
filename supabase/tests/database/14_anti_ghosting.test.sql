@@ -53,7 +53,7 @@ select is((select badge from public.company_response_stats where company_id = :'
 -- Con 5 postulaciones respondidas en menos de 48 h es "rápida"
 select count(*) from (select pg_temp.candidate('f' || n || '@ghost.pgtap.test') from generate_series(1, 5) n) created;
 insert into public.applications (job_id, candidate_id, status, created_at, status_changed_at, first_response_at)
-select :'job', c.user_id, 'in_review', now() - interval '20 days', now() - interval '19 days', now() - interval '19 days 12 hours'
+select :'job', c.user_id, 'viewed', now() - interval '20 days', now() - interval '19 days', now() - interval '19 days 12 hours'
 from public.candidates c join auth.users u on u.id = c.user_id where u.email like 'f_@ghost.pgtap.test';
 select public.daily_maintenance();
 select is((select badge from public.company_response_stats where company_id = :'company'), 'medium'::public.response_badge,

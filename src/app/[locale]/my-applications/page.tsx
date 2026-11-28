@@ -11,8 +11,9 @@ import { removeExternalApplication } from "@/lib/applications/actions";
 import { Emoji } from "@/components/emoji";
 import { ConfirmButton } from "@/components/confirm-button";
 import { BackLink } from "@/components/back-link";
+import { ApplicationTimeline } from "@/components/applications/timeline";
 
-const OPEN = ["received", "in_review", "interview"];
+const OPEN = ["received", "viewed", "in_review", "shortlisted", "interview"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Applications");
@@ -30,12 +31,11 @@ export default async function MyApplicationsPage() {
 
   const t = await getTranslations("Applications");
   const tConfirm = await getTranslations("Confirm");
-  const tStatus = await getTranslations("Applications.status");
   const format = await getFormatter();
   const supabase = await createClient();
   const { data: applications } = await supabase
     .from("applications")
-    .select("id, status, created_at, status_changed_at, rejection_message, jobs(title, slug, language, companies(name, slug)), application_events(id, to_status, created_at)")
+    .select("id, status, created_at, status_changed_at, rejection_message, jobs(title, slug, language, companies(name, slug)), application_events(to_status, created_at)")
     .eq("candidate_id", profile!.id)
     .order("created_at", { ascending: false });
   // Las que contó que hizo en el sitio de la empresa ("¿Te postulaste?" → "Sí").
@@ -63,7 +63,6 @@ export default async function MyApplicationsPage() {
         <ul className="flex flex-col gap-3">
           {applications!.map((application) => {
             const job = application.jobs;
-            const events = [...(application.application_events ?? [])].sort((a, b) => a.created_at.localeCompare(b.created_at));
             return (
               <li key={application.id} className="flex flex-col gap-3 rounded-2xl bg-card shadow-soft p-5">
                 <div className="flex flex-wrap items-start justify-between gap-2">
@@ -95,20 +94,7 @@ export default async function MyApplicationsPage() {
                 {application.status === "rejected" && application.rejection_message && (
                   <blockquote className="border-l-2 border-input pl-4 text-sm whitespace-pre-line">{application.rejection_message}</blockquote>
                 )}
-                <details>
-                  <summary className="inline-flex min-h-9 cursor-pointer items-center text-sm text-violet underline-offset-4 hover:underline">
-                    {t("history")}
-                  </summary>
-                  <ol className="mt-2 flex flex-col gap-1 text-sm">
-                    {events.map((event) => (
-                      <li key={event.id}>
-                        <time dateTime={event.created_at}>{format.dateTime(new Date(event.created_at), { dateStyle: "medium", timeStyle: "short" })}</time>
-                        {" — "}
-                        {tStatus(event.to_status)}
-                      </li>
-                    ))}
-                  </ol>
-                </details>
+                <ApplicationTimeline status={application.status} createdAt={application.created_at} events={application.application_events ?? []} />
                 {OPEN.includes(application.status) && (
                   <form action={withdrawApplication}>
                     <input type="hidden" name="applicationId" value={application.id} />

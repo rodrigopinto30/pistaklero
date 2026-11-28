@@ -22,8 +22,8 @@ select is((select count(*)::int from public.notifications where user_id = :'owne
 
 -- La empresa cambia el estado: aviso a la candidata, con el estado nuevo.
 insert into public.application_events (application_id, from_status, to_status, actor_type, actor_id)
-values (:'application', 'received', 'in_review', 'recruiter', :'owner');
-select is((select data->>'status' from public.notifications where user_id = :'ana' and kind = 'application_status'), 'in_review', 'la candidata se entera del cambio de estado');
+values (:'application', 'received', 'shortlisted', 'recruiter', :'owner');
+select is((select data->>'status' from public.notifications where user_id = :'ana' and kind = 'application_status'), 'shortlisted', 'la candidata se entera del cambio de estado');
 
 -- Me gusta en una publicación: los de dos personas se suman en un solo aviso.
 select tests.authenticate_as(:'ana');

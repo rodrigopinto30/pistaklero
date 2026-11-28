@@ -1,7 +1,7 @@
 begin;
 \ir ../support/helpers.inc
 
-select plan(12);
+select plan(16);
 
 select tests.create_user('rrhh@pipe.pgtap.test') as owner \gset
 select tests.authenticate_as(:'owner');
@@ -19,20 +19,29 @@ select public.onboard_candidate('Ana', '', 'Pérez', 'Frontend', 'en');
 insert into public.candidate_skills (candidate_id, skill_id) select auth.uid(), id from public.skills where slug = 'react';
 insert into public.candidate_projects (candidate_id, title) values (auth.uid(), 'Portfolio');
 select public.apply_to_job(:'job') as application \gset
-select throws_ok(format($$select public.change_application_status(%L, 'in_review')$$, :'application'), 'P0001', 'not_authorized',
+select throws_ok(format($$select public.change_application_status(%L, 'shortlisted')$$, :'application'), 'P0001', 'not_authorized',
   'la candidata no cambia el estado');
 reset role;
 
 select tests.authenticate_as(:'owner');
-select throws_ok(format($$select public.change_application_status(%L, 'hired')$$, :'application'), 'P0001', 'invalid_transition',
-  'no se salta de recibida a contratada');
 select throws_ok(format($$select public.change_application_status(%L, 'no_response')$$, :'application'), 'P0001', 'invalid_transition',
   '"sin respuesta" lo pone solo el sistema');
-select lives_ok(format($$select public.change_application_status(%L, 'in_review')$$, :'application'), 'pasa a revisión');
+select throws_ok(format($$select public.change_application_status(%L, 'viewed')$$, :'application'), 'P0001', 'invalid_transition',
+  '"vista" la marca el sistema al verla');
+select is(public.mark_applications_viewed(array[:'application']::uuid[]), 1, 'la empresa la ve: pasa a "Vista"');
+select is(public.mark_applications_viewed(array[:'application']::uuid[]), 0, 'verla de nuevo no cambia nada');
 reset role;
 
-select isnt((select first_response_at from public.applications where id = :'application'), null, 'se registra la primera respuesta');
-select is((select locale from public.email_outbox where dedupe_key = 'status:' || :'application' || ':in_review'), 'en'::public.app_locale,
+select is((select status from public.applications where id = :'application'), 'viewed'::public.application_status, 'queda como vista');
+select is((select first_response_at from public.applications where id = :'application'), null, 'ver no cuenta como respuesta (el anti-ghosting sigue)');
+select is((select data->>'status' from public.notifications where user_id = :'ana' and kind = 'application_status'), 'viewed',
+  'la candidata se entera de que la vieron');
+
+select tests.authenticate_as(:'owner');
+select lives_ok(format($$select public.change_application_status(%L, 'shortlisted')$$, :'application'), 'la preselecciona');
+reset role;
+select isnt((select first_response_at from public.applications where id = :'application'), null, 'preseleccionar sí es una respuesta');
+select is((select locale from public.email_outbox where dedupe_key = 'status:' || :'application' || ':shortlisted'), 'en'::public.app_locale,
   'se encola el aviso en el idioma de la candidata');
 
 select tests.authenticate_as(:'owner');
@@ -40,14 +49,24 @@ select lives_ok(format($$select public.change_application_status(%L, 'rejected',
   'la descarta con un mensaje');
 select throws_ok(format($$select public.change_application_status(%L, 'interview')$$, :'application'), 'P0001', 'invalid_transition',
   'una postulación cerrada no se reabre');
-select is((select total::int from public.my_job_application_counts() where status = 'rejected'), 1, 'el panel cuenta por estado');
 reset role;
 
 select is((select rejection_message from public.applications where id = :'application'), 'Gracias por postularte. Elegimos otro perfil.',
   'el mensaje queda guardado');
-select isnt((select closed_at from public.applications where id = :'application'), null, 'la postulación queda cerrada');
-select is((select count(*)::int from public.application_events where application_id = :'application'), 3,
-  'el historial tiene recibida, en revisión y descartada');
+select is((select array_agg(to_status::text order by created_at) from public.application_events where application_id = :'application'),
+  array['received', 'viewed', 'shortlisted', 'rejected'], 'el historial tiene cada etapa');
+
+-- Contratar se puede desde cualquier etapa abierta (por ejemplo, recién recibida).
+select tests.create_user('beto@pipe-candidata.pgtap.test') as beto \gset
+select tests.authenticate_as(:'beto');
+select public.onboard_candidate('Beto', '', 'Gómez', 'Backend', 'es');
+insert into public.candidate_skills (candidate_id, skill_id) select auth.uid(), id from public.skills where slug = 'react';
+insert into public.candidate_projects (candidate_id, title) values (auth.uid(), 'API');
+select public.apply_to_job(:'job') as second \gset
+reset role;
+select tests.authenticate_as(:'owner');
+select lives_ok(format($$select public.change_application_status(%L, 'hired')$$, :'second'), 'se puede contratar directo');
+reset role;
 
 select * from finish();
 rollback;

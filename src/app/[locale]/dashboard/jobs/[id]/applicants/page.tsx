@@ -9,16 +9,19 @@ import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { StatusForm } from "./_components/status-form";
+import { ViewedMarker } from "./_components/viewed-marker";
+import { ApplicationTimeline } from "@/components/applications/timeline";
 import { JobManageHeader } from "../../_components/job-manage-header";
 
 const TABS = {
   received: ["received"],
-  in_review: ["in_review"],
+  viewed: ["viewed", "in_review"],
+  shortlisted: ["shortlisted"],
   interview: ["interview"],
   closed: ["hired", "rejected", "no_response", "withdrawn"],
 } as const satisfies Record<string, readonly ApplicationStatus[]>;
 type Tab = keyof typeof TABS;
-const OPEN = ["received", "in_review", "interview"] as const;
+const OPEN = ["received", "viewed", "in_review", "shortlisted", "interview"] as const;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Applicants");
@@ -41,7 +44,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
   const [{ data: applications }, { data: questions }, t, tTabs, tProfile, format] = await Promise.all([
     supabase
       .from("applications")
-      .select("id, status, created_at, candidate_id, candidates(headline, slug, availability, people(full_name)), application_answers(question_id, answer_text, answer_option)")
+      .select("id, status, created_at, candidate_id, candidates(headline, slug, availability, people(full_name)), application_answers(question_id, answer_text, answer_option), application_events(to_status, created_at)")
       .eq("job_id", id)
       .order("created_at", { ascending: true }),
     supabase.from("job_questions").select("id, prompt, options").eq("job_id", id).order("position"),
@@ -94,7 +97,8 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
             const salary = salaries?.find((s) => s.candidate_id === application.candidate_id);
             const name = candidate?.people?.full_name ?? t("unavailable");
             return (
-              <li key={application.id} className="flex flex-col gap-4 rounded-2xl bg-card shadow-soft p-5">
+              <li key={application.id} className="rounded-2xl bg-card p-5 shadow-soft">
+                <Card viewedMarker={application.status === "received"} applicationId={application.id}>
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="flex flex-col gap-1">
                     <h2 className="text-lg font-semibold">
@@ -122,6 +126,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
                   </div>
                   <ApplicationStatusBadge status={application.status} />
                 </div>
+                <ApplicationTimeline status={application.status} createdAt={application.created_at} events={application.application_events ?? []} />
 
                 {(questions ?? []).length > 0 && (
                   <dl className="flex flex-col gap-2 rounded-xl bg-muted/60 p-3 text-sm">
@@ -146,6 +151,7 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
                     templates={templates}
                   />
                 )}
+                </Card>
               </li>
             );
           })}
@@ -153,4 +159,9 @@ export default async function ApplicantsPage({ params, searchParams }: PageProps
       )}
     </div>
   );
+}
+
+/** La tarjeta de cada postulación; las nuevas se marcan como vistas cuando quedan a la vista. */
+function Card({ viewedMarker, applicationId, children }: { viewedMarker: boolean; applicationId: string; children: React.ReactNode }) {
+  return viewedMarker ? <ViewedMarker applicationId={applicationId}>{children}</ViewedMarker> : <div className="flex flex-col gap-4">{children}</div>;
 }
