@@ -5,6 +5,7 @@ import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { cache } from "react";
 import { Avatar } from "@/components/avatar";
 import { Markdown } from "@/components/markdown";
+import { InlineMarkdown } from "@/components/inline-markdown";
 import { authorSubtitle } from "@/components/posts/post-card";
 import { PostActions } from "@/components/posts/post-actions";
 import { ReportPostForm } from "@/components/posts/report-post-form";
@@ -12,6 +13,7 @@ import { PostTags } from "@/components/posts/post-tags";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { deletePost } from "@/lib/posts/actions";
+import { plainInline } from "@/lib/editor/text";
 import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
@@ -31,7 +33,7 @@ const loadPost = cache(async (slug: string) => {
 export async function generateMetadata({ params }: PageProps<"/[locale]/posts/[slug]">): Promise<Metadata> {
   const loaded = await loadPost((await params).slug);
   if (!loaded) return {};
-  return { title: loaded.post.title, description: loaded.card?.excerpt.slice(0, 160), robots: { index: loaded.post.status === "published" } };
+  return { title: plainInline(loaded.post.title), description: loaded.card?.excerpt.slice(0, 160), robots: { index: loaded.post.status === "published" } };
 }
 
 export default async function PostPage({ params }: PageProps<"/[locale]/posts/[slug]">) {
@@ -61,7 +63,9 @@ export default async function PostPage({ params }: PageProps<"/[locale]/posts/[s
           </p>
         )}
         <header className="flex flex-col gap-5">
-          <h1 className="text-3xl leading-tight font-bold tracking-tight sm:text-4xl">{post.title}</h1>
+          <h1 className="text-3xl leading-tight font-bold tracking-tight sm:text-4xl">
+            <InlineMarkdown>{post.title}</InlineMarkdown>
+          </h1>
           {card && (
             <div className="flex items-center gap-3">
               <Avatar path={card.author_avatar} name={card.author_name} size="md" />
@@ -92,7 +96,7 @@ export default async function PostPage({ params }: PageProps<"/[locale]/posts/[s
           <div className="border-t border-border pt-4">
             <PostActions
               postId={post.id}
-              title={post.title}
+              title={plainInline(post.title)}
               liked={card.liked}
               saved={card.saved}
               likes={card.likes_count}

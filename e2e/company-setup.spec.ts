@@ -24,7 +24,7 @@ test("el alta de la empresa es un solo formulario con 'Finalizar registro'", asy
 
   // Industria: lista con las más comunes y "Otra…" para escribirla.
   const details = page.getByRole("region", { name: "Datos de la empresa" });
-  await details.getByLabel(/Quiénes somos/).fill("Armamos todo de una sola vez.");
+  await details.getByRole("textbox", { name: /Quiénes somos/ }).fill("Armamos todo de una sola vez.");
   await details.getByLabel("Industria").selectOption({ label: "Otra…" });
   await details.getByLabel(/¿Cuál\?/).fill("Robótica submarina");
 

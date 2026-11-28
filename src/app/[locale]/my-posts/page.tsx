@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getPathname, Link, redirect } from "@/i18n/navigation";
 import { Emoji } from "@/components/emoji";
 import { BackLink } from "@/components/back-link";
+import { InlineMarkdown } from "@/components/inline-markdown";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Posts.mine");
@@ -49,7 +50,7 @@ export default async function MyPostsPage() {
             <li key={post.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-card p-5 shadow-soft">
               <div className="flex min-w-0 flex-col gap-1">
                 <Link href={{ pathname: "/posts/[slug]", params: { slug: post.slug } }} className="font-semibold underline-offset-4 hover:underline">
-                  {post.title}
+                  <InlineMarkdown>{post.title}</InlineMarkdown>
                 </Link>
                 <p className="text-sm text-muted-foreground">
                   {format.dateTime(new Date(post.created_at), { dateStyle: "medium" })} · {t("likes", { count: post.likes_count })}

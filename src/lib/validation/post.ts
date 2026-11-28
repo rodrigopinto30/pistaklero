@@ -1,11 +1,14 @@
-import { richText } from "@/lib/editor/text";
+import { richInline, richText } from "@/lib/editor/text";
 import { z } from "zod";
 
 export const POST_REPORT_REASONS = ["spam", "offensive", "scam", "other"] as const;
 
-/** Una publicación: título corto y un cuerpo en Markdown (se muestra con el mismo renderizador seguro). */
+/**
+ * Una publicación: un título de una línea con formato (negrita, colores…; 5 a 120 caracteres que se
+ * leen) y un cuerpo en Markdown. Los dos se muestran con el mismo renderizador seguro.
+ */
 export const postSchema = z.object({
-  title: z.string().trim().min(5).max(120),
+  title: richInline(120, 5),
   body: richText(5000, 20),
   language: z.enum(["es", "en"]),
 });

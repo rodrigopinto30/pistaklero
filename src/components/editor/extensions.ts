@@ -1,6 +1,7 @@
-import { type JSONContent, Mark, type MarkdownLexerConfiguration, type MarkdownParseHelpers, type MarkdownRendererHelpers, type MarkdownToken, mergeAttributes } from "@tiptap/core";
+import { type JSONContent, Mark, type MarkdownLexerConfiguration, type MarkdownParseHelpers, type MarkdownRendererHelpers, type MarkdownToken, mergeAttributes, Node } from "@tiptap/core";
 import Image from "@tiptap/extension-image";
 import StarterKit from "@tiptap/starter-kit";
+import { escapeLeadingBlock } from "@/lib/editor/text";
 import { isGiphyUrl } from "@/lib/gifs/gifs";
 import { type Highlight, isHighlight, isTextColor, type TextColor } from "@/lib/editor/palette";
 
@@ -118,5 +119,43 @@ export function editorExtensions() {
     TextColorMark,
     HighlightMark,
     GiphyImage,
+  ];
+}
+
+/** Un documento de un solo párrafo: el título es una línea (Enter no agrega otra). */
+const SingleLineDocument = Node.create({
+  name: "doc",
+  topNode: true,
+  content: "paragraph",
+  // "1. Algo" o "# Algo" al principio quedan escapados: son texto, no una lista o un encabezado.
+  renderMarkdown: (node: JSONContent, helpers: MarkdownRendererHelpers) => (node.content ? escapeLeadingBlock(helpers.renderChildren(node.content, " ")) : ""),
+});
+
+/**
+ * Las extensiones del título de una publicación: una línea con negrita, cursiva, subrayado,
+ * tachado, colores y resaltado (y emojis, que son texto). Sin títulos, listas, enlaces ni GIFs.
+ */
+export function titleExtensions() {
+  return [
+    SingleLineDocument,
+    StarterKit.configure({
+      document: false,
+      heading: false,
+      bulletList: false,
+      orderedList: false,
+      listItem: false,
+      listKeymap: false,
+      blockquote: false,
+      codeBlock: false,
+      code: false,
+      horizontalRule: false,
+      hardBreak: false,
+      link: false,
+      dropcursor: false,
+      gapcursor: false,
+      trailingNode: false,
+    }),
+    TextColorMark,
+    HighlightMark,
   ];
 }

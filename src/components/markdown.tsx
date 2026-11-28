@@ -16,7 +16,7 @@ import { isGiphyUrl } from "@/lib/gifs/gifs";
  */
 const ALLOWED = ["p", "br", "strong", "em", "u", "s", "del", "span", "mark", "ul", "ol", "li", "a", "h1", "h2", "h3", "h4", "blockquote", "code", "pre", "hr", "img"];
 
-const schema = {
+export const markdownSchema = {
   ...defaultSchema,
   tagNames: ALLOWED,
   attributes: {
@@ -33,7 +33,7 @@ export function Markdown({ children, lang }: { children: string; lang?: string }
     <div lang={lang} className="flex flex-col gap-3 leading-relaxed break-words">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw, [rehypeSanitize, schema]]}
+        rehypePlugins={[rehypeRaw, [rehypeSanitize, markdownSchema]]}
         allowedElements={ALLOWED}
         unwrapDisallowed
         components={{

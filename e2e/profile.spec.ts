@@ -9,7 +9,7 @@ test.describe("perfil del candidato", () => {
     // Datos básicos
     const basics = page.getByRole("region", { name: "Datos básicos" });
     await basics.getByLabel(/Titular/).fill("Frontend Junior · React");
-    await basics.getByLabel(/Sobre mí/).fill("Me encanta hacer interfaces accesibles.");
+    await basics.getByRole("textbox", { name: /Sobre mí/ }).fill("Me encanta hacer interfaces accesibles.");
     await basics.getByLabel("Español").check();
     await basics.getByRole("button", { name: "Guardar" }).click();
     await expectToast(page, "Cambios guardados.");
