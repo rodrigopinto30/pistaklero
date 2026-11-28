@@ -1770,7 +1770,12 @@
     "headerLabel": "Messages",
     "headerUnread": "Messages: {count} unread",
     "candidateRole": "Candidate",
-    "teamRole": "Pistaklero team"
+    "teamRole": "Pistaklero team",
+    "status": {
+      "sent": "Sent",
+      "delivered": "Delivered",
+      "read": "Read"
+    }
   },
   "Account": {
     "switched": "You signed in with another account in another tab. Reload this one to continue with the current account.",

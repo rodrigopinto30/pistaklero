@@ -134,6 +134,15 @@ test("el chat ocupa la pantalla, separa los globos, guarda qué hace Enter, se c
   expect(theirsBox!.x).toBeLessThan(mineBox!.x);
   await expectNoA11yViolations(page);
 
+  // Tildes, como en las mensajerías: entregado cuando la otra persona abre Pistaklero y leído cuando
+  // abre la conversación (se ponen al día solas). El último mensaje lo dice también escrito.
+  const ticks = mine.locator("[data-status]");
+  await candidate.goto("/es");
+  await expect(ticks).toHaveAttribute("data-status", /delivered|read/, { timeout: 15_000 });
+  await candidate.goto(`/es/mensajes/${conversation!.id}`);
+  await expect(ticks).toHaveAttribute("data-status", "read", { timeout: 15_000 });
+  await expect(mine).toContainText("Leído");
+
   // La flechita de "Enviar": Enter pasa al siguiente renglón y Ctrl+Enter envía. Queda guardado.
   await page.getByRole("button", { name: "Opciones de envío" }).click();
   await page.getByRole("menuitemradio", { name: /Pasar al siguiente renglón/ }).click();

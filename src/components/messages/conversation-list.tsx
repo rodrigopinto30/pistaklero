@@ -4,6 +4,7 @@ import { timeAgo } from "@/lib/jobs/time";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
+import { MessageTicks, statusOf } from "./message-ticks";
 
 /** Las conversaciones: pestañas Bandeja · Solicitudes y, en cada una, quién, lo último y si hay sin leer. */
 export async function ConversationList({ box, activeId }: { box: "inbox" | "requests"; activeId?: string }) {
@@ -56,8 +57,14 @@ export async function ConversationList({ box, activeId }: { box: "inbox" | "requ
                     </time>
                   </span>
                   {c.other_subtitle && <span className="truncate text-xs text-muted-foreground">{c.other_subtitle}</span>}
-                  <span className={cn("truncate text-sm", c.unread > 0 ? "text-foreground" : "text-muted-foreground")}>
-                    {c.waiting ? t("waitingTag") : c.last_sender && c.last_sender !== c.other_id ? t("you", { body: c.last_body ?? "" }) : c.last_body}
+                  <span className={cn("flex min-w-0 items-center gap-1 text-sm", c.unread > 0 ? "text-foreground" : "text-muted-foreground")}>
+                    {/* Si lo último es mío, con sus tildes (como en las mensajerías). */}
+                    {!c.waiting && c.last_sender && c.last_sender !== c.other_id && (
+                      <MessageTicks status={statusOf(c.last_message_at, { delivered_at: c.other_delivered_at, read_at: c.other_read_at })} />
+                    )}
+                    <span className="truncate">
+                      {c.waiting ? t("waitingTag") : c.last_sender && c.last_sender !== c.other_id ? t("you", { body: c.last_body ?? "" }) : c.last_body}
+                    </span>
                   </span>
                 </span>
                 {c.unread > 0 && (

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
 import { MESSAGES_CHANGED_EVENT } from "./app-screen";
 import { MessageComposer } from "./message-composer";
+import { MessageTicks, type Receipts, statusOf } from "./message-ticks";
 import { ReportMessage } from "./report-message";
 
 type Message = { id: string; body: string; created_at: string; mine: boolean };
@@ -41,11 +42,13 @@ function popupOpen() {
  * abajo. Los propios van a la derecha y los de la otra persona a la izquierda (y cada uno dice de
  * quién es, para los lectores de pantalla). Trae los nuevos cada 4 segundos con la pestaña a la vista.
  * Escape cierra la conversación (como WhatsApp Web); lo escrito queda guardado como borrador.
+ * Los míos llevan tildes (enviado, entregado, leído), que se ponen al día con cada vuelta.
  */
 export function ConversationView({
   conversationId,
   otherName,
   initialMessages,
+  initialReceipts,
   canWrite,
   enterSends,
   closeHref,
@@ -53,6 +56,7 @@ export function ConversationView({
   conversationId: string;
   otherName: string;
   initialMessages: Message[];
+  initialReceipts: Receipts;
   canWrite: boolean;
   enterSends: boolean;
   closeHref: Href;
@@ -61,6 +65,7 @@ export function ConversationView({
   const format = useFormatter();
   const router = useRouter();
   const [messages, setMessages] = useState(initialMessages);
+  const [receipts, setReceipts] = useState(initialReceipts);
   const log = useRef<HTMLDivElement>(null);
   const last = messages.at(-1)?.created_at;
 
@@ -69,7 +74,12 @@ export function ConversationView({
     try {
       const query = last ? `?after=${encodeURIComponent(last)}` : "";
       const response = await fetch(`/api/me/messages/${conversationId}${query}`, { cache: "no-store" });
-      const { messages: fresh } = (await response.json()) as { messages: Message[] };
+      const { messages: fresh, receipts: latest } = (await response.json()) as { messages: Message[]; receipts: Receipts };
+      // Las tildes cambian aunque no haya mensajes nuevos (la otra persona leyó): la lista también.
+      if (latest?.delivered_at !== receipts?.delivered_at || latest?.read_at !== receipts?.read_at) {
+        setReceipts(latest);
+        window.dispatchEvent(new Event(MESSAGES_CHANGED_EVENT));
+      }
       if (fresh.length === 0) return;
       setMessages((current) => [...current, ...fresh.filter((m) => !current.some((c) => c.id === m.id))]);
       if (fresh.some((m) => !m.mine)) {
@@ -80,7 +90,7 @@ export function ConversationView({
     } catch {
       // Sin conexión: se reintenta en la próxima vuelta.
     }
-  }, [conversationId, last]);
+  }, [conversationId, last, receipts]);
 
   useEffect(() => {
     const timer = setInterval(poll, 4000);
@@ -110,6 +120,9 @@ export function ConversationView({
     return () => window.removeEventListener("keydown", onKeyDown, true);
   }, [router, closeHref]);
 
+  // El estado escrito va en el último mensaje mío (vale para todos los anteriores).
+  const lastMine = messages.findLast((m) => m.mine)?.id;
+
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <div
@@ -133,6 +146,7 @@ export function ConversationView({
               </p>
               <span className="flex items-center gap-2 text-xs text-muted-foreground">
                 <time dateTime={message.created_at}>{format.dateTime(new Date(message.created_at), { dateStyle: "short", timeStyle: "short" })}</time>
+                {message.mine && <MessageTicks status={statusOf(message.created_at, receipts)} label={message.id === lastMine} />}
                 {!message.mine && <ReportMessage messageId={message.id} />}
               </span>
             </li>
