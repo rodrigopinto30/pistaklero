@@ -1587,7 +1587,7 @@
     "bulletList": "Lista",
     "orderedList": "Lista numerada",
     "quote": "Cita",
-    "link": "Enlace",
+    "link": "Insertar enlace",
     "linkUrl": "Dirección del enlace",
     "linkInvalid": "Escribí una dirección web (https://…) o un email (mailto:…).",
     "linkApply": "Aplicar",

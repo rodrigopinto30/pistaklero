@@ -49,7 +49,7 @@ test("el editor da formato (negrita, subrayado, color, resaltado y enlace) y se 
     await page.getByRole("button", { name: "Amarillo" }).click();
   });
   await formatWord("guía", async () => {
-    await toolbar.getByRole("button", { name: "Enlace" }).click();
+    await toolbar.getByRole("button", { name: "Insertar enlace" }).click();
     await page.getByLabel("Dirección del enlace").fill("acme.com/guia");
     await page.getByRole("button", { name: "Aplicar" }).click();
   });
