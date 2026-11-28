@@ -35,7 +35,7 @@ test("las empresas exploran talento; las candidatas no ven la pestaña", async (
   await expectNoA11yViolations(page);
 
   // En su perfil, el botón muestra que ya está guardada (y se puede quitar).
-  await savedPeople.getByRole("link", { name: visible }).click();
+  await savedPeople.getByRole("link", { name: visible, exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: visible })).toBeVisible();
   const saveButton = page.getByRole("button", { name: "Guardado" });
   await expect(saveButton).toHaveAttribute("aria-pressed", "true");

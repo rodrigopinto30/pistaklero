@@ -5,6 +5,7 @@ import { countryName } from "@/lib/geo";
 import type { Database } from "@/lib/supabase/database.types";
 import { Link } from "@/i18n/navigation";
 import { SaveCandidateButton } from "./save-candidate-button";
+import { MessageButton } from "@/components/messages/message-button";
 
 type Person = {
   user_id: string;
@@ -35,15 +36,21 @@ export async function TalentCard({ person, locale, saved, note, headingLevel = 2
       <div className="flex items-center gap-3">
         <Avatar path={person.avatar_path} name={person.full_name} size="lg" />
         <div className="flex min-w-0 flex-1 flex-col">
-          <Heading id={`talent-${person.user_id}`} className="truncate font-semibold">
+          <Heading id={`talent-${person.user_id}`} className="min-w-0 font-semibold">
             {/* El enlace cubre toda la tarjeta; su nombre accesible es el de la persona. */}
-            <Link href={{ pathname: "/p/[slug]", params: { slug: person.slug } }} className="after:absolute after:inset-0 after:rounded-2xl">
+            {/* 24 px de alto: objetivo táctil mínimo aunque tenga los botones al lado (WCAG 2.5.8). */}
+            <Link href={{ pathname: "/p/[slug]", params: { slug: person.slug } }} className="block truncate leading-6 after:absolute after:inset-0 after:rounded-2xl">
               {person.full_name}
             </Link>
           </Heading>
           {person.headline && <p className="truncate text-sm text-muted-foreground">{person.headline}</p>}
         </div>
-        {saved !== undefined && <SaveCandidateButton candidateId={person.user_id} name={person.full_name} saved={saved} className="-m-2 self-start" />}
+        {saved !== undefined && (
+          <div className="-m-2 flex self-start">
+            <MessageButton userId={person.user_id} name={person.full_name} variant="icon" />
+            <SaveCandidateButton candidateId={person.user_id} name={person.full_name} saved={saved} />
+          </div>
+        )}
       </div>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
         {location && (

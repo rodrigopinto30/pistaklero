@@ -881,6 +881,16 @@
       "restoreItem": "Volver a publicar: {title}",
       "delete": "Borrar",
       "deleteItem": "Borrar: {title}"
+    },
+    "messages": {
+      "title": "Mensajes denunciados",
+      "hint": "Solo se ve el mensaje denunciado, nunca el resto de la conversación.",
+      "empty": "No hay mensajes denunciados.",
+      "line": "{reason} · de {sender} · denunció {reporter}",
+      "dismiss": "Descartar la denuncia",
+      "suspend": "Suspender la cuenta",
+      "suspendTitle": "¿Suspender la cuenta de {name}?",
+      "suspendHint": "No va a poder ingresar ni escribir mensajes hasta que la reactives."
     }
   },
   "Import": {
@@ -1250,7 +1260,10 @@
     "jobPublished": "¡Tu oferta ya está publicada! 📣",
     "jobDrafted": "Guardamos el borrador 📝",
     "jobDuplicated": "Copiamos la oferta como borrador ✨",
-    "jobTitleSaved": "Guardamos tu cargo ✅"
+    "jobTitleSaved": "Guardamos tu cargo ✅",
+    "requestIgnored": "Ignoraste la solicitud",
+    "userBlocked": "Bloqueaste a esa persona 🚫",
+    "userUnblocked": "Desbloqueaste a esa persona"
   },
   "Saved": {
     "metaTitle": "Guardados",
@@ -1460,7 +1473,11 @@
       "title": "¿Borrar «{title}»?",
       "description": "Se borra para siempre."
     },
-    "withdrawConfirm": "Sí, retirarla"
+    "withdrawConfirm": "Sí, retirarla",
+    "blockUser": {
+      "title": "¿Bloquear a {name}?",
+      "description": "No va a poder escribirte ni ver esta conversación. Podés desbloquearla cuando quieras."
+    }
   },
   "Industries": {
     "software": "Software y tecnología",
@@ -1652,5 +1669,67 @@
     "sectionHint": "Los ve todo el equipo de {company}.",
     "savedBy": "Guardado por {name}",
     "empty": "Todavía no guardaron perfiles. En Talento, tocá el marcador de una tarjeta."
+  },
+  "Messages": {
+    "metaTitle": "Mensajes",
+    "title": "Mensajes",
+    "boxesLabel": "Bandejas",
+    "inbox": "Bandeja",
+    "requests": "Solicitudes",
+    "emptyInbox": "Todavía no tenés conversaciones. Escribile a alguien desde su perfil o desde una oferta.",
+    "emptyRequests": "No tenés solicitudes nuevas.",
+    "pick": "Elegí una conversación para leerla.",
+    "you": "Vos: {body}",
+    "waitingTag": "Esperando respuesta",
+    "unread": "{count, plural, one {# mensaje sin leer} other {# mensajes sin leer}}",
+    "listLabel": "Conversaciones",
+    "logLabel": "Mensajes con {name}",
+    "composer": "Escribí un mensaje",
+    "composerHint": "Solo texto, hasta 2000 caracteres. Enter envía; Mayús+Enter, nueva línea.",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "requestBanner": "{name} quiere escribirte. Si respondés, aceptás la conversación.",
+    "accept": "Aceptar",
+    "ignore": "Ignorar",
+    "ignoreHint": "No se entera de que la ignoraste.",
+    "waitingBanner": "Le mandaste una solicitud a {name}. Vas a poder seguir escribiendo cuando la acepte.",
+    "blockedBanner": "Bloqueaste a esta persona: no puede escribirte ni ver esta conversación.",
+    "blockedByOther": "Esta conversación ya no está disponible.",
+    "block": "Bloquear",
+    "unblock": "Desbloquear",
+    "viewProfile": "Ver perfil",
+    "viewCompany": "Ver empresa",
+    "report": "Denunciar",
+    "reportLabel": "Denunciar este mensaje",
+    "reportReasons": {
+      "spam": "Spam o publicidad",
+      "scam": "Estafa o pedido de dinero",
+      "offensive": "Ofensivo o acoso",
+      "other": "Otro motivo"
+    },
+    "reportSend": "Enviar denuncia",
+    "reported": "Gracias: lo vamos a revisar.",
+    "errors": {
+      "request_pending": "Esperá a que acepte tu solicitud para seguir escribiendo.",
+      "rate_limited": "Mandaste muchos mensajes seguidos: esperá un rato y probá de nuevo.",
+      "not_available": "No le podés escribir a esta persona.",
+      "invalid_body": "Escribí un mensaje (hasta 2000 caracteres).",
+      "unknown": "No se pudo enviar. Probá de nuevo."
+    },
+    "new": {
+      "metaTitle": "Mensaje nuevo",
+      "title": "Mensaje nuevo",
+      "to": "Para",
+      "intro": "Presentate y contá por qué le escribís: si no se conocen, le llega como solicitud.",
+      "notAvailable": "No le podés escribir a esta persona."
+    },
+    "button": {
+      "label": "Mensaje",
+      "to": "Enviar un mensaje a {name}"
+    },
+    "headerLabel": "Mensajes",
+    "headerUnread": "Mensajes: {count} sin leer",
+    "candidateRole": "Candidata/o",
+    "teamRole": "Equipo de Pistaklero"
   }
 }

@@ -26,6 +26,7 @@ import { ReportForm } from "./report-form";
 import { BackLink } from "@/components/back-link";
 import { Avatar } from "@/components/avatar";
 import { JobViewBeacon } from "@/components/jobs/job-view-beacon";
+import { MessageButton } from "@/components/messages/message-button";
 
 async function loadJob(slug: string) {
   const supabase = await createClient();
@@ -75,6 +76,7 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
     supabase.rpc("job_poster", { p_job_id: job.id }),
   ]);
   const poster = posters?.[0] ?? null;
+  const viewerId = (await getCurrentUser())?.id ?? null;
 
   const company = job.companies;
   const logo = companyLogoUrl(company?.logo_path ?? null);
@@ -161,12 +163,13 @@ export default async function JobPage({ params, searchParams }: PageProps<"/[loc
             </h2>
             <div className="flex items-center gap-3">
               <Avatar path={poster.avatar_path} name={poster.full_name} size="md" />
-              <div className="flex min-w-0 flex-col">
+              <div className="flex min-w-0 flex-1 flex-col">
                 <span className="font-medium">{poster.full_name}</span>
                 <span className="text-sm text-muted-foreground">
                   {poster.job_title ? t("detail.poster.role", { title: poster.job_title, company: company.name }) : t("detail.poster.fallbackRole", { company: company.name })}
                 </span>
               </div>
+              {viewerId !== poster.user_id && <MessageButton userId={poster.user_id} name={poster.full_name} />}
             </div>
           </section>
         )}
