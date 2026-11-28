@@ -23,7 +23,7 @@ export function QuickApplyButton({ jobId, slug, title, applied }: { jobId: strin
     return (
       <Link
         href="/my-applications"
-        className="relative z-10 inline-flex h-9 items-center gap-1.5 rounded-full bg-info/10 px-3 text-sm font-medium text-info"
+        className="relative z-10 inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-full bg-info/10 px-4 text-sm font-medium text-info"
       >
         <CircleCheck aria-hidden="true" className="size-4" />
         {t("applied")}
@@ -52,7 +52,7 @@ export function QuickApplyButton({ jobId, slug, title, applied }: { jobId: strin
     });
 
   return (
-    <Button type="button" size="sm" onClick={apply} disabled={pending} aria-label={t("applyTo", { title })} className="relative z-10 rounded-full px-4">
+    <Button type="button" onClick={apply} disabled={pending} aria-label={t("applyTo", { title })} className="relative z-10 w-full rounded-full">
       {!pending && <Zap aria-hidden="true" />}
       {pending ? tApply("sending") : tApply("apply")}
     </Button>
