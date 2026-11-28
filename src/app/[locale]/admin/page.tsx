@@ -13,6 +13,8 @@ import { resolveMessageReport, reviewReport, setCompanyStatus, setUserSuspended 
 import { TransferForm } from "./transfer-form";
 import { ConfirmButton } from "@/components/confirm-button";
 import { BackLink } from "@/components/back-link";
+import { InlineMarkdown } from "@/components/inline-markdown";
+import { plainInline } from "@/lib/editor/text";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Admin");
@@ -120,7 +122,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
               <li key={post.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/50 p-4">
                 <div className="flex min-w-0 flex-col gap-1">
                   <Link href={{ pathname: "/posts/[slug]", params: { slug: post.slug } }} className="font-medium underline-offset-4 hover:underline">
-                    {post.title}
+                    <InlineMarkdown>{post.title}</InlineMarkdown>
                   </Link>
                   <p className="text-sm text-muted-foreground">
                     {post.post_reports.map((r) => tPostReasons(r.reason)).join(" · ")}
@@ -129,14 +131,14 @@ export default async function AdminPage({ searchParams }: PageProps<"/[locale]/a
                 <div className="flex gap-2">
                   <form action={restorePost}>
                     <input type="hidden" name="id" value={post.id} />
-                    <Button type="submit" variant="secondary" aria-label={t("posts.restoreItem", { title: post.title })}>
+                    <Button type="submit" variant="secondary" aria-label={t("posts.restoreItem", { title: plainInline(post.title) })}>
                       {t("posts.restore")}
                     </Button>
                   </form>
                   <form action={deletePost}>
                     <input type="hidden" name="id" value={post.id} />
                     <input type="hidden" name="locale" value={locale} />
-                    <ConfirmButton ariaLabel={t("posts.deleteItem", { title: post.title })} title={tConfirm("adminDeletePost.title", { title: post.title })} description={tConfirm("adminDeletePost.description")} confirmLabel={tConfirm("delete")}>
+                    <ConfirmButton ariaLabel={t("posts.deleteItem", { title: plainInline(post.title) })} title={tConfirm("adminDeletePost.title", { title: plainInline(post.title) })} description={tConfirm("adminDeletePost.description")} confirmLabel={tConfirm("delete")}>
                       {t("posts.delete")}
                     </ConfirmButton>
                   </form>

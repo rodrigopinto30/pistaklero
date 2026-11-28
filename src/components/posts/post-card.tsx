@@ -1,6 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { Avatar } from "@/components/avatar";
+import { InlineMarkdown } from "@/components/inline-markdown";
 import { timeAgo } from "@/lib/jobs/time";
+import { plainInline } from "@/lib/editor/text";
 import type { Database } from "@/lib/supabase/database.types";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
@@ -40,7 +42,7 @@ export async function PostCard({ post, locale, signedIn }: { post: PostCardData;
       <h3 id={`post-${post.id}`} lang={post.language} className="text-lg leading-snug font-bold">
         {/* El enlace cubre toda la tarjeta con ::after, pero su nombre accesible es solo el título. */}
         <Link href={href} className="after:absolute after:inset-0 after:rounded-2xl">
-          {post.title}
+          <InlineMarkdown>{post.title}</InlineMarkdown>
         </Link>
       </h3>
       <p lang={post.language} className="text-sm leading-relaxed text-muted-foreground">
@@ -48,7 +50,7 @@ export async function PostCard({ post, locale, signedIn }: { post: PostCardData;
         {post.excerpt.length >= 280 && "…"}
       </p>
       <PostTags tags={post.tags ?? []} label={tTags("label")} />
-      <PostActions postId={post.id} title={post.title} liked={post.liked} saved={post.saved} likes={post.likes_count} guestReturnTo={guestReturnTo} />
+      <PostActions postId={post.id} title={plainInline(post.title)} liked={post.liked} saved={post.saved} likes={post.likes_count} guestReturnTo={guestReturnTo} />
     </article>
   );
 }

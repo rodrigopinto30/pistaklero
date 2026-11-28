@@ -19,19 +19,26 @@ const buttonClass =
 /**
  * Barra de formato (patrón "toolbar" de W3C): una sola parada de Tab y flechas para moverse entre
  * los botones. Cada botón dice si está activo (aria-pressed) y muestra su ayuda al pasar el mouse.
+ * `inline`: solo el formato del texto (para una línea, como un título): sin títulos, listas, citas,
+ * enlaces ni GIFs. Con `fieldId`, su nombre suma el del campo ("Formato Título"): si hay dos
+ * editores en la página, cada barra se distingue.
  */
 export function EditorToolbar({
   editor,
-  gifs,
-  gifLimitReached,
-  gifLimitReason,
+  fieldId,
+  inline = false,
+  gifs = false,
+  gifLimitReached = false,
+  gifLimitReason = "",
   onGif,
 }: {
   editor: Editor;
-  gifs: boolean;
-  gifLimitReached: boolean;
-  gifLimitReason: string;
-  onGif: (gif: Gif) => void;
+  fieldId?: string;
+  inline?: boolean;
+  gifs?: boolean;
+  gifLimitReached?: boolean;
+  gifLimitReason?: string;
+  onGif?: (gif: Gif) => void;
 }) {
   const t = useTranslations("Editor");
   const bar = useRef<HTMLDivElement>(null);
@@ -75,7 +82,18 @@ export function EditorToolbar({
   const chain = () => editor.chain().focus();
 
   return (
-    <div ref={bar} role="toolbar" aria-label={t("toolbar")} onKeyDown={onKeyDown} className="flex min-h-11 flex-wrap items-center gap-0.5 border-b border-input/40 px-1.5 py-1">
+    <div
+      ref={bar}
+      role="toolbar"
+      {...(fieldId ? { "aria-labelledby": `${fieldId}-toolbar ${fieldId}-label` } : { "aria-label": t("toolbar") })}
+      onKeyDown={onKeyDown}
+      className="flex min-h-11 flex-wrap items-center gap-0.5 border-b border-input/40 px-1.5 py-1"
+    >
+      {fieldId && (
+        <span id={`${fieldId}-toolbar`} hidden>
+          {t("toolbar")}
+        </span>
+      )}
       {toggle(t("bold"), state?.bold, () => chain().toggleBold().run(), <Bold aria-hidden="true" />, true)}
       {toggle(t("italic"), state?.italic, () => chain().toggleItalic().run(), <Italic aria-hidden="true" />)}
       {toggle(t("underline"), state?.underline, () => chain().toggleUnderline().run(), <Underline aria-hidden="true" />)}
@@ -101,17 +119,21 @@ export function EditorToolbar({
         onPick={(c) => (c ? chain().setTextHighlight(c).run() : chain().unsetTextHighlight().run())}
         icon={<Highlighter aria-hidden="true" />}
       />
-      <Separator />
-      {toggle(t("h2"), state?.h2, () => chain().toggleHeading({ level: 2 }).run(), <Heading2 aria-hidden="true" />)}
-      {toggle(t("h3"), state?.h3, () => chain().toggleHeading({ level: 3 }).run(), <Heading3 aria-hidden="true" />)}
-      {toggle(t("bulletList"), state?.bullet, () => chain().toggleBulletList().run(), <List aria-hidden="true" />)}
-      {toggle(t("orderedList"), state?.ordered, () => chain().toggleOrderedList().run(), <ListOrdered aria-hidden="true" />)}
-      {toggle(t("quote"), state?.quote, () => chain().toggleBlockquote().run(), <Quote aria-hidden="true" />)}
-      <LinkEditor editor={editor} active={Boolean(state?.link)} />
+      {!inline && (
+        <>
+          <Separator />
+          {toggle(t("h2"), state?.h2, () => chain().toggleHeading({ level: 2 }).run(), <Heading2 aria-hidden="true" />)}
+          {toggle(t("h3"), state?.h3, () => chain().toggleHeading({ level: 3 }).run(), <Heading3 aria-hidden="true" />)}
+          {toggle(t("bulletList"), state?.bullet, () => chain().toggleBulletList().run(), <List aria-hidden="true" />)}
+          {toggle(t("orderedList"), state?.ordered, () => chain().toggleOrderedList().run(), <ListOrdered aria-hidden="true" />)}
+          {toggle(t("quote"), state?.quote, () => chain().toggleBlockquote().run(), <Quote aria-hidden="true" />)}
+          <LinkEditor editor={editor} active={Boolean(state?.link)} />
+        </>
+      )}
       <Separator />
       <span data-toolbar-group className="contents">
         <EmojiButton onSelect={(emoji) => chain().insertContent(emoji).run()} />
-        {gifs && <GifButton disabled={gifLimitReached} disabledReason={gifLimitReason} onSelect={onGif} />}
+        {gifs && onGif && <GifButton disabled={gifLimitReached} disabledReason={gifLimitReason} onSelect={onGif} />}
       </span>
     </div>
   );
