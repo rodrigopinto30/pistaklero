@@ -5,6 +5,7 @@ import { Avatar } from "@/components/avatar";
 import { BackLink } from "@/components/back-link";
 import { MessageComposer } from "@/components/messages/message-composer";
 import { requireProfilePage } from "@/lib/auth/guards";
+import { getCurrentProfile } from "@/lib/auth/session";
 import { startConversation } from "@/lib/messages/actions";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
@@ -26,9 +27,10 @@ export default async function NewMessagePage({ searchParams }: PageProps<"/[loca
   const supabase = await createClient();
   const { data: existing } = await supabase.rpc("conversation_with", { p_user_id: to! });
   if (existing) redirect({ href: { pathname: "/messages/[id]", params: { id: existing } }, locale });
-  const [{ data: allowed }, { data: contacts }] = await Promise.all([
+  const [{ data: allowed }, { data: contacts }, profile] = await Promise.all([
     supabase.rpc("can_i_message", { p_recipient: to! }),
     supabase.rpc("message_card", { p_user_id: to! }),
+    getCurrentProfile(),
   ]);
   const contact = contacts?.[0];
 
@@ -51,7 +53,7 @@ export default async function NewMessagePage({ searchParams }: PageProps<"/[loca
             </div>
           </div>
           <p className="text-sm text-muted-foreground">{t("new.intro")}</p>
-          <MessageComposer action={startConversation} hidden={{ to: to!, locale }} />
+          <MessageComposer action={startConversation} hidden={{ to: to!, locale }} enterSends={profile?.message_enter_sends ?? true} />
         </>
       )}
     </div>

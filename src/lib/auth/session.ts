@@ -46,7 +46,7 @@ export const getCurrentProfile = cache(async () => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
-    .select("id, role, locale, email_notifications, suspended_at")
+    .select("id, role, locale, email_notifications, message_enter_sends, suspended_at")
     .eq("id", user.id)
     .maybeSingle();
   return data;

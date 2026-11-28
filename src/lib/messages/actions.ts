@@ -9,12 +9,24 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "@/i18n/navigation";
 import { parseLocale } from "@/i18n/locale";
 
-export type MessageErrorCode = "request_pending" | "rate_limited" | "not_available" | "invalid_body" | "unknown";
+export type MessageErrorCode = "request_pending" | "rate_limited" | "not_available" | "invalid_body" | "account_changed" | "unknown";
 export type MessageFormState = { status: "idle" } | { status: "sent"; at: number } | { status: "error"; code: MessageErrorCode; body: string };
 
 const KNOWN: MessageErrorCode[] = ["request_pending", "rate_limited", "not_available", "invalid_body"];
 const errorCode = (message?: string): MessageErrorCode => KNOWN.find((code) => code === message) ?? "unknown";
 const body = z.string().trim().min(1).max(2000);
+
+/**
+ * ¿La sesión sigue siendo la de la cuenta con la que se abrió la pestaña (campo "account")? En un
+ * mismo navegador, entrar con otra cuenta en otra pestaña cambia la sesión de todas: sin esto, el
+ * mensaje salía firmado por la otra cuenta.
+ */
+async function sameAccount(supabase: Awaited<ReturnType<typeof createClient>>, formData: FormData) {
+  const expected = formData.get("account");
+  if (typeof expected !== "string" || !expected) return true;
+  const { data } = await supabase.auth.getClaims();
+  return data?.claims?.sub === expected;
+}
 
 /** Un mensaje en una conversación existente. */
 export async function sendMessage(_prev: MessageFormState, formData: FormData): Promise<MessageFormState> {
@@ -25,6 +37,7 @@ export async function sendMessage(_prev: MessageFormState, formData: FormData): 
   if (!text.success) return { status: "error", code: "invalid_body", body: raw };
 
   const supabase = await createClient();
+  if (!(await sameAccount(supabase, formData))) return { status: "error", code: "account_changed", body: raw };
   const { error } = await supabase.rpc("post_message", { p_conversation_id: id.data, p_body: text.data });
   if (error) return { status: "error", code: errorCode(error.message), body: raw };
   scheduleOutboxFlush();
@@ -42,6 +55,7 @@ export async function startConversation(_prev: MessageFormState, formData: FormD
   if (!text.success) return { status: "error", code: "invalid_body", body: raw };
 
   const supabase = await createClient();
+  if (!(await sameAccount(supabase, formData))) return { status: "error", code: "account_changed", body: raw };
   const { data: id, error } = await supabase.rpc("start_conversation", { p_recipient: to.data, p_body: text.data });
   if (error || !id) return { status: "error", code: errorCode(error?.message), body: raw };
   scheduleOutboxFlush();
@@ -99,4 +113,15 @@ export async function markConversationRead(conversationId: string) {
   if (!id.success) return;
   const supabase = await createClient();
   await supabase.rpc("mark_conversation_read", { p_conversation_id: id.data });
+}
+
+/** Qué hace Enter al escribir un mensaje: enviar (true) o pasar al siguiente renglón. Queda en la cuenta. */
+export async function setMessageEnterSends(enterSends: boolean) {
+  const value = z.boolean().safeParse(enterSends);
+  if (!value.success) return;
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+  const userId = data?.claims?.sub;
+  if (!userId) return;
+  await supabase.from("profiles").update({ message_enter_sends: value.data }).eq("id", userId);
 }

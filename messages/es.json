@@ -1714,7 +1714,17 @@
     "listLabel": "Conversaciones",
     "logLabel": "Mensajes con {name}",
     "composer": "Escribí un mensaje",
-    "composerHint": "Solo texto, hasta 2000 caracteres. Enter envía; Mayús+Enter, nueva línea.",
+    "composerHintSend": "Solo texto, hasta 2000 caracteres. Enter envía; Mayús+Enter, nuevo renglón.",
+    "composerHintNewline": "Solo texto, hasta 2000 caracteres. Enter, nuevo renglón; Ctrl+Enter envía.",
+    "escapeHint": "Esc cierra la conversación.",
+    "sendOptions": "Opciones de envío",
+    "enterLabel": "Al apretar Enter",
+    "enterSends": "Enviar el mensaje",
+    "enterSendsHint": "Mayús+Enter pasa al siguiente renglón.",
+    "enterNewline": "Pasar al siguiente renglón",
+    "enterNewlineHint": "Ctrl+Enter (⌘+Enter en Mac) envía.",
+    "youSaid": "Vos:",
+    "theySaid": "{name}:",
     "send": "Enviar",
     "sending": "Enviando…",
     "requestBanner": "{name} quiere escribirte. Si respondés, aceptás la conversación.",
@@ -1743,7 +1753,8 @@
       "rate_limited": "Mandaste muchos mensajes seguidos: esperá un rato y probá de nuevo.",
       "not_available": "No le podés escribir a esta persona.",
       "invalid_body": "Escribí un mensaje (hasta 2000 caracteres).",
-      "unknown": "No se pudo enviar. Probá de nuevo."
+      "unknown": "No se pudo enviar. Probá de nuevo.",
+      "account_changed": "No se envió: en otra pestaña entraste con otra cuenta. Recargá la página para seguir."
     },
     "new": {
       "metaTitle": "Mensaje nuevo",
@@ -1760,5 +1771,11 @@
     "headerUnread": "Mensajes: {count} sin leer",
     "candidateRole": "Candidata/o",
     "teamRole": "Equipo de Pistaklero"
+  },
+  "Account": {
+    "switched": "Entraste con otra cuenta en otra pestaña. Recargá esta para seguir con la cuenta actual.",
+    "signedIn": "Ingresaste en otra pestaña. Recargá esta para seguir con tu cuenta.",
+    "signedOut": "Cerraste sesión en otra pestaña. Recargá esta para seguir.",
+    "reload": "Recargar"
   }
 }
