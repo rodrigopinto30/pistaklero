@@ -731,7 +731,9 @@
     "withdrawFrom": "Withdraw application: {job}",
     "status": {
       "received": "Received",
-      "in_review": "In review",
+      "viewed": "Viewed",
+      "in_review": "Viewed",
+      "shortlisted": "Shortlisted",
       "interview": "Interview",
       "hired": "Hired",
       "rejected": "Not selected",
@@ -746,6 +748,12 @@
       "removeFrom": "Remove from list: {job}",
       "removeTitle": "Remove “{job}” from your list?",
       "removeHint": "It's only removed here: your application on the company's site stays the same."
+    },
+    "timeline": {
+      "label": "Application journey",
+      "pending": "Pending",
+      "skipped": "Skipped",
+      "current": "Current stage"
     }
   },
   "Applicants": {
@@ -757,7 +765,8 @@
     "unavailable": "Profile unavailable",
     "tabs": {
       "received": "New",
-      "in_review": "In review",
+      "viewed": "Viewed",
+      "shortlisted": "Shortlisted",
       "interview": "Interview",
       "closed": "Closed"
     },
@@ -767,9 +776,9 @@
     "moveTo": "Move {name} to",
     "move": "Move",
     "actions": {
-      "in_review": "In review",
-      "interview": "Interview",
-      "hired": "Hired"
+      "shortlisted": "Shortlist",
+      "interview": "Move to interview",
+      "hired": "Hire"
     },
     "rejectToggle": "Reject {name} with a message",
     "template": "Template",
@@ -1597,9 +1606,10 @@
       "views7d": "{count} this week",
       "applications": "{count, plural, =0 {No applications} one {# application} other {# applications}}",
       "unreviewed": "{count} to review",
-      "inProcess": "{count} in progress",
       "hired": "{count, plural, one {# hire} other {# hires}}",
-      "clicks": "{count, plural, one {# click to your site} other {# clicks to your site}}"
+      "clicks": "{count, plural, one {# click to your site} other {# clicks to your site}}",
+      "shortlisted": "{count, plural, one {# shortlisted} other {# shortlisted}}",
+      "interview": "{count} in interview"
     },
     "actions": {
       "applicants": "Applicants",

@@ -7,7 +7,7 @@ import { button, escapeHtml, layout, paragraph } from "./html";
 type Locale = "es" | "en";
 export type RenderedEmail = { subject: string; html: string; text: string };
 
-type ApplicationStatus = "in_review" | "interview" | "hired" | "rejected" | "no_response";
+type ApplicationStatus = "in_review" | "shortlisted" | "interview" | "hired" | "rejected" | "no_response";
 
 export type EmailTemplates = {
   team_invitation: { companyName: string; inviterName: string; acceptUrl: string };
@@ -23,6 +23,7 @@ const DIGEST_MAX_JOBS = 5;
 const STATUS_COPY: Record<Locale, Record<ApplicationStatus, string>> = {
   es: {
     in_review: "{company} está revisando tu postulación a {job}.",
+    shortlisted: "¡Vas bien! {company} te preseleccionó para {job}: vas a estar entre quienes mira con más detalle.",
     interview: "¡Buenas noticias! {company} quiere entrevistarte para {job}. Te van a contactar con los detalles.",
     hired: "¡Felicitaciones! {company} te eligió para {job}.",
     rejected: "{company} cerró tu postulación a {job}: esta vez avanzan con otros perfiles.",
@@ -30,6 +31,7 @@ const STATUS_COPY: Record<Locale, Record<ApplicationStatus, string>> = {
   },
   en: {
     in_review: "{company} is reviewing your application to {job}.",
+    shortlisted: "Nice! {company} shortlisted you for {job}: you're among the people they'll look at more closely.",
     interview: "Good news! {company} wants to interview you for {job}. They'll contact you with the details.",
     hired: "Congratulations! {company} chose you for {job}.",
     rejected: "{company} closed your application to {job}: this time they're moving forward with other profiles.",

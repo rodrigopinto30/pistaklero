@@ -35,12 +35,12 @@ test("postulación en 1 clic, seguimiento y retiro", async ({ page, browser }) =
   await page.getByRole("link", { name: "Ver mis postulaciones" }).click();
   await page.waitForURL("/es/mis-postulaciones");
   const item = page.getByRole("listitem").filter({ hasText: title });
-  await expect(item.getByText("Recibida", { exact: true })).toBeVisible();
+  await expect(item.getByText("Recibida", { exact: true }).first()).toBeVisible();
   await expectNoA11yViolations(page);
 
   await item.getByRole("button", { name: `Retirar postulación: ${title}` }).click();
   await confirmDialog(page, "Sí, retirarla");
-  await expect(page.getByRole("listitem").filter({ hasText: title }).getByText("Retirada", { exact: true })).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: title }).getByText("Retirada", { exact: true }).first()).toBeVisible();
 
   // El nombre de la empresa lleva a su página.
   await page.getByRole("listitem").filter({ hasText: title }).getByRole("link", { name: "Postulaciones SA" }).click();

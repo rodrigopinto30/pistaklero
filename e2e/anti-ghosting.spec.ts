@@ -47,7 +47,7 @@ test("la tarea diaria recuerda, avisa, cierra y calcula el badge", async ({ page
   // La postulación de 31 días quedó cerrada como "Sin respuesta"
   const candidatePage = await page.context().browser()!.newContext().then((c) => c.newPage());
   await signIn(candidatePage, closedEmail, "/es/mis-postulaciones");
-  await expect(candidatePage.getByRole("listitem").filter({ hasText: `Oferta lenta ${run}` }).getByText("Sin respuesta", { exact: true })).toBeVisible();
+  await expect(candidatePage.getByRole("listitem").filter({ hasText: `Oferta lenta ${run}` }).getByText("Sin respuesta", { exact: true }).first()).toBeVisible();
 
   // El badge se muestra en la búsqueda (con pocas postulaciones, "Nueva en Pistaklero")
   await page.goto(`/es?q=${encodeURIComponent(`lenta ${run}`)}`);
