@@ -70,7 +70,7 @@ select public.block_user(:'rrhh');
 select is((select count(*)::int from public.my_conversations('inbox')), 0, 'bloqueada, desaparece de la bandeja');
 select public.report_message(:'spam', 'spam');
 reset role;
-select is((select count(*)::int from public.message_reports), 1, 'el mensaje queda denunciado');
+select is((select count(*)::int from public.message_reports where message_id = :'spam'), 1, 'el mensaje queda denunciado');
 select tests.authenticate_as(:'rrhh');
 select throws_ok(format($$select public.post_message(%L, '¿Seguís ahí?')$$, :'conv'), 'P0001', 'not_available', 'con un bloqueo no se puede escribir');
 select ok(not public.can_i_message(:'pub'), 'ni arrancar otra conversación');
