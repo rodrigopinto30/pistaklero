@@ -11,12 +11,12 @@ test("publicar un consejo, darle like, guardarlo, denunciarlo, editarlo y borrar
   await page.goto("/es/publicaciones");
   await page.getByRole("link", { name: "Escribir una publicación" }).click();
   await page.getByLabel(/^Título/).fill("CV");
-  await page.getByLabel(/^Texto/).fill("Muy corto");
+  await page.getByRole("textbox", { name: /^Texto/ }).fill("Muy corto");
   await page.getByRole("button", { name: "Publicar" }).click();
   await expect(page.getByText("Tiene que tener al menos 5 caracteres.")).toBeVisible();
   await expect(page.getByLabel(/^Título/)).toBeFocused();
   await page.getByLabel(/^Título/).fill(title);
-  await page.getByLabel(/^Texto/).fill("Practiqué en voz alta y llevé **dos proyectos** para mostrar.\n\n- Repasé lo básico\n- Pregunté por el equipo");
+  await page.getByRole("textbox", { name: /^Texto/ }).fill("Practiqué en voz alta y llevé **dos proyectos** para mostrar.\n\n- Repasé lo básico\n- Pregunté por el equipo");
   // Etiquetas como en dev.to: con o sin #, con Enter o coma; quedan en minúsculas y sin repetir.
   const tagTag = `t${Date.now().toString(36)}`;
   const tags = page.getByRole("textbox", { name: /^Etiquetas/ });
@@ -87,7 +87,7 @@ test("lo que publica un reclutador aparece en la pestaña de su empresa", async 
   await onboardAsCompany(page, unique("Publicadora"), "", "Rita Recluta");
   await page.goto("/es/publicaciones/nueva");
   await page.getByLabel(/^Título/).fill(title);
-  await page.getByLabel(/^Texto/).fill("Que cada proyecto cuente qué problema resolvió y cómo.");
+  await page.getByRole("textbox", { name: /^Texto/ }).fill("Que cada proyecto cuente qué problema resolvió y cómo.");
   await page.getByRole("button", { name: "Publicar" }).click();
   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
 

@@ -9,7 +9,7 @@ test("la campana avisa y lleva a las notificaciones", async ({ page, browser }) 
   await expect(page.getByRole("link", { name: "Notificaciones", exact: true })).toBeVisible();
   await page.goto("/es/publicaciones/nueva");
   await page.getByLabel(/^Título/).fill(title);
-  await page.getByLabel(/^Texto/).fill("Un consejo para probar que los me gusta avisan.");
+  await page.getByRole("textbox", { name: /^Texto/ }).fill("Un consejo para probar que los me gusta avisan.");
   await page.getByRole("button", { name: "Publicar" }).click();
   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
 
