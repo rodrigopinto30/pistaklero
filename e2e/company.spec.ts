@@ -18,7 +18,12 @@ test("una empresa arma su página y se ve en público", async ({ page }) => {
 
   // Datos
   const details = page.getByRole("region", { name: "Datos de la empresa" });
-  await details.getByLabel(/Quiénes somos/).fill("Hacemos **cohetes reutilizables** desde Córdoba.");
+  await details.getByRole("textbox", { name: /Quiénes somos/ }).click();
+  await page.keyboard.type("Hacemos ");
+  await page.keyboard.press("Control+b");
+  await page.keyboard.type("cohetes reutilizables");
+  await page.keyboard.press("Control+b");
+  await page.keyboard.type(" desde Córdoba.");
   await details.getByLabel(/^Etapa/).selectOption("seed");
   await details.getByLabel(/^Tamaño/).selectOption("11-50");
   await details.getByRole("button", { name: "Guardar" }).click();

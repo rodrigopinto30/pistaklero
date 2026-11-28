@@ -185,3 +185,61 @@
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Colores y resaltados del editor (ver src/lib/editor/palette.ts): contraste AA verificado sobre
+ * tarjeta, fondo y gris suave. Se aplican por nombre, nunca con estilos en línea.
+ */
+:root {
+  --text-red: #b42318;
+  --text-orange: #b54708;
+  --text-green: #1d7a35;
+  --text-blue: #1d4ed8;
+  --text-violet: #6d28d9;
+  --text-pink: #be185d;
+  --text-gray: #4b5563;
+  --highlight-yellow: #fef08a;
+  --highlight-green: #bbf7d0;
+  --highlight-blue: #bfdbfe;
+  --highlight-pink: #fbcfe8;
+  --highlight-violet: #ddd6fe;
+}
+
+@layer components {
+  [data-color="red"] { color: var(--text-red); }
+  [data-color="orange"] { color: var(--text-orange); }
+  [data-color="green"] { color: var(--text-green); }
+  [data-color="blue"] { color: var(--text-blue); }
+  [data-color="violet"] { color: var(--text-violet); }
+  [data-color="pink"] { color: var(--text-pink); }
+  [data-color="gray"] { color: var(--text-gray); }
+  mark[data-highlight] { color: inherit; border-radius: 0.2em; padding: 0 0.15em; }
+  mark[data-highlight="yellow"] { background-color: var(--highlight-yellow); }
+  mark[data-highlight="green"] { background-color: var(--highlight-green); }
+  mark[data-highlight="blue"] { background-color: var(--highlight-blue); }
+  mark[data-highlight="pink"] { background-color: var(--highlight-pink); }
+  mark[data-highlight="violet"] { background-color: var(--highlight-violet); }
+}
+
+/* El área del editor visual: el mismo aspecto que el texto publicado. */
+@layer components {
+  .prose-editor { line-height: 1.625; }
+  .prose-editor > * + * { margin-top: 0.75rem; }
+  .prose-editor h2 { font-size: 1.125rem; font-weight: 600; }
+  .prose-editor h3 { font-weight: 600; }
+  .prose-editor ul { list-style: disc; margin-left: 1.25rem; }
+  .prose-editor ol { list-style: decimal; margin-left: 1.25rem; }
+  .prose-editor blockquote { border-left: 2px solid var(--input); padding-left: 1rem; color: var(--muted-foreground); }
+  .prose-editor a { color: var(--violet); text-decoration: underline; text-underline-offset: 4px; }
+  .prose-editor code { border-radius: 0.25rem; background: var(--muted); padding: 0.125rem 0.25rem; font-family: var(--font-mono); font-size: 0.875em; }
+  .prose-editor img { max-height: 18rem; max-width: 100%; border-radius: 0.75rem; }
+  .prose-editor img.ProseMirror-selectednode { outline: 2px solid var(--ring); }
+  .prose-editor p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+    color: var(--muted-foreground);
+  }
+}
+

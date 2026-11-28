@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   experimental: {
+    // Desarrollo: Turbopack suelta de la memoria lo que ya guardó en disco y limpia lo que no se usa.
+    // Con "auto" se guía por la memoria de la máquina (no por el techo del contenedor) y llegaba a 5 GB.
+    turbopackMemoryEviction: "full",
+    turbopackGc: true,
     // Las fotos de perfil sacadas con el celular pesan varios MB (se aceptan hasta 4 MB y se achican).
     // Vercel corta igual los pedidos de más de 4,5 MB.
     // El alta de empresa manda logo (hasta 0,9 MB) y portada (hasta 4 MB) en el mismo envío.

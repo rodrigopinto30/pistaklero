@@ -11,7 +11,7 @@ test("una plantilla completa el formulario y la oferta se publica", async ({ pag
   await page.waitForURL("/es/panel/ofertas/nueva?plantilla=data-analyst-jr");
   await expect(templates.getByRole("link", { name: "Data Analyst Jr" })).toHaveAttribute("aria-current", "true");
   await expect(page.getByRole("main").getByLabel(/^Puesto/)).toHaveValue("Data Analyst Jr");
-  await expect(page.getByLabel(/^Descripción/)).toHaveValue(/Escribir consultas SQL/);
+  await expect(page.getByRole("textbox", { name: /^Descripción/ })).toContainText("Escribir consultas SQL");
   await expect(page.getByLabel("SQL", { exact: true })).toBeChecked();
   await expect(page.getByLabel("Power BI", { exact: true })).toBeChecked();
   await expect(page.getByLabel("React", { exact: true })).not.toBeChecked();
