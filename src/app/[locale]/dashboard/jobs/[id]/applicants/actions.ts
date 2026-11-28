@@ -35,12 +35,3 @@ export async function changeApplicationStatus(_prev: FormState, formData: FormDa
   refresh();
   return successState();
 }
-
-/** La empresa vio estas postulaciones (sus tarjetas quedaron a la vista): pasan a "Vista". */
-export async function markApplicationsViewed(ids: string[]) {
-  const parsed = z.array(z.uuid()).min(1).max(50).safeParse(ids);
-  if (!parsed.success) return;
-  const supabase = await createClient();
-  const { error } = await supabase.rpc("mark_applications_viewed", { p_application_ids: parsed.data });
-  if (error) console.error("mark_applications_viewed falló", { code: error.code });
-}

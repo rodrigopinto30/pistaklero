@@ -3,7 +3,7 @@
 import { useFormatter, useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MESSAGES_READ_EVENT } from "@/components/header/messages-link";
-import { markConversationRead, sendMessage } from "@/lib/messages/actions";
+import { sendMessage } from "@/lib/messages/actions";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
 import { MESSAGES_CHANGED_EVENT } from "./app-screen";
@@ -11,6 +11,16 @@ import { MessageComposer } from "./message-composer";
 import { ReportMessage } from "./report-message";
 
 type Message = { id: string; body: string; created_at: string; mine: boolean };
+
+/** Marca la conversación como leída y avisa al ícono de mensajes (sale aunque se cierre la vista). */
+async function markRead(conversationId: string) {
+  try {
+    await fetch(`/api/me/messages/${conversationId}/read`, { method: "POST", keepalive: true });
+    window.dispatchEvent(new Event(MESSAGES_READ_EVENT));
+  } catch {
+    // Sin conexión: se marca la próxima vez.
+  }
+}
 type Href = Parameters<ReturnType<typeof useRouter>["push"]>[0];
 
 /**
@@ -63,8 +73,7 @@ export function ConversationView({
       if (fresh.length === 0) return;
       setMessages((current) => [...current, ...fresh.filter((m) => !current.some((c) => c.id === m.id))]);
       if (fresh.some((m) => !m.mine)) {
-        await markConversationRead(conversationId);
-        window.dispatchEvent(new Event(MESSAGES_READ_EVENT));
+        await markRead(conversationId);
         // La lista de conversaciones muestra lo último.
         window.dispatchEvent(new Event(MESSAGES_CHANGED_EVENT));
       }
@@ -84,7 +93,7 @@ export function ConversationView({
 
   // Al abrirla queda leída; y siempre se ve lo último.
   useEffect(() => {
-    void markConversationRead(conversationId).then(() => window.dispatchEvent(new Event(MESSAGES_READ_EVENT)));
+    void markRead(conversationId);
   }, [conversationId]);
   useEffect(() => {
     const element = log.current;

@@ -107,14 +107,6 @@ export async function reportMessage(_prev: { status: "idle" | "done" | "error" }
   return { status: error ? "error" : "done" };
 }
 
-/** Marca la conversación como leída (al abrirla o al llegar mensajes con la pestaña a la vista). */
-export async function markConversationRead(conversationId: string) {
-  const id = z.uuid().safeParse(conversationId);
-  if (!id.success) return;
-  const supabase = await createClient();
-  await supabase.rpc("mark_conversation_read", { p_conversation_id: id.data });
-}
-
 /** Qué hace Enter al escribir un mensaje: enviar (true) o pasar al siguiente renglón. Queda en la cuenta. */
 export async function setMessageEnterSends(enterSends: boolean) {
   const value = z.boolean().safeParse(enterSends);

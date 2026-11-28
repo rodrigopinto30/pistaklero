@@ -1,7 +1,6 @@
 "use client";
 
 import { type ReactNode, useEffect, useRef } from "react";
-import { markApplicationsViewed } from "../actions";
 
 // Se juntan las que quedaron a la vista y se mandan juntas (una sola llamada aunque sean varias).
 const queue = new Set<string>();
@@ -12,7 +11,13 @@ function enqueue(id: string) {
   timer = setTimeout(() => {
     const ids = [...queue];
     queue.clear();
-    void markApplicationsViewed(ids);
+    // keepalive: llega aunque la persona ya se haya ido de la página.
+    void fetch("/api/applications/viewed", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids }),
+      keepalive: true,
+    }).catch(() => {});
   }, 400);
 }
 
