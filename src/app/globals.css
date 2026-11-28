@@ -243,3 +243,23 @@
   }
 }
 
+
+/*
+ * Mensajes, como WhatsApp Web: la página ocupa justo la pantalla y no tiene pie; se desplazan solo
+ * la lista de conversaciones y los mensajes. La página marca su contenedor con data-app-screen (y lo
+ * desmarca al dejar de verse: Next deja montada y oculta la página anterior). Fuera de las capas,
+ * para ganarle a las utilidades (min-h-dvh del main).
+ */
+html:has([data-app-screen]) {
+  overflow: hidden;
+}
+html:has([data-app-screen]) body {
+  height: 100dvh;
+  min-height: 0;
+}
+html:has([data-app-screen]) #main-content {
+  min-height: 0;
+}
+html:has([data-app-screen]) body > footer {
+  display: none;
+}

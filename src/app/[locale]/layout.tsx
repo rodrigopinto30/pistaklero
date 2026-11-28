@@ -4,10 +4,11 @@ import { notFound } from "next/navigation";
 import { locale as rootLocale } from "next/root-params";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
+import { AccountProvider } from "@/components/account/account-context";
 import { BackToTop } from "@/components/back-to-top";
 import { FeaturesProvider } from "@/components/features";
 import { ExternalApplyCheck } from "@/components/jobs/external-apply-check";
-import { getCurrentProfile } from "@/lib/auth/session";
+import { getCurrentProfile, getCurrentUser } from "@/lib/auth/session";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/toaster";
 import { SiteHeader } from "@/components/site-header";
@@ -58,6 +59,8 @@ export default async function LocaleLayout({
   const theme = await getTheme();
   // A las candidatas, al volver de postularse en otro sitio, se les pregunta si se postularon.
   const profile = await getCurrentProfile();
+  // Con qué cuenta se arma esta pestaña (para darse cuenta si en otra se entra con otra).
+  const user = await getCurrentUser();
 
   return (
     <html
@@ -73,6 +76,7 @@ export default async function LocaleLayout({
           {t("skipToContent")}
         </a>
         <NextIntlClientProvider>
+          <AccountProvider userId={user?.id ?? null}>
           {/* Los GIFs aparecen en el editor solo si hay clave de GIPHY. */}
           <FeaturesProvider value={{ gifs: Boolean(process.env.GIPHY_API_KEY) }}>
           <SiteHeader />
@@ -86,6 +90,7 @@ export default async function LocaleLayout({
           {profile?.role === "candidate" && <ExternalApplyCheck />}
           <Toaster />
           </FeaturesProvider>
+          </AccountProvider>
         </NextIntlClientProvider>
       </body>
     </html>

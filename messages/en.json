@@ -1714,7 +1714,17 @@
     "listLabel": "Conversations",
     "logLabel": "Messages with {name}",
     "composer": "Write a message",
-    "composerHint": "Text only, up to 2000 characters. Enter sends; Shift+Enter adds a new line.",
+    "composerHintSend": "Text only, up to 2000 characters. Enter sends; Shift+Enter, new line.",
+    "composerHintNewline": "Text only, up to 2000 characters. Enter, new line; Ctrl+Enter sends.",
+    "escapeHint": "Esc closes the conversation.",
+    "sendOptions": "Send options",
+    "enterLabel": "When you press Enter",
+    "enterSends": "Send the message",
+    "enterSendsHint": "Shift+Enter starts a new line.",
+    "enterNewline": "Start a new line",
+    "enterNewlineHint": "Ctrl+Enter (⌘+Enter on Mac) sends.",
+    "youSaid": "You:",
+    "theySaid": "{name}:",
     "send": "Send",
     "sending": "Sending…",
     "requestBanner": "{name} wants to message you. Replying accepts the conversation.",
@@ -1743,7 +1753,8 @@
       "rate_limited": "You sent many messages in a row: wait a bit and try again.",
       "not_available": "You can't message this person.",
       "invalid_body": "Write a message (up to 2000 characters).",
-      "unknown": "It couldn't be sent. Please try again."
+      "unknown": "It couldn't be sent. Please try again.",
+      "account_changed": "Not sent: you signed in with another account in another tab. Reload the page to continue."
     },
     "new": {
       "metaTitle": "New message",
@@ -1760,5 +1771,11 @@
     "headerUnread": "Messages: {count} unread",
     "candidateRole": "Candidate",
     "teamRole": "Pistaklero team"
+  },
+  "Account": {
+    "switched": "You signed in with another account in another tab. Reload this one to continue with the current account.",
+    "signedIn": "You signed in in another tab. Reload this one to continue with your account.",
+    "signedOut": "You signed out in another tab. Reload this one to continue.",
+    "reload": "Reload"
   }
 }

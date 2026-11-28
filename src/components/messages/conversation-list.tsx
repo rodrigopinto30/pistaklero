@@ -18,8 +18,8 @@ export async function ConversationList({ box, activeId }: { box: "inbox" | "requ
   const requestCount = box === "requests" ? conversations.length : (requests ?? []).length;
 
   return (
-    <div className="flex flex-col gap-3">
-      <nav aria-label={t("boxesLabel")}>
+    <div className="flex min-h-0 flex-1 flex-col gap-3">
+      <nav aria-label={t("boxesLabel")} className="shrink-0">
         <ul className="flex gap-2">
           {(["inbox", "requests"] as const).map((key) => (
             <li key={key}>
@@ -38,7 +38,8 @@ export async function ConversationList({ box, activeId }: { box: "inbox" | "requ
       {conversations.length === 0 ? (
         <p className="rounded-2xl bg-card p-5 text-sm text-muted-foreground shadow-soft">{box === "requests" ? t("emptyRequests") : t("emptyInbox")}</p>
       ) : (
-        <ul aria-label={t("listLabel")} className="flex flex-col gap-1 rounded-2xl bg-card p-2 shadow-soft">
+        // La lista se desplaza sola (la página ocupa justo la pantalla).
+        <ul aria-label={t("listLabel")} className="flex min-h-0 flex-col gap-1 overflow-y-auto overscroll-contain rounded-2xl bg-card p-2 shadow-soft">
           {conversations.map((c) => (
             <li key={c.id}>
               <Link

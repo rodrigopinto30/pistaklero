@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
+import { AccountWatcher } from "@/components/account/account-watcher";
 import { CommandPalette, type PaletteLink } from "@/components/command-palette";
 import { SearchBar } from "@/components/header/search-bar";
 import { SectionTabs } from "@/components/header/section-tabs";
@@ -70,6 +71,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 bg-background/95 shadow-header backdrop-blur-md supports-[backdrop-filter]:bg-background/85">
+      <AccountWatcher />
       {profile?.suspended_at && (
         <p role="alert" className="bg-destructive/10 px-4 py-2 text-center text-sm text-destructive">
           {t("suspended")}

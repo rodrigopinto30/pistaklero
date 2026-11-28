@@ -853,14 +853,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "created_at": string,"email_notifications": boolean,"id": string,"locale": Database["public"]['Enums']["app_locale"],"role": Database["public"]['Enums']["user_role"],"suspended_at": string | null
+                    "created_at": string,"email_notifications": boolean,"id": string,"locale": Database["public"]['Enums']["app_locale"],"message_enter_sends": boolean,"role": Database["public"]['Enums']["user_role"],"suspended_at": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"email_notifications"?: boolean,"id": string,"locale"?: Database["public"]['Enums']["app_locale"],"role": Database["public"]['Enums']["user_role"],"suspended_at"?: string | null
+                    "created_at"?: string,"email_notifications"?: boolean,"id": string,"locale"?: Database["public"]['Enums']["app_locale"],"message_enter_sends"?: boolean,"role": Database["public"]['Enums']["user_role"],"suspended_at"?: string | null
                   }
                   Update: {
-                    "created_at"?: string,"email_notifications"?: boolean,"id"?: string,"locale"?: Database["public"]['Enums']["app_locale"],"role"?: Database["public"]['Enums']["user_role"],"suspended_at"?: string | null
+                    "created_at"?: string,"email_notifications"?: boolean,"id"?: string,"locale"?: Database["public"]['Enums']["app_locale"],"message_enter_sends"?: boolean,"role"?: Database["public"]['Enums']["user_role"],"suspended_at"?: string | null
                   }
                   Relationships: [
                     

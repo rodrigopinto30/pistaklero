@@ -35,7 +35,7 @@ select throws_ok(
 );
 
 select lives_ok(
-  $$update public.profiles set locale = 'en', email_notifications = false where id = auth.uid()$$,
+  $$update public.profiles set locale = 'en', email_notifications = false, message_enter_sends = false where id = auth.uid()$$,
   'cada usuario puede cambiar sus preferencias'
 );
 

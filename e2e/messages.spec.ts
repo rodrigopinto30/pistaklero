@@ -1,4 +1,4 @@
-import { confirmDialog, signInAsAdmin, emailOf, expect, expectNoA11yViolations, expectToast, MAILPIT_URL, onboardAsCompany, signIn, signInAsReadyCandidate, test, uniqueEmail } from "./support/fixtures";
+import { admin, confirmDialog, signInAsAdmin, emailOf, expect, expectNoA11yViolations, expectToast, MAILPIT_URL, onboardAsCompany, signIn, signInAsReadyCandidate, test, uniqueEmail } from "./support/fixtures";
 
 async function lastEmailTo(email: string) {
   let message: { Subject: string; Text: string } | undefined;
@@ -86,4 +86,85 @@ test("una empresa le escribe a una candidata: solicitud, respuesta, denuncia y b
   await expect(reports.getByText("Hola Mia, vimos tu perfil")).toHaveCount(0);
   await report.getByRole("button", { name: "Descartar la denuncia" }).click();
   await expect(report).toHaveCount(0);
+});
+
+test("el chat ocupa la pantalla, separa los globos, guarda qué hace Enter, se cierra con Escape y no manda con otra cuenta", async ({ page, browser }) => {
+  const run = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+  const name = `Cleo Chat${run}`;
+  const candidate = await (await browser.newContext()).newPage();
+  const candidateId = await signInAsReadyCandidate(candidate, name);
+  const domain = `chat-${run}.com`;
+  const recruiterId = await signIn(page, uniqueEmail("rrhh", domain));
+  await onboardAsCompany(page, `Chat ${run}`, domain, "Rita Chat");
+
+  // Una conversación ya aceptada, con un mensaje de la candidata.
+  const pairKey = [candidateId, recruiterId].sort().join(":");
+  const { data: conversation } = await admin.from("conversations").insert({ pair_key: pairKey, started_by: candidateId }).select("id").single();
+  await admin.from("conversation_members").insert([
+    { conversation_id: conversation!.id, user_id: candidateId, state: "accepted" },
+    { conversation_id: conversation!.id, user_id: recruiterId, state: "accepted" },
+  ]);
+  await admin.from("messages").insert({ conversation_id: conversation!.id, sender_id: candidateId, body: `Hola, ¿cómo va? ${run}` });
+
+  await page.goto(`/es/mensajes/${conversation!.id}`);
+  const log = page.getByRole("log", { name: `Mensajes con ${name}` });
+  const box = page.getByRole("textbox", { name: "Escribí un mensaje" });
+  const send = page.getByRole("button", { name: "Enviar", exact: true });
+  await expect(log.getByText(`Hola, ¿cómo va? ${run}`)).toBeVisible();
+
+  // Ocupa justo la pantalla: sin scroll de la página y sin pie.
+  expect(await page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight + 1)).toBe(true);
+  await expect(page.getByRole("contentinfo")).toBeHidden();
+
+  // Sin texto no hay nada que enviar.
+  await expect(send).toHaveAttribute("aria-disabled", "true");
+  await box.fill("Todo bien, ¿y vos?");
+  await expect(send).not.toHaveAttribute("aria-disabled");
+  await box.press("Enter");
+  await expect(log.getByText("Todo bien, ¿y vos?")).toBeVisible();
+  await expect(send).toHaveAttribute("aria-disabled", "true");
+
+  // Los propios a la derecha y los de la otra persona a la izquierda; cada uno dice de quién es.
+  const mine = log.getByRole("listitem").filter({ hasText: "Todo bien, ¿y vos?" });
+  const theirs = log.getByRole("listitem").filter({ hasText: `Hola, ¿cómo va? ${run}` });
+  await expect(mine).toContainText("Vos:");
+  await expect(theirs).toContainText(`${name}:`);
+  const [mineBox, theirsBox] = [await mine.boundingBox(), await theirs.boundingBox()];
+  expect(mineBox!.x + mineBox!.width).toBeGreaterThan(theirsBox!.x + theirsBox!.width + 20);
+  expect(theirsBox!.x).toBeLessThan(mineBox!.x);
+  await expectNoA11yViolations(page);
+
+  // La flechita de "Enviar": Enter pasa al siguiente renglón y Ctrl+Enter envía. Queda guardado.
+  await page.getByRole("button", { name: "Opciones de envío" }).click();
+  await page.getByRole("menuitemradio", { name: /Pasar al siguiente renglón/ }).click();
+  await box.fill("línea uno");
+  await box.press("Enter");
+  await box.pressSequentially("línea dos");
+  await expect(box).toHaveValue("línea uno\nlínea dos");
+  await expect(page.getByText("Enter, nuevo renglón; Ctrl+Enter envía.")).toBeVisible();
+  await box.press("Control+Enter");
+  await expect(log.getByText(/línea uno\s+línea dos/)).toBeVisible();
+  await page.goto(page.url());
+  await page.getByRole("button", { name: "Opciones de envío" }).click();
+  await expect(page.getByRole("menuitemradio", { name: /Pasar al siguiente renglón/ })).toHaveAttribute("aria-checked", "true");
+  // Escape cierra el menú, no la conversación.
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menu")).toHaveCount(0);
+  await expect(page).toHaveURL(new RegExp(`/es/mensajes/${conversation!.id}$`));
+
+  // Escape cierra la conversación; lo escrito queda como borrador.
+  await box.fill("un borrador");
+  await box.press("Escape");
+  await page.waitForURL(/\/es\/mensajes$/);
+  await expect(page.getByRole("log")).toHaveCount(0);
+  await page.getByRole("list", { name: "Conversaciones" }).getByRole("link").filter({ hasText: name }).click();
+  await expect(page.getByRole("textbox", { name: "Escribí un mensaje" })).toHaveValue("un borrador");
+
+  // Si en otra pestaña (mismo navegador) se entra con otra cuenta, esta avisa y no manda nada.
+  const otherTab = await page.context().newPage();
+  await signIn(otherTab, uniqueEmail("otra-cuenta"));
+  await expect(page.getByRole("alert").filter({ hasText: "Entraste con otra cuenta en otra pestaña" })).toBeVisible();
+  await page.getByRole("button", { name: "Enviar", exact: true }).click();
+  await expect(page.getByText("No se envió: en otra pestaña entraste con otra cuenta.")).toBeVisible();
+  await otherTab.close();
 });

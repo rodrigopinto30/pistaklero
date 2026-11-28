@@ -7,9 +7,11 @@ import { Avatar } from "@/components/avatar";
 import { BackLink } from "@/components/back-link";
 import { ConfirmButton } from "@/components/confirm-button";
 import { ConversationList } from "@/components/messages/conversation-list";
+import { AppScreen } from "@/components/messages/app-screen";
 import { ConversationView } from "@/components/messages/conversation-view";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { requireProfilePage } from "@/lib/auth/guards";
+import { getCurrentProfile } from "@/lib/auth/session";
 import { answerRequest, blockUser, unblockUser } from "@/lib/messages/actions";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
@@ -28,9 +30,10 @@ export default async function ConversationPage({ params }: PageProps<"/[locale]/
   if (!z.uuid().safeParse(id).success) notFound();
 
   const supabase = await createClient();
-  const [{ data: details }, { data: messages }] = await Promise.all([
+  const [{ data: details }, { data: messages }, profile] = await Promise.all([
     supabase.rpc("conversation_detail", { p_conversation_id: id }),
     supabase.rpc("conversation_messages", { p_conversation_id: id, p_limit: 100 }),
+    getCurrentProfile(),
   ]);
   const conversation = details?.[0];
   if (!conversation) notFound();
@@ -42,16 +45,20 @@ export default async function ConversationPage({ params }: PageProps<"/[locale]/
   const waiting = conversation.their_state !== "accepted" && iSentAlready;
   const canWrite = !conversation.blocked && !waiting;
 
+  // Cerrar la conversación (Volver o Escape) lleva a la bandeja de la que vino.
+  const boxHref = { pathname: "/messages" as const, query: box === "requests" ? { caja: "solicitudes" } : {} };
+
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
-      <BackLink fallback="/messages" />
-      <div className="grid gap-6 lg:grid-cols-[22rem_1fr]">
-        <div className="hidden lg:block">
+    // Como WhatsApp Web: la pantalla justa; se desplazan la lista y los mensajes.
+    <AppScreen className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col gap-3 px-4 pt-3 pb-4">
+      <BackLink fallback={boxHref} />
+      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] gap-6 lg:grid-cols-[22rem_1fr]">
+        <div className="hidden min-h-0 lg:flex lg:flex-col">
           <ConversationList box={box} activeId={id} />
         </div>
 
-        <section aria-labelledby="conversation-title" className="flex min-w-0 flex-col gap-4">
-          <header className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-card p-4 shadow-soft">
+        <section aria-labelledby="conversation-title" className="flex min-h-0 min-w-0 flex-col gap-3">
+          <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 rounded-2xl bg-card p-3 shadow-soft">
             <div className="flex min-w-0 items-center gap-3">
               <Avatar path={conversation.other_avatar} name={name} size="md" />
               <div className="flex min-w-0 flex-col">
@@ -127,9 +134,16 @@ export default async function ConversationPage({ params }: PageProps<"/[locale]/
             )
           )}
 
-          <ConversationView conversationId={id} otherName={name} initialMessages={messages ?? []} canWrite={canWrite} />
+          <ConversationView
+            conversationId={id}
+            otherName={name}
+            initialMessages={messages ?? []}
+            canWrite={canWrite}
+            enterSends={profile?.message_enter_sends ?? true}
+            closeHref={boxHref}
+          />
         </section>
       </div>
-    </div>
+    </AppScreen>
   );
 }

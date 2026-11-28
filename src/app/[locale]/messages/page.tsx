@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { BackLink } from "@/components/back-link";
 import { Emoji } from "@/components/emoji";
+import { AppScreen } from "@/components/messages/app-screen";
 import { ConversationList } from "@/components/messages/conversation-list";
 import { requireProfilePage } from "@/lib/auth/guards";
 import type { AppLocale } from "@/i18n/routing";
@@ -19,15 +20,16 @@ export default async function MessagesPage({ searchParams }: PageProps<"/[locale
   const box = (await searchParams).caja === "solicitudes" ? "requests" : "inbox";
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
+    // Como WhatsApp Web: la pantalla justa; la lista se desplaza sola.
+    <AppScreen className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col gap-3 px-4 pt-3 pb-4">
       <BackLink fallback="/" />
       <h1 className="text-3xl font-semibold tracking-tight">
         {t("title")} <Emoji symbol="💬" />
       </h1>
-      <div className="grid gap-6 lg:grid-cols-[22rem_1fr]">
+      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] gap-6 lg:grid-cols-[22rem_1fr]">
         <ConversationList box={box} />
         <p className="hidden items-center justify-center rounded-2xl bg-muted/40 p-10 text-muted-foreground lg:flex">{t("pick")}</p>
       </div>
-    </div>
+    </AppScreen>
   );
 }
