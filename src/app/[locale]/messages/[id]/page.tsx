@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { Avatar } from "@/components/avatar";
 import { BackLink } from "@/components/back-link";
+import { Emoji } from "@/components/emoji";
 import { ConfirmButton } from "@/components/confirm-button";
 import { ConversationList } from "@/components/messages/conversation-list";
 import { AppScreen } from "@/components/messages/app-screen";
@@ -52,6 +53,10 @@ export default async function ConversationPage({ params }: PageProps<"/[locale]/
     // Como WhatsApp Web: la pantalla justa; se desplazan la lista y los mensajes.
     <AppScreen className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col gap-3 px-4 pt-3 pb-4">
       <BackLink fallback={boxHref} />
+      {/* El mismo título que la bandeja: al abrir una conversación no se mueve nada. */}
+      <h1 className="text-3xl font-semibold tracking-tight">
+        {t("title")} <Emoji symbol="💬" />
+      </h1>
       <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] gap-6 lg:grid-cols-[22rem_1fr]">
         <div className="hidden min-h-0 lg:flex lg:flex-col">
           <ConversationList box={box} activeId={id} />
@@ -62,9 +67,9 @@ export default async function ConversationPage({ params }: PageProps<"/[locale]/
             <div className="flex min-w-0 items-center gap-3">
               <Avatar path={conversation.other_avatar} name={name} size="md" />
               <div className="flex min-w-0 flex-col">
-                <h1 id="conversation-title" className="truncate text-lg font-semibold">
+                <h2 id="conversation-title" className="truncate text-lg font-semibold">
                   {name}
-                </h1>
+                </h2>
                 {conversation.other_subtitle && <p className="truncate text-sm text-muted-foreground">{conversation.other_subtitle}</p>}
               </div>
             </div>
