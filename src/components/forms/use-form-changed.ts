@@ -5,6 +5,12 @@ import { useEffect, useRef, useState } from "react";
 type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 /**
+ * Los saltos de línea se comparan sin \r: lo guardado desde un <textarea> viaja con \r\n (así envía
+ * el navegador) y su valor en pantalla usa \n. Si no, un texto de varias líneas siempre "cambiaba".
+ */
+const sameText = (a: string, b: string) => a.replace(/\r\n?/g, "\n") === b.replace(/\r\n?/g, "\n");
+
+/**
  * ¿Algún campo es distinto de su valor original? Se compara con lo que vino en el HTML (defaultValue,
  * defaultChecked, defaultSelected) y no con una foto tomada al cargar: así cuenta también lo que la
  * persona cambió antes de que la página terminara de cargar.
@@ -14,7 +20,7 @@ function differsFromDefaults(form: HTMLFormElement) {
     const control = element as Control;
     if (!control.name || control.disabled) return false;
     if (control instanceof HTMLSelectElement) return [...control.options].some((option) => option.selected !== option.defaultSelected);
-    if (control instanceof HTMLTextAreaElement) return control.value !== control.defaultValue;
+    if (control instanceof HTMLTextAreaElement) return !sameText(control.value, control.defaultValue);
     if (!(control instanceof HTMLInputElement)) return false;
     if (control.type === "checkbox" || control.type === "radio") return control.checked !== control.defaultChecked;
     if (control.type === "file") return (control.files?.length ?? 0) > 0;
@@ -23,9 +29,21 @@ function differsFromDefaults(form: HTMLFormElement) {
   });
 }
 
-/** Los inputs ocultos (listas que arma JavaScript, como los chips) se comparan contra cómo estaban al cargar. */
-function hiddenSnapshot(form: HTMLFormElement) {
-  return JSON.stringify([...form.querySelectorAll<HTMLInputElement>('input[type="hidden"][name]')].map((input) => [input.name, input.value]));
+/**
+ * Foto de todos los valores, para comparar contra cómo estaba al cargar. Cubre lo que la comparación
+ * con el HTML no ve: los inputs ocultos (listas que arma JavaScript, como los chips) y los campos
+ * controlados por React (React copia su valor en el original a cada tecla, como en las contraseñas).
+ */
+function snapshot(form: HTMLFormElement) {
+  // Solo los campos con nombre: los botones que aparecen después (la barra del editor) no cuentan.
+  return JSON.stringify(
+    [...form.elements].flatMap((element) => {
+      const control = element as Control;
+      if (!control.name || control.disabled || control instanceof HTMLButtonElement || (control instanceof HTMLInputElement && control.type === "file")) return [];
+      if (control instanceof HTMLInputElement && (control.type === "checkbox" || control.type === "radio")) return [[control.name, control.checked]];
+      return [[control.name, control.value.replace(/\r\n?/g, "\n")]];
+    })
+  );
 }
 
 /**
@@ -40,9 +58,9 @@ export function useFormChanged(enabled = true) {
   useEffect(() => {
     const form = button.current?.form;
     if (!enabled || !form) return;
-    let hiddenBaseline = hiddenSnapshot(form);
+    let baseline = snapshot(form);
     let frame = 0;
-    const compute = () => setChanged(differsFromDefaults(form) || hiddenSnapshot(form) !== hiddenBaseline);
+    const compute = () => setChanged(differsFromDefaults(form) || snapshot(form) !== baseline);
     // Algunos controles cambian sin disparar "input": también se revisa después de cada tecla o clic.
     const check = () => {
       cancelAnimationFrame(frame);
@@ -50,7 +68,7 @@ export function useFormChanged(enabled = true) {
     };
     const onReset = () =>
       setTimeout(() => {
-        hiddenBaseline = hiddenSnapshot(form);
+        baseline = snapshot(form);
         compute();
       }, 0);
     check(); // por si algo cambió antes de que cargara el botón

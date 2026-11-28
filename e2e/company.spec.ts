@@ -24,10 +24,17 @@ test("una empresa arma su página y se ve en público", async ({ page }) => {
   await page.keyboard.type("cohetes reutilizables");
   await page.keyboard.press("Control+b");
   await page.keyboard.type(" desde Córdoba.");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Con equipo propio.");
   await details.getByLabel(/^Etapa/).selectOption("seed");
   await details.getByLabel(/^Tamaño/).selectOption("11-50");
   await details.getByRole("button", { name: "Guardar" }).click();
   await expectToast(page, "Cambios guardados.");
+  // Al volver, un texto de varias líneas ya guardado no cuenta como cambio: no hay nada que guardar.
+  await page.goto("/es/panel/empresa");
+  await expect(details.getByRole("textbox", { name: /Quiénes somos/ })).toContainText("Con equipo propio.");
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await expect(details.getByRole("button", { name: "Guardar" })).toHaveAttribute("aria-disabled", "true");
 
   // Cambiar el dominio desverifica; volver lo verifica de nuevo
   const website = page.getByRole("region", { name: "Sitio web y verificación" });
