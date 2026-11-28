@@ -29,7 +29,7 @@ async function JobCardAction({ part, job, locale, viewer }: { part: "save" | "ap
   const tApply = await getTranslations("Apply");
   const jobHref = { pathname: "/jobs/[slug]" as const, params: { slug: job.slug } };
   const applyLink = (href: Parameters<typeof Link>[0]["href"]) => (
-    <Link href={href} aria-label={t("applyTo", { title: job.title })} className={buttonVariants({ size: "sm", className: "relative z-10 rounded-full px-4" })}>
+    <Link href={href} aria-label={t("applyTo", { title: job.title })} className={buttonVariants({ className: "relative z-10 w-full rounded-full" })}>
       {tApply("apply")}
     </Link>
   );
@@ -42,7 +42,7 @@ async function JobCardAction({ part, job, locale, viewer }: { part: "save" | "ap
       company={job.company_name}
       track={track}
       ariaLabel={t("applyExternalTo", { title: job.title })}
-      className={buttonVariants({ size: "sm", className: "relative z-10 gap-1.5 rounded-full px-4" })}
+      className={buttonVariants({ className: "relative z-10 w-full gap-1.5 rounded-full" })}
     >
       {tApply("applyExternal")}
     </ExternalApplyLink>
@@ -138,21 +138,20 @@ export async function JobCard({ job, locale, index, viewer }: { job: JobCardData
           ))}
         </ul>
       )}
-      <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1">
-        <div className="flex flex-wrap items-center gap-2">
-          {job.published_at && (
-            <p className="text-xs text-muted-foreground">
-              <time dateTime={job.published_at}>{timeAgo(job.published_at, locale)}</time>
-            </p>
-          )}
-          {job.source === "native" && <ResponseBadge badge={job.company_badge} />}
-        </div>
-        {viewer && (
-          <span className="ml-auto">
-            <JobCardAction part="apply" job={job} locale={locale} viewer={viewer} />
-          </span>
+      <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
+        {job.published_at && (
+          <p className="text-xs text-muted-foreground">
+            <time dateTime={job.published_at}>{timeAgo(job.published_at, locale)}</time>
+          </p>
         )}
+        {job.source === "native" && <ResponseBadge badge={job.company_badge} />}
       </div>
+      {/* Postularse abajo, a todo el ancho y separado de la info por una línea. */}
+      {viewer && viewer.mode !== "none" && (
+        <div className="-mx-5 mt-1 border-t border-border px-5 pt-4">
+          <JobCardAction part="apply" job={job} locale={locale} viewer={viewer} />
+        </div>
+      )}
     </article>
   );
 }
