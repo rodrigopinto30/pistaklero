@@ -1,4 +1,4 @@
-import { admin, expect, expectNoA11yViolations, expectToast, onboardAsCompany, publishJobFor, signIn, signInAsReadyCandidate, test, uniqueEmail, userIdOf } from "./support/fixtures";
+import { admin, expect, expectNoA11yViolations, waitForHydration, expectToast, onboardAsCompany, publishJobFor, signIn, signInAsReadyCandidate, test, uniqueEmail, userIdOf } from "./support/fixtures";
 
 test("Mis ofertas: el cargo, quién publicó, las vistas, los filtros, el resumen y duplicar", async ({ page, browser }) => {
   const run = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
@@ -51,6 +51,7 @@ test("Mis ofertas: el cargo, quién publicó, las vistas, los filtros, el resume
   // El resumen: números, postulantes por etapa y los días.
   await row.getByRole("link", { name: title }).click();
   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+  await waitForHydration(page);
   await expect(page.getByRole("link", { name: "Resumen" })).toHaveAttribute("aria-current", "page");
   await expect(page.getByRole("list", { name: `Números de ${title}` }).getByText(/^\d+ vistas?$/)).toBeVisible();
   await expect(page.getByText("Todavía nadie se postuló.")).toBeVisible();
