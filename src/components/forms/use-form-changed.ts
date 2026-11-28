@@ -35,12 +35,13 @@ function differsFromDefaults(form: HTMLFormElement) {
  * controlados por React (React copia su valor en el original a cada tecla, como en las contraseñas).
  */
 function snapshot(form: HTMLFormElement) {
+  // Solo los campos con nombre: los botones que aparecen después (la barra del editor) no cuentan.
   return JSON.stringify(
-    [...form.elements].map((element) => {
+    [...form.elements].flatMap((element) => {
       const control = element as Control;
-      if (!control.name || control.disabled || (control instanceof HTMLInputElement && control.type === "file")) return null;
-      if (control instanceof HTMLInputElement && (control.type === "checkbox" || control.type === "radio")) return [control.name, control.checked];
-      return [control.name, control.value.replace(/\r\n?/g, "\n")];
+      if (!control.name || control.disabled || control instanceof HTMLButtonElement || (control instanceof HTMLInputElement && control.type === "file")) return [];
+      if (control instanceof HTMLInputElement && (control.type === "checkbox" || control.type === "radio")) return [[control.name, control.checked]];
+      return [[control.name, control.value.replace(/\r\n?/g, "\n")]];
     })
   );
 }
