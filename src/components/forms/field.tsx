@@ -62,7 +62,7 @@ export function Field({
         className
       )}
     >
-      <Label htmlFor={id} className="in-data-[slot=field-grid]:self-end">
+      <Label id={`${id}-label`} htmlFor={id} className="in-data-[slot=field-grid]:self-end">
         {label}
         {!required && <span className="font-normal text-muted-foreground"> {t("optional")}</span>}
       </Label>

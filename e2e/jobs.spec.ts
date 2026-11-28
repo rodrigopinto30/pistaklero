@@ -9,9 +9,21 @@ async function newCompany(page: Page) {
 
 async function fillJob(page: Page, title: string, { min = "1000", max = "1500" } = {}) {
   await page.getByRole("main").getByLabel(/^Puesto/).fill(title);
-  await page
-    .getByLabel(/^Descripción/)
-    .fill("Vas a trabajar con **React** y TypeScript.\n\n- Remoto\n- Equipo chico\n\n<script>alert('xss')</script> [trampa](javascript:alert(1))");
+  // El editor visual: el formato se da con atajos (o con la barra), como en cualquier procesador de texto.
+  await page.getByRole("textbox", { name: /^Descripción/ }).click();
+  await page.keyboard.type("Vas a trabajar con ");
+  await page.keyboard.press("Control+b");
+  await page.keyboard.type("React");
+  await page.keyboard.press("Control+b");
+  await page.keyboard.type(" y TypeScript.");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("- Remoto");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Equipo chico");
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("Enter");
+  // Lo que parezca HTML o un enlace peligroso queda como texto.
+  await page.keyboard.type("<script>alert('xss')</script> [trampa](javascript:alert(1))");
   await page.getByLabel(/^Mínimo/).fill(min);
   await page.getByLabel(/^Máximo/).fill(max);
 }
