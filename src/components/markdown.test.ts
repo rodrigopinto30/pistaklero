@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { Markdown } from "./markdown";
 
-const render = (text: string) => renderToStaticMarkup(createElement(Markdown, { children: text }));
+const render = (text: string) => renderToStaticMarkup(createElement(Markdown, {} as { children: string }, text));
 
 describe("Markdown: lo que escribe el editor, limpio", () => {
   it("muestra subrayado, tachado, colores y resaltado de la paleta", () => {
